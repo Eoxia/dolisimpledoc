@@ -18,7 +18,7 @@ CREATE TABLE llx_simpledocmodule_simpledoc(
 	-- BEGIN MODULEBUILDER FIELDS
 	rowid integer AUTO_INCREMENT PRIMARY KEY NOT NULL, 
 	ref varchar(128) DEFAULT '(PROV)' NOT NULL, 
-	fk_thirdparty integer, 
+	fk_soc integer,
 	note text not null
 	
 	-- END MODULEBUILDER FIELDS
