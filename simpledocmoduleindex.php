@@ -25,6 +25,7 @@
  */
 
 // Load Dolibarr environment
+
 $res = 0;
 // Try main.inc.php into web root known defined into CONTEXT_DOCUMENT_ROOT (not always defined)
 if (!$res && !empty($_SERVER["CONTEXT_DOCUMENT_ROOT"])) {
@@ -55,13 +56,16 @@ if (!$res) {
 	die("Include of main fails");
 }
 
-require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
+require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
+require_once DOL_DOCUMENT_ROOT.'/core/class/doleditor.class.php';
+require_once __DIR__ .'./class/simpledoc.class.php';
 
 // Load translation files required by the page
 $langs->loadLangs(array("simpledocmodule@simpledocmodule"));
 
 $action = GETPOST('action', 'aZ09');
 
+$simpledoc = new SimpleDoc($db);
 
 // Security check
 // if (! $user->rights->simpledocmodule->myobject->read) {
@@ -80,7 +84,19 @@ $now = dol_now();
 /*
  * Actions
  */
-
+if ($action == 'create')
+{
+	$simpledoc->note=GETPOST('modalites');
+	$simpledoc->note=GETPOST('modalites', 'none');
+	$simpledoc->ref=GETPOST('modalites', 'none'); //give correct number
+	$simpledoc->fk_thirdparty=GETPOST('ext_society', 'none');
+	$result = $simpledoc->create($user);
+	$simpledoc->fetch($result);
+	echo '<pre>';
+	print_r($simpledoc);
+	echo '</pre>';
+	exit;
+}
 // None
 
 
@@ -89,13 +105,39 @@ $now = dol_now();
  */
 
 $form = new Form($db);
-$formfile = new FormFile($db);
 
 llxHeader("", $langs->trans("SimpleDocModuleArea"));
 
 print load_fiche_titre($langs->trans("SimpleDocModuleArea"), '', 'simpledocmodule.png@simpledocmodule');
 
-print '<div class="fichecenter"><div class="fichethirdleft">';
+print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?action=create'.'" name="simpledocdata>';
+//Selection du tiers receveur
+print '<div class="fichecenter">';
+print 	'<table>';
+print 		'<tr><td class="fieldrequired">'.$langs->trans("ExtSociety").'</td><td>';
+print $form->select_company(GETPOST('ext_society'), 'ext_society', '', 'SelectThirdParty', 1, 0, $events, 0, 'minwidth300');
+print 		'<a href="'.DOL_URL_ROOT.'/societe/card.php?action=create&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create').'" target="_blank"><span class="fa fa-plus-circle valignmiddle paddingleft" title="'.$langs->trans("AddThirdParty").'"></span></a>';
+print 		'</td></tr>';
+print 	'</table>';
+print '</div>';
+
+//Créer une boite de texte WYSIWYG, en récup le contenu
+
+print '<table class="noborder centpercent editmode">';
+print '<tr class="liste_titre"><th class="titlefield wordbreak">'.$langs->trans("ParticipationAgreement").'</th><th>'.$langs->trans("").'</th></tr>'."\n";
+print '<tr class="oddeven"><td><label for="modalites">'.$langs->trans("TermsAndConditions").'</label></td><td>';
+$doleditor = new DolEditor('modalites', $conf->global->DIGIRISK_PARTICIPATION_AGREEMENT_INFORMATION_PROCEDURE ? $conf->global->DIGIRISK_PARTICIPATION_AGREEMENT_INFORMATION_PROCEDURE : '', '', 90, 'dolibarr_notes', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
+$doleditor->Create();
+print '</td></tr>';
+print '</table>';
+
+print '<input type="submit" class="button" name="save" value="Enregistrer">'; 
+print '</form>';
+
+
+//bouton generer, de la meme façon que digirisk gènere les plans.(?(?(?)))
+
+
 
 
 /* BEGIN MODULEBUILDER DRAFT MYOBJECT
