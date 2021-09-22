@@ -314,10 +314,12 @@ class modSimpleDocModule extends DolibarrModules
 			'langs'=>'simpledocmodule@simpledocmodule',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1000+$r,
 			'enabled'=>'$conf->simpledocmodule->enabled',  // Define condition to show or hide menu entry. Use '$conf->simpledocmodule->enabled' if entry must be visible if module is enabled.
-			'perms'=>'$user->rights->simpledocmodule->simpledoc->read',			                // Use 'perms'=>'$user->rights->simpledocmodule->level1->level2' if you want your menu with a permission rules
+			'perms'=>'1',			                // Use 'perms'=>'$user->rights->simpledocmodule->level1->level2' if you want your menu with a permission rules
 			'target'=>'',
 			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
 		);
+		/**/
+		/*
 		$this->menu[$r++]=array(
 			'fk_menu'=>'fk_mainmenu=simpledocmodule,fk_leftmenu=simpledoc',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type'=>'left',			                // This is a Left menu entry
@@ -346,14 +348,14 @@ class modSimpleDocModule extends DolibarrModules
 			'target'=>'',
 			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
 		);
-		*/
+		/**/
 
         $this->menu[$r++]=array(
             // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
             'fk_menu'=>'fk_mainmenu=simpledocmodule',
             // This is a Left menu entry
             'type'=>'left',
-            'titre'=>'List SimpleDoc',
+            'titre'=>'List Documents',
             'mainmenu'=>'simpledocmodule',
             'leftmenu'=>'simpledocmodule_simpledoc',
             'url'=>'/simpledocmodule/simpledoc_list.php',
@@ -373,7 +375,7 @@ class modSimpleDocModule extends DolibarrModules
             'fk_menu'=>'fk_mainmenu=simpledocmodule,fk_leftmenu=simpledocmodule_simpledoc',
             // This is a Left menu entry
             'type'=>'left',
-            'titre'=>'New SimpleDoc',
+            'titre'=>'New Document',
             'mainmenu'=>'simpledocmodule',
             'leftmenu'=>'simpledocmodule_simpledoc',
             'url'=>'/simpledocmodule/simpledoc_card.php?action=create',
@@ -388,6 +390,26 @@ class modSimpleDocModule extends DolibarrModules
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>2
         );
+		$this->menu[$r++]=array(
+			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu'=>'fk_mainmenu=simpledocmodule',
+			// This is a Left menu entry
+			'type'=>'left',
+			'titre'=>$langs->trans('about'),
+			'mainmenu'=>'simpledocmodule',
+			'leftmenu'=>'simpledocmodule_simpledoc',
+			'url'=>'/simpledocmodule/simpledocmoduleindex.php',
+			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'langs'=>'simpledocmodule@simpledocmodule',
+			'position'=>1100+$r,
+			// Define condition to show or hide menu entry. Use '$conf->simpledocmodule->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'enabled'=>'$conf->simpledocmodule->enabled',
+			// Use 'perms'=>'$user->rights->simpledocmodule->level1->level2' if you want your menu with a permission rules
+			'perms'=>'1',
+			'target'=>'',
+			// 0=Menu for internal users, 1=external users, 2=both
+			'user'=>2
+		);
 
 		/* END MODULEBUILDER LEFTMENU SIMPLEDOC */
 		// Exports profiles provided by this module

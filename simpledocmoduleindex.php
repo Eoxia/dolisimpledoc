@@ -84,19 +84,6 @@ $now = dol_now();
 /*
  * Actions
  */
-if ($action == 'create')
-{
-	$simpledoc->note=GETPOST('modalites');
-	$simpledoc->note=GETPOST('modalites', 'none');
-	$simpledoc->ref=GETPOST('modalites', 'none'); //give correct number
-	$simpledoc->fk_thirdparty=GETPOST('ext_society', 'none');
-	$result = $simpledoc->create($user);
-	$simpledoc->fetch($result);
-	echo '<pre>';
-	print_r($simpledoc);
-	echo '</pre>';
-	exit;
-}
 // None
 
 
@@ -110,33 +97,31 @@ llxHeader("", $langs->trans("SimpleDocModuleArea"));
 
 print load_fiche_titre($langs->trans("SimpleDocModuleArea"), '', 'simpledocmodule.png@simpledocmodule');
 
-print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?action=create'.'" name="simpledocdata>';
-//Selection du tiers receveur
-print '<div class="fichecenter">';
-print 	'<table>';
-print 		'<tr><td class="fieldrequired">'.$langs->trans("ExtSociety").'</td><td>';
-print $form->select_company(GETPOST('ext_society'), 'ext_society', '', 'SelectThirdParty', 1, 0, $events, 0, 'minwidth300');
-print 		'<a href="'.DOL_URL_ROOT.'/societe/card.php?action=create&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create').'" target="_blank"><span class="fa fa-plus-circle valignmiddle paddingleft" title="'.$langs->trans("AddThirdParty").'"></span></a>';
-print 		'</td></tr>';
-print 	'</table>';
-print '</div>';
 
-//Créer une boite de texte WYSIWYG, en récup le contenu
-
-print '<table class="noborder centpercent editmode">';
-print '<tr class="liste_titre"><th class="titlefield wordbreak">'.$langs->trans("ParticipationAgreement").'</th><th>'.$langs->trans("").'</th></tr>'."\n";
-print '<tr class="oddeven"><td><label for="modalites">'.$langs->trans("TermsAndConditions").'</label></td><td>';
-$doleditor = new DolEditor('modalites', $conf->global->DIGIRISK_PARTICIPATION_AGREEMENT_INFORMATION_PROCEDURE ? $conf->global->DIGIRISK_PARTICIPATION_AGREEMENT_INFORMATION_PROCEDURE : '', '', 90, 'dolibarr_notes', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
-$doleditor->Create();
-print '</td></tr>';
-print '</table>';
-
-print '<input type="submit" class="button" name="save" value="Enregistrer">'; 
-print '</form>';
-
-
-//bouton generer, de la meme façon que digirisk gènere les plans.(?(?(?)))
-
+print "
+<h1>DIGIRISKDOLIBARR FOR <a href='https://www.dolibarr.org'>DOLIBARR ERP CRM</a></h1>
+<h2>Fonctionnalités</h2>
+<p>Gérez les risques de votre entreprise et créez votre document unique en toute simplicité</p>
+<p>Other modules are available on <a href='https://www.dolistore.com'>Dolistore.com</a>.</p>
+<h2>Traduction</h2>
+<p>La traduction de ce module peut être définie manuellement en éditant les fichiers dans le dossier <em>langs</em>.</p>
+<h2>Installation</h2>
+<h3>Méthode 1 :</h3>
+<ul>
+<li>Depuis le menu 'Déployer/Installer un module externe' de Dolibarr : </li>
+<li>Glisser l\'archive ZIP \'module_digiriskdolibarr-1.0.0\' et cliquer sur 'SEND'</li>
+<li>Activer le module dans la liste des Modules/Applications installés</li>
+</ul>
+<h3>Méthode 2 :</h3>
+<ul>
+<li>Dans le dossier 'dolibarr/htdocs/custom' copier la ligne suivante :
+<pre><code>git clone https://github.com/Evarisk/digiriskdolibarr.git digiriskdolibarr</code></pre></li>
+</ul>
+<h2>Licenses</h2>
+<p>Ce module est publié sous licence GPLv3.</p>
+<h3>Documentation</h3>
+<p>La documentation de ce module est accessible sur la page suivante :
+<a href='https://wiki.dolibarr.org/index.php/Module_DigiriskDolibarr'>https://wiki.dolibarr.org/index.php/Module_DigiriskDolibarr</a></p>";
 
 
 
