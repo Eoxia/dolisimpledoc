@@ -25,6 +25,7 @@
  */
 
 // Load Dolibarr environment
+
 $res = 0;
 // Try main.inc.php into web root known defined into CONTEXT_DOCUMENT_ROOT (not always defined)
 if (!$res && !empty($_SERVER["CONTEXT_DOCUMENT_ROOT"])) {
@@ -86,9 +87,15 @@ $now = dol_now();
 if ($action == 'create')
 {
 	$simpledoc->note=GETPOST('modalites');
-	$simpledoc->ref=GETPOST('modalites');
-	$simpledoc->fk_thirdparty=GETPOST('modalites');
-	$simpledoc->create($user);
+	$simpledoc->note=GETPOST('modalites', 'none');
+	$simpledoc->ref=GETPOST('modalites', 'none'); //give correct number
+	$simpledoc->fk_thirdparty=GETPOST('ext_society', 'none');
+	$result = $simpledoc->create($user);
+	$simpledoc->fetch($result);
+	echo '<pre>';
+	print_r($simpledoc);
+	echo '</pre>';
+	exit;
 }
 // None
 
@@ -103,7 +110,7 @@ llxHeader("", $langs->trans("SimpleDocModuleArea"));
 
 print load_fiche_titre($langs->trans("SimpleDocModuleArea"), '', 'simpledocmodule.png@simpledocmodule');
 
-print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'" name="simpledocdata>';
+print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?action=create'.'" name="simpledocdata>';
 //Selection du tiers receveur
 print '<div class="fichecenter">';
 print 	'<table>';
