@@ -36,7 +36,7 @@ class mod_simpledoc_standard extends ModeleNumRefSimpleDoc
 	 */
 	public $version = 'dolibarr'; // 'development', 'experimental', 'dolibarr'
 
-	public $prefix = 'SIMPLEDOC';
+	public $prefix = 'SD';
 
 	/**
 	 * @var string Error code (or message)
@@ -147,7 +147,7 @@ class mod_simpledoc_standard extends ModeleNumRefSimpleDoc
 
 		//$date=time();
 		$date = $object->date_creation;
-		$yymm = strftime("%y%m", $date);
+		$yymm = strftime("%y%m%d", $date);
 
 		if ($max >= (pow(10, 4) - 1)) {
 			$num = $max + 1; // If counter > 9999, we do not format on 4 chars, we take number as it is

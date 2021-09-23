@@ -149,6 +149,9 @@ $upload_dir = $conf->simpledocmodule->multidir_output[isset($object->entity) ? $
  * Actions
  */
 
+require_once DOL_DOCUMENT_ROOT.'/custom/simpledocmodule/core/modules/simpledocmodule/mod_simpledoc_standard.php';
+$simpledocmod = new mod_simpledoc_standard;
+
 $parameters = array();
 $reshook = $hookmanager->executeHooks('doActions', $parameters, $object, $action); // Note that $action and $object may have been modified by some hooks
 if ($reshook < 0) {
@@ -245,19 +248,42 @@ if ($action == 'create') {
 	print 	'</table>';
 	print '</div>';
 
-	//message name
-	print 'document ref:';
-	print '<input type="text" name="ref" value="">';
+//message name
+	print 'document name:';
+	print '<input type="text" name="name" value="">';
 
-//Créer une boite de texte WYSIWYG
+//ref
+	print '<tr><td class="fieldrequired">'.$langs->trans("Ref").'</td><td>';
+	print '<input hidden class="flat" type="text" size="36" name="ref" id="ref" value="'.$simpledocmod->getNextValue($object).'">';
+	print $simpledocmod->getNextValue($object);
+	print '</td></tr>';
 
+//Créer des boite de texte WYSIWYG
+	//content
 	print '<table class="noborder centpercent editmode">';
-	print '<tr class="liste_titre"><th class="titlefield wordbreak">'.$langs->trans("ParticipationAgreement").'</th><th>'.$langs->trans("").'</th></tr>'."\n";
-	print '<tr class="oddeven"><td><label for="note">'.$langs->trans("TermsAndConditions").'</label></td><td>';
-	$doleditor = new DolEditor('note', $conf->global->DIGIRISK_PARTICIPATION_AGREEMENT_INFORMATION_PROCEDURE ? $conf->global->DIGIRISK_PARTICIPATION_AGREEMENT_INFORMATION_PROCEDURE : '', '', 90, 'dolibarr_notes', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
+	print '<tr class="liste_titre"><th class="titlefield wordbreak">'.$langs->trans("content").'</th><th>'.$langs->trans("").'</th></tr>'."\n";
+	print '<tr class="oddeven"><td><label for="content">'.$langs->trans(" ").'</label></td><td>';
+	$doleditor = new DolEditor('content', $conf->global->DIGIRISK_PARTICIPATION_AGREEMENT_INFORMATION_PROCEDURE ? $conf->global->DIGIRISK_PARTICIPATION_AGREEMENT_INFORMATION_PROCEDURE : '', '', 90, 'dolibarr_notes', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
 	$doleditor->Create();
 	print '</td></tr>';
 	print '</table>';
+	//note pub
+	print '<table class="noborder centpercent editmode">';
+	print '<tr class="liste_titre"><th class="titlefield wordbreak">'.$langs->trans("note_public").'</th><th>'.$langs->trans("").'</th></tr>'."\n";
+	print '<tr class="oddeven"><td><label for="note_public">'.$langs->trans(" ").'</label></td><td>';
+	$doleditor = new DolEditor('note_public', $conf->global->DIGIRISK_PARTICIPATION_AGREEMENT_INFORMATION_PROCEDURE ? $conf->global->DIGIRISK_PARTICIPATION_AGREEMENT_INFORMATION_PROCEDURE : '', '', 90, 'dolibarr_notes', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
+	$doleditor->Create();
+	print '</td></tr>';
+	print '</table>';
+	//note prv
+	print '<table class="noborder centpercent editmode">';
+	print '<tr class="liste_titre"><th class="titlefield wordbreak">'.$langs->trans("note_private").'</th><th>'.$langs->trans("").'</th></tr>'."\n";
+	print '<tr class="oddeven"><td><label for="note_private">'.$langs->trans(" ").'</label></td><td>';
+	$doleditor = new DolEditor('note_private', $conf->global->DIGIRISK_PARTICIPATION_AGREEMENT_INFORMATION_PROCEDURE ? $conf->global->DIGIRISK_PARTICIPATION_AGREEMENT_INFORMATION_PROCEDURE : '', '', 90, 'dolibarr_notes', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
+	$doleditor->Create();
+	print '</td></tr>';
+	print '</table>';
+
 
 	print '<input type="submit" class="button" name="save" value="Enregistrer">';
 	print '</form>';

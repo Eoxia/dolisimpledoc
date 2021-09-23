@@ -19,7 +19,11 @@ CREATE TABLE llx_simpledocmodule_simpledoc(
 	rowid integer AUTO_INCREMENT PRIMARY KEY NOT NULL, 
 	ref varchar(128) DEFAULT '(PROV)' NOT NULL, 
 	fk_soc integer,
-	note text not null
-	
+	content text not null,
+	date_creation datetime NOT NULL,
+	note_private     text DEFAULT NULL,
+	note_public      text DEFAULT NULL,
+	name text not null,
+	fk_project integer
 	-- END MODULEBUILDER FIELDS
 ) ENGINE=innodb;

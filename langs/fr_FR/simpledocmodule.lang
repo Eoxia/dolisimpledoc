@@ -52,3 +52,6 @@ MyPageName = My page name
 MyWidget = My widget
 MyWidgetDescription = My widget description
 ExtSociety = Tiers destinataire
+content = Contenu du document
+note_public = Note publique
+note_private = Note privée
