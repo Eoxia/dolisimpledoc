@@ -145,8 +145,8 @@ class mod_simpledoc_standard extends ModeleNumRefSimpleDoc
 			return -1;
 		}
 
-		//$date=time();
-		$date = $object->date_creation;
+		$date = time();
+		
 		$yymm = strftime("%y%m%d", $date);
 
 		if ($max >= (pow(10, 4) - 1)) {
