@@ -24,6 +24,9 @@ CREATE TABLE llx_simpledocmodule_simpledoc(
 	note_private     text DEFAULT NULL,
 	note_public      text DEFAULT NULL,
 	name text not null,
-	fk_project integer
+--	fk_project integer,
+    fk_user_creat integer,
+	fk_user_modif integer,
+	tms timestamp
 	-- END MODULEBUILDER FIELDS
 ) ENGINE=innodb;

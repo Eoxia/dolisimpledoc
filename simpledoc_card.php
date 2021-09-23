@@ -328,8 +328,8 @@ if (($id || $ref) && $action == 'edit') {
 if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'create'))) {
 	$res = $object->fetch_optionals();
 
-	//$head = simpledocPrepareHead($object);
-	//print dol_get_fiche_head($head, 'card', $langs->trans("Workstation"), -1, $object->picto);
+	$head = simpledocPrepareHead($object);
+	print dol_get_fiche_head($head, 'card', $langs->trans("Workstation"), -1, $object->picto);
 
 	$formconfirm = '';
 
@@ -416,7 +416,8 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	 }
 	 }
 	 }*/
-	$morehtmlref .= '</div>';
+
+	$morehtmlref .= $object->name.'</div>';
 
 
 	dol_banner_tab($object, 'ref', $linkback, 1, 'ref', 'ref', $morehtmlref);
@@ -442,6 +443,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 	print '<div class="clearboth"></div>';
 
+	print '<div>Contenu du document :<br>'. $object->content.'</br></div>';
 	print dol_get_fiche_end();
 
 

@@ -103,12 +103,15 @@ class SimpleDoc extends CommonObject
 		'rowid' => array('type'=>'integer', 'label'=>'TechnicalID', 'enabled'=>'1', 'position'=>1, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'css'=>'left', 'comment'=>"Id"),
 		'ref' => array('type'=>'varchar(128)', 'label'=>'Ref', 'enabled'=>'1', 'position'=>20, 'notnull'=>1, 'visible'=>4, 'noteditable'=>'1', 'default'=>'(PROV)', 'index'=>1, 'searchall'=>1, 'showoncombobox'=>'1', 'comment'=>"Reference of object"),
 		'fk_soc' => array('type'=>'integer:Societe:societe/class/societe.class.php:1:status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'ThirdParty', 'enabled'=>'1', 'position'=>50, 'notnull'=>-1, 'visible'=>1, 'index'=>1, 'help'=>"LinkToThirparty",),
-		'content' => array('type'=>'html', 'label'=>'NotePublic', 'enabled'=>'1', 'position'=>61, 'notnull'=>0, 'visible'=>0,),
-		'note_public' => array(''),
-		'note_private' => array(''),
-		'name' => array(''),
-		'date_creation' => array(''),
-		'fk_project' => array('')
+		'content' => array('type'=>'html', 'label'=>'Content', 'enabled'=>'1', 'position'=>61, 'notnull'=>0, 'visible'=>0,),
+		'note_public' => array('type'=>'html', 'label'=>'NotePublic', 'enabled'=>'1', 'position'=>61, 'notnull'=>0, 'visible'=>1,),
+		'note_private' => array('type'=>'html', 'label'=>'NotePrivate', 'enabled'=>'1', 'position'=>61, 'notnull'=>0, 'visible'=>1,),
+		'name' => array('type'=>'html', 'label'=>'Name', 'enabled'=>'1', 'position'=>61, 'notnull'=>0, 'visible'=>-2,),
+		'date_creation' => array('type'=>'datetime', 'label'=>'DateCreation', 'enabled'=>'1', 'position'=>40, 'notnull'=>1, 'visible'=>1,),
+		'tms' => array('type'=>'timestamp', 'label'=>'DateModif', 'enabled'=>'1', 'position'=>40, 'notnull'=>1, 'visible'=>0,),
+		'fk_user_creat' => array(''),
+		'fk_user_modif' => array('')
+//		'fk_project' => array('')
 	);
 
 	public $rowid;
@@ -119,7 +122,10 @@ class SimpleDoc extends CommonObject
 	public $note_private;
 	public $name;
 	public $date_creation;
-	public $fk_project;
+	public $fk_user_creat;
+	public $fk_user_modif;
+	public $tms;
+//	public $fk_project;
 	// END MODULEBUILDER PROPERTIES
 
 
