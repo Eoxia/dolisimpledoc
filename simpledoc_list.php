@@ -18,7 +18,7 @@
 
 /**
  *   	\file       simpledoc_list.php
- *		\ingroup    simpledocmodule
+ *		\ingroup    dolisimpledoc
  *		\brief      List page for simpledoc
  */
 
@@ -62,14 +62,14 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/html.formcompany.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
 
-// load simpledocmodule libraries
+// load dolisimpledoc libraries
 require_once __DIR__.'/class/simpledoc.class.php';
 
 // for other modules
 //dol_include_once('/othermodule/class/otherobject.class.php');
 
 // Load translation files required by the page
-$langs->loadLangs(array("simpledocmodule@simpledocmodule", "other"));
+$langs->loadLangs(array("dolisimpledoc@dolisimpledoc", "other"));
 
 $action     = GETPOST('action', 'aZ09') ?GETPOST('action', 'aZ09') : 'view'; // The action 'add', 'create', 'edit', 'update', 'view', ...
 $massaction = GETPOST('massaction', 'alpha'); // The bulk action (combo box choice into lists)
@@ -99,7 +99,7 @@ $pagenext = $page + 1;
 // Initialize technical objects
 $object = new SimpleDoc($db);
 $extrafields = new ExtraFields($db);
-$diroutputmassaction = $conf->simpledocmodule->dir_output.'/temp/massgeneration/'.$user->id;
+$diroutputmassaction = $conf->dolisimpledoc->dir_output.'/temp/massgeneration/'.$user->id;
 $hookmanager->initHooks(array('simpledoclist')); // Note that conf->hooks_modules contains array
 
 // Fetch optionals attributes and labels
@@ -159,12 +159,12 @@ include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_list_array_fields.tpl.php';
 $object->fields = dol_sort_array($object->fields, 'position');
 $arrayfields = dol_sort_array($arrayfields, 'position');
 
-$permissiontoread = $user->rights->simpledocmodule->simpledoc->read;
-$permissiontoadd = $user->rights->simpledocmodule->simpledoc->write;
-$permissiontodelete = $user->rights->simpledocmodule->simpledoc->delete;
+$permissiontoread = $user->rights->dolisimpledoc->simpledoc->read;
+$permissiontoadd = $user->rights->dolisimpledoc->simpledoc->write;
+$permissiontodelete = $user->rights->dolisimpledoc->simpledoc->delete;
 
 // Security check
-if (empty($conf->simpledocmodule->enabled)) {
+if (empty($conf->dolisimpledoc->enabled)) {
 	accessforbidden('Module not enabled');
 }
 
@@ -174,7 +174,7 @@ if ($user->socid > 0) accessforbidden();
 //$socid = 0; if ($user->socid > 0) $socid = $user->socid;
 //$isdraft = (($object->status == $object::STATUS_DRAFT) ? 1 : 0);
 //restrictedArea($user, $object->element, $object->id, $object->table_element, '', 'fk_soc', 'rowid', $isdraft);
-//if (empty($conf->simpledocmodule->enabled)) accessforbidden();
+//if (empty($conf->dolisimpledoc->enabled)) accessforbidden();
 //if (!$permissiontoread) accessforbidden();
 
 
@@ -221,7 +221,7 @@ if (empty($reshook)) {
 	// Mass actions
 	$objectclass = 'SimpleDoc';
 	$objectlabel = 'SimpleDoc';
-	$uploaddir = $conf->simpledocmodule->dir_output;
+	$uploaddir = $conf->dolisimpledoc->dir_output;
 	include DOL_DOCUMENT_ROOT.'/core/actions_massactions.inc.php';
 }
 
@@ -361,7 +361,7 @@ if (is_numeric($nbtotalofrecords) && ($limit > $nbtotalofrecords || empty($limit
 if ($num == 1 && !empty($conf->global->MAIN_SEARCH_DIRECT_OPEN_IF_ONLY_ONE) && $search_all && !$page) {
 	$obj = $db->fetch_object($resql);
 	$id = $obj->rowid;
-	header("Location: ".dol_buildpath('/simpledocmodule/simpledoc_card.php', 1).'?id='.$id);
+	header("Location: ".dol_buildpath('/dolisimpledoc/simpledoc_card.php', 1).'?id='.$id);
 	exit;
 }
 
@@ -441,7 +441,7 @@ print '<input type="hidden" name="sortorder" value="'.$sortorder.'">';
 print '<input type="hidden" name="page" value="'.$page.'">';
 print '<input type="hidden" name="contextpage" value="'.$contextpage.'">';
 
-$newcardbutton = dolGetButtonTitle($langs->trans('New'), '', 'fa fa-plus-circle', dol_buildpath('/simpledocmodule/simpledoc_card.php', 1).'?action=create&backtopage='.urlencode($_SERVER['PHP_SELF']), '', $permissiontoadd);
+$newcardbutton = dolGetButtonTitle($langs->trans('New'), '', 'fa fa-plus-circle', dol_buildpath('/dolisimpledoc/simpledoc_card.php', 1).'?action=create&backtopage='.urlencode($_SERVER['PHP_SELF']), '', $permissiontoadd);
 
 print_barre_liste($title, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, $massactionbutton, $num, $nbtotalofrecords, 'object_'.$object->picto, 0, $newcardbutton, '', $limit, 0, 0, 1);
 
@@ -704,7 +704,7 @@ if (in_array('builddoc', $arrayofmassactions) && ($nbtotalofrecords === '' || $n
 	$genallowed = $permissiontoread;
 	$delallowed = $permissiontoadd;
 
-	print $formfile->showdocuments('massfilesarea_simpledocmodule', '', $filedir, $urlsource, 0, $delallowed, '', 1, 1, 0, 48, 1, $param, $title, '', '', '', null, $hidegeneratedfilelistifempty);
+	print $formfile->showdocuments('massfilesarea_dolisimpledoc', '', $filedir, $urlsource, 0, $delallowed, '', 1, 1, 0, 48, 1, $param, $title, '', '', '', null, $hidegeneratedfilelistifempty);
 }
 
 // End of page

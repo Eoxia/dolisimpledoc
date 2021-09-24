@@ -26,12 +26,12 @@
  */
 
 /**
- *  \file       core/modules/simpledocmodule/doc/pdf_standard.modules.php
- *  \ingroup    simpledocmodule
+ *  \file       core/modules/dolisimpledoc/doc/pdf_standard.modules.php
+ *  \ingroup    dolisimpledoc
  *  \brief      File of class to generate document from standard template
  */
 
-dol_include_once('/simpledocmodule/core/modules/simpledocmodule/modules_simpledoc.php');
+dol_include_once('/dolisimpledoc/core/modules/dolisimpledoc/modules_simpledoc.php');
 require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/functions2.lib.php';

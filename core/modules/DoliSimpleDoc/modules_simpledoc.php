@@ -23,8 +23,8 @@
  */
 
 /**
- *  \file			htdocs/core/modules/simpledocmodule/modules_simpledoc.php
- *  \ingroup		simpledocmodule
+ *  \file			htdocs/core/modules/dolisimpledoc/modules_simpledoc.php
+ *  \ingroup		dolisimpledoc
  *  \brief			File that contains parent class for simpledocs document models and parent class for simpledocs numbering models
  */
 
@@ -91,7 +91,7 @@ abstract class ModeleNumRefSimpleDoc
 	public function info()
 	{
 		global $langs;
-		$langs->load("simpledocmodule@simpledocmodule");
+		$langs->load("dolisimpledoc@dolisimpledoc");
 		return $langs->trans("NoDescription");
 	}
 
@@ -103,7 +103,7 @@ abstract class ModeleNumRefSimpleDoc
 	public function getExample()
 	{
 		global $langs;
-		$langs->load("simpledocmodule@simpledocmodule");
+		$langs->load("dolisimpledoc@dolisimpledoc");
 		return $langs->trans("NoExample");
 	}
 

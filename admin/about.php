@@ -17,8 +17,8 @@
  */
 
 /**
- * \file    simpledocmodule/admin/about.php
- * \ingroup simpledocmodule
+ * \file    dolisimpledoc/admin/about.php
+ * \ingroup dolisimpledoc
  * \brief   About page of module SimpleDocModule.
  */
 
@@ -53,10 +53,10 @@ if (!$res) {
 // Libraries
 require_once DOL_DOCUMENT_ROOT.'/core/lib/admin.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/functions2.lib.php';
-require_once '../lib/simpledocmodule.lib.php';
+require_once '../lib/dolisimpledoc.lib.php';
 
 // Translations
-$langs->loadLangs(array("errors", "admin", "simpledocmodule@simpledocmodule"));
+$langs->loadLangs(array("errors", "admin", "dolisimpledoc@dolisimpledoc"));
 
 // Access control
 if (!$user->admin) {
@@ -92,10 +92,10 @@ $linkback = '<a href="'.($backtopage ? $backtopage : DOL_URL_ROOT.'/admin/module
 print load_fiche_titre($langs->trans($page_name), $linkback, 'title_setup');
 
 // Configuration header
-$head = simpledocmoduleAdminPrepareHead();
-print dol_get_fiche_head($head, 'about', $langs->trans($page_name), 0, 'simpledocmodule@simpledocmodule');
+$head = dolisimpledocAdminPrepareHead();
+print dol_get_fiche_head($head, 'about', $langs->trans($page_name), 0, 'dolisimpledoc@dolisimpledoc');
 
-dol_include_once('/simpledocmodule/core/modules/modSimpleDocModule.class.php');
+dol_include_once('/dolisimpledoc/core/modules/modSimpleDocModule.class.php');
 $tmpmodule = new modSimpleDocModule($db);
 print $tmpmodule->getDescLong();
 

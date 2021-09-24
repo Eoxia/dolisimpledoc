@@ -18,7 +18,7 @@
 
 /**
  *  \file       simpledoc_document.php
- *  \ingroup    simpledocmodule
+ *  \ingroup    dolisimpledoc
  *  \brief      Tab for documents linked to SimpleDoc
  */
 
@@ -78,11 +78,11 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/images.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
-dol_include_once('/simpledocmodule/class/simpledoc.class.php');
-dol_include_once('/simpledocmodule/lib/simpledocmodule_simpledoc.lib.php');
+dol_include_once('/dolisimpledoc/class/simpledoc.class.php');
+dol_include_once('/dolisimpledoc/lib/dolisimpledoc_simpledoc.lib.php');
 
 // Load translation files required by the page
-$langs->loadLangs(array("simpledocmodule@simpledocmodule", "companies", "other", "mails"));
+$langs->loadLangs(array("dolisimpledoc@dolisimpledoc", "companies", "other", "mails"));
 
 
 $action = GETPOST('action', 'aZ09');
@@ -112,7 +112,7 @@ if (!$sortfield) {
 // Initialize technical objects
 $object = new SimpleDoc($db);
 $extrafields = new ExtraFields($db);
-$diroutputmassaction = $conf->simpledocmodule->dir_output.'/temp/massgeneration/'.$user->id;
+$diroutputmassaction = $conf->dolisimpledoc->dir_output.'/temp/massgeneration/'.$user->id;
 $hookmanager->initHooks(array('simpledocdocument', 'globalcard')); // Note that conf->hooks_modules contains array
 // Fetch optionals attributes and labels
 $extrafields->fetch_name_optionals_label($object->table_element);
@@ -121,17 +121,17 @@ $extrafields->fetch_name_optionals_label($object->table_element);
 include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be include, not include_once  // Must be include, not include_once. Include fetch and fetch_thirdparty but not fetch_optionals
 
 if ($id > 0 || !empty($ref)) {
-	$upload_dir = $conf->simpledocmodule->multidir_output[$object->entity ? $object->entity : $conf->entity]."/simpledoc/".get_exdir(0, 0, 0, 1, $object);
+	$upload_dir = $conf->dolisimpledoc->multidir_output[$object->entity ? $object->entity : $conf->entity]."/simpledoc/".get_exdir(0, 0, 0, 1, $object);
 }
 
-$permissiontoadd = $user->rights->simpledocmodule->simpledoc->write; // Used by the include of actions_addupdatedelete.inc.php and actions_linkedfiles.inc.php
+$permissiontoadd = $user->rights->dolisimpledoc->simpledoc->write; // Used by the include of actions_addupdatedelete.inc.php and actions_linkedfiles.inc.php
 
 // Security check (enable the most restrictive one)
 //if ($user->socid > 0) accessforbidden();
 //if ($user->socid > 0) $socid = $user->socid;
 //$isdraft = (($object->status == $object::STATUS_DRAFT) ? 1 : 0);
 //restrictedArea($user, $object->element, $object->id, $object->table_element, '', 'fk_soc', 'rowid', $isdraft);
-//if (empty($conf->simpledocmodule->enabled)) accessforbidden();
+//if (empty($conf->dolisimpledoc->enabled)) accessforbidden();
 //if (!$permissiontoread) accessforbidden();
 
 
@@ -171,7 +171,7 @@ if ($object->id) {
 
 	// Object card
 	// ------------------------------------------------------------
-	$linkback = '<a href="'.dol_buildpath('/simpledocmodule/simpledoc_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
+	$linkback = '<a href="'.dol_buildpath('/dolisimpledoc/simpledoc_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
 
 	$morehtmlref = '<div class="refidno">';
 	/*
@@ -232,10 +232,10 @@ if ($object->id) {
 
 	print dol_get_fiche_end();
 
-	$modulepart = 'simpledocmodule';
-	//$permissiontoadd = $user->rights->simpledocmodule->simpledoc->write;
+	$modulepart = 'dolisimpledoc';
+	//$permissiontoadd = $user->rights->dolisimpledoc->simpledoc->write;
 	$permissiontoadd = 1;
-	//$permtoedit = $user->rights->simpledocmodule->simpledoc->write;
+	//$permtoedit = $user->rights->dolisimpledoc->simpledoc->write;
 	$permtoedit = 1;
 	$param = '&id='.$object->id;
 

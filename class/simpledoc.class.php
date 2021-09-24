@@ -18,7 +18,7 @@
 
 /**
  * \file        class/simpledoc.class.php
- * \ingroup     simpledocmodule
+ * \ingroup     dolisimpledoc
  * \brief       This file is a CRUD class file for SimpleDoc (Create/Read/Update/Delete)
  */
 
@@ -35,7 +35,7 @@ class SimpleDoc extends CommonObject
 	/**
 	 * @var string ID of module.
 	 */
-	public $module = 'simpledocmodule';
+	public $module = 'dolisimpledoc';
 
 	/**
 	 * @var string ID to identify managed object.
@@ -45,7 +45,7 @@ class SimpleDoc extends CommonObject
 	/**
 	 * @var string Name of table without prefix where object is stored. This is also the key used for extrafields management.
 	 */
-	public $table_element = 'simpledocmodule_simpledoc';
+	public $table_element = 'dolisimpledoc_simpledoc';
 
 	/**
 	 * @var int  Does this object support multicompany module ?
@@ -61,7 +61,7 @@ class SimpleDoc extends CommonObject
 	/**
 	 * @var string String with name of icon for simpledoc. Must be the part after the 'object_' into object_simpledoc.png
 	 */
-	public $picto = 'simpledoc@simpledocmodule';
+	public $picto = 'simpledoc@dolisimpledoc';
 
 
 	const STATUS_DRAFT = 0;
@@ -134,7 +134,7 @@ class SimpleDoc extends CommonObject
 	// /**
 	//  * @var string    Name of subtable line
 	//  */
-	// public $table_element_line = 'simpledocmodule_simpledocline';
+	// public $table_element_line = 'dolisimpledoc_simpledocline';
 
 	// /**
 	//  * @var string    Field with ID of parent key if this object has a parent
@@ -156,7 +156,7 @@ class SimpleDoc extends CommonObject
 	//  *               If name matches '@ClassNAme:FilePathClass;ParentFkFieldName' it will
 	//  *               call method deleteByParentField(parentId, ParentFkFieldName) to fetch and delete child object
 	//  */
-	// protected $childtablesoncascade = array('simpledocmodule_simpledocdet');
+	// protected $childtablesoncascade = array('dolisimpledoc_simpledocdet');
 
 	// /**
 	//  * @var SimpleDocLine[]     Array of subtable lines
@@ -184,7 +184,7 @@ class SimpleDoc extends CommonObject
 		}
 
 		// Example to show how to set values of fields definition dynamically
-		/*if ($user->rights->simpledocmodule->simpledoc->read) {
+		/*if ($user->rights->dolisimpledoc->simpledoc->read) {
 			$this->fields['myfield']['visible'] = 1;
 			$this->fields['myfield']['noteditable'] = 0;
 		}*/
@@ -498,8 +498,8 @@ class SimpleDoc extends CommonObject
 			return 0;
 		}
 
-		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->simpledocmodule->simpledoc->write))
-		 || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->simpledocmodule->simpledoc->simpledoc_advance->validate))))
+		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->dolisimpledoc->simpledoc->write))
+		 || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->dolisimpledoc->simpledoc->simpledoc_advance->validate))))
 		 {
 		 $this->error='NotEnoughPermissions';
 		 dol_syslog(get_class($this)."::valid ".$this->error, LOG_ERR);
@@ -565,15 +565,15 @@ class SimpleDoc extends CommonObject
 				// We rename directory ($this->ref = old ref, $num = new ref) in order not to lose the attachments
 				$oldref = dol_sanitizeFileName($this->ref);
 				$newref = dol_sanitizeFileName($num);
-				$dirsource = $conf->simpledocmodule->dir_output.'/simpledoc/'.$oldref;
-				$dirdest = $conf->simpledocmodule->dir_output.'/simpledoc/'.$newref;
+				$dirsource = $conf->dolisimpledoc->dir_output.'/simpledoc/'.$oldref;
+				$dirdest = $conf->dolisimpledoc->dir_output.'/simpledoc/'.$newref;
 				if (!$error && file_exists($dirsource)) {
 					dol_syslog(get_class($this)."::validate() rename dir ".$dirsource." into ".$dirdest);
 
 					if (@rename($dirsource, $dirdest)) {
 						dol_syslog("Rename ok");
 						// Rename docs starting with $oldref with $newref
-						$listoffiles = dol_dir_list($conf->simpledocmodule->dir_output.'/simpledoc/'.$newref, 'files', 1, '^'.preg_quote($oldref, '/'));
+						$listoffiles = dol_dir_list($conf->dolisimpledoc->dir_output.'/simpledoc/'.$newref, 'files', 1, '^'.preg_quote($oldref, '/'));
 						foreach ($listoffiles as $fileentry) {
 							$dirsource = $fileentry['name'];
 							$dirdest = preg_replace('/^'.preg_quote($oldref, '/').'/', $newref, $dirsource);
@@ -616,8 +616,8 @@ class SimpleDoc extends CommonObject
 			return 0;
 		}
 
-		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->simpledocmodule->write))
-		 || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->simpledocmodule->simpledocmodule_advance->validate))))
+		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->dolisimpledoc->write))
+		 || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->dolisimpledoc->dolisimpledoc_advance->validate))))
 		 {
 		 $this->error='Permission denied';
 		 return -1;
@@ -640,8 +640,8 @@ class SimpleDoc extends CommonObject
 			return 0;
 		}
 
-		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->simpledocmodule->write))
-		 || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->simpledocmodule->simpledocmodule_advance->validate))))
+		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->dolisimpledoc->write))
+		 || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->dolisimpledoc->dolisimpledoc_advance->validate))))
 		 {
 		 $this->error='Permission denied';
 		 return -1;
@@ -664,8 +664,8 @@ class SimpleDoc extends CommonObject
 			return 0;
 		}
 
-		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->simpledocmodule->write))
-		 || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->simpledocmodule->simpledocmodule_advance->validate))))
+		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->dolisimpledoc->write))
+		 || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->dolisimpledoc->dolisimpledoc_advance->validate))))
 		 {
 		 $this->error='Permission denied';
 		 return -1;
@@ -701,7 +701,7 @@ class SimpleDoc extends CommonObject
 		$label .= '<br>';
 		$label .= '<b>'.$langs->trans('Ref').':</b> '.$this->ref;
 
-		$url = dol_buildpath('/simpledocmodule/simpledoc_card.php', 1).'?id='.$this->id;
+		$url = dol_buildpath('/dolisimpledoc/simpledoc_card.php', 1).'?id='.$this->id;
 
 		if ($option != 'nolink') {
 			// Add param to save lastsearch_values or not
@@ -813,7 +813,7 @@ class SimpleDoc extends CommonObject
 		// phpcs:enable
 		if (empty($this->labelStatus) || empty($this->labelStatusShort)) {
 			global $langs;
-			//$langs->load("simpledocmodule@simpledocmodule");
+			//$langs->load("dolisimpledoc@dolisimpledoc");
 			$this->labelStatus[self::STATUS_DRAFT] = $langs->trans('Draft');
 			$this->labelStatus[self::STATUS_VALIDATED] = $langs->trans('Enabled');
 			$this->labelStatus[self::STATUS_CANCELED] = $langs->trans('Disabled');
@@ -922,7 +922,7 @@ class SimpleDoc extends CommonObject
 	public function getNextNumRef()
 	{
 		global $langs, $conf;
-		$langs->load("simpledocmodule@simpledocmodule");
+		$langs->load("dolisimpledoc@dolisimpledoc");
 
 		if (empty($conf->global->SIMPLEDOCMODULE_SIMPLEDOC_ADDON)) {
 			$conf->global->SIMPLEDOCMODULE_SIMPLEDOC_ADDON = 'mod_simpledoc_standard';
@@ -937,7 +937,7 @@ class SimpleDoc extends CommonObject
 			// Include file with class
 			$dirmodels = array_merge(array('/'), (array) $conf->modules_parts['models']);
 			foreach ($dirmodels as $reldir) {
-				$dir = dol_buildpath($reldir."core/modules/simpledocmodule/");
+				$dir = dol_buildpath($reldir."core/modules/dolisimpledoc/");
 
 				// Load file with numbering class (if found)
 				$mybool |= @include_once $dir.$file;
@@ -987,7 +987,7 @@ class SimpleDoc extends CommonObject
 		$result = 0;
 		$includedocgeneration = 1;
 
-		$langs->load("simpledocmodule@simpledocmodule");
+		$langs->load("dolisimpledoc@dolisimpledoc");
 
 		if (!dol_strlen($modele)) {
 			$modele = 'standard_simpledoc';
@@ -999,7 +999,7 @@ class SimpleDoc extends CommonObject
 			}
 		}
 
-		$modelpath = "core/modules/simpledocmodule/doc/";
+		$modelpath = "core/modules/dolisimpledoc/doc/";
 
 		if ($includedocgeneration && !empty($modele)) {
 			$result = $this->commonGenerateDocument($modelpath, $modele, $outputlangs, $hidedetails, $hidedesc, $hideref, $moreparams);

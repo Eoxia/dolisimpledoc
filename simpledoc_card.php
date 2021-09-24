@@ -18,7 +18,7 @@
 
 /**
  *   	\file       simpledoc_card.php
- *		\ingroup    simpledocmodule
+ *		\ingroup    dolisimpledoc
  *		\brief      Page to create/edit/view simpledoc
  */
 
@@ -82,11 +82,11 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/doleditor.class.php';
 require_once __DIR__ .'./class/simpledoc.class.php';
 
 
-dol_include_once('/simpledocmodule/class/simpledoc.class.php');
-dol_include_once('/simpledocmodule/lib/simpledocmodule_simpledoc.lib.php');
+dol_include_once('/dolisimpledoc/class/simpledoc.class.php');
+dol_include_once('/dolisimpledoc/lib/dolisimpledoc_simpledoc.lib.php');
 
 // Load translation files required by the page
-$langs->loadLangs(array("simpledocmodule@simpledocmodule", "other"));
+$langs->loadLangs(array("dolisimpledoc@dolisimpledoc", "other"));
 
 // Get parameters
 $id = GETPOST('id', 'int');
@@ -104,7 +104,7 @@ $object = new SimpleDoc($db);
 $object->fetch($id);
 
 $extrafields = new ExtraFields($db);
-$diroutputmassaction = $conf->simpledocmodule->dir_output.'/temp/massgeneration/'.$user->id;
+$diroutputmassaction = $conf->dolisimpledoc->dir_output.'/temp/massgeneration/'.$user->id;
 $hookmanager->initHooks(array('simpledoccard', 'globalcard')); // Note that conf->hooks_modules contains array
 
 // Fetch optionals attributes and labels
@@ -129,19 +129,19 @@ if (empty($action) && empty($id) && empty($ref)) {
 include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be include, not include_once.
 
 
-$permissiontoread = $user->rights->simpledocmodule->simpledoc->read;
-$permissiontoadd = $user->rights->simpledocmodule->simpledoc->write; // Used by the include of actions_addupdatedelete.inc.php and actions_lineupdown.inc.php
-$permissiontodelete = $user->rights->simpledocmodule->simpledoc->delete || ($permissiontoadd && isset($object->status) && $object->status == $object::STATUS_DRAFT);
-$permissionnote = $user->rights->simpledocmodule->simpledoc->write; // Used by the include of actions_setnotes.inc.php
-$permissiondellink = $user->rights->simpledocmodule->simpledoc->write; // Used by the include of actions_dellink.inc.php
-$upload_dir = $conf->simpledocmodule->multidir_output[isset($object->entity) ? $object->entity : 1].'/simpledoc';
+$permissiontoread = $user->rights->dolisimpledoc->simpledoc->read;
+$permissiontoadd = $user->rights->dolisimpledoc->simpledoc->write; // Used by the include of actions_addupdatedelete.inc.php and actions_lineupdown.inc.php
+$permissiontodelete = $user->rights->dolisimpledoc->simpledoc->delete || ($permissiontoadd && isset($object->status) && $object->status == $object::STATUS_DRAFT);
+$permissionnote = $user->rights->dolisimpledoc->simpledoc->write; // Used by the include of actions_setnotes.inc.php
+$permissiondellink = $user->rights->dolisimpledoc->simpledoc->write; // Used by the include of actions_dellink.inc.php
+$upload_dir = $conf->dolisimpledoc->multidir_output[isset($object->entity) ? $object->entity : 1].'/simpledoc';
 
 // Security check (enable the most restrictive one)
 //if ($user->socid > 0) accessforbidden();
 //if ($user->socid > 0) $socid = $user->socid;
 //$isdraft = (($object->status == $object::STATUS_DRAFT) ? 1 : 0);
 //restrictedArea($user, $object->element, $object->id, $object->table_element, '', 'fk_soc', 'rowid', $isdraft);
-//if (empty($conf->simpledocmodule->enabled)) accessforbidden();
+//if (empty($conf->dolisimpledoc->enabled)) accessforbidden();
 //if (!$permissiontoread) accessforbidden();
 
 
@@ -149,7 +149,7 @@ $upload_dir = $conf->simpledocmodule->multidir_output[isset($object->entity) ? $
  * Actions
  */
 
-require_once DOL_DOCUMENT_ROOT.'/custom/simpledocmodule/core/modules/simpledocmodule/mod_simpledoc_standard.php';
+require_once DOL_DOCUMENT_ROOT.'/custom/dolisimpledoc/core/modules/dolisimpledoc/mod_simpledoc_standard.php';
 $simpledocmod = new mod_simpledoc_standard;
 
 $parameters = array();
@@ -163,14 +163,14 @@ if (empty($reshook)) {
 
 	$error = 0;
 
-	$backurlforlist = dol_buildpath('/simpledocmodule/simpledoc_list.php', 1);
+	$backurlforlist = dol_buildpath('/dolisimpledoc/simpledoc_list.php', 1);
 
 	if (empty($backtopage) || ($cancel && empty($id))) {
 		if (empty($backtopage) || ($cancel && strpos($backtopage, '__ID__'))) {
 			if (empty($id) && (($action != 'add' && $action != 'create') || $cancel)) {
 				$backtopage = $backurlforlist;
 			} else {
-				$backtopage = dol_buildpath('/simpledocmodule/simpledoc_card.php', 1).'?id='.($id > 0 ? $id : '__ID__');
+				$backtopage = dol_buildpath('/dolisimpledoc/simpledoc_card.php', 1).'?id='.($id > 0 ? $id : '__ID__');
 			}
 		}
 	}
@@ -379,7 +379,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 	// Object card
 	// ------------------------------------------------------------
-	$linkback = '<a href="'.dol_buildpath('/simpledocmodule/simpledoc_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
+	$linkback = '<a href="'.dol_buildpath('/dolisimpledoc/simpledoc_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
 
 	$morehtmlref = '<div class="refidno">';
 	/*
@@ -537,11 +537,11 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		if ($includedocgeneration) {
 			$objref = dol_sanitizeFileName($object->ref);
 			$relativepath = $objref.'/'.$objref.'.pdf';
-			$filedir = $conf->simpledocmodule->dir_output.'/'.$object->element.'/'.$objref;
+			$filedir = $conf->dolisimpledoc->dir_output.'/'.$object->element.'/'.$objref;
 			$urlsource = $_SERVER["PHP_SELF"]."?id=".$object->id;
-			$genallowed = $user->rights->simpledocmodule->simpledoc->read; // If you can read, you can build the PDF to read content
-			$delallowed = $user->rights->simpledocmodule->simpledoc->write; // If you can create/edit, you can remove a file on card
-			print $formfile->showdocuments('simpledocmodule:SimpleDoc', $object->element.'/'.$objref, $filedir, $urlsource, $genallowed, $delallowed, $object->model_pdf, 1, 0, 0, 28, 0, '', '', '', $langs->defaultlang);
+			$genallowed = $user->rights->dolisimpledoc->simpledoc->read; // If you can read, you can build the PDF to read content
+			$delallowed = $user->rights->dolisimpledoc->simpledoc->write; // If you can create/edit, you can remove a file on card
+			print $formfile->showdocuments('dolisimpledoc:SimpleDoc', $object->element.'/'.$objref, $filedir, $urlsource, $genallowed, $delallowed, $object->model_pdf, 1, 0, 0, 28, 0, '', '', '', $langs->defaultlang);
 		}
 
 
@@ -556,7 +556,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	// Presend form
 	$modelmail = 'simpledoc';
 	$defaulttopic = 'InformationMessage';
-	$diroutput = $conf->simpledocmodule->dir_output;
+	$diroutput = $conf->dolisimpledoc->dir_output;
 	$trackid = 'simpledoc'.$object->id;
 
 	include DOL_DOCUMENT_ROOT.'/core/tpl/card_presend.tpl.php';

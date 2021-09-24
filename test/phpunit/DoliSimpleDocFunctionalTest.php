@@ -17,8 +17,8 @@
  */
 
 /**
- * \file    test/phpunit/SimpleDocModuleFunctionalTest.php
- * \ingroup simpledocmodule
+ * \file    test/phpunit/DoliSimpleDocFunctionalTest.php
+ * \ingroup dolisimpledoc
  * \brief   Example Selenium test.
  *
  * Put detailed description here.
@@ -29,7 +29,7 @@ namespace test\functional;
 use PHPUnit_Extensions_Selenium2TestCase_WebDriverException;
 
 /**
- * Class SimpleDocModuleFunctionalTest
+ * Class DoliSimpleDocFunctionalTest
  *
  * Requires chromedriver for Google Chrome
  * Requires geckodriver for Mozilla Firefox
@@ -39,9 +39,9 @@ use PHPUnit_Extensions_Selenium2TestCase_WebDriverException;
  * @todo Windows support (IE, Google Chrome, Mozilla Firefox, Safari)
  * @todo OSX support (Safari, Google Chrome, Mozilla Firefox)
  *
- * @package Testsimpledocmodule
+ * @package Testdolisimpledoc
  */
-class SimpleDocModuleFunctionalTest extends \PHPUnit_Extensions_Selenium2TestCase
+class DoliSimpleDocFunctionalTest extends \PHPUnit_Extensions_Selenium2TestCase
 {
 	// TODO: move to a global configuration file?
 	/** @var string Base URL of the webserver under test */
@@ -176,12 +176,12 @@ class SimpleDocModuleFunctionalTest extends \PHPUnit_Extensions_Selenium2TestCas
 		$module_status_image = $this->byXPath($module_status_image_path);
 		if (strstr($module_status_image->attribute('src'), 'switch_off.png')) {
 			// Enable the module
-			$this->byHref('modSimpleDocModule')->click();
+			$this->byHref('modDoliSimpleDoc')->click();
 		} else {
 			// Disable the module
-			$this->byHref('modSimpleDocModule')->click();
+			$this->byHref('modDoliSimpleDoc')->click();
 			// Reenable the module
-			$this->byHref('modSimpleDocModule')->click();
+			$this->byHref('modDoliSimpleDoc')->click();
 		}
 		// Page reloaded, we need a new Xpath
 		$module_status_image = $this->byXPath($module_status_image_path);
@@ -196,9 +196,9 @@ class SimpleDocModuleFunctionalTest extends \PHPUnit_Extensions_Selenium2TestCas
 	 */
 	public function testConfigurationPage()
 	{
-		$this->url('/custom/simpledocmodule/admin/setup.php');
+		$this->url('/custom/dolisimpledoc/admin/setup.php');
 		$this->authenticate();
-		return $this->assertContains('simpledocmodule/admin/setup.php', $this->url(), 'Configuration page');
+		return $this->assertContains('dolisimpledoc/admin/setup.php', $this->url(), 'Configuration page');
 	}
 
 	/**
@@ -209,9 +209,9 @@ class SimpleDocModuleFunctionalTest extends \PHPUnit_Extensions_Selenium2TestCas
 	 */
 	public function testAboutPage()
 	{
-		$this->url('/custom/simpledocmodule/admin/about.php');
+		$this->url('/custom/dolisimpledoc/admin/about.php');
 		$this->authenticate();
-		return $this->assertContains('simpledocmodule/admin/about.php', $this->url(), 'About page');
+		return $this->assertContains('dolisimpledoc/admin/about.php', $this->url(), 'About page');
 	}
 
 	/**
@@ -222,7 +222,7 @@ class SimpleDocModuleFunctionalTest extends \PHPUnit_Extensions_Selenium2TestCas
 	 */
 	public function testAboutPageRendersMarkdownReadme()
 	{
-		$this->url('/custom/simpledocmodule/admin/about.php');
+		$this->url('/custom/dolisimpledoc/admin/about.php');
 		$this->authenticate();
 		return $this->assertEquals(
 			'Dolibarr Module Template (aka My Module)',
@@ -241,7 +241,7 @@ class SimpleDocModuleFunctionalTest extends \PHPUnit_Extensions_Selenium2TestCas
 	{
 		$this->url('/admin/boxes.php');
 		$this->authenticate();
-		return $this->assertContains('simpledocmodulewidget1', $this->source(), "Box enabled");
+		return $this->assertContains('dolisimpledocwidget1', $this->source(), "Box enabled");
 	}
 
 	/**
@@ -255,7 +255,7 @@ class SimpleDocModuleFunctionalTest extends \PHPUnit_Extensions_Selenium2TestCas
 		$this->url('/admin/triggers.php');
 		$this->authenticate();
 		return $this->assertContains(
-			'interface_99_modSimpleDocModule_SimpleDocModuleTriggers.class.php',
+			'interface_99_modDoliSimpleDoc_DoliSimpleDocTriggers.class.php',
 			$this->byTag('body')->text(),
 			"Trigger declared"
 		);
@@ -273,7 +273,7 @@ class SimpleDocModuleFunctionalTest extends \PHPUnit_Extensions_Selenium2TestCas
 		$this->authenticate();
 		return $this->assertContains(
 			'tick.png',
-			$this->byXPath('//td[text()="interface_99_modSimpleDocModule_MyTrigger.class.php"]/following::img')->attribute('src'),
+			$this->byXPath('//td[text()="interface_99_modDoliSimpleDoc_MyTrigger.class.php"]/following::img')->attribute('src'),
 			"Trigger enabled"
 		);
 	}

@@ -16,8 +16,8 @@
  */
 
 /**
- * \file    simpledocmodule/lib/simpledocmodule.lib.php
- * \ingroup simpledocmodule
+ * \file    dolisimpledoc/lib/dolisimpledoc.lib.php
+ * \ingroup dolisimpledoc
  * \brief   Library files with common functions for SimpleDocModule
  */
 
@@ -26,28 +26,28 @@
  *
  * @return array
  */
-function simpledocmoduleAdminPrepareHead()
+function dolisimpledocAdminPrepareHead()
 {
 	global $langs, $conf;
 
-	$langs->load("simpledocmodule@simpledocmodule");
+	$langs->load("dolisimpledoc@dolisimpledoc");
 
 	$h = 0;
 	$head = array();
 
-	$head[$h][0] = dol_buildpath("/simpledocmodule/admin/setup.php", 1);
+	$head[$h][0] = dol_buildpath("/dolisimpledoc/admin/setup.php", 1);
 	$head[$h][1] = $langs->trans("Settings");
 	$head[$h][2] = 'settings';
 	$h++;
 
 	/*
-	$head[$h][0] = dol_buildpath("/simpledocmodule/admin/myobject_extrafields.php", 1);
+	$head[$h][0] = dol_buildpath("/dolisimpledoc/admin/myobject_extrafields.php", 1);
 	$head[$h][1] = $langs->trans("ExtraFields");
 	$head[$h][2] = 'myobject_extrafields';
 	$h++;
 	*/
 
-	$head[$h][0] = dol_buildpath("/simpledocmodule/admin/about.php", 1);
+	$head[$h][0] = dol_buildpath("/dolisimpledoc/admin/about.php", 1);
 	$head[$h][1] = $langs->trans("About");
 	$head[$h][2] = 'about';
 	$h++;
@@ -55,12 +55,12 @@ function simpledocmoduleAdminPrepareHead()
 	// Show more tabs from modules
 	// Entries must be declared in modules descriptor with line
 	//$this->tabs = array(
-	//	'entity:+tabname:Title:@simpledocmodule:/simpledocmodule/mypage.php?id=__ID__'
+	//	'entity:+tabname:Title:@dolisimpledoc:/dolisimpledoc/mypage.php?id=__ID__'
 	//); // to add new tab
 	//$this->tabs = array(
-	//	'entity:-tabname:Title:@simpledocmodule:/simpledocmodule/mypage.php?id=__ID__'
+	//	'entity:-tabname:Title:@dolisimpledoc:/dolisimpledoc/mypage.php?id=__ID__'
 	//); // to remove a tab
-	complete_head_from_modules($conf, $langs, null, $head, $h, 'simpledocmodule');
+	complete_head_from_modules($conf, $langs, null, $head, $h, 'dolisimpledoc');
 
 	return $head;
 }

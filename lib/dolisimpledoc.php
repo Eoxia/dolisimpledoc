@@ -16,8 +16,8 @@
  */
 
 /**
- * \file    lib/simpledocmodule_simpledoc.lib.php
- * \ingroup simpledocmodule
+ * \file    lib/dolisimpledoc_simpledoc.lib.php
+ * \ingroup dolisimpledoc
  * \brief   Library files with common functions for SimpleDoc
  */
 
@@ -31,12 +31,12 @@ function simpledocPrepareHead($object)
 {
 	global $db, $langs, $conf;
 
-	$langs->load("simpledocmodule@simpledocmodule");
+	$langs->load("dolisimpledoc@dolisimpledoc");
 
 	$h = 0;
 	$head = array();
 
-	$head[$h][0] = dol_buildpath("/simpledocmodule/simpledoc_card.php", 1).'?id='.$object->id;
+	$head[$h][0] = dol_buildpath("/dolisimpledoc/simpledoc_card.php", 1).'?id='.$object->id;
 	$head[$h][1] = $langs->trans("Card");
 	$head[$h][2] = 'card';
 	$h++;
@@ -49,7 +49,7 @@ function simpledocPrepareHead($object)
 		if (!empty($object->note_public)) {
 			$nbNote++;
 		}
-		$head[$h][0] = dol_buildpath('/simpledocmodule/simpledoc_note.php', 1).'?id='.$object->id;
+		$head[$h][0] = dol_buildpath('/dolisimpledoc/simpledoc_note.php', 1).'?id='.$object->id;
 		$head[$h][1] = $langs->trans('Notes');
 		if ($nbNote > 0) {
 			$head[$h][1] .= (empty($conf->global->MAIN_OPTIMIZEFORTEXTBROWSER) ? '<span class="badge marginleftonlyshort">'.$nbNote.'</span>' : '');
@@ -60,10 +60,10 @@ function simpledocPrepareHead($object)
 
 	require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
 	require_once DOL_DOCUMENT_ROOT.'/core/class/link.class.php';
-	$upload_dir = $conf->simpledocmodule->dir_output."/simpledoc/".dol_sanitizeFileName($object->ref);
+	$upload_dir = $conf->dolisimpledoc->dir_output."/simpledoc/".dol_sanitizeFileName($object->ref);
 	$nbFiles = count(dol_dir_list($upload_dir, 'files', 0, '', '(\.meta|_preview.*\.png)$'));
 	$nbLinks = Link::count($db, $object->element, $object->id);
-	$head[$h][0] = dol_buildpath("/simpledocmodule/simpledoc_document.php", 1).'?id='.$object->id;
+	$head[$h][0] = dol_buildpath("/dolisimpledoc/simpledoc_document.php", 1).'?id='.$object->id;
 	$head[$h][1] = $langs->trans('Documents');
 	if (($nbFiles + $nbLinks) > 0) {
 		$head[$h][1] .= '<span class="badge marginleftonlyshort">'.($nbFiles + $nbLinks).'</span>';
@@ -71,7 +71,7 @@ function simpledocPrepareHead($object)
 	$head[$h][2] = 'document';
 	$h++;
 
-	$head[$h][0] = dol_buildpath("/simpledocmodule/simpledoc_agenda.php", 1).'?id='.$object->id;
+	$head[$h][0] = dol_buildpath("/dolisimpledoc/simpledoc_agenda.php", 1).'?id='.$object->id;
 	$head[$h][1] = $langs->trans("Events");
 	$head[$h][2] = 'agenda';
 	$h++;
@@ -79,14 +79,14 @@ function simpledocPrepareHead($object)
 	// Show more tabs from modules
 	// Entries must be declared in modules descriptor with line
 	//$this->tabs = array(
-	//	'entity:+tabname:Title:@simpledocmodule:/simpledocmodule/mypage.php?id=__ID__'
+	//	'entity:+tabname:Title:@dolisimpledoc:/dolisimpledoc/mypage.php?id=__ID__'
 	//); // to add new tab
 	//$this->tabs = array(
-	//	'entity:-tabname:Title:@simpledocmodule:/simpledocmodule/mypage.php?id=__ID__'
+	//	'entity:-tabname:Title:@dolisimpledoc:/dolisimpledoc/mypage.php?id=__ID__'
 	//); // to remove a tab
-	complete_head_from_modules($conf, $langs, $object, $head, $h, 'simpledoc@simpledocmodule');
+	complete_head_from_modules($conf, $langs, $object, $head, $h, 'simpledoc@dolisimpledoc');
 
-	complete_head_from_modules($conf, $langs, $object, $head, $h, 'simpledoc@simpledocmodule', 'remove');
+	complete_head_from_modules($conf, $langs, $object, $head, $h, 'simpledoc@dolisimpledoc', 'remove');
 
 	return $head;
 }

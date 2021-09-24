@@ -19,9 +19,9 @@
  */
 
 /**
- *	\file       simpledocmodule/simpledocmoduleindex.php
- *	\ingroup    simpledocmodule
- *	\brief      Home page of simpledocmodule top menu
+ *	\file       dolisimpledoc/dolisimpledocindex.php
+ *	\ingroup    dolisimpledoc
+ *	\brief      Home page of dolisimpledoc top menu
  */
 
 // Load Dolibarr environment
@@ -61,14 +61,14 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/doleditor.class.php';
 require_once __DIR__ .'./class/simpledoc.class.php';
 
 // Load translation files required by the page
-$langs->loadLangs(array("simpledocmodule@simpledocmodule"));
+$langs->loadLangs(array("dolisimpledoc@dolisimpledoc"));
 
 $action = GETPOST('action', 'aZ09');
 
 $simpledoc = new SimpleDoc($db);
 
 // Security check
-// if (! $user->rights->simpledocmodule->myobject->read) {
+// if (! $user->rights->dolisimpledoc->myobject->read) {
 // 	accessforbidden();
 // }
 $socid = GETPOST('socid', 'int');
@@ -95,7 +95,7 @@ $form = new Form($db);
 
 llxHeader("", $langs->trans("SimpleDocModuleArea"));
 
-print load_fiche_titre($langs->trans("SimpleDocModuleArea"), '', 'simpledocmodule.png@simpledocmodule');
+print load_fiche_titre($langs->trans("SimpleDocModuleArea"), '', 'dolisimpledoc.png@dolisimpledoc');
 
 
 print "
@@ -127,7 +127,7 @@ print "
 
 /* BEGIN MODULEBUILDER DRAFT MYOBJECT
 // Draft MyObject
-if (! empty($conf->simpledocmodule->enabled) && $user->rights->simpledocmodule->read)
+if (! empty($conf->dolisimpledoc->enabled) && $user->rights->dolisimpledoc->read)
 {
 	$langs->load("orders");
 
@@ -208,10 +208,10 @@ $max = $conf->global->MAIN_SIZE_SHORTLIST_LIMIT;
 
 /* BEGIN MODULEBUILDER LASTMODIFIED MYOBJECT
 // Last modified myobject
-if (! empty($conf->simpledocmodule->enabled) && $user->rights->simpledocmodule->read)
+if (! empty($conf->dolisimpledoc->enabled) && $user->rights->dolisimpledoc->read)
 {
 	$sql = "SELECT s.rowid, s.ref, s.label, s.date_creation, s.tms";
-	$sql.= " FROM ".MAIN_DB_PREFIX."simpledocmodule_myobject as s";
+	$sql.= " FROM ".MAIN_DB_PREFIX."dolisimpledoc_myobject as s";
 	//if (! $user->rights->societe->client->voir && ! $socid) $sql.= ", ".MAIN_DB_PREFIX."societe_commerciaux as sc";
 	$sql.= " WHERE s.entity IN (".getEntity($myobjectstatic->element).")";
 	//if (! $user->rights->societe->client->voir && ! $socid) $sql.= " AND s.rowid = sc.fk_soc AND sc.fk_user = ".((int) $user->id);

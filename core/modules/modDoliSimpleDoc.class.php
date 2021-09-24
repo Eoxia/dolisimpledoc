@@ -19,19 +19,19 @@
  */
 
 /**
- * 	\defgroup   simpledocmodule     Module SimpleDocModule
- *  \brief      SimpleDocModule module descriptor.
+ * 	\defgroup   dolisimpledoc     Module DoliSimpleDoc
+ *  \brief      DoliSimpleDoc module descriptor.
  *
- *  \file       htdocs/simpledocmodule/core/modules/modSimpleDocModule.class.php
- *  \ingroup    simpledocmodule
- *  \brief      Description and activation file for module SimpleDocModule
+ *  \file       htdocs/dolisimpledoc/core/modules/modDoliSimpleDoc.class.php
+ *  \ingroup    dolisimpledoc
+ *  \brief      Description and activation file for module DoliSimpleDoc
  */
 include_once DOL_DOCUMENT_ROOT.'/core/modules/DolibarrModules.class.php';
 
 /**
- *  Description and activation class for module SimpleDocModule
+ *  Description and activation class for module DoliSimpleDoc
  */
-class modSimpleDocModule extends DolibarrModules
+class modDoliSimpleDoc extends DolibarrModules
 {
 	/**
 	 * Constructor. Define names, constants, directories, boxes, permissions
@@ -48,7 +48,7 @@ class modSimpleDocModule extends DolibarrModules
 		$this->numero = 500000; // TODO Go on page https://wiki.dolibarr.org/index.php/List_of_modules_id to reserve an id number for your module
 
 		// Key text used to identify module (for permissions, menus, etc...)
-		$this->rights_class = 'simpledocmodule';
+		$this->rights_class = 'dolisimpledoc';
 
 		// Family can be 'base' (core modules),'crm','financial','hr','projects','products','ecm','technic' (transverse modules),'interface' (link with external tools),'other','...'
 		// It is used to group modules by family in module setup page
@@ -59,13 +59,13 @@ class modSimpleDocModule extends DolibarrModules
 
 		// Gives the possibility for the module, to provide his own family info and position of this family (Overwrite $this->family and $this->module_position. Avoid this)
 		//$this->familyinfo = array('myownfamily' => array('position' => '01', 'label' => $langs->trans("MyOwnFamily")));
-		// Module label (no space allowed), used if translation string 'ModuleSimpleDocModuleName' not found (SimpleDocModule is name of module).
+		// Module label (no space allowed), used if translation string 'ModuleDoliSimpleDocName' not found (DoliSimpleDoc is name of module).
 		$this->name = preg_replace('/^mod/i', '', get_class($this));
 
-		// Module description, used if translation string 'ModuleSimpleDocModuleDesc' not found (SimpleDocModule is name of module).
-		$this->description = "SimpleDocModuleDescription";
+		// Module description, used if translation string 'ModuleDoliSimpleDocDesc' not found (DoliSimpleDoc is name of module).
+		$this->description = "DoliSimpleDocDescription";
 		// Used only if file README.md and README-LL.md not found.
-		$this->descriptionlong = "SimpleDocModuleDescription";
+		$this->descriptionlong = "DoliSimpleDocDescription";
 
 		// Author
 		$this->editor_name = 'Editor name';
@@ -107,11 +107,11 @@ class modSimpleDocModule extends DolibarrModules
 			'theme' => 0,
 			// Set this to relative path of css file if module has its own css file
 			'css' => array(
-				//    '/simpledocmodule/css/simpledocmodule.css.php',
+				//    '/dolisimpledoc/css/dolisimpledoc.css.php',
 			),
 			// Set this to relative path of js file if module must load a js on all pages
 			'js' => array(
-				//   '/simpledocmodule/js/simpledocmodule.js.php',
+				//   '/dolisimpledoc/js/dolisimpledoc.js.php',
 			),
 			// Set here all hooks context managed by module. To find available hook context, make a "grep -r '>initHooks(' *" on source code. You can also set hook context to 'all'
 			'hooks' => array(
@@ -126,11 +126,11 @@ class modSimpleDocModule extends DolibarrModules
 		);
 
 		// Data directories to create when module is enabled.
-		// Example: this->dirs = array("/simpledocmodule/temp","/simpledocmodule/subdir");
-		$this->dirs = array("/simpledocmodule/temp");
+		// Example: this->dirs = array("/dolisimpledoc/temp","/dolisimpledoc/subdir");
+		$this->dirs = array("/dolisimpledoc/temp");
 
-		// Config pages. Put here list of php page, stored into simpledocmodule/admin directory, to use to setup module.
-		$this->config_page_url = array("setup.php@simpledocmodule");
+		// Config pages. Put here list of php page, stored into dolisimpledoc/admin directory, to use to setup module.
+		$this->config_page_url = array("setup.php@dolisimpledoc");
 
 		// Dependencies
 		// A condition to hide module
@@ -141,7 +141,7 @@ class modSimpleDocModule extends DolibarrModules
 		$this->conflictwith = array(); // List of module class names as string this module is in conflict with. Example: array('modModuleToDisable1', ...)
 
 		// The language file dedicated to your module
-		$this->langfiles = array("simpledocmodule@simpledocmodule");
+		$this->langfiles = array("dolisimpledoc@dolisimpledoc");
 
 		// Prerequisites
 		$this->phpmin = array(5, 6); // Minimum version of PHP required by module
@@ -150,7 +150,7 @@ class modSimpleDocModule extends DolibarrModules
 		// Messages at activation
 		$this->warnings_activation = array(); // Warning to show when we activate module. array('always'='text') or array('FR'='textfr','ES'='textes'...)
 		$this->warnings_activation_ext = array(); // Warning to show when we activate an external module. array('always'='text') or array('FR'='textfr','ES'='textes'...)
-		//$this->automatic_activation = array('FR'=>'SimpleDocModuleWasAutomaticallyActivatedBecauseOfYourCountryChoice');
+		//$this->automatic_activation = array('FR'=>'DoliSimpleDocWasAutomaticallyActivatedBecauseOfYourCountryChoice');
 		//$this->always_enabled = true;								// If true, can't be disabled
 
 		// Constants
@@ -166,16 +166,16 @@ class modSimpleDocModule extends DolibarrModules
 			'fr_FR:ParentCompany'=>'Maison mère ou revendeur'
 		)*/
 
-		if (!isset($conf->simpledocmodule) || !isset($conf->simpledocmodule->enabled)) {
-			$conf->simpledocmodule = new stdClass();
-			$conf->simpledocmodule->enabled = 0;
+		if (!isset($conf->dolisimpledoc) || !isset($conf->dolisimpledoc->enabled)) {
+			$conf->dolisimpledoc = new stdClass();
+			$conf->dolisimpledoc->enabled = 0;
 		}
 
 		// Array to add new pages in new tabs
 		$this->tabs = array();
 		// Example:
-		// $this->tabs[] = array('data'=>'objecttype:+tabname1:Title1:mylangfile@simpledocmodule:$user->rights->simpledocmodule->read:/simpledocmodule/mynewtab1.php?id=__ID__');  					// To add a new tab identified by code tabname1
-		// $this->tabs[] = array('data'=>'objecttype:+tabname2:SUBSTITUTION_Title2:mylangfile@simpledocmodule:$user->rights->othermodule->read:/simpledocmodule/mynewtab2.php?id=__ID__',  	// To add another new tab identified by code tabname2. Label will be result of calling all substitution functions on 'Title2' key.
+		// $this->tabs[] = array('data'=>'objecttype:+tabname1:Title1:mylangfile@dolisimpledoc:$user->rights->dolisimpledoc->read:/dolisimpledoc/mynewtab1.php?id=__ID__');  					// To add a new tab identified by code tabname1
+		// $this->tabs[] = array('data'=>'objecttype:+tabname2:SUBSTITUTION_Title2:mylangfile@dolisimpledoc:$user->rights->othermodule->read:/dolisimpledoc/mynewtab2.php?id=__ID__',  	// To add another new tab identified by code tabname2. Label will be result of calling all substitution functions on 'Title2' key.
 		// $this->tabs[] = array('data'=>'objecttype:-tabname:NU:conditiontoremove');                                                     										// To remove an existing tab identified by code tabname
 		//
 		// Where objecttype can be
@@ -203,7 +203,7 @@ class modSimpleDocModule extends DolibarrModules
 		$this->dictionaries = array();
 		/* Example:
 		$this->dictionaries=array(
-			'langs'=>'simpledocmodule@simpledocmodule',
+			'langs'=>'dolisimpledoc@dolisimpledoc',
 			// List of tables we want to see into dictonnary editor
 			'tabname'=>array(MAIN_DB_PREFIX."table1", MAIN_DB_PREFIX."table2", MAIN_DB_PREFIX."table3"),
 			// Label of tables
@@ -221,16 +221,16 @@ class modSimpleDocModule extends DolibarrModules
 			// Name of columns with primary key (try to always name it 'rowid')
 			'tabrowid'=>array("rowid", "rowid", "rowid"),
 			// Condition to show each dictionary
-			'tabcond'=>array($conf->simpledocmodule->enabled, $conf->simpledocmodule->enabled, $conf->simpledocmodule->enabled)
+			'tabcond'=>array($conf->dolisimpledoc->enabled, $conf->dolisimpledoc->enabled, $conf->dolisimpledoc->enabled)
 		);
 		*/
 
 		// Boxes/Widgets
-		// Add here list of php file(s) stored in simpledocmodule/core/boxes that contains a class to show a widget.
+		// Add here list of php file(s) stored in dolisimpledoc/core/boxes that contains a class to show a widget.
 		$this->boxes = array(
 			//  0 => array(
-			//      'file' => 'simpledocmodulewidget1.php@simpledocmodule',
-			//      'note' => 'Widget provided by SimpleDocModule',
+			//      'file' => 'dolisimpledocwidget1.php@dolisimpledoc',
+			//      'note' => 'Widget provided by DoliSimpleDoc',
 			//      'enabledbydefaulton' => 'Home',
 			//  ),
 			//  ...
@@ -242,7 +242,7 @@ class modSimpleDocModule extends DolibarrModules
 			//  0 => array(
 			//      'label' => 'MyJob label',
 			//      'jobtype' => 'method',
-			//      'class' => '/simpledocmodule/class/simpledoc.class.php',
+			//      'class' => '/dolisimpledoc/class/simpledoc.class.php',
 			//      'objectname' => 'SimpleDoc',
 			//      'method' => 'doScheduledJob',
 			//      'parameters' => '',
@@ -250,13 +250,13 @@ class modSimpleDocModule extends DolibarrModules
 			//      'frequency' => 2,
 			//      'unitfrequency' => 3600,
 			//      'status' => 0,
-			//      'test' => '$conf->simpledocmodule->enabled',
+			//      'test' => '$conf->dolisimpledoc->enabled',
 			//      'priority' => 50,
 			//  ),
 		);
 		// Example: $this->cronjobs=array(
-		//    0=>array('label'=>'My label', 'jobtype'=>'method', 'class'=>'/dir/class/file.class.php', 'objectname'=>'MyClass', 'method'=>'myMethod', 'parameters'=>'param1, param2', 'comment'=>'Comment', 'frequency'=>2, 'unitfrequency'=>3600, 'status'=>0, 'test'=>'$conf->simpledocmodule->enabled', 'priority'=>50),
-		//    1=>array('label'=>'My label', 'jobtype'=>'command', 'command'=>'', 'parameters'=>'param1, param2', 'comment'=>'Comment', 'frequency'=>1, 'unitfrequency'=>3600*24, 'status'=>0, 'test'=>'$conf->simpledocmodule->enabled', 'priority'=>50)
+		//    0=>array('label'=>'My label', 'jobtype'=>'method', 'class'=>'/dir/class/file.class.php', 'objectname'=>'MyClass', 'method'=>'myMethod', 'parameters'=>'param1, param2', 'comment'=>'Comment', 'frequency'=>2, 'unitfrequency'=>3600, 'status'=>0, 'test'=>'$conf->dolisimpledoc->enabled', 'priority'=>50),
+		//    1=>array('label'=>'My label', 'jobtype'=>'command', 'command'=>'', 'parameters'=>'param1, param2', 'comment'=>'Comment', 'frequency'=>1, 'unitfrequency'=>3600*24, 'status'=>0, 'test'=>'$conf->dolisimpledoc->enabled', 'priority'=>50)
 		// );
 
 		// Permissions provided by this module
@@ -265,19 +265,19 @@ class modSimpleDocModule extends DolibarrModules
 		// Add here entries to declare new permissions
 		/* BEGIN MODULEBUILDER PERMISSIONS */
 		$this->rights[$r][0] = $this->numero . sprintf("%02d", $r + 1); // Permission id (must not be already used)
-		$this->rights[$r][1] = 'Read objects of SimpleDocModule'; // Permission label
+		$this->rights[$r][1] = 'Read objects of DoliSimpleDoc'; // Permission label
 		$this->rights[$r][4] = 'simpledoc';
-		$this->rights[$r][5] = 'read'; // In php code, permission will be checked by test if ($user->rights->simpledocmodule->simpledoc->read)
+		$this->rights[$r][5] = 'read'; // In php code, permission will be checked by test if ($user->rights->dolisimpledoc->simpledoc->read)
 		$r++;
 		$this->rights[$r][0] = $this->numero . sprintf("%02d", $r + 1); // Permission id (must not be already used)
-		$this->rights[$r][1] = 'Create/Update objects of SimpleDocModule'; // Permission label
+		$this->rights[$r][1] = 'Create/Update objects of DoliSimpleDoc'; // Permission label
 		$this->rights[$r][4] = 'simpledoc';
-		$this->rights[$r][5] = 'write'; // In php code, permission will be checked by test if ($user->rights->simpledocmodule->simpledoc->write)
+		$this->rights[$r][5] = 'write'; // In php code, permission will be checked by test if ($user->rights->dolisimpledoc->simpledoc->write)
 		$r++;
 		$this->rights[$r][0] = $this->numero . sprintf("%02d", $r + 1); // Permission id (must not be already used)
-		$this->rights[$r][1] = 'Delete objects of SimpleDocModule'; // Permission label
+		$this->rights[$r][1] = 'Delete objects of DoliSimpleDoc'; // Permission label
 		$this->rights[$r][4] = 'simpledoc';
-		$this->rights[$r][5] = 'delete'; // In php code, permission will be checked by test if ($user->rights->simpledocmodule->simpledoc->delete)
+		$this->rights[$r][5] = 'delete'; // In php code, permission will be checked by test if ($user->rights->dolisimpledoc->simpledoc->delete)
 		$r++;
 		/* END MODULEBUILDER PERMISSIONS */
 
@@ -289,62 +289,62 @@ class modSimpleDocModule extends DolibarrModules
 		$this->menu[$r++] = array(
 			'fk_menu'=>'', // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type'=>'top', // This is a Top menu entry
-			'titre'=>'ModuleSimpleDocModuleName',
+			'titre'=>'ModuleDoliSimpleDocName',
 			'prefix' => img_picto('', $this->picto, 'class="paddingright pictofixedwidth valignmiddle"'),
-			'mainmenu'=>'simpledocmodule',
+			'mainmenu'=>'dolisimpledoc',
 			'leftmenu'=>'',
-			'url'=>'/simpledocmodule/simpledocmoduleindex.php',
-			'langs'=>'simpledocmodule@simpledocmodule', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'url'=>'/dolisimpledoc/dolisimpledocindex.php',
+			'langs'=>'dolisimpledoc@dolisimpledoc', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1000 + $r,
-			'enabled'=>'$conf->simpledocmodule->enabled', // Define condition to show or hide menu entry. Use '$conf->simpledocmodule->enabled' if entry must be visible if module is enabled.
-			'perms'=>'1', // Use 'perms'=>'$user->rights->simpledocmodule->simpledoc->read' if you want your menu with a permission rules
+			'enabled'=>'$conf->dolisimpledoc->enabled', // Define condition to show or hide menu entry. Use '$conf->dolisimpledoc->enabled' if entry must be visible if module is enabled.
+			'perms'=>'1', // Use 'perms'=>'$user->rights->dolisimpledoc->simpledoc->read' if you want your menu with a permission rules
 			'target'=>'',
 			'user'=>2, // 0=Menu for internal users, 1=external users, 2=both
 		);
 		/* END MODULEBUILDER TOPMENU */
 		/* BEGIN MODULEBUILDER LEFTMENU SIMPLEDOC
 		$this->menu[$r++]=array(
-			'fk_menu'=>'fk_mainmenu=simpledocmodule',      // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu'=>'fk_mainmenu=dolisimpledoc',      // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type'=>'left',                          // This is a Top menu entry
 			'titre'=>'SimpleDoc',
 			'prefix' => img_picto('', $this->picto, 'class="paddingright pictofixedwidth valignmiddle"'),
-			'mainmenu'=>'simpledocmodule',
+			'mainmenu'=>'dolisimpledoc',
 			'leftmenu'=>'simpledoc',
-			'url'=>'/simpledocmodule/simpledocmoduleindex.php',
-			'langs'=>'simpledocmodule@simpledocmodule',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'url'=>'/dolisimpledoc/dolisimpledocindex.php',
+			'langs'=>'dolisimpledoc@dolisimpledoc',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1000+$r,
-			'enabled'=>'$conf->simpledocmodule->enabled',  // Define condition to show or hide menu entry. Use '$conf->simpledocmodule->enabled' if entry must be visible if module is enabled.
-			'perms'=>'1',			                // Use 'perms'=>'$user->rights->simpledocmodule->level1->level2' if you want your menu with a permission rules
+			'enabled'=>'$conf->dolisimpledoc->enabled',  // Define condition to show or hide menu entry. Use '$conf->dolisimpledoc->enabled' if entry must be visible if module is enabled.
+			'perms'=>'1',			                // Use 'perms'=>'$user->rights->dolisimpledoc->level1->level2' if you want your menu with a permission rules
 			'target'=>'',
 			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
 		);
 		/**/
 		/*
 		$this->menu[$r++]=array(
-			'fk_menu'=>'fk_mainmenu=simpledocmodule,fk_leftmenu=simpledoc',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu'=>'fk_mainmenu=dolisimpledoc,fk_leftmenu=simpledoc',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type'=>'left',			                // This is a Left menu entry
 			'titre'=>'List_SimpleDoc',
-			'mainmenu'=>'simpledocmodule',
-			'leftmenu'=>'simpledocmodule_simpledoc_list',
-			'url'=>'/simpledocmodule/simpledoc_list.php',
-			'langs'=>'simpledocmodule@simpledocmodule',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'mainmenu'=>'dolisimpledoc',
+			'leftmenu'=>'dolisimpledoc_simpledoc_list',
+			'url'=>'/dolisimpledoc/simpledoc_list.php',
+			'langs'=>'dolisimpledoc@dolisimpledoc',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1000+$r,
-			'enabled'=>'$conf->simpledocmodule->enabled',  // Define condition to show or hide menu entry. Use '$conf->simpledocmodule->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-			'perms'=>'$user->rights->simpledocmodule->simpledoc->read',			                // Use 'perms'=>'$user->rights->simpledocmodule->level1->level2' if you want your menu with a permission rules
+			'enabled'=>'$conf->dolisimpledoc->enabled',  // Define condition to show or hide menu entry. Use '$conf->dolisimpledoc->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'perms'=>'$user->rights->dolisimpledoc->simpledoc->read',			                // Use 'perms'=>'$user->rights->dolisimpledoc->level1->level2' if you want your menu with a permission rules
 			'target'=>'',
 			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
 		);
 		$this->menu[$r++]=array(
-			'fk_menu'=>'fk_mainmenu=simpledocmodule,fk_leftmenu=simpledoc',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu'=>'fk_mainmenu=dolisimpledoc,fk_leftmenu=simpledoc',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type'=>'left',			                // This is a Left menu entry
 			'titre'=>'New_SimpleDoc',
-			'mainmenu'=>'simpledocmodule',
-			'leftmenu'=>'simpledocmodule_simpledoc_new',
-			'url'=>'/simpledocmodule/simpledoc_card.php?action=create',
-			'langs'=>'simpledocmodule@simpledocmodule',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'mainmenu'=>'dolisimpledoc',
+			'leftmenu'=>'dolisimpledoc_simpledoc_new',
+			'url'=>'/dolisimpledoc/simpledoc_card.php?action=create',
+			'langs'=>'dolisimpledoc@dolisimpledoc',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1000+$r,
-			'enabled'=>'$conf->simpledocmodule->enabled',  // Define condition to show or hide menu entry. Use '$conf->simpledocmodule->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-			'perms'=>'$user->rights->simpledocmodule->simpledoc->write',			                // Use 'perms'=>'$user->rights->simpledocmodule->level1->level2' if you want your menu with a permission rules
+			'enabled'=>'$conf->dolisimpledoc->enabled',  // Define condition to show or hide menu entry. Use '$conf->dolisimpledoc->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'perms'=>'$user->rights->dolisimpledoc->simpledoc->write',			                // Use 'perms'=>'$user->rights->dolisimpledoc->level1->level2' if you want your menu with a permission rules
 			'target'=>'',
 			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
 		);
@@ -352,19 +352,19 @@ class modSimpleDocModule extends DolibarrModules
 
         $this->menu[$r++]=array(
             // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-            'fk_menu'=>'fk_mainmenu=simpledocmodule',
+            'fk_menu'=>'fk_mainmenu=dolisimpledoc',
             // This is a Left menu entry
             'type'=>'left',
             'titre'=>'List Documents',
-            'mainmenu'=>'simpledocmodule',
-            'leftmenu'=>'simpledocmodule_simpledoc',
-            'url'=>'/simpledocmodule/simpledoc_list.php',
+            'mainmenu'=>'dolisimpledoc',
+            'leftmenu'=>'dolisimpledoc_simpledoc',
+            'url'=>'/dolisimpledoc/simpledoc_list.php',
             // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-            'langs'=>'simpledocmodule@simpledocmodule',
+            'langs'=>'dolisimpledoc@dolisimpledoc',
             'position'=>1100+$r,
-            // Define condition to show or hide menu entry. Use '$conf->simpledocmodule->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-            'enabled'=>'$conf->simpledocmodule->enabled',
-            // Use 'perms'=>'$user->rights->simpledocmodule->level1->level2' if you want your menu with a permission rules
+            // Define condition to show or hide menu entry. Use '$conf->dolisimpledoc->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+            'enabled'=>'$conf->dolisimpledoc->enabled',
+            // Use 'perms'=>'$user->rights->dolisimpledoc->level1->level2' if you want your menu with a permission rules
             'perms'=>'1',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
@@ -372,19 +372,19 @@ class modSimpleDocModule extends DolibarrModules
         );
         $this->menu[$r++]=array(
             // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-            'fk_menu'=>'fk_mainmenu=simpledocmodule,fk_leftmenu=simpledocmodule_simpledoc',
+            'fk_menu'=>'fk_mainmenu=dolisimpledoc,fk_leftmenu=dolisimpledoc_simpledoc',
             // This is a Left menu entry
             'type'=>'left',
             'titre'=>'New Document',
-            'mainmenu'=>'simpledocmodule',
-            'leftmenu'=>'simpledocmodule_simpledoc',
-            'url'=>'/simpledocmodule/simpledoc_card.php?action=create',
+            'mainmenu'=>'dolisimpledoc',
+            'leftmenu'=>'dolisimpledoc_simpledoc',
+            'url'=>'/dolisimpledoc/simpledoc_card.php?action=create',
             // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-            'langs'=>'simpledocmodule@simpledocmodule',
+            'langs'=>'dolisimpledoc@dolisimpledoc',
             'position'=>1100+$r,
-            // Define condition to show or hide menu entry. Use '$conf->simpledocmodule->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-            'enabled'=>'$conf->simpledocmodule->enabled',
-            // Use 'perms'=>'$user->rights->simpledocmodule->level1->level2' if you want your menu with a permission rules
+            // Define condition to show or hide menu entry. Use '$conf->dolisimpledoc->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+            'enabled'=>'$conf->dolisimpledoc->enabled',
+            // Use 'perms'=>'$user->rights->dolisimpledoc->level1->level2' if you want your menu with a permission rules
             'perms'=>'1',
             'target'=>'',
             // 0=Menu for internal users, 1=external users, 2=both
@@ -392,19 +392,19 @@ class modSimpleDocModule extends DolibarrModules
         );
 		$this->menu[$r++]=array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=simpledocmodule',
+			'fk_menu'=>'fk_mainmenu=dolisimpledoc',
 			// This is a Left menu entry
 			'type'=>'left',
 			'titre'=>$langs->trans('about'),
-			'mainmenu'=>'simpledocmodule',
-			'leftmenu'=>'simpledocmodule_simpledoc',
-			'url'=>'/simpledocmodule/simpledocmoduleindex.php',
+			'mainmenu'=>'dolisimpledoc',
+			'leftmenu'=>'dolisimpledoc_simpledoc',
+			'url'=>'/dolisimpledoc/dolisimpledocindex.php',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'langs'=>'simpledocmodule@simpledocmodule',
+			'langs'=>'dolisimpledoc@dolisimpledoc',
 			'position'=>1100+$r,
-			// Define condition to show or hide menu entry. Use '$conf->simpledocmodule->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-			'enabled'=>'$conf->simpledocmodule->enabled',
-			// Use 'perms'=>'$user->rights->simpledocmodule->level1->level2' if you want your menu with a permission rules
+			// Define condition to show or hide menu entry. Use '$conf->dolisimpledoc->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'enabled'=>'$conf->dolisimpledoc->enabled',
+			// Use 'perms'=>'$user->rights->dolisimpledoc->level1->level2' if you want your menu with a permission rules
 			'perms'=>'1',
 			'target'=>'',
 			// 0=Menu for internal users, 1=external users, 2=both
@@ -416,20 +416,20 @@ class modSimpleDocModule extends DolibarrModules
 		$r = 1;
 		/* BEGIN MODULEBUILDER EXPORT SIMPLEDOC */
 		/*
-		$langs->load("simpledocmodule@simpledocmodule");
+		$langs->load("dolisimpledoc@dolisimpledoc");
 		$this->export_code[$r]=$this->rights_class.'_'.$r;
 		$this->export_label[$r]='SimpleDocLines';	// Translation key (used only if key ExportDataset_xxx_z not found)
-		$this->export_icon[$r]='simpledoc@simpledocmodule';
+		$this->export_icon[$r]='simpledoc@dolisimpledoc';
 		// Define $this->export_fields_array, $this->export_TypeFields_array and $this->export_entities_array
-		$keyforclass = 'SimpleDoc'; $keyforclassfile='/simpledocmodule/class/simpledoc.class.php'; $keyforelement='simpledoc@simpledocmodule';
+		$keyforclass = 'SimpleDoc'; $keyforclassfile='/dolisimpledoc/class/simpledoc.class.php'; $keyforelement='simpledoc@dolisimpledoc';
 		include DOL_DOCUMENT_ROOT.'/core/commonfieldsinexport.inc.php';
 		//$this->export_fields_array[$r]['t.fieldtoadd']='FieldToAdd'; $this->export_TypeFields_array[$r]['t.fieldtoadd']='Text';
 		//unset($this->export_fields_array[$r]['t.fieldtoremove']);
-		//$keyforclass = 'SimpleDocLine'; $keyforclassfile='/simpledocmodule/class/simpledoc.class.php'; $keyforelement='simpledocline@simpledocmodule'; $keyforalias='tl';
+		//$keyforclass = 'SimpleDocLine'; $keyforclassfile='/dolisimpledoc/class/simpledoc.class.php'; $keyforelement='simpledocline@dolisimpledoc'; $keyforalias='tl';
 		//include DOL_DOCUMENT_ROOT.'/core/commonfieldsinexport.inc.php';
-		$keyforselect='simpledoc'; $keyforaliasextra='extra'; $keyforelement='simpledoc@simpledocmodule';
+		$keyforselect='simpledoc'; $keyforaliasextra='extra'; $keyforelement='simpledoc@dolisimpledoc';
 		include DOL_DOCUMENT_ROOT.'/core/extrafieldsinexport.inc.php';
-		//$keyforselect='simpledocline'; $keyforaliasextra='extraline'; $keyforelement='simpledocline@simpledocmodule';
+		//$keyforselect='simpledocline'; $keyforaliasextra='extraline'; $keyforelement='simpledocline@dolisimpledoc';
 		//include DOL_DOCUMENT_ROOT.'/core/extrafieldsinexport.inc.php';
 		//$this->export_dependencies_array[$r] = array('simpledocline'=>array('tl.rowid','tl.ref')); // To force to activate one or several fields if we select some fields that need same (like to select a unique key if we ask a field of a child to avoid the DISTINCT to discard them, or for computed field than need several other fields)
 		//$this->export_special_array[$r] = array('t.field'=>'...');
@@ -447,13 +447,13 @@ class modSimpleDocModule extends DolibarrModules
 		$r = 1;
 		/* BEGIN MODULEBUILDER IMPORT SIMPLEDOC */
 		/*
-		 $langs->load("simpledocmodule@simpledocmodule");
+		 $langs->load("dolisimpledoc@dolisimpledoc");
 		 $this->export_code[$r]=$this->rights_class.'_'.$r;
 		 $this->export_label[$r]='SimpleDocLines';	// Translation key (used only if key ExportDataset_xxx_z not found)
-		 $this->export_icon[$r]='simpledoc@simpledocmodule';
-		 $keyforclass = 'SimpleDoc'; $keyforclassfile='/simpledocmodule/class/simpledoc.class.php'; $keyforelement='simpledoc@simpledocmodule';
+		 $this->export_icon[$r]='simpledoc@dolisimpledoc';
+		 $keyforclass = 'SimpleDoc'; $keyforclassfile='/dolisimpledoc/class/simpledoc.class.php'; $keyforelement='simpledoc@dolisimpledoc';
 		 include DOL_DOCUMENT_ROOT.'/core/commonfieldsinexport.inc.php';
-		 $keyforselect='simpledoc'; $keyforaliasextra='extra'; $keyforelement='simpledoc@simpledocmodule';
+		 $keyforselect='simpledoc'; $keyforaliasextra='extra'; $keyforelement='simpledoc@dolisimpledoc';
 		 include DOL_DOCUMENT_ROOT.'/core/extrafieldsinexport.inc.php';
 		 //$this->export_dependencies_array[$r]=array('mysubobject'=>'ts.rowid', 't.myfield'=>array('t.myfield2','t.myfield3')); // To force to activate one or several fields if we select some fields that need same (like to select a unique key if we ask a field of a child to avoid the DISTINCT to discard them, or for computed field than need several other fields)
 		 $this->export_sql_start[$r]='SELECT DISTINCT ';
@@ -476,19 +476,19 @@ class modSimpleDocModule extends DolibarrModules
 	{
 		global $conf, $langs;
 
-		$result = $this->_load_tables('/simpledocmodule/sql/');
+		$result = $this->_load_tables('/dolisimpledoc/sql/');
 		if ($result < 0) {
 			return -1; // Do not activate module if error 'not allowed' returned when loading module SQL queries (the _load_table run sql with run_sql with the error allowed parameter set to 'default')
 		}
-		addDocumentModel('legaldisplay_odt','legaldisplay','ODT templates','DIGIRISKDOLIBARR_LEGALDISPLAY_ADDON_ODT_PATH');
+		//addDocumentModel('legaldisplay_odt','legaldisplay','ODT templates','DIGIRISKDOLIBARR_LEGALDISPLAY_ADDON_ODT_PATH');
 		// Create extrafields during init
 		//include_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
 		//$extrafields = new ExtraFields($this->db);
-		//$result1=$extrafields->addExtraField('simpledocmodule_myattr1', "New Attr 1 label", 'boolean', 1,  3, 'thirdparty',   0, 0, '', '', 1, '', 0, 0, '', '', 'simpledocmodule@simpledocmodule', '$conf->simpledocmodule->enabled');
-		//$result2=$extrafields->addExtraField('simpledocmodule_myattr2', "New Attr 2 label", 'varchar', 1, 10, 'project',      0, 0, '', '', 1, '', 0, 0, '', '', 'simpledocmodule@simpledocmodule', '$conf->simpledocmodule->enabled');
-		//$result3=$extrafields->addExtraField('simpledocmodule_myattr3', "New Attr 3 label", 'varchar', 1, 10, 'bank_account', 0, 0, '', '', 1, '', 0, 0, '', '', 'simpledocmodule@simpledocmodule', '$conf->simpledocmodule->enabled');
-		//$result4=$extrafields->addExtraField('simpledocmodule_myattr4', "New Attr 4 label", 'select',  1,  3, 'thirdparty',   0, 1, '', array('options'=>array('code1'=>'Val1','code2'=>'Val2','code3'=>'Val3')), 1,'', 0, 0, '', '', 'simpledocmodule@simpledocmodule', '$conf->simpledocmodule->enabled');
-		//$result5=$extrafields->addExtraField('simpledocmodule_myattr5', "New Attr 5 label", 'text',    1, 10, 'user',         0, 0, '', '', 1, '', 0, 0, '', '', 'simpledocmodule@simpledocmodule', '$conf->simpledocmodule->enabled');
+		//$result1=$extrafields->addExtraField('dolisimpledoc_myattr1', "New Attr 1 label", 'boolean', 1,  3, 'thirdparty',   0, 0, '', '', 1, '', 0, 0, '', '', 'dolisimpledoc@dolisimpledoc', '$conf->dolisimpledoc->enabled');
+		//$result2=$extrafields->addExtraField('dolisimpledoc_myattr2', "New Attr 2 label", 'varchar', 1, 10, 'project',      0, 0, '', '', 1, '', 0, 0, '', '', 'dolisimpledoc@dolisimpledoc', '$conf->dolisimpledoc->enabled');
+		//$result3=$extrafields->addExtraField('dolisimpledoc_myattr3', "New Attr 3 label", 'varchar', 1, 10, 'bank_account', 0, 0, '', '', 1, '', 0, 0, '', '', 'dolisimpledoc@dolisimpledoc', '$conf->dolisimpledoc->enabled');
+		//$result4=$extrafields->addExtraField('dolisimpledoc_myattr4', "New Attr 4 label", 'select',  1,  3, 'thirdparty',   0, 1, '', array('options'=>array('code1'=>'Val1','code2'=>'Val2','code3'=>'Val3')), 1,'', 0, 0, '', '', 'dolisimpledoc@dolisimpledoc', '$conf->dolisimpledoc->enabled');
+		//$result5=$extrafields->addExtraField('dolisimpledoc_myattr5', "New Attr 5 label", 'text',    1, 10, 'user',         0, 0, '', '', 1, '', 0, 0, '', '', 'dolisimpledoc@dolisimpledoc', '$conf->dolisimpledoc->enabled');
 
 		// Permissions
 		$this->remove($options);
@@ -496,7 +496,7 @@ class modSimpleDocModule extends DolibarrModules
 		$sql = array();
 
 		// Document templates
-		$moduledir = 'simpledocmodule';
+		$moduledir = 'dolisimpledoc';
 		$myTmpObjects = array();
 		$myTmpObjects['SimpleDoc'] = array('includerefgeneration'=>0, 'includedocgeneration'=>0);
 
@@ -505,8 +505,8 @@ class modSimpleDocModule extends DolibarrModules
 				continue;
 			}
 			if ($myTmpObjectArray['includerefgeneration']) {
-				$src = DOL_DOCUMENT_ROOT.'/install/doctemplates/simpledocmodule/template_simpledocs.odt';
-				$dirodt = DOL_DATA_ROOT.'/doctemplates/simpledocmodule';
+				$src = DOL_DOCUMENT_ROOT.'/install/doctemplates/dolisimpledoc/template_simpledocs.odt';
+				$dirodt = DOL_DATA_ROOT.'/doctemplates/dolisimpledoc';
 				$dest = $dirodt.'/template_simpledocs.odt';
 
 				if (file_exists($src) && !file_exists($dest)) {

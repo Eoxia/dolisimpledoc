@@ -21,12 +21,12 @@
  */
 
 /**
- * \file       htdocs/core/modules/simpledocmodule/mod_simpledoc_advanced.php
- * \ingroup    simpledocmodule
+ * \file       htdocs/core/modules/dolisimpledoc/mod_simpledoc_advanced.php
+ * \ingroup    dolisimpledoc
  * \brief      File containing class for advanced numbering model of SimpleDoc
  */
 
-dol_include_once('/simpledocmodule/core/modules/simpledocmodule/modules_simpledoc.php');
+dol_include_once('/dolisimpledoc/core/modules/dolisimpledoc/modules_simpledoc.php');
 
 
 /**
@@ -68,7 +68,7 @@ class mod_simpledoc_advanced extends ModeleNumRefSimpleDoc
 		$texte .= '<form action="'.$_SERVER["PHP_SELF"].'" method="POST">';
 		$texte .= '<input type="hidden" name="token" value="'.newToken().'">';
 		$texte .= '<input type="hidden" name="action" value="updateMask">';
-		$texte .= '<input type="hidden" name="maskconstBom" value="SIMPLEDOCMODULE_SIMPLEDOC_ADVANCED_MASK">';
+		$texte .= '<input type="hidden" name="maskconstBom" value="DOLISIMPLEDOC_SIMPLEDOC_ADVANCED_MASK">';
 		$texte .= '<table class="nobordernopadding" width="100%">';
 
 		$tooltip = $langs->trans("GenericMaskCodes", $langs->transnoentities("SimpleDoc"), $langs->transnoentities("SimpleDoc"));
@@ -79,7 +79,7 @@ class mod_simpledoc_advanced extends ModeleNumRefSimpleDoc
 
 		// Parametrage du prefix
 		$texte .= '<tr><td>'.$langs->trans("Mask").':</td>';
-		$texte .= '<td class="right">'.$form->textwithpicto('<input type="text" class="flat minwidth175" name="maskSimpleDoc" value="'.$conf->global->SIMPLEDOCMODULE_SIMPLEDOC_ADVANCED_MASK.'">', $tooltip, 1, 1).'</td>';
+		$texte .= '<td class="right">'.$form->textwithpicto('<input type="text" class="flat minwidth175" name="maskSimpleDoc" value="'.$conf->global->DOLISIMPLEDOC_SIMPLEDOC_ADVANCED_MASK.'">', $tooltip, 1, 1).'</td>';
 
 		$texte .= '<td class="left" rowspan="2">&nbsp; <input type="submit" class="button" value="'.$langs->trans("Modify").'" name="Button"></td>';
 
@@ -132,7 +132,7 @@ class mod_simpledoc_advanced extends ModeleNumRefSimpleDoc
 		require_once DOL_DOCUMENT_ROOT.'/core/lib/functions2.lib.php';
 
 		// We get cursor rule
-		$mask = $conf->global->SIMPLEDOCMODULE_SIMPLEDOC_ADVANCED_MASK;
+		$mask = $conf->global->DOLISIMPLEDOC_SIMPLEDOC_ADVANCED_MASK;
 
 		if (!$mask) {
 			$this->error = 'NotConfigured';
@@ -141,7 +141,7 @@ class mod_simpledoc_advanced extends ModeleNumRefSimpleDoc
 
 		$date = $object->date;
 
-		$numFinal = get_next_value($db, $mask, 'simpledocmodule_simpledoc', 'ref', '', null, $date);
+		$numFinal = get_next_value($db, $mask, 'dolisimpledoc_simpledoc', 'ref', '', null, $date);
 
 		return  $numFinal;
 	}

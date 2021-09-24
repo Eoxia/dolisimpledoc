@@ -22,7 +22,7 @@
 
 /**
  *      \file       admin/simpledoc_extrafields.php
- *		\ingroup    simpledocmodule
+ *		\ingroup    dolisimpledoc
  *		\brief      Page to setup extra fields of simpledoc
  */
 
@@ -55,10 +55,10 @@ if (!$res) {
 }
 
 require_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
-require_once '../lib/simpledocmodule.lib.php';
+require_once '../lib/dolisimpledoc.lib.php';
 
 // Load translation files required by the page
-$langs->loadLangs(array('simpledocmodule@simpledocmodule', 'admin'));
+$langs->loadLangs(array('dolisimpledoc@dolisimpledoc', 'admin'));
 
 $extrafields = new ExtraFields($db);
 $form = new Form($db);
@@ -72,7 +72,7 @@ foreach ($tmptype2label as $key => $val) {
 
 $action = GETPOST('action', 'aZ09');
 $attrname = GETPOST('attrname', 'alpha');
-$elementtype = 'simpledocmodule_simpledoc'; //Must be the $table_element of the class that manage extrafield
+$elementtype = 'dolisimpledoc_simpledoc'; //Must be the $table_element of the class that manage extrafield
 
 if (!$user->admin) {
 	accessforbidden();
@@ -101,9 +101,9 @@ $linkback = '<a href="'.DOL_URL_ROOT.'/admin/modules.php?restore_lastsearch_valu
 print load_fiche_titre($langs->trans($page_name), $linkback, 'title_setup');
 
 
-$head = simpledocmoduleAdminPrepareHead();
+$head = dolisimpledocAdminPrepareHead();
 
-print dol_get_fiche_head($head, 'simpledoc_extrafields', $langs->trans($page_name), -1, 'simpledocmodule@simpledocmodule');
+print dol_get_fiche_head($head, 'simpledoc_extrafields', $langs->trans($page_name), -1, 'dolisimpledoc@dolisimpledoc');
 
 require DOL_DOCUMENT_ROOT.'/core/tpl/admin_extrafields_view.tpl.php';
 

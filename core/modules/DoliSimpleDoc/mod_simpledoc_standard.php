@@ -18,11 +18,11 @@
  */
 
 /**
- *  \file       htdocs/core/modules/simpledocmodule/mod_simpledoc_standard.php
- *  \ingroup    simpledocmodule
+ *  \file       htdocs/core/modules/dolisimpledoc/mod_simpledoc_standard.php
+ *  \ingroup    dolisimpledoc
  *  \brief      File of class to manage SimpleDoc numbering rules standard
  */
-dol_include_once('/simpledocmodule/core/modules/simpledocmodule/modules_simpledoc.php');
+dol_include_once('/dolisimpledoc/core/modules/dolisimpledoc/modules_simpledoc.php');
 
 
 /**
@@ -87,7 +87,7 @@ class mod_simpledoc_standard extends ModeleNumRefSimpleDoc
 
 		$posindice = strlen($this->prefix) + 6;
 		$sql = "SELECT MAX(CAST(SUBSTRING(ref FROM ".$posindice.") AS SIGNED)) as max";
-		$sql .= " FROM ".MAIN_DB_PREFIX."simpledocmodule_simpledoc";
+		$sql .= " FROM ".MAIN_DB_PREFIX."dolisimpledoc_simpledoc";
 		$sql .= " WHERE ref LIKE '".$db->escape($this->prefix)."____-%'";
 		if ($object->ismultientitymanaged == 1) {
 			$sql .= " AND entity = ".$conf->entity;
@@ -124,7 +124,7 @@ class mod_simpledoc_standard extends ModeleNumRefSimpleDoc
 		// first we get the max value
 		$posindice = strlen($this->prefix) + 6;
 		$sql = "SELECT MAX(CAST(SUBSTRING(ref FROM ".$posindice.") AS SIGNED)) as max";
-		$sql .= " FROM ".MAIN_DB_PREFIX."simpledocmodule_simpledoc";
+		$sql .= " FROM ".MAIN_DB_PREFIX."dolisimpledoc_simpledoc";
 		$sql .= " WHERE ref LIKE '".$db->escape($this->prefix)."____-%'";
 		if ($object->ismultientitymanaged == 1) {
 			$sql .= " AND entity = ".$conf->entity;
@@ -146,7 +146,7 @@ class mod_simpledoc_standard extends ModeleNumRefSimpleDoc
 		}
 
 		$date = time();
-		
+
 		$yymm = strftime("%y%m%d", $date);
 
 		if ($max >= (pow(10, 4) - 1)) {
