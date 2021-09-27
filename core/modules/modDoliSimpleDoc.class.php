@@ -76,7 +76,7 @@ class modDoliSimpleDoc extends DolibarrModules
 		// Url to the file with your last numberversion of this module
 		//$this->url_last_version = 'http://www.example.com/versionmodule.txt';
 
-		// Key used in llx_const table to save module status enabled/disabled (where SIMPLEDOCMODULE is value of property name of module in uppercase)
+		// Key used in llx_const table to save module status enabled/disabled (where DOLISIMPLEDOC is value of property name of module in uppercase)
 		$this->const_name = 'MAIN_MODULE_'.strtoupper($this->name);
 
 		// Name of image file used for this module.
@@ -155,8 +155,8 @@ class modDoliSimpleDoc extends DolibarrModules
 
 		// Constants
 		// List of particular constants to add when module is enabled (key, 'chaine', value, desc, visible, 'current' or 'allentities', deleteonunactive)
-		// Example: $this->const=array(1 => array('SIMPLEDOCMODULE_MYNEWCONST1', 'chaine', 'myvalue', 'This is a constant to add', 1),
-		//                             2 => array('SIMPLEDOCMODULE_MYNEWCONST2', 'chaine', 'myvalue', 'This is another constant to add', 0, 'current', 1)
+		// Example: $this->const=array(1 => array('DOLISIMPLEDOC_MYNEWCONST1', 'chaine', 'myvalue', 'This is a constant to add', 1),
+		//                             2 => array('DOLISIMPLEDOC_MYNEWCONST2', 'chaine', 'myvalue', 'This is another constant to add', 0, 'current', 1)
 		// );
 		$this->const = array();
 
@@ -318,8 +318,6 @@ class modDoliSimpleDoc extends DolibarrModules
 			'target'=>'',
 			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
 		);
-		/**/
-		/*
 		$this->menu[$r++]=array(
 			'fk_menu'=>'fk_mainmenu=dolisimpledoc,fk_leftmenu=simpledoc',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type'=>'left',			                // This is a Left menu entry
@@ -355,7 +353,7 @@ class modDoliSimpleDoc extends DolibarrModules
             'fk_menu'=>'fk_mainmenu=dolisimpledoc',
             // This is a Left menu entry
             'type'=>'left',
-            'titre'=>'List Documents',
+            'titre'=>'List SimpleDoc',
             'mainmenu'=>'dolisimpledoc',
             'leftmenu'=>'dolisimpledoc_simpledoc',
             'url'=>'/dolisimpledoc/simpledoc_list.php',
@@ -375,7 +373,7 @@ class modDoliSimpleDoc extends DolibarrModules
             'fk_menu'=>'fk_mainmenu=dolisimpledoc,fk_leftmenu=dolisimpledoc_simpledoc',
             // This is a Left menu entry
             'type'=>'left',
-            'titre'=>'New Document',
+            'titre'=>'New SimpleDoc',
             'mainmenu'=>'dolisimpledoc',
             'leftmenu'=>'dolisimpledoc_simpledoc',
             'url'=>'/dolisimpledoc/simpledoc_card.php?action=create',

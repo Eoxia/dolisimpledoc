@@ -18,7 +18,7 @@
 /**
  * \file    dolisimpledoc/lib/dolisimpledoc.lib.php
  * \ingroup dolisimpledoc
- * \brief   Library files with common functions for SimpleDocModule
+ * \brief   Library files with common functions for DoliSimpleDoc
  */
 
 /**

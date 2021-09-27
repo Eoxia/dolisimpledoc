@@ -17,29 +17,29 @@
 # Generic
 #
 
-# Module label 'ModuleSimpleDocModuleName'
-ModuleSimpleDocModuleName = SimpleDocModule
-# Module description 'ModuleSimpleDocModuleDesc'
-ModuleSimpleDocModuleDesc = SimpleDocModule description
+# Module label 'ModuleDoliSimpleDocName'
+ModuleDoliSimpleDocName = DoliSimpleDoc
+# Module description 'ModuleDoliSimpleDocDesc'
+ModuleDoliSimpleDocDesc = DoliSimpleDoc description
 
 #
 # Admin page
 #
-SimpleDocModuleSetup = SimpleDocModule setup
+DoliSimpleDocSetup = DoliSimpleDoc setup
 Settings = Settings
-SimpleDocModuleSetupPage = SimpleDocModule setup page
-SIMPLEDOCMODULE_MYPARAM1 = My param 1
-SIMPLEDOCMODULE_MYPARAM1Tooltip = My param 1 tooltip
-SIMPLEDOCMODULE_MYPARAM2=My param 2
-SIMPLEDOCMODULE_MYPARAM2Tooltip=My param 2 tooltip
+DoliSimpleDocSetupPage = DoliSimpleDoc setup page
+DOLISIMPLEDOC_MYPARAM1 = My param 1
+DOLISIMPLEDOC_MYPARAM1Tooltip = My param 1 tooltip
+DOLISIMPLEDOC_MYPARAM2=My param 2
+DOLISIMPLEDOC_MYPARAM2Tooltip=My param 2 tooltip
 
 
 #
 # About page
 #
 About = About
-SimpleDocModuleAbout = About SimpleDocModule
-SimpleDocModuleAboutPage = SimpleDocModule about page
+DoliSimpleDocAbout = About DoliSimpleDoc
+DoliSimpleDocAboutPage = DoliSimpleDoc about page
 
 #
 # Sample page

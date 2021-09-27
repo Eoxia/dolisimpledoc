@@ -175,7 +175,7 @@ if (empty($reshook)) {
 		}
 	}
 
-	$triggermodname = 'SIMPLEDOCMODULE_SIMPLEDOC_MODIFY'; // Name of trigger action code to execute when we modify record
+	$triggermodname = 'DOLISIMPLEDOC_SIMPLEDOC_MODIFY'; // Name of trigger action code to execute when we modify record
 
 	// Actions cancel, add, update, update_extras, confirm_validate, confirm_delete, confirm_deleteline, confirm_clone, confirm_close, confirm_setdraft, confirm_reopen
 	include DOL_DOCUMENT_ROOT.'/core/actions_addupdatedelete.inc.php';
@@ -194,7 +194,7 @@ if (empty($reshook)) {
 
 
 	// Actions to send emails
-	$triggersendname = 'SIMPLEDOCMODULE_SIMPLEDOC_SENTBYMAIL';
+	$triggersendname = 'DOLISIMPLEDOC_SIMPLEDOC_SENTBYMAIL';
 	$autocopy = 'MAIN_MAIL_AUTOCOPY_SIMPLEDOC_TO';
 	$trackid = 'simpledoc'.$object->id;
 	include DOL_DOCUMENT_ROOT.'/core/actions_sendmails.inc.php';
@@ -235,6 +235,7 @@ llxHeader('', $title, $help_url);
 
 // Part to create
 if ($action == 'create') {
+	print load_fiche_titre($langs->trans("NewObject", $langs->transnoentitiesnoconv("SimpleDoc")), '', 'object_'.$object->picto);
 
 	$form = new Form($db);
 	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?action=add'.'" name="simpledocdata>';
@@ -250,7 +251,7 @@ if ($action == 'create') {
 
 //message name
 	print 'document name:';
-	print '<input type="text" name="name" value="">';
+	print '<input type="text" name="label" value="">';
 
 //ref
 	print '<tr><td class="fieldrequired">'.$langs->trans("Ref").'</td><td>';
@@ -262,8 +263,8 @@ if ($action == 'create') {
 	//content
 	print '<table class="noborder centpercent editmode">';
 	print '<tr class="liste_titre"><th class="titlefield wordbreak">'.$langs->trans("content").'</th><th>'.$langs->trans("").'</th></tr>'."\n";
-	print '<tr class="oddeven"><td><label for="content">'.$langs->trans(" ").'</label></td><td>';
-	$doleditor = new DolEditor('content', $conf->global->DIGIRISK_PARTICIPATION_AGREEMENT_INFORMATION_PROCEDURE ? $conf->global->DIGIRISK_PARTICIPATION_AGREEMENT_INFORMATION_PROCEDURE : '', '', 90, 'dolibarr_notes', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
+	print '<tr class="oddeven"><td><label for="contents">'.$langs->trans(" ").'</label></td><td>';
+	$doleditor = new DolEditor('contents', $conf->global->DIGIRISK_PARTICIPATION_AGREEMENT_INFORMATION_PROCEDURE ? $conf->global->DIGIRISK_PARTICIPATION_AGREEMENT_INFORMATION_PROCEDURE : '', '', 90, 'dolibarr_notes', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
 	$doleditor->Create();
 	print '</td></tr>';
 	print '</table>';
@@ -443,7 +444,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 	print '<div class="clearboth"></div>';
 
-	print '<div>Contenu du document :<br>'. $object->content.'</br></div>';
+	print '<div>Contenu du document :<br>'. $object->contents.'</br></div>';
 	print dol_get_fiche_end();
 
 
@@ -516,6 +517,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			// Clone
 			print dolGetButtonAction($langs->trans('ToClone'), '', 'default', $_SERVER['PHP_SELF'].'?id='.$object->id.'&socid='.$object->socid.'&action=clone&token='.newToken(), '', $permissiontoadd);
 			// Delete
+			// Delete (need delete permission, or if draft, just need create/modify permission)
 			print dolGetButtonAction($langs->trans('Delete'), '', 'delete', $_SERVER['PHP_SELF'].'?id='.$object->id.'&action=delete&token='.newToken(), '', $permissiontodelete || ($object->status == $object::STATUS_DRAFT && $permissiontoadd));
 		}
 		print '</div>'."\n";

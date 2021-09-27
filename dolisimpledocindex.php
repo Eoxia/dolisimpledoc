@@ -92,10 +92,11 @@ $now = dol_now();
  */
 
 $form = new Form($db);
+//$formfile = new FormFile($db);
 
-llxHeader("", $langs->trans("SimpleDocModuleArea"));
+llxHeader("", $langs->trans("DoliSimpleDocArea"));
 
-print load_fiche_titre($langs->trans("SimpleDocModuleArea"), '', 'dolisimpledoc.png@dolisimpledoc');
+print load_fiche_titre($langs->trans("DoliSimpleDocArea"), '', 'dolisimpledoc.png@dolisimpledoc');
 
 
 print "

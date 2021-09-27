@@ -284,16 +284,16 @@ class pdf_standard_simpledoc extends ModelePDFSimpleDoc
 
 		//if (count($realpatharray) == 0) $this->posxpicture=$this->posxtva;
 
-		if ($conf->simpledocmodule->dir_output.'/simpledoc') {
+		if ($conf->dolisimpledoc->dir_output.'/simpledoc') {
 			$object->fetch_thirdparty();
 
 			// Definition of $dir and $file
 			if ($object->specimen) {
-				$dir = $conf->simpledocmodule->dir_output.'/simpledoc';
+				$dir = $conf->dolisimpledoc->dir_output.'/simpledoc';
 				$file = $dir."/SPECIMEN.pdf";
 			} else {
 				$objectref = dol_sanitizeFileName($object->ref);
-				$dir = $conf->simpledocmodule->dir_output.'/simpledoc/'.$objectref;
+				$dir = $conf->dolisimpledoc->dir_output.'/simpledoc/'.$objectref;
 				$file = $dir."/".$objectref.".pdf";
 			}
 			if (!file_exists($dir)) {

@@ -19,7 +19,7 @@
 /**
  * \file    dolisimpledoc/admin/about.php
  * \ingroup dolisimpledoc
- * \brief   About page of module SimpleDocModule.
+ * \brief   About page of module DoliSimpleDoc.
  */
 
 // Load Dolibarr environment
@@ -82,7 +82,7 @@ $backtopage = GETPOST('backtopage', 'alpha');
 $form = new Form($db);
 
 $help_url = '';
-$page_name = "SimpleDocModuleAbout";
+$page_name = "DoliSimpleDocAbout";
 
 llxHeader('', $langs->trans($page_name), $help_url);
 
@@ -95,8 +95,8 @@ print load_fiche_titre($langs->trans($page_name), $linkback, 'title_setup');
 $head = dolisimpledocAdminPrepareHead();
 print dol_get_fiche_head($head, 'about', $langs->trans($page_name), 0, 'dolisimpledoc@dolisimpledoc');
 
-dol_include_once('/dolisimpledoc/core/modules/modSimpleDocModule.class.php');
-$tmpmodule = new modSimpleDocModule($db);
+dol_include_once('/dolisimpledoc/core/modules/modDoliSimpleDoc.class.php');
+$tmpmodule = new modDoliSimpleDoc($db);
 print $tmpmodule->getDescLong();
 
 // Page end

@@ -1,4 +1,4 @@
-# CHANGELOG SIMPLEDOCMODULE FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
+# CHANGELOG DOLISIMPLEDOC FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
 
 ## 1.0
 

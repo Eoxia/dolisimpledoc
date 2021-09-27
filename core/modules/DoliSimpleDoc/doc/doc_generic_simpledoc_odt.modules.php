@@ -73,7 +73,7 @@ class doc_generic_simpledoc_odt extends ModelePDFSimpleDoc
 		$this->db = $db;
 		$this->name = "ODT templates";
 		$this->description = $langs->trans("DocumentModelOdt");
-		$this->scandir = 'SIMPLEDOCMODULE_SIMPLEDOC_ADDON_PDF_ODT_PATH'; // Name of constant that is used to save list of directories to scan
+		$this->scandir = 'DOLISIMPLEDOC_SIMPLEDOC_ADDON_PDF_ODT_PATH'; // Name of constant that is used to save list of directories to scan
 
 		// Page size for A4 format
 		$this->type = 'odt';
@@ -123,13 +123,13 @@ class doc_generic_simpledoc_odt extends ModelePDFSimpleDoc
 		$texte .= '<form action="'.$_SERVER["PHP_SELF"].'" method="POST">';
 		$texte .= '<input type="hidden" name="token" value="'.newToken().'">';
 		$texte .= '<input type="hidden" name="action" value="setModuleOptions">';
-		$texte .= '<input type="hidden" name="param1" value="SIMPLEDOCMODULE_SIMPLEDOC_ADDON_PDF_ODT_PATH">';
+		$texte .= '<input type="hidden" name="param1" value="DOLISIMPLEDOC_SIMPLEDOC_ADDON_PDF_ODT_PATH">';
 		$texte .= '<table class="nobordernopadding" width="100%">';
 
 		// List of directories area
 		$texte .= '<tr><td>';
 		$texttitle = $langs->trans("ListOfDirectories");
-		$listofdir = explode(',', preg_replace('/[\r\n]+/', ',', trim($conf->global->SIMPLEDOCMODULE_SIMPLEDOC_ADDON_PDF_ODT_PATH)));
+		$listofdir = explode(',', preg_replace('/[\r\n]+/', ',', trim($conf->global->DOLISIMPLEDOC_SIMPLEDOC_ADDON_PDF_ODT_PATH)));
 		$listoffiles = array();
 		foreach ($listofdir as $key => $tmpdir) {
 			$tmpdir = trim($tmpdir);
@@ -155,7 +155,7 @@ class doc_generic_simpledoc_odt extends ModelePDFSimpleDoc
 		$texte .= $form->textwithpicto($texttitle, $texthelp, 1, 'help', '', 1);
 		$texte .= '<div><div style="display: inline-block; min-width: 100px; vertical-align: middle;">';
 		$texte .= '<textarea class="flat" cols="60" name="value1">';
-		$texte .= $conf->global->SIMPLEDOCMODULE_SIMPLEDOC_ADDON_PDF_ODT_PATH;
+		$texte .= $conf->global->DOLISIMPLEDOC_SIMPLEDOC_ADDON_PDF_ODT_PATH;
 		$texte .= '</textarea>';
 		$texte .= '</div><div style="display: inline-block; vertical-align: middle;">';
 		$texte .= '<input type="submit" class="button small" value="'.$langs->trans("Modify").'" name="Button">';
@@ -163,7 +163,7 @@ class doc_generic_simpledoc_odt extends ModelePDFSimpleDoc
 
 		// Scan directories
 		$nbofiles = count($listoffiles);
-		if (!empty($conf->global->SIMPLEDOCMODULE_SIMPLEDOC_ADDON_PDF_ODT_PATH)) {
+		if (!empty($conf->global->DOLISIMPLEDOC_SIMPLEDOC_ADDON_PDF_ODT_PATH)) {
 			$texte .= $langs->trans("NumberOfModelFilesFound").': <b>';
 			//$texte.=$nbofiles?'<a id="a_'.get_class($this).'" href="#">':'';
 			$texte .= count($listoffiles);
@@ -174,7 +174,7 @@ class doc_generic_simpledoc_odt extends ModelePDFSimpleDoc
 		if ($nbofiles) {
 			$texte .= '<div id="div_'.get_class($this).'" class="hidden">';
 			foreach ($listoffiles as $file) {
-				$texte .= '- '.$file['name'].' <a href="'.DOL_URL_ROOT.'/document.php?modulepart=doctemplates&file=simpledocmodule_simpledoc/'.urlencode(basename($file['name'])).'">'.img_picto('', 'listlight').'</a><br>';
+				$texte .= '- '.$file['name'].' <a href="'.DOL_URL_ROOT.'/document.php?modulepart=doctemplates&file=dolisimpledoc_simpledoc/'.urlencode(basename($file['name'])).'">'.img_picto('', 'listlight').'</a><br>';
 			}
 			$texte .= '</div>';
 		}
@@ -230,7 +230,7 @@ class doc_generic_simpledoc_odt extends ModelePDFSimpleDoc
 
 		$outputlangs->loadLangs(array("main", "dict", "companies", "bills"));
 
-		if ($conf->simpledocmodule->dir_output) {
+		if ($conf->dolisimpledoc->dir_output) {
 			// If $object is id instead of object
 			if (!is_object($object)) {
 				$id = $object;
@@ -244,7 +244,7 @@ class doc_generic_simpledoc_odt extends ModelePDFSimpleDoc
 
 			$object->fetch_thirdparty();
 
-			$dir = $conf->simpledocmodule->multidir_output[isset($object->entity) ? $object->entity : 1];
+			$dir = $conf->dolisimpledoc->multidir_output[isset($object->entity) ? $object->entity : 1];
 			$objectref = dol_sanitizeFileName($object->ref);
 			if (!preg_match('/specimen/i', $objectref)) {
 				$dir .= "/".$objectref;
@@ -283,9 +283,9 @@ class doc_generic_simpledoc_odt extends ModelePDFSimpleDoc
 				//print "file=".$file;
 				//print "conf->societe->dir_temp=".$conf->societe->dir_temp;
 
-				dol_mkdir($conf->simpledocmodule->dir_temp);
-				if (!is_writable($conf->simpledocmodule->dir_temp)) {
-					$this->error = "Failed to write in temp directory ".$conf->simpledocmodule->dir_temp;
+				dol_mkdir($conf->dolisimpledoc->dir_temp);
+				if (!is_writable($conf->dolisimpledoc->dir_temp)) {
+					$this->error = "Failed to write in temp directory ".$conf->dolisimpledoc->dir_temp;
 					dol_syslog('Error in write_file: '.$this->error, LOG_ERR);
 					return -1;
 				}
@@ -338,7 +338,7 @@ class doc_generic_simpledoc_odt extends ModelePDFSimpleDoc
 					$odfHandler = new odf(
 						$srctemplatepath,
 						array(
-						'PATH_TO_TMP'	  => $conf->simpledocmodule->dir_temp,
+						'PATH_TO_TMP'	  => $conf->dolisimpledoc->dir_temp,
 						'ZIP_PROXY'		  => 'PclZipProxy', // PhpZipProxy or PclZipProxy. Got "bad compression method" error when using PhpZipProxy.
 						'DELIMITER_LEFT'  => '{',
 						'DELIMITER_RIGHT' => '}'

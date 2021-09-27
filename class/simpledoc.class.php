@@ -102,30 +102,39 @@ class SimpleDoc extends CommonObject
 	public $fields=array(
 		'rowid' => array('type'=>'integer', 'label'=>'TechnicalID', 'enabled'=>'1', 'position'=>1, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'css'=>'left', 'comment'=>"Id"),
 		'ref' => array('type'=>'varchar(128)', 'label'=>'Ref', 'enabled'=>'1', 'position'=>20, 'notnull'=>1, 'visible'=>4, 'noteditable'=>'1', 'default'=>'(PROV)', 'index'=>1, 'searchall'=>1, 'showoncombobox'=>'1', 'comment'=>"Reference of object"),
+		'label' => array('type'=>'varchar(255)', 'label'=>'Label', 'enabled'=>'1', 'position'=>30, 'notnull'=>0, 'visible'=>1, 'searchall'=>1, 'css'=>'minwidth300', 'cssview'=>'wordbreak', 'help'=>"Help text", 'showoncombobox'=>'2',),
 		'fk_soc' => array('type'=>'integer:Societe:societe/class/societe.class.php:1:status=1 AND entity IN (__SHARED_ENTITIES__)', 'label'=>'ThirdParty', 'enabled'=>'1', 'position'=>50, 'notnull'=>-1, 'visible'=>1, 'index'=>1, 'help'=>"LinkToThirparty",),
-		'content' => array('type'=>'html', 'label'=>'Content', 'enabled'=>'1', 'position'=>61, 'notnull'=>0, 'visible'=>0,),
 		'note_public' => array('type'=>'html', 'label'=>'NotePublic', 'enabled'=>'1', 'position'=>61, 'notnull'=>0, 'visible'=>1,),
-		'note_private' => array('type'=>'html', 'label'=>'NotePrivate', 'enabled'=>'1', 'position'=>61, 'notnull'=>0, 'visible'=>1,),
-		'name' => array('type'=>'html', 'label'=>'Name', 'enabled'=>'1', 'position'=>61, 'notnull'=>0, 'visible'=>-2,),
-		'date_creation' => array('type'=>'datetime', 'label'=>'DateCreation', 'enabled'=>'1', 'position'=>40, 'notnull'=>1, 'visible'=>1,),
-		'tms' => array('type'=>'timestamp', 'label'=>'DateModif', 'enabled'=>'1', 'position'=>40, 'notnull'=>1, 'visible'=>0,),
-		'fk_user_creat' => array(''),
-		'fk_user_modif' => array('')
-//		'fk_project' => array('')
+		'note_private' => array('type'=>'html', 'label'=>'NotePrivate', 'enabled'=>'1', 'position'=>62, 'notnull'=>0, 'visible'=>0,),
+		'date_creation' => array('type'=>'datetime', 'label'=>'DateCreation', 'enabled'=>'1', 'position'=>500, 'notnull'=>1, 'visible'=>-2,),
+		'tms' => array('type'=>'timestamp', 'label'=>'DateModification', 'enabled'=>'1', 'position'=>501, 'notnull'=>0, 'visible'=>-2,),
+		'fk_user_creat' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserAuthor', 'enabled'=>'1', 'position'=>510, 'notnull'=>1, 'visible'=>-2, 'foreignkey'=>'user.rowid',),
+		'fk_user_modif' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserModif', 'enabled'=>'1', 'position'=>511, 'notnull'=>-1, 'visible'=>-2,),
+		'last_main_doc' => array('type'=>'varchar(255)', 'label'=>'LastMainDoc', 'enabled'=>'1', 'position'=>600, 'notnull'=>0, 'visible'=>0,),
+		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>-2,),
+		'model_pdf' => array('type'=>'varchar(255)', 'label'=>'Model pdf', 'enabled'=>'1', 'position'=>1010, 'notnull'=>-1, 'visible'=>0,),
+		'status' => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>1000, 'notnull'=>0, 'visible'=>1, 'index'=>1, 'arrayofkeyval'=>array('0'=>'Brouillon', '1'=>'Valid&eacute;', '9'=>'Annul&eacute;'),),
+		'contents' => array('type'=>'html', 'label'=>'contents', 'enabled'=>'1', 'position'=>61, 'notnull'=>0, 'visible'=>0,),
 	);
-
 	public $rowid;
 	public $ref;
+	public $label;
+	public $amount;
+	public $qty;
 	public $fk_soc;
-	public $content;
+	public $fk_project;
+	public $description;
 	public $note_public;
 	public $note_private;
-	public $name;
 	public $date_creation;
+	public $tms;
 	public $fk_user_creat;
 	public $fk_user_modif;
-	public $tms;
-//	public $fk_project;
+	public $last_main_doc;
+	public $import_key;
+	public $model_pdf;
+	public $status;
+	public $contents;
 	// END MODULEBUILDER PROPERTIES
 
 
@@ -924,15 +933,15 @@ class SimpleDoc extends CommonObject
 		global $langs, $conf;
 		$langs->load("dolisimpledoc@dolisimpledoc");
 
-		if (empty($conf->global->SIMPLEDOCMODULE_SIMPLEDOC_ADDON)) {
-			$conf->global->SIMPLEDOCMODULE_SIMPLEDOC_ADDON = 'mod_simpledoc_standard';
+		if (empty($conf->global->DOLISIMPLEDOC_SIMPLEDOC_ADDON)) {
+			$conf->global->DOLISIMPLEDOC_SIMPLEDOC_ADDON = 'mod_simpledoc_standard';
 		}
 
-		if (!empty($conf->global->SIMPLEDOCMODULE_SIMPLEDOC_ADDON)) {
+		if (!empty($conf->global->DOLISIMPLEDOC_SIMPLEDOC_ADDON)) {
 			$mybool = false;
 
-			$file = $conf->global->SIMPLEDOCMODULE_SIMPLEDOC_ADDON.".php";
-			$classname = $conf->global->SIMPLEDOCMODULE_SIMPLEDOC_ADDON;
+			$file = $conf->global->DOLISIMPLEDOC_SIMPLEDOC_ADDON.".php";
+			$classname = $conf->global->DOLISIMPLEDOC_SIMPLEDOC_ADDON;
 
 			// Include file with class
 			$dirmodels = array_merge(array('/'), (array) $conf->modules_parts['models']);

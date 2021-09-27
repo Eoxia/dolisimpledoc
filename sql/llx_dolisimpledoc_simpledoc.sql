@@ -18,15 +18,20 @@ CREATE TABLE llx_dolisimpledoc_simpledoc(
 	-- BEGIN MODULEBUILDER FIELDS
 	rowid integer AUTO_INCREMENT PRIMARY KEY NOT NULL, 
 	ref varchar(128) DEFAULT '(PROV)' NOT NULL, 
-	fk_soc integer,
-	content text not null,
-	date_creation datetime NOT NULL,
-	note_private     text DEFAULT NULL,
-	note_public      text DEFAULT NULL,
-	name text not null,
---	fk_project integer,
-    fk_user_creat integer,
-	fk_user_modif integer,
-	tms timestamp
+	label varchar(255),
+	fk_soc integer, 
+	fk_project integer, 
+	description text, 
+	note_public text, 
+	note_private text, 
+	date_creation datetime NOT NULL, 
+	tms timestamp, 
+	fk_user_creat integer NOT NULL, 
+	fk_user_modif integer, 
+	last_main_doc varchar(255), 
+	import_key varchar(14), 
+	model_pdf varchar(255), 
+	status smallint,
+	contents text
 	-- END MODULEBUILDER FIELDS
 ) ENGINE=innodb;
