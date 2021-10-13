@@ -29,8 +29,6 @@
  */
 
 require_once DOL_DOCUMENT_ROOT.'/core/class/commondocgenerator.class.php';
-require_once DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php'; // required for use by classes that inherit
-
 
 /**
  *	Parent class for documents models
@@ -66,7 +64,7 @@ abstract class ModelePDFSimpleDoc extends CommonDocGenerator
 /**
  *  Parent class to manage numbering of SimpleDoc
  */
-abstract class ModeleNumRefSimpleDoc
+abstract class ModeleNumRefDocument
 {
 	/**
 	 * @var string Error code (or message)

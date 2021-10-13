@@ -17,17 +17,17 @@
 
 
 /**
- *  \file       htdocs/core/modules/dolisimpledoc/mod_simpledoc_standard.php
- *  \ingroup    dolisimpledoc
+ *  \file       htdocs/core/modules/doliletter/mod_document_standard.php
+ *  \ingroup    doliletter
  *  \brief      File of class to manage SimpleDoc numbering rules standard
  */
-dol_include_once('/dolisimpledoc/core/modules/dolisimpledoc/modules_simpledoc.php');
 
+require_once __DIR__ . '/modules_document.php';
 
 /**
  *	Class to manage customer order numbering rules standard
  */
-class mod_simpledoc_standard extends ModeleNumRefSimpleDoc
+class mod_document_standard extends ModeleNumRefDocument
 {
 	/**
 	 * Dolibarr version of the loaded document
@@ -35,7 +35,7 @@ class mod_simpledoc_standard extends ModeleNumRefSimpleDoc
 	 */
 	public $version = 'dolibarr'; // 'development', 'experimental', 'dolibarr'
 
-	public $prefix = 'SD';
+	public $prefix = 'DOC';
 
 	/**
 	 * @var string Error code (or message)
@@ -45,8 +45,7 @@ class mod_simpledoc_standard extends ModeleNumRefSimpleDoc
 	/**
 	 * @var string name
 	 */
-	public $name = 'standard';
-
+	public $name = 'Test';
 
 	/**
 	 *  Return description of numbering module
@@ -59,7 +58,6 @@ class mod_simpledoc_standard extends ModeleNumRefSimpleDoc
 		return $langs->trans("SimpleNumRefModelDesc", $this->prefix);
 	}
 
-
 	/**
 	 *  Return an example of numbering
 	 *
@@ -67,9 +65,8 @@ class mod_simpledoc_standard extends ModeleNumRefSimpleDoc
 	 */
 	public function getExample()
 	{
-		return $this->prefix."0501-0001";
+		return $this->prefix."0001-001";
 	}
-
 
 	/**
 	 *  Checks if the numbers already in the database do not
@@ -78,15 +75,14 @@ class mod_simpledoc_standard extends ModeleNumRefSimpleDoc
 	 *  @param  Object		$object		Object we need next value for
 	 *  @return boolean     			false if conflict, true if ok
 	 */
-	public function canBeActivated($object)
-	{
+	public function canBeActivated($object) {
 		global $conf, $langs, $db;
 
 		$coyymm = ''; $max = '';
 
 		$posindice = strlen($this->prefix) + 6;
 		$sql = "SELECT MAX(CAST(SUBSTRING(ref FROM ".$posindice.") AS SIGNED)) as max";
-		$sql .= " FROM ".MAIN_DB_PREFIX."dolisimpledoc_simpledoc";
+		$sql .= " FROM ".MAIN_DB_PREFIX."doliletter_document";
 		$sql .= " WHERE ref LIKE '".$db->escape($this->prefix)."____-%'";
 		if ($object->ismultientitymanaged == 1) {
 			$sql .= " AND entity = ".$conf->entity;
@@ -116,14 +112,13 @@ class mod_simpledoc_standard extends ModeleNumRefSimpleDoc
 	 *  @param  Object		$object		Object we need next value for
 	 *  @return string      			Value if KO, <0 if KO
 	 */
-	public function getNextValue($object)
-	{
+	public function getNextValue($object) {
 		global $db, $conf;
 
 		// first we get the max value
 		$posindice = strlen($this->prefix) + 6;
 		$sql = "SELECT MAX(CAST(SUBSTRING(ref FROM ".$posindice.") AS SIGNED)) as max";
-		$sql .= " FROM ".MAIN_DB_PREFIX."dolisimpledoc_simpledoc";
+		$sql .= " FROM ".MAIN_DB_PREFIX."doliletter_document";
 		$sql .= " WHERE ref LIKE '".$db->escape($this->prefix)."____-%'";
 		if ($object->ismultientitymanaged == 1) {
 			$sql .= " AND entity = ".$conf->entity;
@@ -140,7 +135,7 @@ class mod_simpledoc_standard extends ModeleNumRefSimpleDoc
 				$max = 0;
 			}
 		} else {
-			dol_syslog("mod_simpledoc_standard::getNextValue", LOG_DEBUG);
+			dol_syslog("mod_document_standard::getNextValue", LOG_DEBUG);
 			return -1;
 		}
 
@@ -154,7 +149,7 @@ class mod_simpledoc_standard extends ModeleNumRefSimpleDoc
 			$num = sprintf("%04s", $max + 1);
 		}
 
-		dol_syslog("mod_simpledoc_standard::getNextValue return ".$this->prefix.$yymm."-".$num);
+		dol_syslog("mod_document_standard::getNextValue return ".$this->prefix.$yymm."-".$num);
 		return $this->prefix.$yymm."-".$num;
 	}
 }
