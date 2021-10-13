@@ -24,65 +24,46 @@
 // Load Dolibarr environment
 $res = 0;
 // Try main.inc.php into web root known defined into CONTEXT_DOCUMENT_ROOT (not always defined)
-if (!$res && !empty($_SERVER["CONTEXT_DOCUMENT_ROOT"])) {
-	$res = @include $_SERVER["CONTEXT_DOCUMENT_ROOT"]."/main.inc.php";
-}
+if (!$res && !empty($_SERVER["CONTEXT_DOCUMENT_ROOT"])) $res = @include $_SERVER["CONTEXT_DOCUMENT_ROOT"]."/main.inc.php";
 // Try main.inc.php into web root detected using web root calculated from SCRIPT_FILENAME
 $tmp = empty($_SERVER['SCRIPT_FILENAME']) ? '' : $_SERVER['SCRIPT_FILENAME']; $tmp2 = realpath(__FILE__); $i = strlen($tmp) - 1; $j = strlen($tmp2) - 1;
-while ($i > 0 && $j > 0 && isset($tmp[$i]) && isset($tmp2[$j]) && $tmp[$i] == $tmp2[$j]) {
-	$i--; $j--;
-}
-if (!$res && $i > 0 && file_exists(substr($tmp, 0, ($i + 1))."/main.inc.php")) {
-	$res = @include substr($tmp, 0, ($i + 1))."/main.inc.php";
-}
-if (!$res && $i > 0 && file_exists(dirname(substr($tmp, 0, ($i + 1)))."/main.inc.php")) {
-	$res = @include dirname(substr($tmp, 0, ($i + 1)))."/main.inc.php";
-}
+while ($i > 0 && $j > 0 && isset($tmp[$i]) && isset($tmp2[$j]) && $tmp[$i] == $tmp2[$j]) { $i--; $j--; }
+if (!$res && $i > 0 && file_exists(substr($tmp, 0, ($i + 1))."/main.inc.php")) $res = @include substr($tmp, 0, ($i + 1))."/main.inc.php";
+if (!$res && $i > 0 && file_exists(dirname(substr($tmp, 0, ($i + 1)))."/main.inc.php")) $res = @include dirname(substr($tmp, 0, ($i + 1)))."/main.inc.php";
 // Try main.inc.php using relative path
-if (!$res && file_exists("../main.inc.php")) {
-	$res = @include "../main.inc.php";
-}
-if (!$res && file_exists("../../main.inc.php")) {
-	$res = @include "../../main.inc.php";
-}
-if (!$res && file_exists("../../../main.inc.php")) {
-	$res = @include "../../../main.inc.php";
-}
-if (!$res) {
-	die("Include of main fails");
-}
+if (!$res && file_exists("../../main.inc.php")) $res = @include "../../main.inc.php";
+if (!$res && file_exists("../../../main.inc.php")) $res = @include "../../../main.inc.php";
+if (!$res) die("Include of main fails");
 
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formcompany.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/doleditor.class.php';
-require_once __DIR__ . './class/document.class.php';
+require_once './class/document.class.php';
+require_once './core/modules/doliletter/mod_document_standard.php';
 
-
-dol_include_once('/doliletter/class/doliletter.class.php');
-dol_include_once('/doliletter/lib/doliletter_letter.lib.php');
+global $db, $conf, $langs, $user, $hookmanager;
 
 // Load translation files required by the page
 $langs->loadLangs(array("doliletter@doliletter", "other"));
 
 // Get parameters
-$id = GETPOST('id', 'int');
-$ref = GETPOST('ref', 'alpha');
-$action = GETPOST('action', 'aZ09');
-$confirm = GETPOST('confirm', 'alpha');
-$cancel = GETPOST('cancel', 'aZ09');
-$contextpage = GETPOST('contextpage', 'aZ') ? GETPOST('contextpage', 'aZ') : 'lettercard'; // To manage different context of search
-$backtopage = GETPOST('backtopage', 'alpha');
-$backtopageforcancel = GETPOST('backtopageforcancel', 'alpha');
-//$lineid   = GETPOST('lineid', 'int');
+$id          = GETPOST('id', 'int');
+$action      = GETPOST('action', 'aZ09');
+$massaction  = GETPOST('massaction', 'alpha'); // The bulk action (combo box choice into lists)
+$confirm     = GETPOST('confirm', 'alpha');
+$cancel      = GETPOST('cancel', 'aZ09');
+$contextpage = GETPOST('contextpage', 'aZ') ?GETPOST('contextpage', 'aZ') : 'riskcard'; // To manage different context of search
+$backtopage  = GETPOST('backtopage', 'alpha');
 
 // Initialize technical objects
-$object = new SimpleDoc($db);
+$object         = new Document($db);
+$refDocumentMod = new $conf->global->DOLILETTER_DOCUMENT_ADDON();
+$extrafields    = new ExtraFields($db);
+
 $object->fetch($id);
 
-$extrafields = new ExtraFields($db);
-$diroutputmassaction = $conf->doliletter->dir_output.'/temp/massgeneration/'.$user->id;
 $hookmanager->initHooks(array('lettercard', 'globalcard')); // Note that conf->hooks_modules contains array
 
 // Fetch optionals attributes and labels
@@ -126,9 +107,6 @@ $upload_dir = $conf->doliletter->multidir_output[isset($object->entity) ? $objec
 /*
  * Actions
  */
-
-require_once DOL_DOCUMENT_ROOT.'/custom/doliletter/core/modules/doliletter/mod_letter_standard.php';
-$lettermod = new mod_letter_standard;
 
 $parameters = array();
 $reshook = $hookmanager->executeHooks('doActions', $parameters, $object, $action); // Note that $action and $object may have been modified by some hooks
@@ -191,7 +169,7 @@ $form = new Form($db);
 $formfile = new FormFile($db);
 $formproject = new FormProjets($db);
 
-$title = $langs->trans("SimpleDoc");
+$title = $langs->trans("MyObject");
 $help_url = '';
 llxHeader('', $title, $help_url);
 
@@ -213,64 +191,72 @@ llxHeader('', $title, $help_url);
 
 // Part to create
 if ($action == 'create') {
-	print load_fiche_titre($langs->trans("NewObject", $langs->transnoentitiesnoconv("SimpleDoc")), '', 'object_'.$object->picto);
+	print load_fiche_titre($langs->trans("NewObject", $langs->transnoentitiesnoconv("MyObject")), '', 'object_'.$object->picto);
 
-	$form = new Form($db);
-	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?action=add'.'" name="letterdata>';
-//Selection du tiers receveur
-	print '<div class="fichecenter">';
-	print 	'<table>';
-	print 		'<tr><td class="fieldrequired">'.$langs->trans("ExtSociety").'</td><td>';
-	print $form->select_company(GETPOST('fk_soc'), 'fk_soc', '', 'SelectThirdParty', 1, 0, $events, 0, 'minwidth300');
-	print 		'<a href="'.DOL_URL_ROOT.'/societe/card.php?action=create&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create').'" target="_blank"><span class="fa fa-plus-circle valignmiddle paddingleft" title="'.$langs->trans("AddThirdParty").'"></span></a>';
-	print 		'</td></tr>';
-	print 	'</table>';
+	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
+	print '<input type="hidden" name="token" value="'.newToken().'">';
+	print '<input type="hidden" name="action" value="add">';
+	if ($backtopage) {
+		print '<input type="hidden" name="backtopage" value="'.$backtopage.'">';
+	}
+	if ($backtopageforcancel) {
+		print '<input type="hidden" name="backtopageforcancel" value="'.$backtopageforcancel.'">';
+	}
+
+	print dol_get_fiche_head(array(), '');
+
+	print '<table class="border centpercent tableforfieldcreate">'."\n";
+
+	//Ref -- Ref
+	print '<tr><td class="fieldrequired">'.$langs->trans("Ref").'</td><td>';
+	print '<input hidden class="flat" type="text" size="36" name="ref" id="ref" value="'.$refDocumentMod->getNextValue($object).'">';
+	print $refDocumentMod->getNextValue($object);
+	print '</td></tr>';
+
+	//Society -- Société
+	print '<tr><td class="fieldrequired">'.$langs->trans("Society").'</td><td>';
+	$events = array();
+	$events[1] = array('method' => 'getContacts', 'url' => dol_buildpath('/core/ajax/contacts.php?showempty=1', 1), 'htmlname' => 'contact', 'params' => array('add-customer-contact' => 'disabled'));
+	print $form->select_company(GETPOST('society'), 'society', '', 'SelectThirdParty', 1, 0, $events, 0, 'minwidth300');
+	print ' <a href="'.DOL_URL_ROOT.'/societe/card.php?action=create&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create').'" target="_blank"><span class="fa fa-plus-circle valignmiddle paddingleft" title="'.$langs->trans("AddThirdParty").'"></span></a>';
+	print '</td></tr>';
+
+	//External responsible -- Responsable de la société extérieure
+	print '<tr><td class="fieldrequired">'.$langs->trans("Contact").'</td><td>';
+	print $form->selectcontacts(GETPOST('contact', 'int'), GETPOST('contact'), 'contact', 1, '', '', 0, 'minwidth300', false, 0, array(), false, '', 'contact');
+	print '</td></tr>';
+
+	//Content -- Contenue
+	print '<tr class="content_field"><td><label for="content">'.$langs->trans("Content").'</label></td><td>';
+	$doleditor = new DolEditor('content', GETPOST('content'), '', 90, 'dolibarr_notes', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
+	$doleditor->Create();
+	print '</td></tr>';
+
+
+
+
+	// Other attributes
+	include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_add.tpl.php';
+
+	print '</table>'."\n";
+
+	print dol_get_fiche_end();
+
+	print '<div class="center">';
+	print '<input type="submit" class="button" name="add" value="'.dol_escape_htmltag($langs->trans("Create")).'">';
+	print '&nbsp; ';
+	print '<input type="'.($backtopage ? "submit" : "button").'" class="button button-cancel" name="cancel" value="'.dol_escape_htmltag($langs->trans("Cancel")).'"'.($backtopage ? '' : ' onclick="javascript:history.go(-1)"').'>'; // Cancel for create does not post form if we don't know the backtopage
 	print '</div>';
 
-//message name
-	print 'document name:';
-	print '<input type="text" name="label" value="">';
-
-//ref
-	print '<tr><td class="fieldrequired">'.$langs->trans("Ref").'</td><td>';
-	print '<input hidden class="flat" type="text" size="36" name="ref" id="ref" value="'.$lettermod->getNextValue($object).'">';
-	print $lettermod->getNextValue($object);
-	print '</td></tr>';
-
-//Créer des boite de texte WYSIWYG
-	//content
-	print '<table class="noborder centpercent editmode">';
-	print '<tr class="liste_titre"><th class="titlefield wordbreak">'.$langs->trans("content").'</th><th>'.$langs->trans("").'</th></tr>'."\n";
-	print '<tr class="oddeven"><td><label for="contents">'.$langs->trans(" ").'</label></td><td>';
-	$doleditor = new DolEditor('contents', $conf->global->DIGIRISK_PARTICIPATION_AGREEMENT_INFORMATION_PROCEDURE ? $conf->global->DIGIRISK_PARTICIPATION_AGREEMENT_INFORMATION_PROCEDURE : '', '', 90, 'dolibarr_notes', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
-	$doleditor->Create();
-	print '</td></tr>';
-	print '</table>';
-	//note pub
-	print '<table class="noborder centpercent editmode">';
-	print '<tr class="liste_titre"><th class="titlefield wordbreak">'.$langs->trans("note_public").'</th><th>'.$langs->trans("").'</th></tr>'."\n";
-	print '<tr class="oddeven"><td><label for="note_public">'.$langs->trans(" ").'</label></td><td>';
-	$doleditor = new DolEditor('note_public', $conf->global->DIGIRISK_PARTICIPATION_AGREEMENT_INFORMATION_PROCEDURE ? $conf->global->DIGIRISK_PARTICIPATION_AGREEMENT_INFORMATION_PROCEDURE : '', '', 90, 'dolibarr_notes', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
-	$doleditor->Create();
-	print '</td></tr>';
-	print '</table>';
-	//note prv
-	print '<table class="noborder centpercent editmode">';
-	print '<tr class="liste_titre"><th class="titlefield wordbreak">'.$langs->trans("note_private").'</th><th>'.$langs->trans("").'</th></tr>'."\n";
-	print '<tr class="oddeven"><td><label for="note_private">'.$langs->trans(" ").'</label></td><td>';
-	$doleditor = new DolEditor('note_private', $conf->global->DIGIRISK_PARTICIPATION_AGREEMENT_INFORMATION_PROCEDURE ? $conf->global->DIGIRISK_PARTICIPATION_AGREEMENT_INFORMATION_PROCEDURE : '', '', 90, 'dolibarr_notes', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
-	$doleditor->Create();
-	print '</td></tr>';
-	print '</table>';
-
-
-	print '<input type="submit" class="button" name="save" value="Enregistrer">';
 	print '</form>';
+
+	//dol_set_focus('input[name="ref"]');
 }
 
 // Part to edit record
 if (($id || $ref) && $action == 'edit') {
-	print load_fiche_titre($langs->trans("SimpleDoc"), '', 'object_'.$object->picto);
+	print load_fiche_titre($langs->trans("MyObject"), '', 'object_'.$object->picto);
+
 	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
 	print '<input type="hidden" name="token" value="'.newToken().'">';
 	print '<input type="hidden" name="action" value="update">';
@@ -307,14 +293,14 @@ if (($id || $ref) && $action == 'edit') {
 if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'create'))) {
 	$res = $object->fetch_optionals();
 
-	$head = letterPrepareHead($object);
+	$head = myobjectPrepareHead($object);
 	print dol_get_fiche_head($head, 'card', $langs->trans("Workstation"), -1, $object->picto);
 
 	$formconfirm = '';
 
 	// Confirmation to delete
 	if ($action == 'delete') {
-		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id, $langs->trans('DeleteSimpleDoc'), $langs->trans('ConfirmDeleteObject'), 'confirm_delete', '', 0, 1);
+		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id, $langs->trans('DeleteMyObject'), $langs->trans('ConfirmDeleteObject'), 'confirm_delete', '', 0, 1);
 	}
 	// Confirmation to delete line
 	if ($action == 'deleteline') {
@@ -358,7 +344,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 	// Object card
 	// ------------------------------------------------------------
-	$linkback = '<a href="'.dol_buildpath('/doliletter/doliletter_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
+	$linkback = '<a href="'.dol_buildpath('/mymodule/myobject_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
 
 	$morehtmlref = '<div class="refidno">';
 	/*
@@ -395,8 +381,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	 }
 	 }
 	 }*/
-
-	$morehtmlref .= $object->name.'</div>';
+	$morehtmlref .= '</div>';
 
 
 	dol_banner_tab($object, 'ref', $linkback, 1, 'ref', 'ref', $morehtmlref);
@@ -422,7 +407,6 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 	print '<div class="clearboth"></div>';
 
-	print '<div>Contenu du document :<br>'. $object->contents.'</br></div>';
 	print dol_get_fiche_end();
 
 
@@ -488,13 +472,48 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		}
 
 		if (empty($reshook)) {
+			// Send
+			if (empty($user->socid)) {
+				print dolGetButtonAction($langs->trans('SendMail'), '', 'default', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=presend&mode=init&token='.newToken().'#formmailbeforetitle');
+			}
 
 			// Back to draft
+			if ($object->status == $object::STATUS_VALIDATED) {
+				print dolGetButtonAction($langs->trans('SetToDraft'), '', 'default', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=confirm_setdraft&confirm=yes&token='.newToken(), '', $permissiontoadd);
+			}
 
 			print dolGetButtonAction($langs->trans('Modify'), '', 'default', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=edit&token='.newToken(), '', $permissiontoadd);
+
+			// Validate
+			if ($object->status == $object::STATUS_DRAFT) {
+				if (empty($object->table_element_line) || (is_array($object->lines) && count($object->lines) > 0)) {
+					print dolGetButtonAction($langs->trans('Validate'), '', 'default', $_SERVER['PHP_SELF'].'?id='.$object->id.'&action=confirm_validate&confirm=yes&token='.newToken(), '', $permissiontoadd);
+				} else {
+					$langs->load("errors");
+					print dolGetButtonAction($langs->trans("ErrorAddAtLeastOneLineFirst"), $langs->trans("Validate"), 'default', '#', '', 0);
+				}
+			}
+
 			// Clone
 			print dolGetButtonAction($langs->trans('ToClone'), '', 'default', $_SERVER['PHP_SELF'].'?id='.$object->id.'&socid='.$object->socid.'&action=clone&token='.newToken(), '', $permissiontoadd);
-			// Delete
+
+			/*
+			if ($permissiontoadd) {
+				if ($object->status == $object::STATUS_ENABLED) {
+					print dolGetButtonAction($langs->trans('Disable'), '', 'default', $_SERVER['PHP_SELF'].'?id='.$object->id.'&action=disable&token='.newToken(), '', $permissiontoadd);
+				} else {
+					print dolGetButtonAction($langs->trans('Enable'), '', 'default', $_SERVER['PHP_SELF'].'?id='.$object->id.'&action=enable&token='.newToken(), '', $permissiontoadd);
+				}
+			}
+			if ($permissiontoadd) {
+				if ($object->status == $object::STATUS_VALIDATED) {
+					print dolGetButtonAction($langs->trans('Cancel'), '', 'default', $_SERVER['PHP_SELF'].'?id='.$object->id.'&action=close&token='.newToken(), '', $permissiontoadd);
+				} else {
+					print dolGetButtonAction($langs->trans('Re-Open'), '', 'default', $_SERVER['PHP_SELF'].'?id='.$object->id.'&action=reopen&token='.newToken(), '', $permissiontoadd);
+				}
+			}
+			*/
+
 			// Delete (need delete permission, or if draft, just need create/modify permission)
 			print dolGetButtonAction($langs->trans('Delete'), '', 'delete', $_SERVER['PHP_SELF'].'?id='.$object->id.'&action=delete&token='.newToken(), '', $permissiontodelete || ($object->status == $object::STATUS_DRAFT && $permissiontoadd));
 		}
@@ -511,19 +530,36 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<div class="fichecenter"><div class="fichehalfleft">';
 		print '<a name="builddoc"></a>'; // ancre
 
-		$includedocgeneration = 1;
+		$includedocgeneration = 0;
 
 		// Documents
 		if ($includedocgeneration) {
 			$objref = dol_sanitizeFileName($object->ref);
 			$relativepath = $objref.'/'.$objref.'.pdf';
-			$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$objref;
+			$filedir = $conf->mymodule->dir_output.'/'.$object->element.'/'.$objref;
 			$urlsource = $_SERVER["PHP_SELF"]."?id=".$object->id;
-			$genallowed = $user->rights->doliletter->letter->read; // If you can read, you can build the PDF to read content
-			$delallowed = $user->rights->doliletter->letter->write; // If you can create/edit, you can remove a file on card
-			print $formfile->showdocuments('doliletter:SimpleDoc', $object->element.'/'.$objref, $filedir, $urlsource, $genallowed, $delallowed, $object->model_pdf, 1, 0, 0, 28, 0, '', '', '', $langs->defaultlang);
+			$genallowed = $user->rights->mymodule->myobject->read; // If you can read, you can build the PDF to read content
+			$delallowed = $user->rights->mymodule->myobject->write; // If you can create/edit, you can remove a file on card
+			print $formfile->showdocuments('mymodule:MyObject', $object->element.'/'.$objref, $filedir, $urlsource, $genallowed, $delallowed, $object->model_pdf, 1, 0, 0, 28, 0, '', '', '', $langs->defaultlang);
 		}
 
+		// Show links to link elements
+		$linktoelem = $form->showLinkToObjectBlock($object, null, array('myobject'));
+		$somethingshown = $form->showLinkedObjectBlock($object, $linktoelem);
+
+
+		print '</div><div class="fichehalfright"><div class="ficheaddleft">';
+
+		$MAXEVENT = 10;
+
+		$morehtmlright = '<a href="'.dol_buildpath('/mymodule/myobject_agenda.php', 1).'?id='.$object->id.'">';
+		$morehtmlright .= $langs->trans("SeeAll");
+		$morehtmlright .= '</a>';
+
+		// List of actions on element
+		include_once DOL_DOCUMENT_ROOT.'/core/class/html.formactions.class.php';
+		$formactions = new FormActions($db);
+		$somethingshown = $formactions->showactions($object, $object->element.'@'.$object->module, (is_object($object->thirdparty) ? $object->thirdparty->id : 0), 1, '', $MAXEVENT, '', $morehtmlright);
 
 		print '</div></div></div>';
 	}
@@ -534,10 +570,10 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	}
 
 	// Presend form
-	$modelmail = 'letter';
+	$modelmail = 'myobject';
 	$defaulttopic = 'InformationMessage';
-	$diroutput = $conf->doliletter->dir_output;
-	$trackid = 'letter'.$object->id;
+	$diroutput = $conf->mymodule->dir_output;
+	$trackid = 'myobject'.$object->id;
 
 	include DOL_DOCUMENT_ROOT.'/core/tpl/card_presend.tpl.php';
 }

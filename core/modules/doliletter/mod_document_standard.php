@@ -35,7 +35,7 @@ class mod_document_standard extends ModeleNumRefDocument
 	 */
 	public $version = 'dolibarr'; // 'development', 'experimental', 'dolibarr'
 
-	public $prefix = 'DOC';
+	public $prefix = 'DL';
 
 	/**
 	 * @var string Error code (or message)
