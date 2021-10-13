@@ -17,7 +17,7 @@
  */
 
 /**
- *  \file       dolisimpledoc_note.php
+ *  \file       doliletter_note.php
  *  \ingroup    doliletter
  *  \brief      Tab for notes on SimpleDoc
  */
@@ -139,7 +139,7 @@ if ($id > 0 || !empty($ref)) {
 
 	// Object card
 	// ------------------------------------------------------------
-	$linkback = '<a href="'.dol_buildpath('/doliletter/dolisimpledoc_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
+	$linkback = '<a href="'.dol_buildpath('/doliletter/doliletter_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
 
 	$morehtmlref = '<div class="refidno">';
 	/*

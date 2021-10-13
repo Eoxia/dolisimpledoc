@@ -710,7 +710,7 @@ class SimpleDoc extends CommonObject
 		$label .= '<br>';
 		$label .= '<b>'.$langs->trans('Ref').':</b> '.$this->ref;
 
-		$url = dol_buildpath('/doliletter/dolisimpledoc_card.php', 1).'?id='.$this->id;
+		$url = dol_buildpath('/doliletter/doliletter_card.php', 1).'?id='.$this->id;
 
 		if ($option != 'nolink') {
 			// Add param to save lastsearch_values or not

@@ -19,7 +19,7 @@
  */
 
 /**
- *	\file       doliletter/dolisimpledocindex.php
+ *	\file       doliletter/doliletterindex.php
  *	\ingroup    doliletter
  *	\brief      Home page of doliletter top menu
  */
