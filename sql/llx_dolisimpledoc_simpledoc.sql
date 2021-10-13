@@ -14,24 +14,27 @@
 -- along with this program.  If not, see https://www.gnu.org/licenses/.
 
 
-CREATE TABLE llx_dolisimpledoc_simpledoc(
+CREATE TABLE llx_dolisimpledoc_document(
 	-- BEGIN MODULEBUILDER FIELDS
 	rowid integer AUTO_INCREMENT PRIMARY KEY NOT NULL, 
 	ref varchar(128) DEFAULT '(PROV)' NOT NULL, 
-	label varchar(255),
-	fk_soc integer, 
-	fk_project integer, 
-	description text, 
-	note_public text, 
-	note_private text, 
-	date_creation datetime NOT NULL, 
-	tms timestamp, 
-	fk_user_creat integer NOT NULL, 
-	fk_user_modif integer, 
-	last_main_doc varchar(255), 
-	import_key varchar(14), 
-	model_pdf varchar(255), 
-	status smallint,
-	contents text
+	ref_ext varchar(128),
+	entity integer,
+	date_creation datetime NOT NULL,
+	tms timestamp,
+	import_key varchar(128),
+    status smallint,
+	note_public text,
+	note_private text,
+	model_pdf varchar(255),
+	last_main_doc varchar(255),
+	content text,
+	sender varchar(255),
+	sender_service varchar(255),
+	document_url varchar(255),
+	fk_soc integer,
+	fk_socpeople integer,
+	fk_user_creat integer NOT NULL,
+	fk_user_modif integer,
 	-- END MODULEBUILDER FIELDS
 ) ENGINE=innodb;
