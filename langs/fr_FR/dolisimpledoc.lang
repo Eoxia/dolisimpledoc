@@ -17,10 +17,10 @@
 # Generic
 #
 
-# Module label 'ModuleSimpleDocModuleName'
-ModuleSimpleDocModuleName = SimpleDocModule
-# Module description 'ModuleSimpleDocModuleDesc'
-ModuleSimpleDocModuleDesc = SimpleDocModule description
+# Module label 'ModuleDoliSimpleDocModuleName'
+ModuleDoliSimpleDocModuleName = DoliSimpleDoc
+# Module description 'ModuleDoliSimpleDoc'
+ModuleDoliSimpleDocDesc = DoliSimpleDoc description
 
 #
 # Admin page
@@ -55,3 +55,7 @@ ExtSociety = Tiers destinataire
 content = Contenu du document
 note_public = Note publique
 note_private = Note privée
+
+DoliSimpleDocCreate = Nouveau courrier
+DoliSimpleDocList = Liste
+DoliSimpleDocIndex = DoliSimpleDoc
