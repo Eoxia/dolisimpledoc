@@ -65,7 +65,7 @@ $langs->loadLangs(array("doliletter@doliletter"));
 
 $action = GETPOST('action', 'aZ09');
 
-$simpledoc = new SimpleDoc($db);
+$simpledoc = new Document($db);
 
 // Security check
 // if (! $user->rights->doliletter->myobject->read) {
