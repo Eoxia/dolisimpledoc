@@ -1,10 +1,9 @@
 <?php
-/* Copyright (C) 2017 Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) ---Put here your own copyright and developer email---
+/* Copyright (C) 2021 EOXIA <dev@eoxia.com>
  *
- * This program is free software; you can redistribute it and/or modify
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -13,35 +12,14 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /**
  *   	\file       doliletter_card.php
  *		\ingroup    doliletter
- *		\brief      Page to create/edit/view simpledoc
+ *		\brief      Page to create/edit/view doliletter
  */
-
-//if (! defined('NOREQUIREDB'))              define('NOREQUIREDB', '1');				// Do not create database handler $db
-//if (! defined('NOREQUIREUSER'))            define('NOREQUIREUSER', '1');				// Do not load object $user
-//if (! defined('NOREQUIRESOC'))             define('NOREQUIRESOC', '1');				// Do not load object $mysoc
-//if (! defined('NOREQUIRETRAN'))            define('NOREQUIRETRAN', '1');				// Do not load object $langs
-//if (! defined('NOSCANGETFORINJECTION'))    define('NOSCANGETFORINJECTION', '1');		// Do not check injection attack on GET parameters
-//if (! defined('NOSCANPOSTFORINJECTION'))   define('NOSCANPOSTFORINJECTION', '1');		// Do not check injection attack on POST parameters
-//if (! defined('NOCSRFCHECK'))              define('NOCSRFCHECK', '1');				// Do not check CSRF attack (test on referer + on token if option MAIN_SECURITY_CSRF_WITH_TOKEN is on).
-//if (! defined('NOTOKENRENEWAL'))           define('NOTOKENRENEWAL', '1');				// Do not roll the Anti CSRF token (used if MAIN_SECURITY_CSRF_WITH_TOKEN is on)
-//if (! defined('NOSTYLECHECK'))             define('NOSTYLECHECK', '1');				// Do not check style html tag into posted data
-//if (! defined('NOREQUIREMENU'))            define('NOREQUIREMENU', '1');				// If there is no need to load and show top and left menu
-//if (! defined('NOREQUIREHTML'))            define('NOREQUIREHTML', '1');				// If we don't need to load the html.form.class.php
-//if (! defined('NOREQUIREAJAX'))            define('NOREQUIREAJAX', '1');       	  	// Do not load ajax.lib.php library
-//if (! defined("NOLOGIN"))                  define("NOLOGIN", '1');					// If this page is public (can be called outside logged session). This include the NOIPCHECK too.
-//if (! defined('NOIPCHECK'))                define('NOIPCHECK', '1');					// Do not check IP defined into conf $dolibarr_main_restrict_ip
-//if (! defined("MAIN_LANG_DEFAULT"))        define('MAIN_LANG_DEFAULT', 'auto');					// Force lang to a particular value
-//if (! defined("MAIN_AUTHENTICATION_MODE")) define('MAIN_AUTHENTICATION_MODE', 'aloginmodule');	// Force authentication handler
-//if (! defined("NOREDIRECTBYMAINTOLOGIN"))  define('NOREDIRECTBYMAINTOLOGIN', 1);		// The main.inc.php does not make a redirect if not logged, instead show simple error message
-//if (! defined("FORCECSP"))                 define('FORCECSP', 'none');				// Disable all Content Security Policies
-//if (! defined('CSRFCHECK_WITH_TOKEN'))     define('CSRFCHECK_WITH_TOKEN', '1');		// Force use of CSRF protection with tokens even for GET
-//if (! defined('NOBROWSERNOTIF'))     		 define('NOBROWSERNOTIF', '1');				// Disable browser notification
 
 // Load Dolibarr environment
 $res = 0;
@@ -79,7 +57,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/doleditor.class.php';
-require_once __DIR__ . './class/doliletter.class.php';
+require_once __DIR__ . './class/document.class.php';
 
 
 dol_include_once('/doliletter/class/doliletter.class.php');
@@ -94,7 +72,7 @@ $ref = GETPOST('ref', 'alpha');
 $action = GETPOST('action', 'aZ09');
 $confirm = GETPOST('confirm', 'alpha');
 $cancel = GETPOST('cancel', 'aZ09');
-$contextpage = GETPOST('contextpage', 'aZ') ? GETPOST('contextpage', 'aZ') : 'simpledoccard'; // To manage different context of search
+$contextpage = GETPOST('contextpage', 'aZ') ? GETPOST('contextpage', 'aZ') : 'lettercard'; // To manage different context of search
 $backtopage = GETPOST('backtopage', 'alpha');
 $backtopageforcancel = GETPOST('backtopageforcancel', 'alpha');
 //$lineid   = GETPOST('lineid', 'int');
@@ -104,8 +82,8 @@ $object = new SimpleDoc($db);
 $object->fetch($id);
 
 $extrafields = new ExtraFields($db);
-$diroutputmassaction = $conf->dolisimpledoc->dir_output.'/temp/massgeneration/'.$user->id;
-$hookmanager->initHooks(array('simpledoccard', 'globalcard')); // Note that conf->hooks_modules contains array
+$diroutputmassaction = $conf->doliletter->dir_output.'/temp/massgeneration/'.$user->id;
+$hookmanager->initHooks(array('lettercard', 'globalcard')); // Note that conf->hooks_modules contains array
 
 // Fetch optionals attributes and labels
 $extrafields->fetch_name_optionals_label($object->table_element);
@@ -129,12 +107,12 @@ if (empty($action) && empty($id) && empty($ref)) {
 include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be include, not include_once.
 
 
-$permissiontoread = $user->rights->dolisimpledoc->simpledoc->read;
-$permissiontoadd = $user->rights->dolisimpledoc->simpledoc->write; // Used by the include of actions_addupdatedelete.inc.php and actions_lineupdown.inc.php
-$permissiontodelete = $user->rights->dolisimpledoc->simpledoc->delete || ($permissiontoadd && isset($object->status) && $object->status == $object::STATUS_DRAFT);
-$permissionnote = $user->rights->dolisimpledoc->simpledoc->write; // Used by the include of actions_setnotes.inc.php
-$permissiondellink = $user->rights->dolisimpledoc->simpledoc->write; // Used by the include of actions_dellink.inc.php
-$upload_dir = $conf->dolisimpledoc->multidir_output[isset($object->entity) ? $object->entity : 1].'/simpledoc';
+$permissiontoread = $user->rights->doliletter->letter->read;
+$permissiontoadd = $user->rights->doliletter->letter->write; // Used by the include of actions_addupdatedelete.inc.php and actions_lineupdown.inc.php
+$permissiontodelete = $user->rights->doliletter->letter->delete || ($permissiontoadd && isset($object->status) && $object->status == $object::STATUS_DRAFT);
+$permissionnote = $user->rights->doliletter->letter->write; // Used by the include of actions_setnotes.inc.php
+$permissiondellink = $user->rights->doliletter->letter->write; // Used by the include of actions_dellink.inc.php
+$upload_dir = $conf->doliletter->multidir_output[isset($object->entity) ? $object->entity : 1].'/letter';
 
 // Security check (enable the most restrictive one)
 //if ($user->socid > 0) accessforbidden();
@@ -149,8 +127,8 @@ $upload_dir = $conf->dolisimpledoc->multidir_output[isset($object->entity) ? $ob
  * Actions
  */
 
-require_once DOL_DOCUMENT_ROOT.'/custom/doliletter/core/modules/doliletter/mod_simpledoc_standard.php';
-$simpledocmod = new mod_simpledoc_standard;
+require_once DOL_DOCUMENT_ROOT.'/custom/doliletter/core/modules/doliletter/mod_letter_standard.php';
+$lettermod = new mod_letter_standard;
 
 $parameters = array();
 $reshook = $hookmanager->executeHooks('doActions', $parameters, $object, $action); // Note that $action and $object may have been modified by some hooks
@@ -196,7 +174,7 @@ if (empty($reshook)) {
 	// Actions to send emails
 	$triggersendname = 'DOLISIMPLEDOC_SIMPLEDOC_SENTBYMAIL';
 	$autocopy = 'MAIN_MAIL_AUTOCOPY_SIMPLEDOC_TO';
-	$trackid = 'simpledoc'.$object->id;
+	$trackid = 'letter'.$object->id;
 	include DOL_DOCUMENT_ROOT.'/core/actions_sendmails.inc.php';
 }
 
@@ -238,7 +216,7 @@ if ($action == 'create') {
 	print load_fiche_titre($langs->trans("NewObject", $langs->transnoentitiesnoconv("SimpleDoc")), '', 'object_'.$object->picto);
 
 	$form = new Form($db);
-	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?action=add'.'" name="simpledocdata>';
+	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?action=add'.'" name="letterdata>';
 //Selection du tiers receveur
 	print '<div class="fichecenter">';
 	print 	'<table>';
@@ -255,8 +233,8 @@ if ($action == 'create') {
 
 //ref
 	print '<tr><td class="fieldrequired">'.$langs->trans("Ref").'</td><td>';
-	print '<input hidden class="flat" type="text" size="36" name="ref" id="ref" value="'.$simpledocmod->getNextValue($object).'">';
-	print $simpledocmod->getNextValue($object);
+	print '<input hidden class="flat" type="text" size="36" name="ref" id="ref" value="'.$lettermod->getNextValue($object).'">';
+	print $lettermod->getNextValue($object);
 	print '</td></tr>';
 
 //Créer des boite de texte WYSIWYG
@@ -329,7 +307,7 @@ if (($id || $ref) && $action == 'edit') {
 if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'create'))) {
 	$res = $object->fetch_optionals();
 
-	$head = simpledocPrepareHead($object);
+	$head = letterPrepareHead($object);
 	print dol_get_fiche_head($head, 'card', $langs->trans("Workstation"), -1, $object->picto);
 
 	$formconfirm = '';
@@ -539,10 +517,10 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		if ($includedocgeneration) {
 			$objref = dol_sanitizeFileName($object->ref);
 			$relativepath = $objref.'/'.$objref.'.pdf';
-			$filedir = $conf->dolisimpledoc->dir_output.'/'.$object->element.'/'.$objref;
+			$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$objref;
 			$urlsource = $_SERVER["PHP_SELF"]."?id=".$object->id;
-			$genallowed = $user->rights->dolisimpledoc->simpledoc->read; // If you can read, you can build the PDF to read content
-			$delallowed = $user->rights->dolisimpledoc->simpledoc->write; // If you can create/edit, you can remove a file on card
+			$genallowed = $user->rights->doliletter->letter->read; // If you can read, you can build the PDF to read content
+			$delallowed = $user->rights->doliletter->letter->write; // If you can create/edit, you can remove a file on card
 			print $formfile->showdocuments('doliletter:SimpleDoc', $object->element.'/'.$objref, $filedir, $urlsource, $genallowed, $delallowed, $object->model_pdf, 1, 0, 0, 28, 0, '', '', '', $langs->defaultlang);
 		}
 
@@ -556,10 +534,10 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	}
 
 	// Presend form
-	$modelmail = 'simpledoc';
+	$modelmail = 'letter';
 	$defaulttopic = 'InformationMessage';
-	$diroutput = $conf->dolisimpledoc->dir_output;
-	$trackid = 'simpledoc'.$object->id;
+	$diroutput = $conf->doliletter->dir_output;
+	$trackid = 'letter'.$object->id;
 
 	include DOL_DOCUMENT_ROOT.'/core/tpl/card_presend.tpl.php';
 }

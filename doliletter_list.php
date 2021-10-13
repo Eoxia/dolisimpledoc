@@ -63,7 +63,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
 
 // load doliletter libraries
-require_once __DIR__ . '/class/doliletter.class.php';
+require_once __DIR__ . '/class/document.class.php';
 
 // for other modules
 //dol_include_once('/othermodule/class/otherobject.class.php');
