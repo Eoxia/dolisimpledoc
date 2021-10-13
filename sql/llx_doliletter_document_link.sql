@@ -20,5 +20,5 @@ CREATE TABLE llx_doliletter_document_link(
     customer_ref  varchar(255),
     object_type   varchar(255),
     fk_document   integer NOT NULL,
-    fk_object     integer NOT NULL,
+    fk_object     integer NOT NULL
 ) ENGINE=innodb;

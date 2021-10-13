@@ -15,7 +15,6 @@
 
 
 CREATE TABLE llx_doliletter_document(
-	-- BEGIN MODULEBUILDER FIELDS
 	rowid integer AUTO_INCREMENT PRIMARY KEY NOT NULL, 
 	ref varchar(128) DEFAULT '(PROV)' NOT NULL, 
 	ref_ext varchar(128),
@@ -35,6 +34,5 @@ CREATE TABLE llx_doliletter_document(
 	fk_soc integer,
 	fk_socpeople integer,
 	fk_user_creat integer NOT NULL,
-	fk_user_modif integer,
-	-- END MODULEBUILDER FIELDS
+	fk_user_modif integer
 ) ENGINE=innodb;
