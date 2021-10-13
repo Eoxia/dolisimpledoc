@@ -58,7 +58,7 @@ if (!$res) {
 
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/doleditor.class.php';
-require_once __DIR__ .'./class/simpledoc.class.php';
+require_once __DIR__ . '/class/dolisimpledoc.class.php';
 
 // Load translation files required by the page
 $langs->loadLangs(array("dolisimpledoc@dolisimpledoc"));

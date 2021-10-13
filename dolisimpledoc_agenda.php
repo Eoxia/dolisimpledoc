@@ -17,7 +17,7 @@
  */
 
 /**
- *  \file       simpledoc_agenda.php
+ *  \file       dolisimpledoc_agenda.php
  *  \ingroup    dolisimpledoc
  *  \brief      Tab of events on SimpleDoc
  */
@@ -77,7 +77,7 @@ if (!$res) {
 require_once DOL_DOCUMENT_ROOT.'/contact/class/contact.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/functions2.lib.php';
-dol_include_once('/dolisimpledoc/class/simpledoc.class.php');
+dol_include_once('/dolisimpledoc/class/dolisimpledoc.class.php');
 dol_include_once('/dolisimpledoc/lib/dolisimpledoc_simpledoc.lib.php');
 
 
@@ -191,7 +191,7 @@ if ($object->id > 0) {
 
 	// Object card
 	// ------------------------------------------------------------
-	$linkback = '<a href="'.dol_buildpath('/dolisimpledoc/simpledoc_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
+	$linkback = '<a href="'.dol_buildpath('/dolisimpledoc/dolisimpledoc_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
 
 	$morehtmlref = '<div class="refidno">';
 	/*

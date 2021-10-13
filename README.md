@@ -5,7 +5,7 @@
 Description of the module...
 
 <!--
-![Screenshot dolisimpledoc](img/screenshot_dolisimpledoc.png?raw=true "DoliSimpleDoc"){imgmd}
+![Screenshot dolisimpledoc](img/screenshot_dolisimpledoc.png?raw=true "dolisimpledoc"){imgmd}
 -->
 
 Other external modules are available on [Dolistore.com](https://www.dolistore.com).

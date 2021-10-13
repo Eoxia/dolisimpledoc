@@ -17,7 +17,7 @@
  */
 
 /**
- *  \file       simpledoc_document.php
+ *  \file       dolisimpledoc_document.php
  *  \ingroup    dolisimpledoc
  *  \brief      Tab for documents linked to SimpleDoc
  */
@@ -78,7 +78,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/images.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
-dol_include_once('/dolisimpledoc/class/simpledoc.class.php');
+dol_include_once('/dolisimpledoc/class/dolisimpledoc.class.php');
 dol_include_once('/dolisimpledoc/lib/dolisimpledoc_simpledoc.lib.php');
 
 // Load translation files required by the page
@@ -171,7 +171,7 @@ if ($object->id) {
 
 	// Object card
 	// ------------------------------------------------------------
-	$linkback = '<a href="'.dol_buildpath('/dolisimpledoc/simpledoc_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
+	$linkback = '<a href="'.dol_buildpath('/dolisimpledoc/dolisimpledoc_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
 
 	$morehtmlref = '<div class="refidno">';
 	/*

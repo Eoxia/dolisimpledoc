@@ -17,7 +17,7 @@
  */
 
 /**
- * \file        class/simpledoc.class.php
+ * \file        class/dolisimpledoc.class.php
  * \ingroup     dolisimpledoc
  * \brief       This file is a CRUD class file for SimpleDoc (Create/Read/Update/Delete)
  */
@@ -710,7 +710,7 @@ class SimpleDoc extends CommonObject
 		$label .= '<br>';
 		$label .= '<b>'.$langs->trans('Ref').':</b> '.$this->ref;
 
-		$url = dol_buildpath('/dolisimpledoc/simpledoc_card.php', 1).'?id='.$this->id;
+		$url = dol_buildpath('/dolisimpledoc/dolisimpledoc_card.php', 1).'?id='.$this->id;
 
 		if ($option != 'nolink') {
 			// Add param to save lastsearch_values or not

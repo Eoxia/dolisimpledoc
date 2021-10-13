@@ -19,7 +19,7 @@
 /**
  * \file    dolisimpledoc/admin/setup.php
  * \ingroup dolisimpledoc
- * \brief   DoliSimpleDoc setup page.
+ * \brief   dolisimpledoc setup page.
  */
 
 // Load Dolibarr environment

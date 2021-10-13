@@ -17,7 +17,7 @@
  */
 
 /**
- *   	\file       simpledoc_list.php
+ *   	\file       dolisimpledoc_list.php
  *		\ingroup    dolisimpledoc
  *		\brief      List page for simpledoc
  */
@@ -63,7 +63,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
 
 // load dolisimpledoc libraries
-require_once __DIR__.'/class/simpledoc.class.php';
+require_once __DIR__ . '/class/dolisimpledoc.class.php';
 
 // for other modules
 //dol_include_once('/othermodule/class/otherobject.class.php');
@@ -361,7 +361,7 @@ if (is_numeric($nbtotalofrecords) && ($limit > $nbtotalofrecords || empty($limit
 if ($num == 1 && !empty($conf->global->MAIN_SEARCH_DIRECT_OPEN_IF_ONLY_ONE) && $search_all && !$page) {
 	$obj = $db->fetch_object($resql);
 	$id = $obj->rowid;
-	header("Location: ".dol_buildpath('/dolisimpledoc/simpledoc_card.php', 1).'?id='.$id);
+	header("Location: ".dol_buildpath('/dolisimpledoc/dolisimpledoc_card.php', 1).'?id='.$id);
 	exit;
 }
 
@@ -441,7 +441,7 @@ print '<input type="hidden" name="sortorder" value="'.$sortorder.'">';
 print '<input type="hidden" name="page" value="'.$page.'">';
 print '<input type="hidden" name="contextpage" value="'.$contextpage.'">';
 
-$newcardbutton = dolGetButtonTitle($langs->trans('New'), '', 'fa fa-plus-circle', dol_buildpath('/dolisimpledoc/simpledoc_card.php', 1).'?action=create&backtopage='.urlencode($_SERVER['PHP_SELF']), '', $permissiontoadd);
+$newcardbutton = dolGetButtonTitle($langs->trans('New'), '', 'fa fa-plus-circle', dol_buildpath('/dolisimpledoc/dolisimpledoc_card.php', 1).'?action=create&backtopage='.urlencode($_SERVER['PHP_SELF']), '', $permissiontoadd);
 
 print_barre_liste($title, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, $massactionbutton, $num, $nbtotalofrecords, 'object_'.$object->picto, 0, $newcardbutton, '', $limit, 0, 0, 1);
 

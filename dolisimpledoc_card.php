@@ -17,7 +17,7 @@
  */
 
 /**
- *   	\file       simpledoc_card.php
+ *   	\file       dolisimpledoc_card.php
  *		\ingroup    dolisimpledoc
  *		\brief      Page to create/edit/view simpledoc
  */
@@ -79,10 +79,10 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/doleditor.class.php';
-require_once __DIR__ .'./class/simpledoc.class.php';
+require_once __DIR__ . './class/dolisimpledoc.class.php';
 
 
-dol_include_once('/dolisimpledoc/class/simpledoc.class.php');
+dol_include_once('/dolisimpledoc/class/dolisimpledoc.class.php');
 dol_include_once('/dolisimpledoc/lib/dolisimpledoc_simpledoc.lib.php');
 
 // Load translation files required by the page
@@ -163,14 +163,14 @@ if (empty($reshook)) {
 
 	$error = 0;
 
-	$backurlforlist = dol_buildpath('/dolisimpledoc/simpledoc_list.php', 1);
+	$backurlforlist = dol_buildpath('/dolisimpledoc/dolisimpledoc_list.php', 1);
 
 	if (empty($backtopage) || ($cancel && empty($id))) {
 		if (empty($backtopage) || ($cancel && strpos($backtopage, '__ID__'))) {
 			if (empty($id) && (($action != 'add' && $action != 'create') || $cancel)) {
 				$backtopage = $backurlforlist;
 			} else {
-				$backtopage = dol_buildpath('/dolisimpledoc/simpledoc_card.php', 1).'?id='.($id > 0 ? $id : '__ID__');
+				$backtopage = dol_buildpath('/dolisimpledoc/dolisimpledoc_card.php', 1).'?id='.($id > 0 ? $id : '__ID__');
 			}
 		}
 	}
@@ -380,7 +380,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 	// Object card
 	// ------------------------------------------------------------
-	$linkback = '<a href="'.dol_buildpath('/dolisimpledoc/simpledoc_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
+	$linkback = '<a href="'.dol_buildpath('/dolisimpledoc/dolisimpledoc_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
 
 	$morehtmlref = '<div class="refidno">';
 	/*

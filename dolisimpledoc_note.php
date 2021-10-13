@@ -17,7 +17,7 @@
  */
 
 /**
- *  \file       simpledoc_note.php
+ *  \file       dolisimpledoc_note.php
  *  \ingroup    dolisimpledoc
  *  \brief      Tab for notes on SimpleDoc
  */
@@ -74,7 +74,7 @@ if (!$res) {
 	die("Include of main fails");
 }
 
-dol_include_once('/dolisimpledoc/class/simpledoc.class.php');
+dol_include_once('/dolisimpledoc/class/dolisimpledoc.class.php');
 dol_include_once('/dolisimpledoc/lib/dolisimpledoc_simpledoc.lib.php');
 
 // Load translation files required by the page
@@ -139,7 +139,7 @@ if ($id > 0 || !empty($ref)) {
 
 	// Object card
 	// ------------------------------------------------------------
-	$linkback = '<a href="'.dol_buildpath('/dolisimpledoc/simpledoc_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
+	$linkback = '<a href="'.dol_buildpath('/dolisimpledoc/dolisimpledoc_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
 
 	$morehtmlref = '<div class="refidno">';
 	/*
