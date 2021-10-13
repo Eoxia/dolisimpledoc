@@ -89,7 +89,7 @@ class modDoliLetter extends DolibarrModules {
 
 		// Dependencies
 		$this->hidden       = false;
-		$this->depends      = array(); // List of module class names as string that must be enabled if this module is enabled. Example: array('always1'=>'modModuleToEnable1','always2'=>'modModuleToEnable2', 'FR1'=>'modModuleToEnableFR'...)
+		$this->depends      = array('modFckEditor'); // List of module class names as string that must be enabled if this module is enabled. Example: array('always1'=>'modModuleToEnable1','always2'=>'modModuleToEnable2', 'FR1'=>'modModuleToEnableFR'...)
 		$this->requiredby   = array(); // List of module class names as string to disable if this one is disabled. Example: array('modModuleToDisable1', ...)
 		$this->conflictwith = array(); // List of module class names as string this module is in conflict with. Example: array('modModuleToDisable1', ...)
 
@@ -111,7 +111,10 @@ class modDoliLetter extends DolibarrModules {
 		// Example: $this->const=array(1 => array('DOLISIMPLEDOC_MYNEWCONST1', 'chaine', 'myvalue', 'This is a constant to add', 1),
 		//                             2 => array('DOLISIMPLEDOC_MYNEWCONST2', 'chaine', 'myvalue', 'This is another constant to add', 0, 'current', 1)
 		// );
-		$this->const = array();
+		$this->const = array(
+			// CONST DOCUMENT
+			1 => array('DOLILETTER_DOCUMENT_ADDON','chaine', 'mod_document_standard' ,'', $conf->entity),
+		);
 
 		if (!isset($conf->doliletter) || !isset($conf->doliletter->enabled)) {
 			$conf->doliletter = new stdClass();
