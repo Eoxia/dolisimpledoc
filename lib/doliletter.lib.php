@@ -16,9 +16,9 @@
  */
 
 /**
- * \file    dolisimpledoc/lib/dolisimpledoc.lib.php
- * \ingroup dolisimpledoc
- * \brief   Library files with common functions for dolisimpledoc
+ * \file    doliletter/lib/doliletter.lib.php
+ * \ingroup doliletter
+ * \brief   Library files with common functions for doliletter
  */
 
 /**
@@ -30,24 +30,24 @@ function dolisimpledocAdminPrepareHead()
 {
 	global $langs, $conf;
 
-	$langs->load("dolisimpledoc@dolisimpledoc");
+	$langs->load("doliletter@doliletter");
 
 	$h = 0;
 	$head = array();
 
-	$head[$h][0] = dol_buildpath("/dolisimpledoc/admin/setup.php", 1);
+	$head[$h][0] = dol_buildpath("/doliletter/admin/setup.php", 1);
 	$head[$h][1] = $langs->trans("Settings");
 	$head[$h][2] = 'settings';
 	$h++;
 
 	/*
-	$head[$h][0] = dol_buildpath("/dolisimpledoc/admin/myobject_extrafields.php", 1);
+	$head[$h][0] = dol_buildpath("/doliletter/admin/myobject_extrafields.php", 1);
 	$head[$h][1] = $langs->trans("ExtraFields");
 	$head[$h][2] = 'myobject_extrafields';
 	$h++;
 	*/
 
-	$head[$h][0] = dol_buildpath("/dolisimpledoc/admin/about.php", 1);
+	$head[$h][0] = dol_buildpath("/doliletter/admin/about.php", 1);
 	$head[$h][1] = $langs->trans("About");
 	$head[$h][2] = 'about';
 	$h++;
@@ -55,12 +55,12 @@ function dolisimpledocAdminPrepareHead()
 	// Show more tabs from modules
 	// Entries must be declared in modules descriptor with line
 	//$this->tabs = array(
-	//	'entity:+tabname:Title:@dolisimpledoc:/dolisimpledoc/mypage.php?id=__ID__'
+	//	'entity:+tabname:Title:@doliletter:/doliletter/mypage.php?id=__ID__'
 	//); // to add new tab
 	//$this->tabs = array(
-	//	'entity:-tabname:Title:@dolisimpledoc:/dolisimpledoc/mypage.php?id=__ID__'
+	//	'entity:-tabname:Title:@doliletter:/doliletter/mypage.php?id=__ID__'
 	//); // to remove a tab
-	complete_head_from_modules($conf, $langs, null, $head, $h, 'dolisimpledoc');
+	complete_head_from_modules($conf, $langs, null, $head, $h, 'doliletter');
 
 	return $head;
 }

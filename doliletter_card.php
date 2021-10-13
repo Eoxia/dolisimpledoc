@@ -18,7 +18,7 @@
 
 /**
  *   	\file       dolisimpledoc_card.php
- *		\ingroup    dolisimpledoc
+ *		\ingroup    doliletter
  *		\brief      Page to create/edit/view simpledoc
  */
 
@@ -79,14 +79,14 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/doleditor.class.php';
-require_once __DIR__ . './class/dolisimpledoc.class.php';
+require_once __DIR__ . './class/doliletter.class.php';
 
 
-dol_include_once('/dolisimpledoc/class/dolisimpledoc.class.php');
-dol_include_once('/dolisimpledoc/lib/dolisimpledoc_simpledoc.lib.php');
+dol_include_once('/doliletter/class/doliletter.class.php');
+dol_include_once('/doliletter/lib/doliletter_letter.lib.php');
 
 // Load translation files required by the page
-$langs->loadLangs(array("dolisimpledoc@dolisimpledoc", "other"));
+$langs->loadLangs(array("doliletter@doliletter", "other"));
 
 // Get parameters
 $id = GETPOST('id', 'int');
@@ -141,7 +141,7 @@ $upload_dir = $conf->dolisimpledoc->multidir_output[isset($object->entity) ? $ob
 //if ($user->socid > 0) $socid = $user->socid;
 //$isdraft = (($object->status == $object::STATUS_DRAFT) ? 1 : 0);
 //restrictedArea($user, $object->element, $object->id, $object->table_element, '', 'fk_soc', 'rowid', $isdraft);
-//if (empty($conf->dolisimpledoc->enabled)) accessforbidden();
+//if (empty($conf->doliletter->enabled)) accessforbidden();
 //if (!$permissiontoread) accessforbidden();
 
 
@@ -149,7 +149,7 @@ $upload_dir = $conf->dolisimpledoc->multidir_output[isset($object->entity) ? $ob
  * Actions
  */
 
-require_once DOL_DOCUMENT_ROOT.'/custom/dolisimpledoc/core/modules/dolisimpledoc/mod_simpledoc_standard.php';
+require_once DOL_DOCUMENT_ROOT.'/custom/doliletter/core/modules/doliletter/mod_simpledoc_standard.php';
 $simpledocmod = new mod_simpledoc_standard;
 
 $parameters = array();
@@ -163,14 +163,14 @@ if (empty($reshook)) {
 
 	$error = 0;
 
-	$backurlforlist = dol_buildpath('/dolisimpledoc/dolisimpledoc_list.php', 1);
+	$backurlforlist = dol_buildpath('/doliletter/dolisimpledoc_list.php', 1);
 
 	if (empty($backtopage) || ($cancel && empty($id))) {
 		if (empty($backtopage) || ($cancel && strpos($backtopage, '__ID__'))) {
 			if (empty($id) && (($action != 'add' && $action != 'create') || $cancel)) {
 				$backtopage = $backurlforlist;
 			} else {
-				$backtopage = dol_buildpath('/dolisimpledoc/dolisimpledoc_card.php', 1).'?id='.($id > 0 ? $id : '__ID__');
+				$backtopage = dol_buildpath('/doliletter/dolisimpledoc_card.php', 1).'?id='.($id > 0 ? $id : '__ID__');
 			}
 		}
 	}
@@ -380,7 +380,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 	// Object card
 	// ------------------------------------------------------------
-	$linkback = '<a href="'.dol_buildpath('/dolisimpledoc/dolisimpledoc_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
+	$linkback = '<a href="'.dol_buildpath('/doliletter/dolisimpledoc_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
 
 	$morehtmlref = '<div class="refidno">';
 	/*
@@ -543,7 +543,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			$urlsource = $_SERVER["PHP_SELF"]."?id=".$object->id;
 			$genallowed = $user->rights->dolisimpledoc->simpledoc->read; // If you can read, you can build the PDF to read content
 			$delallowed = $user->rights->dolisimpledoc->simpledoc->write; // If you can create/edit, you can remove a file on card
-			print $formfile->showdocuments('dolisimpledoc:SimpleDoc', $object->element.'/'.$objref, $filedir, $urlsource, $genallowed, $delallowed, $object->model_pdf, 1, 0, 0, 28, 0, '', '', '', $langs->defaultlang);
+			print $formfile->showdocuments('doliletter:SimpleDoc', $object->element.'/'.$objref, $filedir, $urlsource, $genallowed, $delallowed, $object->model_pdf, 1, 0, 0, 28, 0, '', '', '', $langs->defaultlang);
 		}
 
 

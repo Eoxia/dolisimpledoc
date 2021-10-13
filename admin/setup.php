@@ -17,9 +17,9 @@
  */
 
 /**
- * \file    dolisimpledoc/admin/setup.php
- * \ingroup dolisimpledoc
- * \brief   dolisimpledoc setup page.
+ * \file    doliletter/admin/setup.php
+ * \ingroup doliletter
+ * \brief   doliletter setup page.
  */
 
 // Load Dolibarr environment
@@ -54,11 +54,11 @@ global $langs, $user;
 
 // Libraries
 require_once DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php";
-require_once '../lib/dolisimpledoc.lib.php';
+require_once '../lib/doliletter.lib.php';
 //require_once "../class/myclass.class.php";
 
 // Translations
-$langs->loadLangs(array("admin", "dolisimpledoc@dolisimpledoc"));
+$langs->loadLangs(array("admin", "doliletter@doliletter"));
 
 // Access control
 if (!$user->admin) {
@@ -126,7 +126,7 @@ if ($action == 'updateMask') {
 	$file = ''; $classname = ''; $filefound = 0;
 	$dirmodels = array_merge(array('/'), (array) $conf->modules_parts['models']);
 	foreach ($dirmodels as $reldir) {
-		$file = dol_buildpath($reldir."core/modules/dolisimpledoc/doc/pdf_".$modele."_".strtolower($tmpobjectkey).".modules.php", 0);
+		$file = dol_buildpath($reldir."core/modules/doliletter/doc/pdf_".$modele."_".strtolower($tmpobjectkey).".modules.php", 0);
 		if (file_exists($file)) {
 			$filefound = 1;
 			$classname = "pdf_".$modele;
@@ -216,7 +216,7 @@ print load_fiche_titre($langs->trans($page_name), $linkback, 'title_setup');
 
 // Configuration header
 $head = dolisimpledocAdminPrepareHead();
-print dol_get_fiche_head($head, 'settings', $langs->trans($page_name), -1, "dolisimpledoc@dolisimpledoc");
+print dol_get_fiche_head($head, 'settings', $langs->trans($page_name), -1, "doliletter@doliletter");
 
 // Setup page goes here
 echo '<span class="opacitymedium">'.$langs->trans("DoliSimpleDocSetupPage").'</span><br><br>';
@@ -397,7 +397,7 @@ if ($action == 'edit') {
 }
 
 
-$moduledir = 'dolisimpledoc';
+$moduledir = 'doliletter';
 $myTmpObjects = array();
 $myTmpObjects['MyObject'] = array('includerefgeneration'=>0, 'includedocgeneration'=>0);
 

@@ -13,6 +13,5 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see https://www.gnu.org/licenses/.
 
-ALTER TABLE llx_dolisimpledoc_document_link ADD INDEX idx_dolisimpledoc_document_link_rowid (rowid);
-ALTER TABLE llx_dolisimpledoc_document_link ADD CONSTRAINT llx_dolisimpledoc_document_link_fk_document FOREIGN KEY (fk_document) REFERENCES llx_dolisimpledoc_document(rowid);
-
+ALTER TABLE llx_doliletter_document_signature ADD INDEX idx_doliletter_document_signature _rowid (rowid);
+ALTER TABLE llx_doliletter_document_signature  ADD CONSTRAINT llx_doliletter_document_signature_fk_object FOREIGN KEY (fk_object) REFERENCES llx_doliletter_document(rowid);

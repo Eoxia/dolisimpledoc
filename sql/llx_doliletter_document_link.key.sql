@@ -13,11 +13,6 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see https://www.gnu.org/licenses/.
 
-CREATE TABLE llx_dolisimpledoc_email_sending(
-    rowid             integer AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    date_creation     datetime NOT NULL,
-    contact_fullname  varchar(255),
-    recipient_address varchar(255),
-    fk_document       integer NOT NULL,
-    fk_socpeople      integer NOT NULL,
-) ENGINE=innodb;
+ALTER TABLE llx_doliletter_document_link ADD INDEX idx_doliletter_document_link_rowid (rowid);
+ALTER TABLE llx_doliletter_document_link ADD CONSTRAINT llx_doliletter_document_link_fk_document FOREIGN KEY (fk_document) REFERENCES llx_doliletter_document(rowid);
+

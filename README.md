@@ -5,7 +5,7 @@
 Description of the module...
 
 <!--
-![Screenshot dolisimpledoc](img/screenshot_dolisimpledoc.png?raw=true "dolisimpledoc"){imgmd}
+![Screenshot doliletter](img/screenshot_dolisimpledoc.png?raw=true "doliletter"){imgmd}
 -->
 
 Other external modules are available on [Dolistore.com](https://www.dolistore.com).
@@ -58,11 +58,11 @@ Note: If this screen tell you there is no custom directory, check your setup is 
 
 ### From a GIT repository
 
-- Clone the repository in ```$dolibarr_main_document_root_alt/dolisimpledoc```
+- Clone the repository in ```$dolibarr_main_document_root_alt/doliletter```
 
 ```sh
 cd ....../custom
-git clone git@github.com:gitlogin/dolisimpledoc.git dolisimpledoc
+git clone git@github.com:gitlogin/doliletter.git doliletter
 ```
 
 ### <a name="final_steps"></a>Final steps

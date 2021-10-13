@@ -17,29 +17,29 @@
 # Generic
 #
 
-# Module label 'ModuleDoliSimpleDocName'
-ModuleDoliSimpleDocName = DoliSimpleDoc
-# Module description 'ModuleDoliSimpleDocDesc'
-ModuleDoliSimpleDocDesc = DoliSimpleDoc description
+# Module label 'ModuleDoliLetterModuleName'
+ModuleDoliLetterModuleName = DoliLetter
+# Module description 'ModuleDoliLetter'
+ModuleDoliLetterDesc = DoliLetter description
 
 #
 # Admin page
 #
-DoliSimpleDocSetup = DoliSimpleDoc setup
+LetterModuleSetup = LetterModule setup
 Settings = Settings
-DoliSimpleDocSetupPage = DoliSimpleDoc setup page
-DOLISIMPLEDOC_MYPARAM1 = My param 1
-DOLISIMPLEDOC_MYPARAM1Tooltip = My param 1 tooltip
-DOLISIMPLEDOC_MYPARAM2=My param 2
-DOLISIMPLEDOC_MYPARAM2Tooltip=My param 2 tooltip
+LetterModuleSetupPage = LetterModule setup page
+SIMPLEDOCMODULE_MYPARAM1 = My param 1
+SIMPLEDOCMODULE_MYPARAM1Tooltip = My param 1 tooltip
+SIMPLEDOCMODULE_MYPARAM2=My param 2
+SIMPLEDOCMODULE_MYPARAM2Tooltip=My param 2 tooltip
 
 
 #
 # About page
 #
 About = About
-DoliSimpleDocAbout = About DoliSimpleDoc
-DoliSimpleDocAboutPage = DoliSimpleDoc about page
+LetterModuleAbout = About LetterModule
+LetterModuleAboutPage = LetterModule about page
 
 #
 # Sample page
@@ -51,3 +51,11 @@ MyPageName = My page name
 #
 MyWidget = My widget
 MyWidgetDescription = My widget description
+ExtSociety = Tiers destinataire
+content = Contenu du document
+note_public = Note publique
+note_private = Note privée
+
+DoliLetterCreate = Nouveau courrier
+DoliLetterList = Liste
+DoliLetterIndex = DoliLetter

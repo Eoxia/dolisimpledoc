@@ -18,7 +18,7 @@
 
 /**
  * \file    test/phpunit/DoliSimpleDocFunctionalTest.php
- * \ingroup dolisimpledoc
+ * \ingroup doliletter
  * \brief   Example Selenium test.
  *
  * Put detailed description here.
@@ -196,9 +196,9 @@ class DoliSimpleDocFunctionalTest extends \PHPUnit_Extensions_Selenium2TestCase
 	 */
 	public function testConfigurationPage()
 	{
-		$this->url('/custom/dolisimpledoc/admin/setup.php');
+		$this->url('/custom/doliletter/admin/setup.php');
 		$this->authenticate();
-		return $this->assertContains('dolisimpledoc/admin/setup.php', $this->url(), 'Configuration page');
+		return $this->assertContains('doliletter/admin/setup.php', $this->url(), 'Configuration page');
 	}
 
 	/**
@@ -209,9 +209,9 @@ class DoliSimpleDocFunctionalTest extends \PHPUnit_Extensions_Selenium2TestCase
 	 */
 	public function testAboutPage()
 	{
-		$this->url('/custom/dolisimpledoc/admin/about.php');
+		$this->url('/custom/doliletter/admin/about.php');
 		$this->authenticate();
-		return $this->assertContains('dolisimpledoc/admin/about.php', $this->url(), 'About page');
+		return $this->assertContains('doliletter/admin/about.php', $this->url(), 'About page');
 	}
 
 	/**
@@ -222,7 +222,7 @@ class DoliSimpleDocFunctionalTest extends \PHPUnit_Extensions_Selenium2TestCase
 	 */
 	public function testAboutPageRendersMarkdownReadme()
 	{
-		$this->url('/custom/dolisimpledoc/admin/about.php');
+		$this->url('/custom/doliletter/admin/about.php');
 		$this->authenticate();
 		return $this->assertEquals(
 			'Dolibarr Module Template (aka My Module)',

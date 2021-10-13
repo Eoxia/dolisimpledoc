@@ -13,9 +13,10 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see https://www.gnu.org/licenses/.
 
-ALTER TABLE llx_dolisimpledoc_document ADD INDEX idx_dolisimpledoc_document_rowid (rowid);
-ALTER TABLE llx_dolisimpledoc_document ADD INDEX idx_dolisimpledoc_document_ref (ref);
-ALTER TABLE llx_dolisimpledoc_document ADD INDEX idx_dolisimpledoc_document_fk_soc (fk_soc);
-ALTER TABLE llx_dolisimpledoc_document ADD CONSTRAINT llx_dolisimpledoc_document_fk_user_creat FOREIGN KEY (fk_user_creat) REFERENCES llx_user(rowid);
-ALTER TABLE llx_dolisimpledoc_document ADD INDEX idx_dolisimpledoc_document_status (status);
+create table llx_doliletter_document_extrafields (
+  rowid      integer AUTO_INCREMENT PRIMARY KEY,
+  tms        timestamp,
+  fk_object  integer NOT NULL,
+  import_key varchar(14)
+) ENGINE=innodb;
 

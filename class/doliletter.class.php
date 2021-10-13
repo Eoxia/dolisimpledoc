@@ -17,8 +17,8 @@
  */
 
 /**
- * \file        class/dolisimpledoc.class.php
- * \ingroup     dolisimpledoc
+ * \file        class/doliletter.class.php
+ * \ingroup     doliletter
  * \brief       This file is a CRUD class file for SimpleDoc (Create/Read/Update/Delete)
  */
 
@@ -35,7 +35,7 @@ class SimpleDoc extends CommonObject
 	/**
 	 * @var string ID of module.
 	 */
-	public $module = 'dolisimpledoc';
+	public $module = 'doliletter';
 
 	/**
 	 * @var string ID to identify managed object.
@@ -61,7 +61,7 @@ class SimpleDoc extends CommonObject
 	/**
 	 * @var string String with name of icon for simpledoc. Must be the part after the 'object_' into object_simpledoc.png
 	 */
-	public $picto = 'simpledoc@dolisimpledoc';
+	public $picto = 'simpledoc@doliletter';
 
 
 	const STATUS_DRAFT = 0;
@@ -193,7 +193,7 @@ class SimpleDoc extends CommonObject
 		}
 
 		// Example to show how to set values of fields definition dynamically
-		/*if ($user->rights->dolisimpledoc->simpledoc->read) {
+		/*if ($user->rights->doliletter->simpledoc->read) {
 			$this->fields['myfield']['visible'] = 1;
 			$this->fields['myfield']['noteditable'] = 0;
 		}*/
@@ -507,8 +507,8 @@ class SimpleDoc extends CommonObject
 			return 0;
 		}
 
-		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->dolisimpledoc->simpledoc->write))
-		 || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->dolisimpledoc->simpledoc->simpledoc_advance->validate))))
+		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->doliletter->simpledoc->write))
+		 || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->doliletter->simpledoc->simpledoc_advance->validate))))
 		 {
 		 $this->error='NotEnoughPermissions';
 		 dol_syslog(get_class($this)."::valid ".$this->error, LOG_ERR);
@@ -625,8 +625,8 @@ class SimpleDoc extends CommonObject
 			return 0;
 		}
 
-		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->dolisimpledoc->write))
-		 || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->dolisimpledoc->dolisimpledoc_advance->validate))))
+		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->doliletter->write))
+		 || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->doliletter->dolisimpledoc_advance->validate))))
 		 {
 		 $this->error='Permission denied';
 		 return -1;
@@ -649,8 +649,8 @@ class SimpleDoc extends CommonObject
 			return 0;
 		}
 
-		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->dolisimpledoc->write))
-		 || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->dolisimpledoc->dolisimpledoc_advance->validate))))
+		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->doliletter->write))
+		 || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->doliletter->dolisimpledoc_advance->validate))))
 		 {
 		 $this->error='Permission denied';
 		 return -1;
@@ -673,8 +673,8 @@ class SimpleDoc extends CommonObject
 			return 0;
 		}
 
-		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->dolisimpledoc->write))
-		 || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->dolisimpledoc->dolisimpledoc_advance->validate))))
+		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->doliletter->write))
+		 || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->doliletter->dolisimpledoc_advance->validate))))
 		 {
 		 $this->error='Permission denied';
 		 return -1;
@@ -710,7 +710,7 @@ class SimpleDoc extends CommonObject
 		$label .= '<br>';
 		$label .= '<b>'.$langs->trans('Ref').':</b> '.$this->ref;
 
-		$url = dol_buildpath('/dolisimpledoc/dolisimpledoc_card.php', 1).'?id='.$this->id;
+		$url = dol_buildpath('/doliletter/dolisimpledoc_card.php', 1).'?id='.$this->id;
 
 		if ($option != 'nolink') {
 			// Add param to save lastsearch_values or not
@@ -822,7 +822,7 @@ class SimpleDoc extends CommonObject
 		// phpcs:enable
 		if (empty($this->labelStatus) || empty($this->labelStatusShort)) {
 			global $langs;
-			//$langs->load("dolisimpledoc@dolisimpledoc");
+			//$langs->load("doliletter@doliletter");
 			$this->labelStatus[self::STATUS_DRAFT] = $langs->trans('Draft');
 			$this->labelStatus[self::STATUS_VALIDATED] = $langs->trans('Enabled');
 			$this->labelStatus[self::STATUS_CANCELED] = $langs->trans('Disabled');
@@ -931,7 +931,7 @@ class SimpleDoc extends CommonObject
 	public function getNextNumRef()
 	{
 		global $langs, $conf;
-		$langs->load("dolisimpledoc@dolisimpledoc");
+		$langs->load("doliletter@doliletter");
 
 		if (empty($conf->global->DOLISIMPLEDOC_SIMPLEDOC_ADDON)) {
 			$conf->global->DOLISIMPLEDOC_SIMPLEDOC_ADDON = 'mod_simpledoc_standard';
@@ -946,7 +946,7 @@ class SimpleDoc extends CommonObject
 			// Include file with class
 			$dirmodels = array_merge(array('/'), (array) $conf->modules_parts['models']);
 			foreach ($dirmodels as $reldir) {
-				$dir = dol_buildpath($reldir."core/modules/dolisimpledoc/");
+				$dir = dol_buildpath($reldir."core/modules/doliletter/");
 
 				// Load file with numbering class (if found)
 				$mybool |= @include_once $dir.$file;
@@ -996,7 +996,7 @@ class SimpleDoc extends CommonObject
 		$result = 0;
 		$includedocgeneration = 1;
 
-		$langs->load("dolisimpledoc@dolisimpledoc");
+		$langs->load("doliletter@doliletter");
 
 		if (!dol_strlen($modele)) {
 			$modele = 'standard_simpledoc';
@@ -1008,7 +1008,7 @@ class SimpleDoc extends CommonObject
 			}
 		}
 
-		$modelpath = "core/modules/dolisimpledoc/doc/";
+		$modelpath = "core/modules/doliletter/doc/";
 
 		if ($includedocgeneration && !empty($modele)) {
 			$result = $this->commonGenerateDocument($modelpath, $modele, $outputlangs, $hidedetails, $hidedesc, $hideref, $moreparams);

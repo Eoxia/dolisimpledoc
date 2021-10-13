@@ -16,19 +16,19 @@
  */
 
 /**
- * 	\defgroup   dolisimpledoc     Module DoliSimpleDoc
- *  \brief      DoliSimpleDoc module descriptor.
+ * 	\defgroup   doliletter     Module DoliLetter
+ *  \brief      DoliLetter module descriptor.
  *
- *  \file       htdocs/custom/dolisimpledoc/core/modules/modDoliSimpleDoc.class.php
- *  \ingroup    dolisimpledoc
- *  \brief      Description and activation file for module DoliSimpleDoc
+ *  \file       htdocs/custom/doliletter/core/modules/modDoliLetter.class.php
+ *  \ingroup    doliletter
+ *  \brief      Description and activation file for module DoliLetter
  */
 include_once DOL_DOCUMENT_ROOT.'/core/modules/DolibarrModules.class.php';
 
 /**
- *  Description and activation class for module dolisimpledoc
+ *  Description and activation class for module doliletter
  */
-class modDoliSimpleDoc extends DolibarrModules {
+class modDoliLetter extends DolibarrModules {
 	/**
 	 * Constructor. Define names, constants, directories, boxes, permissions
 	 *
@@ -40,18 +40,18 @@ class modDoliSimpleDoc extends DolibarrModules {
 		$this->db = $db;
 
 		$this->numero          = 500000; // TODO Go on page https://wiki.dolibarr.org/index.php/List_of_modules_id to reserve an id number for your module
-		$this->rights_class    = 'dolisimpledoc';
+		$this->rights_class    = 'doliletter';
 		$this->family          = '';
 		$this->module_position = '';
 		$this->familyinfo      = array('Eoxia' => array('position' => '01', 'label' => $langs->trans("Eoxia")));
 		$this->name            = preg_replace('/^mod/i', '', get_class($this));
-		$this->description     = $langs->trans('DoliSimpleDocDescription');
-		$this->descriptionlong = $langs->trans('DoliSimpleDocDescriptionLong');
+		$this->description     = $langs->trans('DoliLetterDescription');
+		$this->descriptionlong = $langs->trans('DoliLetterDescriptionLong');
 		$this->editor_name     = 'Eoxia';
 		$this->editor_url      = 'https://eoxia.com/';
 		$this->version         = '1.0.0';
 		$this->const_name      = 'MAIN_MODULE_'.strtoupper($this->name);
-		$this->picto           = 'dolisimpledoc@dolisimpledoc';
+		$this->picto           = 'doliletter@doliletter';
 
 		$this->module_parts = array(
 			// Set this to 1 if module has its own trigger directory (core/triggers)
@@ -82,10 +82,10 @@ class modDoliSimpleDoc extends DolibarrModules {
 			'moduleforexternal' => 0,
 		);
 
-		$this->dirs = array("/dolisimpledoc/temp");
+		$this->dirs = array("/doliletter/temp");
 
-		// Config pages. Put here list of php page, stored into dolisimpledoc/admin directory, to use to setup module.
-		$this->config_page_url = array("setup.php@dolisimpledoc");
+		// Config pages. Put here list of php page, stored into doliletter/admin directory, to use to setup module.
+		$this->config_page_url = array("setup.php@doliletter");
 
 		// Dependencies
 		$this->hidden       = false;
@@ -94,7 +94,7 @@ class modDoliSimpleDoc extends DolibarrModules {
 		$this->conflictwith = array(); // List of module class names as string this module is in conflict with. Example: array('modModuleToDisable1', ...)
 
 		// The language file dedicated to your module
-		$this->langfiles = array("dolisimpledoc@dolisimpledoc");
+		$this->langfiles = array("doliletter@doliletter");
 
 		// Prerequisites
 		$this->phpmin                = array(5, 6); // Minimum version of PHP required by module
@@ -103,7 +103,7 @@ class modDoliSimpleDoc extends DolibarrModules {
 		// Messages at activation
 		$this->warnings_activation     = array(); // Warning to show when we activate module. array('always'='text') or array('FR'='textfr','ES'='textes'...)
 		$this->warnings_activation_ext = array(); // Warning to show when we activate an external module. array('always'='text') or array('FR'='textfr','ES'='textes'...)
-		//$this->automatic_activation  = array('FR'=>'DoliSimpleDocWasAutomaticallyActivatedBecauseOfYourCountryChoice');
+		//$this->automatic_activation  = array('FR'=>'DoliLetterWasAutomaticallyActivatedBecauseOfYourCountryChoice');
 		//$this->always_enabled        = true; // If true, can't be disabled
 
 		// Constants
@@ -113,23 +113,23 @@ class modDoliSimpleDoc extends DolibarrModules {
 		// );
 		$this->const = array();
 
-		if (!isset($conf->dolisimpledoc) || !isset($conf->dolisimpledoc->enabled)) {
-			$conf->dolisimpledoc = new stdClass();
-			$conf->dolisimpledoc->enabled = 0;
+		if (!isset($conf->doliletter) || !isset($conf->doliletter->enabled)) {
+			$conf->doliletter = new stdClass();
+			$conf->doliletter->enabled = 0;
 		}
 
 		// Array to add new pages in new tabs
 		$this->tabs = array();
 		// Example:
-		// $this->tabs[] = array('data'=>'objecttype:+tabname1:Title1:mylangfile@dolisimpledoc:$user->rights->dolisimpledoc->read:/dolisimpledoc/mynewtab1.php?id=__ID__');  					// To add a new tab identified by code tabname1
-		// $this->tabs[] = array('data'=>'objecttype:+tabname2:SUBSTITUTION_Title2:mylangfile@dolisimpledoc:$user->rights->othermodule->read:/dolisimpledoc/mynewtab2.php?id=__ID__',  	// To add another new tab identified by code tabname2. Label will be result of calling all substitution functions on 'Title2' key.
+		// $this->tabs[] = array('data'=>'objecttype:+tabname1:Title1:mylangfile@doliletter:$user->rights->doliletter->read:/doliletter/mynewtab1.php?id=__ID__');  					// To add a new tab identified by code tabname1
+		// $this->tabs[] = array('data'=>'objecttype:+tabname2:SUBSTITUTION_Title2:mylangfile@doliletter:$user->rights->othermodule->read:/doliletter/mynewtab2.php?id=__ID__',  	// To add another new tab identified by code tabname2. Label will be result of calling all substitution functions on 'Title2' key.
 		// $this->tabs[] = array('data'=>'objecttype:-tabname:NU:conditiontoremove');                                                     										// To remove an existing tab identified by code tabname
 
 		// Dictionaries
 		$this->dictionaries = array();
 		/* Example:
 		$this->dictionaries=array(
-			'langs'=>'dolisimpledoc@dolisimpledoc',
+			'langs'=>'doliletter@doliletter',
 			// List of tables we want to see into dictonnary editor
 			'tabname'=>array(MAIN_DB_PREFIX."table1", MAIN_DB_PREFIX."table2", MAIN_DB_PREFIX."table3"),
 			// Label of tables
@@ -147,7 +147,7 @@ class modDoliSimpleDoc extends DolibarrModules {
 			// Name of columns with primary key (try to always name it 'rowid')
 			'tabrowid'=>array("rowid", "rowid", "rowid"),
 			// Condition to show each dictionary
-			'tabcond'=>array($conf->dolisimpledoc->enabled, $conf->dolisimpledoc->enabled, $conf->dolisimpledoc->enabled)
+			'tabcond'=>array($conf->doliletter->enabled, $conf->doliletter->enabled, $conf->doliletter->enabled)
 		);
 		*/
 
@@ -160,20 +160,20 @@ class modDoliSimpleDoc extends DolibarrModules {
 		// Permissions provided by this module
 		$this->rights = array();
 		$r            = 0;
-		/* DoliSimpleDoc PERMISSIONS */
+		/* DoliLetter PERMISSIONS */
 		$this->rights[$r][0] = $this->numero . sprintf("%02d", $r + 1);
-		$this->rights[$r][1] = $langs->trans('ReadDoliSimpleDoc');
-		$this->rights[$r][4] = 'simpledoc';
+		$this->rights[$r][1] = $langs->trans('ReadDoliLetter');
+		$this->rights[$r][4] = 'letter';
 		$this->rights[$r][5] = 'read';
 		$r++;
 		$this->rights[$r][0] = $this->numero . sprintf("%02d", $r + 1);
-		$this->rights[$r][1] = $langs->trans('CreateDoliSimpleDoc');
-		$this->rights[$r][4] = 'simpledoc';
+		$this->rights[$r][1] = $langs->trans('CreateDoliLetter');
+		$this->rights[$r][4] = 'letter';
 		$this->rights[$r][5] = 'write';
 		$r++;
 		$this->rights[$r][0] = $this->numero . sprintf("%02d", $r + 1);
-		$this->rights[$r][1] = $langs->trans('DeleteDoliSimpleDoc');
-		$this->rights[$r][4] = 'simpledoc';
+		$this->rights[$r][1] = $langs->trans('DeleteDoliLetter');
+		$this->rights[$r][4] = 'letter';
 		$this->rights[$r][5] = 'delete';
 
 		// Main menu entries to add
@@ -183,59 +183,59 @@ class modDoliSimpleDoc extends DolibarrModules {
 		$this->menu[$r++] = array(
 			'fk_menu'=>'', // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type'=>'top', // This is a Top menu entry
-			'titre'=>'ModuleDoliSimpleDocName',
+			'titre'=>'ModuleDoliLetterName',
 			'prefix' => img_picto('', $this->picto, 'class="paddingright pictofixedwidth valignmiddle"'),
-			'mainmenu'=>'dolisimpledoc',
+			'mainmenu'=>'doliletter',
 			'leftmenu'=>'',
-			'url'=>'/dolisimpledoc/dolisimpledocindex.php',
-			'langs'=>'dolisimpledoc@dolisimpledoc', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'url'=>'/doliletter/doliletterindex.php',
+			'langs'=>'doliletter@doliletter', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1000 + $r,
-			'enabled'=>'$conf->dolisimpledoc->enabled', // Define condition to show or hide menu entry. Use '$conf->dolisimpledoc->enabled' if entry must be visible if module is enabled.
-			'perms'=>'1', // Use 'perms'=>'$user->rights->dolisimpledoc->simpledoc->read' if you want your menu with a permission rules
+			'enabled'=>'$conf->doliletter->enabled', // Define condition to show or hide menu entry. Use '$conf->doliletter->enabled' if entry must be visible if module is enabled.
+			'perms'=>'1', // Use 'perms'=>'$user->rights->doliletter->letter->read' if you want your menu with a permission rules
 			'target'=>'',
 			'user'=>2, // 0=Menu for internal users, 1=external users, 2=both
 		);
 
 		$this->menu[$r++] = array(
-			'fk_menu'=>'fk_mainmenu=dolisimpledoc', // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu'=>'fk_mainmenu=doliletter', // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type'=>'left', // This is a Top menu entry
-			'titre'=>$langs->trans('DoliSimpleDocIndex'),
-			'mainmenu'=>'dolisimpledoc',
-			'leftmenu'=>'dolisimpledocindex',
-			'url'=>'/dolisimpledoc/dolisimpledocindex.php',
-			'langs'=>'dolisimpledoc@dolisimpledoc', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'titre'=>$langs->trans('DoliLetterIndex'),
+			'mainmenu'=>'doliletter',
+			'leftmenu'=>'doliletterindex',
+			'url'=>'/doliletter/doliletterindex.php',
+			'langs'=>'doliletter@doliletter', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1000 + $r,
-			'enabled'=>'$conf->dolisimpledoc->enabled', // Define condition to show or hide menu entry. Use '$conf->dolisimpledoc->enabled' if entry must be visible if module is enabled.
-			'perms'=>'1', // Use 'perms'=>'$user->rights->dolisimpledoc->simpledoc->read' if you want your menu with a permission rules
+			'enabled'=>'$conf->doliletter->enabled', // Define condition to show or hide menu entry. Use '$conf->doliletter->enabled' if entry must be visible if module is enabled.
+			'perms'=>'1', // Use 'perms'=>'$user->rights->doliletter->letter->read' if you want your menu with a permission rules
 			'target'=>'',
 			'user'=>2, // 0=Menu for internal users, 1=external users, 2=both
 		);
 
 		$this->menu[$r++]=array(
-			'fk_menu'=>'fk_mainmenu=dolisimpledoc',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu'=>'fk_mainmenu=doliletter',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type'=>'left', // This is a Left menu entry
-			'titre'=>$langs->trans('DoliSimpleDocCreate'),
-			'mainmenu'=>'dolisimpledoc',
-			'leftmenu'=>'dolisimpledoc_create',
-			'url'=>'/dolisimpledoc/dolisimpledoc_card.php?action=create',
-			'langs'=>'dolisimpledoc@dolisimpledoc', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'titre'=>$langs->trans('DoliLetterCreate'),
+			'mainmenu'=>'doliletter',
+			'leftmenu'=>'doliletter_create',
+			'url'=>'/doliletter/doliletter_card.php?action=create',
+			'langs'=>'doliletter@doliletter', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1100+$r,
-			'enabled'=>'$conf->dolisimpledoc->enabled',  // Define condition to show or hide menu entry. Use '$conf->digiriskdolibarr->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'enabled'=>'$conf->doliletter->enabled',  // Define condition to show or hide menu entry. Use '$conf->digiriskdolibarr->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
 			'perms'=>'1', // Use 'perms'=>'$user->rights->digiriskdolibarr->level1->level2' if you want your menu with a permission rules
 			'target'=>'',
 			'user'=>0, // 0=Menu for internal users, 1=external users, 2=both
 		);
 
 		$this->menu[$r++]=array(
-			'fk_menu'=>'fk_mainmenu=dolisimpledoc',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu'=>'fk_mainmenu=doliletter',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type'=>'left', // This is a Left menu entry
-			'titre'=>'<i class="fas fa-list"></i>  ' . $langs->trans('DoliSimpleDocList'),
-			'mainmenu'=>'dolisimpledoc',
-			'leftmenu'=>'dolisimpledoc_list',
-			'url'=>'/dolisimpledoc/dolisimpledoc_list.php',
-			'langs'=>'dolisimpledoc@dolisimpledoc', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'titre'=>'<i class="fas fa-list"></i>  ' . $langs->trans('DoliLetterList'),
+			'mainmenu'=>'doliletter',
+			'leftmenu'=>'doliletter_list',
+			'url'=>'/doliletter/doliletter_list.php',
+			'langs'=>'doliletter@doliletter', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1100+$r,
-			'enabled'=>'$conf->dolisimpledoc->enabled',  // Define condition to show or hide menu entry. Use '$conf->digiriskdolibarr->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'enabled'=>'$conf->doliletter->enabled',  // Define condition to show or hide menu entry. Use '$conf->digiriskdolibarr->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
 			'perms'=>'1', // Use 'perms'=>'$user->rights->digiriskdolibarr->level1->level2' if you want your menu with a permission rules
 			'target'=>'',
 			'user'=>0, // 0=Menu for internal users, 1=external users, 2=both
@@ -251,7 +251,7 @@ class modDoliSimpleDoc extends DolibarrModules {
 	 *  @return     int             	1 if OK, 0 if KO
 	 */
 	public function init($options = '') {
-		$this->_load_tables('/dolisimpledoc/sql/');
+		$this->_load_tables('/doliletter/sql/');
 
 		$sql = array();
 

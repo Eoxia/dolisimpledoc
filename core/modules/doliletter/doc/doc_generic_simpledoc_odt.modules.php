@@ -22,12 +22,12 @@
  */
 
 /**
- *	\file       htdocs/core/modules/dolisimpledoc/doc/doc_generic_simpledoc_odt.modules.php
- *	\ingroup    dolisimpledoc
+ *	\file       htdocs/core/modules/doliletter/doc/doc_generic_simpledoc_odt.modules.php
+ *	\ingroup    doliletter
  *	\brief      File of class to build ODT documents for simpledocs
  */
 
-dol_include_once('/dolisimpledoc/core/modules/dolisimpledoc/modules_simpledoc.php');
+dol_include_once('/doliletter/core/modules/doliletter/modules_simpledoc.php');
 require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/functions2.lib.php';

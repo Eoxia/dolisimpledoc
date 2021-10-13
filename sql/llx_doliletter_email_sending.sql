@@ -13,10 +13,11 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see https://www.gnu.org/licenses/.
 
-create table llx_dolisimpledoc_document_extrafields (
-  rowid      integer AUTO_INCREMENT PRIMARY KEY,
-  tms        timestamp,
-  fk_object  integer NOT NULL,
-  import_key varchar(14)
+CREATE TABLE llx_doliletter_email_sending(
+    rowid             integer AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    date_creation     datetime NOT NULL,
+    contact_fullname  varchar(255),
+    recipient_address varchar(255),
+    fk_document       integer NOT NULL,
+    fk_socpeople      integer NOT NULL,
 ) ENGINE=innodb;
-

@@ -19,9 +19,9 @@
  */
 
 /**
- *	\file       dolisimpledoc/dolisimpledocindex.php
- *	\ingroup    dolisimpledoc
- *	\brief      Home page of dolisimpledoc top menu
+ *	\file       doliletter/dolisimpledocindex.php
+ *	\ingroup    doliletter
+ *	\brief      Home page of doliletter top menu
  */
 
 // Load Dolibarr environment
@@ -58,17 +58,17 @@ if (!$res) {
 
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/doleditor.class.php';
-require_once __DIR__ . '/class/dolisimpledoc.class.php';
+require_once __DIR__ . '/class/doliletter.class.php';
 
 // Load translation files required by the page
-$langs->loadLangs(array("dolisimpledoc@dolisimpledoc"));
+$langs->loadLangs(array("doliletter@doliletter"));
 
 $action = GETPOST('action', 'aZ09');
 
 $simpledoc = new SimpleDoc($db);
 
 // Security check
-// if (! $user->rights->dolisimpledoc->myobject->read) {
+// if (! $user->rights->doliletter->myobject->read) {
 // 	accessforbidden();
 // }
 $socid = GETPOST('socid', 'int');
@@ -96,7 +96,7 @@ $form = new Form($db);
 
 llxHeader("", $langs->trans("DoliSimpleDocArea"));
 
-print load_fiche_titre($langs->trans("DoliSimpleDocArea"), '', 'dolisimpledoc.png@dolisimpledoc');
+print load_fiche_titre($langs->trans("DoliSimpleDocArea"), '', 'doliletter.png@doliletter');
 
 
 print "
@@ -128,7 +128,7 @@ print "
 
 /* BEGIN MODULEBUILDER DRAFT MYOBJECT
 // Draft MyObject
-if (! empty($conf->dolisimpledoc->enabled) && $user->rights->dolisimpledoc->read)
+if (! empty($conf->doliletter->enabled) && $user->rights->doliletter->read)
 {
 	$langs->load("orders");
 
@@ -209,7 +209,7 @@ $max = $conf->global->MAIN_SIZE_SHORTLIST_LIMIT;
 
 /* BEGIN MODULEBUILDER LASTMODIFIED MYOBJECT
 // Last modified myobject
-if (! empty($conf->dolisimpledoc->enabled) && $user->rights->dolisimpledoc->read)
+if (! empty($conf->doliletter->enabled) && $user->rights->doliletter->read)
 {
 	$sql = "SELECT s.rowid, s.ref, s.label, s.date_creation, s.tms";
 	$sql.= " FROM ".MAIN_DB_PREFIX."dolisimpledoc_myobject as s";

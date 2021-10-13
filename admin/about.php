@@ -17,9 +17,9 @@
  */
 
 /**
- * \file    dolisimpledoc/admin/about.php
- * \ingroup dolisimpledoc
- * \brief   About page of module dolisimpledoc.
+ * \file    doliletter/admin/about.php
+ * \ingroup doliletter
+ * \brief   About page of module doliletter.
  */
 
 // Load Dolibarr environment
@@ -53,10 +53,10 @@ if (!$res) {
 // Libraries
 require_once DOL_DOCUMENT_ROOT.'/core/lib/admin.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/functions2.lib.php';
-require_once '../lib/dolisimpledoc.lib.php';
+require_once '../lib/doliletter.lib.php';
 
 // Translations
-$langs->loadLangs(array("errors", "admin", "dolisimpledoc@dolisimpledoc"));
+$langs->loadLangs(array("errors", "admin", "doliletter@doliletter"));
 
 // Access control
 if (!$user->admin) {
@@ -93,9 +93,9 @@ print load_fiche_titre($langs->trans($page_name), $linkback, 'title_setup');
 
 // Configuration header
 $head = dolisimpledocAdminPrepareHead();
-print dol_get_fiche_head($head, 'about', $langs->trans($page_name), 0, 'dolisimpledoc@dolisimpledoc');
+print dol_get_fiche_head($head, 'about', $langs->trans($page_name), 0, 'doliletter@doliletter');
 
-dol_include_once('/dolisimpledoc/core/modules/modDoliSimpleDoc.class.php');
+dol_include_once('/doliletter/core/modules/modDoliLetter.class.php');
 $tmpmodule = new modDoliSimpleDoc($db);
 print $tmpmodule->getDescLong();
 

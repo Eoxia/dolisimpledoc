@@ -13,6 +13,9 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see https://www.gnu.org/licenses/.
 
-ALTER TABLE llx_dolisimpledoc_email_sending ADD INDEX idx_dolisimpledoc_email_sending_rowid (rowid);
-ALTER TABLE llx_dolisimpledoc_email_sending ADD CONSTRAINT llx_dolisimpledoc_email_sending_fk_document FOREIGN KEY (fk_document) REFERENCES llx_dolisimpledoc_document(rowid);
-ALTER TABLE llx_dolisimpledoc_email_sending ADD CONSTRAINT llx_dolisimpledoc_email_sending_fk_socpeople FOREIGN KEY (fk_socpeople) REFERENCES llx_socpeople(rowid);
+ALTER TABLE llx_doliletter_document ADD INDEX idx_doliletter_document_rowid (rowid);
+ALTER TABLE llx_doliletter_document ADD INDEX idx_doliletter_document_ref (ref);
+ALTER TABLE llx_doliletter_document ADD INDEX idx_doliletter_document_fk_soc (fk_soc);
+ALTER TABLE llx_doliletter_document ADD CONSTRAINT llx_doliletter_document_fk_user_creat FOREIGN KEY (fk_user_creat) REFERENCES llx_user(rowid);
+ALTER TABLE llx_doliletter_document ADD INDEX idx_doliletter_document_status (status);
+

@@ -18,7 +18,7 @@
 
 /**
  *  \file       dolisimpledoc_agenda.php
- *  \ingroup    dolisimpledoc
+ *  \ingroup    doliletter
  *  \brief      Tab of events on SimpleDoc
  */
 
@@ -77,12 +77,12 @@ if (!$res) {
 require_once DOL_DOCUMENT_ROOT.'/contact/class/contact.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/functions2.lib.php';
-dol_include_once('/dolisimpledoc/class/dolisimpledoc.class.php');
-dol_include_once('/dolisimpledoc/lib/dolisimpledoc_simpledoc.lib.php');
+dol_include_once('/doliletter/class/doliletter.class.php');
+dol_include_once('/doliletter/lib/doliletter_letter.lib.php');
 
 
 // Load translation files required by the page
-$langs->loadLangs(array("dolisimpledoc@dolisimpledoc", "other"));
+$langs->loadLangs(array("doliletter@doliletter", "other"));
 
 // Get parameters
 $id = GETPOST('id', 'int');
@@ -139,7 +139,7 @@ $permissiontoadd = $user->rights->dolisimpledoc->simpledoc->write; // Used by th
 //if ($user->socid > 0) $socid = $user->socid;
 //$isdraft = (($object->status == $object::STATUS_DRAFT) ? 1 : 0);
 //restrictedArea($user, $object->element, $object->id, $object->table_element, '', 'fk_soc', 'rowid', $isdraft);
-//if (empty($conf->dolisimpledoc->enabled)) accessforbidden();
+//if (empty($conf->doliletter->enabled)) accessforbidden();
 //if (!$permissiontoread) accessforbidden();
 
 
@@ -191,7 +191,7 @@ if ($object->id > 0) {
 
 	// Object card
 	// ------------------------------------------------------------
-	$linkback = '<a href="'.dol_buildpath('/dolisimpledoc/dolisimpledoc_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
+	$linkback = '<a href="'.dol_buildpath('/doliletter/dolisimpledoc_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
 
 	$morehtmlref = '<div class="refidno">';
 	/*
