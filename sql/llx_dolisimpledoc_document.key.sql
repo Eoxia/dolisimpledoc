@@ -15,12 +15,11 @@
 
 
 -- BEGIN MODULEBUILDER INDEXES
-ALTER TABLE llx_dolisimpledoc_simpledoc ADD INDEX idx_dolisimpledoc_simpledoc_rowid (rowid);
-ALTER TABLE llx_dolisimpledoc_simpledoc ADD INDEX idx_dolisimpledoc_simpledoc_ref (ref);
-ALTER TABLE llx_dolisimpledoc_simpledoc ADD INDEX idx_dolisimpledoc_simpledoc_fk_soc (fk_soc);
-ALTER TABLE llx_dolisimpledoc_simpledoc ADD INDEX idx_dolisimpledoc_simpledoc_fk_project (fk_project);
-ALTER TABLE llx_dolisimpledoc_simpledoc ADD CONSTRAINT llx_dolisimpledoc_simpledoc_fk_user_creat FOREIGN KEY (fk_user_creat) REFERENCES llx_user(rowid);
-ALTER TABLE llx_dolisimpledoc_simpledoc ADD INDEX idx_dolisimpledoc_simpledoc_status (status);
+ALTER TABLE llx_dolisimpledoc_document ADD INDEX idx_dolisimpledoc_document_rowid (rowid);
+ALTER TABLE llx_dolisimpledoc_document ADD INDEX idx_dolisimpledoc_document_ref (ref);
+ALTER TABLE llx_dolisimpledoc_document ADD INDEX idx_dolisimpledoc_document_fk_soc (fk_soc);
+ALTER TABLE llx_dolisimpledoc_document ADD CONSTRAINT llx_dolisimpledoc_document_fk_user_creat FOREIGN KEY (fk_user_creat) REFERENCES llx_user(rowid);
+ALTER TABLE llx_dolisimpledoc_document ADD INDEX idx_dolisimpledoc_document_status (status);
 -- END MODULEBUILDER INDEXES
 
 --ALTER TABLE llx_dolisimpledoc_simpledoc ADD UNIQUE INDEX uk_dolisimpledoc_simpledoc_fieldxy(fieldx, fieldy);

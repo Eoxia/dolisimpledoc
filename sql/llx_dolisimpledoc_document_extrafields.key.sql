@@ -15,5 +15,5 @@
 
 
 -- BEGIN MODULEBUILDER INDEXES
-ALTER TABLE llx_dolisimpledoc_simpledoc_extrafields ADD INDEX idx_simpledoc_fk_object(fk_object);
+ALTER TABLE llx_dolisimpledoc_document_extrafields ADD INDEX idx_document_fk_object(fk_object);
 -- END MODULEBUILDER INDEXES
