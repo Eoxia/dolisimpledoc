@@ -112,8 +112,9 @@ class modDoliLetter extends DolibarrModules {
 		//                             2 => array('DOLISIMPLEDOC_MYNEWCONST2', 'chaine', 'myvalue', 'This is another constant to add', 0, 'current', 1)
 		// );
 		$this->const = array(
-			// CONST DOCUMENT
+			// CONST ENVELOPE
 			1 => array('DOLILETTER_ENVELOPE_ADDON','chaine', 'mod_envelope_standard','', $conf->entity),
+			2 => array('DOLILETTER_ENVELOPE_ADDON_PDF','chaine', 'phobos' ,'', $conf->entity),
 		);
 
 		if (!isset($conf->doliletter) || !isset($conf->doliletter->enabled)) {
@@ -275,6 +276,8 @@ class modDoliLetter extends DolibarrModules {
 	 */
 	public function init($options = '') {
 		$this->_load_tables('/doliletter/sql/');
+
+		addDocumentModel('phobos','envelope','PDF template','DOLILETTER_ENVELOPE_ADDON_PDF');
 
 		$sql = array();
 

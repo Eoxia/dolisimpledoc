@@ -106,7 +106,7 @@ class Envelope extends CommonObject
 		'content'        => array('type'=>'textarea', 'label'=>'Content', 'enabled'=>'1', 'position'=>120, 'notnull'=>0, 'visible'=>1,),
 		'sender'         => array('type'=>'varchar(255)', 'label'=>'Sender', 'enabled'=>'1', 'position'=>130, 'notnull'=>-1, 'visible'=>1,),
 		'sender_service' => array('type'=>'varchar(255)', 'label'=>'SenderService', 'enabled'=>'1', 'position'=>140, 'notnull'=>0, 'visible'=>1,),
-		'document_url'   => array('type'=>'varchar(255)', 'label'=>'DocumentUrl', 'enabled'=>'1', 'position'=>150, 'notnull'=>0, 'visible'=>1,),
+		'document_url'   => array('type'=>'varchar(255)', 'label'=>'DocumentUrl', 'enabled'=>'1', 'position'=>150, 'notnull'=>0, 'visible'=>0,),
 		'fk_soc'         => array('type'=>'integer', 'label'=>'Societe', 'enabled'=>'1', 'position'=>160, 'notnull'=>1, 'visible'=>1,),
 		'fk_user_creat'  => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserAuthor', 'enabled'=>'1', 'position'=>180, 'notnull'=>1, 'visible'=>-2, 'foreignkey'=>'user.rowid',),
 		'fk_user_modif'  => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserModif', 'enabled'=>'1', 'position'=>190, 'notnull'=>-1, 'visible'=>-2,),
@@ -327,7 +327,7 @@ class Envelope extends CommonObject
 		$label .= '<br>';
 		$label .= '<b>'.$langs->trans('Ref').':</b> '.$this->ref;
 
-		$url = dol_buildpath('/doliletter/doliletter_card.php', 1).'?id='.$this->id;
+		$url = dol_buildpath('/doliletter/envelope_card.php', 1).'?id='.$this->id;
 
 		if ($option != 'nolink') {
 			// Add param to save lastsearch_values or not
