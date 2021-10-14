@@ -97,7 +97,7 @@ $pageprev = $page - 1;
 $pagenext = $page + 1;
 
 // Initialize technical objects
-$object = new Document($db);
+$object = new Envelope($db);
 $extrafields = new ExtraFields($db);
 $diroutputmassaction = $conf->enveloppe->dir_output.'/temp/massgeneration/'.$user->id;
 $hookmanager->initHooks(array('documentlist')); // Note that conf->hooks_modules contains array
@@ -164,7 +164,7 @@ $permissiontoadd = $user->rights->enveloppe->document->write;
 $permissiontodelete = $user->rights->enveloppe->document->delete;
 
 // Security check
-if (empty($conf->enveloppe->enabled)) {
+if (empty($conf->doliletter->enabled)) {
 	accessforbidden('Module not enabled');
 }
 
@@ -446,9 +446,9 @@ $newcardbutton = dolGetButtonTitle($langs->trans('New'), '', 'fa fa-plus-circle'
 print_barre_liste($title, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, $massactionbutton, $num, $nbtotalofrecords, 'object_'.$object->picto, 0, $newcardbutton, '', $limit, 0, 0, 1);
 
 // Add code for pre mass action (confirmation or email presend form)
-$topicmail = "SendDocumentRef";
+$topicmail = "SendEnvelopeRef";
 $modelmail = "document";
-$objecttmp = new Document($db);
+$objecttmp = new Envelope($db);
 $trackid = 'xxxx'.$object->id;
 include DOL_DOCUMENT_ROOT.'/core/tpl/massactions_pre.tpl.php';
 
