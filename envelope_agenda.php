@@ -77,8 +77,8 @@ if (!$res) {
 require_once DOL_DOCUMENT_ROOT.'/contact/class/contact.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/functions2.lib.php';
-dol_include_once('/enveloppe/class/enveloppe.class.php');
-dol_include_once('/enveloppe/lib/enveloppe_letter.lib.php');
+require_once './class/envelope.class.php';
+require_once './lib/doliletter_envelope.lib.php';
 
 
 // Load translation files required by the page
@@ -119,7 +119,7 @@ if (!$sortorder) {
 }
 
 // Initialize technical objects
-$object = new SimpleDoc($db);
+$object = new Envelope($db);
 $extrafields = new ExtraFields($db);
 $diroutputmassaction = $conf->dolisimpledoc->dir_output.'/temp/massgeneration/'.$user->id;
 $hookmanager->initHooks(array('simpledocagenda', 'globalcard')); // Note that conf->hooks_modules contains array
@@ -184,7 +184,7 @@ if ($object->id > 0) {
 	if (!empty($conf->notification->enabled)) {
 		$langs->load("mails");
 	}
-	$head = simpledocPrepareHead($object);
+	$head = envelopePrepareHead($object);
 
 
 	print dol_get_fiche_head($head, 'agenda', '', -1, $object->picto);

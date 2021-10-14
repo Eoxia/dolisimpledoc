@@ -18,7 +18,7 @@
 
 /**
  *  \file       envelope_note.php
- *  \ingroup    enveloppe
+ *  \ingroup    envelope
  *  \brief      Tab for notes on SimpleDoc
  */
 
@@ -73,12 +73,11 @@ if (!$res && file_exists("../../../main.inc.php")) {
 if (!$res) {
 	die("Include of main fails");
 }
-
-dol_include_once('/enveloppe/class/enveloppe.class.php');
-dol_include_once('/enveloppe/lib/enveloppe_letter.lib.php');
+require_once './class/envelope.class.php';
+require_once './lib/doliletter_envelope.lib.php';
 
 // Load translation files required by the page
-$langs->loadLangs(array("enveloppe@enveloppe", "companies"));
+$langs->loadLangs(array("envelope@envelope", "companies"));
 
 // Get parameters
 $id = GETPOST('id', 'int');
@@ -88,28 +87,28 @@ $cancel     = GETPOST('cancel', 'aZ09');
 $backtopage = GETPOST('backtopage', 'alpha');
 
 // Initialize technical objects
-$object = new SimpleDoc($db);
+$object = new Envelope($db);
 $extrafields = new ExtraFields($db);
-$diroutputmassaction = $conf->dolisimpledoc->dir_output.'/temp/massgeneration/'.$user->id;
-$hookmanager->initHooks(array('simpledocnote', 'globalcard')); // Note that conf->hooks_modules contains array
+$diroutputmassaction = $conf->doliletter->dir_output.'/temp/massgeneration/'.$user->id;
+$hookmanager->initHooks(array('envelopenote', 'globalcard')); // Note that conf->hooks_modules contains array
 // Fetch optionals attributes and labels
 $extrafields->fetch_name_optionals_label($object->table_element);
 
 // Load object
 include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be include, not include_once  // Must be include, not include_once. Include fetch and fetch_thirdparty but not fetch_optionals
 if ($id > 0 || !empty($ref)) {
-	$upload_dir = $conf->dolisimpledoc->multidir_output[$object->entity]."/".$object->id;
+	$upload_dir = $conf->doliletter->multidir_output[$object->entity]."/".$object->id;
 }
 
-$permissionnote = $user->rights->dolisimpledoc->simpledoc->write; // Used by the include of actions_setnotes.inc.php
-$permissiontoadd = $user->rights->dolisimpledoc->simpledoc->write; // Used by the include of actions_addupdatedelete.inc.php
+$permissionnote = $user->rights->doliletter->envelope->write; // Used by the include of actions_setnotes.inc.php
+$permissiontoadd = $user->rights->doliletter->envelope->write; // Used by the include of actions_addupdatedelete.inc.php
 
 // Security check (enable the most restrictive one)
 //if ($user->socid > 0) accessforbidden();
 //if ($user->socid > 0) $socid = $user->socid;
 //$isdraft = (($object->status == $object::STATUS_DRAFT) ? 1 : 0);
 //restrictedArea($user, $object->element, $object->id, $object->table_element, '', 'fk_soc', 'rowid', $isdraft);
-//if (empty($conf->enveloppe->enabled)) accessforbidden();
+//if (empty($conf->envelope->enabled)) accessforbidden();
 //if (!$permissiontoread) accessforbidden();
 
 
@@ -128,18 +127,18 @@ $form = new Form($db);
 
 //$help_url='EN:Customers_Orders|FR:Commandes_Clients|ES:Pedidos de clientes';
 $help_url = '';
-llxHeader('', $langs->trans('SimpleDoc'), $help_url);
+llxHeader('', $langs->trans('Envelope'), $help_url);
 
 if ($id > 0 || !empty($ref)) {
 	$object->fetch_thirdparty();
 
-	$head = simpledocPrepareHead($object);
+	$head = envelopePrepareHead($object);
 
 	print dol_get_fiche_head($head, 'note', '', -1, $object->picto);
 
 	// Object card
 	// ------------------------------------------------------------
-	$linkback = '<a href="'.dol_buildpath('/enveloppe/envelope_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
+	$linkback = '<a href="'.dol_buildpath('/doliletter/envelope_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
 
 	$morehtmlref = '<div class="refidno">';
 	/*

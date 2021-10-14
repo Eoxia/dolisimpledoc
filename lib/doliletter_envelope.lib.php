@@ -24,7 +24,7 @@
 /**
  * Prepare array of tabs for SimpleDoc
  *
- * @param	SimpleDoc	$object		SimpleDoc
+ * @param	Envelope	$object		Envelope
  * @return 	array					Array of tabs
  */
 function envelopePrepareHead($object)
@@ -36,7 +36,7 @@ function envelopePrepareHead($object)
 	$h = 0;
 	$head = array();
 
-	$head[$h][0] = dol_buildpath("/doliletter/doliletter_card.php", 1).'?id='.$object->id;
+	$head[$h][0] = dol_buildpath("/doliletter/envelope_card.php", 1).'?id='.$object->id;
 	$head[$h][1] = $langs->trans("Card");
 	$head[$h][2] = 'card';
 	$h++;
@@ -49,7 +49,7 @@ function envelopePrepareHead($object)
 		if (!empty($object->note_public)) {
 			$nbNote++;
 		}
-		$head[$h][0] = dol_buildpath('/doliletter/doliletter_note.php', 1).'?id='.$object->id;
+		$head[$h][0] = dol_buildpath('/doliletter/envelope_note.php', 1).'?id='.$object->id;
 		$head[$h][1] = $langs->trans('Notes');
 		if ($nbNote > 0) {
 			$head[$h][1] .= (empty($conf->global->MAIN_OPTIMIZEFORTEXTBROWSER) ? '<span class="badge marginleftonlyshort">'.$nbNote.'</span>' : '');

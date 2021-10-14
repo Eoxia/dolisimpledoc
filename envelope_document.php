@@ -78,8 +78,8 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/images.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
-dol_include_once('/enveloppe/class/enveloppe.class.php');
-dol_include_once('/enveloppe/lib/enveloppe_document.lib.php');
+require_once './class/envelope.class.php';
+require_once './lib/doliletter_envelope.lib.php';
 
 // Load translation files required by the page
 $langs->loadLangs(array("enveloppe@enveloppe", "companies", "other", "mails"));
@@ -110,7 +110,7 @@ if (!$sortfield) {
 //if (! $sortfield) $sortfield="position_name";
 
 // Initialize technical objects
-$object = new SimpleDoc($db);
+$object = new Envelope($db);
 $extrafields = new ExtraFields($db);
 $diroutputmassaction = $conf->dolisimpledoc->dir_output.'/temp/massgeneration/'.$user->id;
 $hookmanager->initHooks(array('simpledocdocument', 'globalcard')); // Note that conf->hooks_modules contains array
@@ -157,7 +157,7 @@ if ($object->id) {
 	/*
 	 * Show tabs
 	 */
-	$head = simpledocPrepareHead($object);
+	$head = envelopePrepareHead($object);
 
 	print dol_get_fiche_head($head, 'document', '', -1, $object->picto);
 
