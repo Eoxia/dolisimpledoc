@@ -13,7 +13,7 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see https://www.gnu.org/licenses/.
 
-create table llx_doliletter_document_extrafields (
+create table llx_doliletter_envelope_extrafields (
   rowid      integer AUTO_INCREMENT PRIMARY KEY,
   tms        timestamp,
   fk_object  integer NOT NULL,

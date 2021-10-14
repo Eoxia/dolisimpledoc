@@ -13,12 +13,9 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see https://www.gnu.org/licenses/.
 
-CREATE TABLE llx_doliletter_document_link(
-    rowid         integer AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    date_creation datetime NOT NULL,
-    tms           timestamp,
-    customer_ref  varchar(255),
-    object_type   varchar(255),
-    fk_document   integer NOT NULL,
-    fk_object     integer NOT NULL
-) ENGINE=innodb;
+ALTER TABLE llx_doliletter_envelope ADD INDEX idx_doliletter_envelope_rowid (rowid);
+ALTER TABLE llx_doliletter_envelope ADD INDEX idx_doliletter_envelope_ref (ref);
+ALTER TABLE llx_doliletter_envelope ADD INDEX idx_doliletter_envelope_fk_soc (fk_soc);
+ALTER TABLE llx_doliletter_envelope ADD CONSTRAINT llx_doliletter_envelope_fk_user_creat FOREIGN KEY (fk_user_creat) REFERENCES llx_user(rowid);
+ALTER TABLE llx_doliletter_envelope ADD INDEX idx_doliletter_envelope_status (status);
+

@@ -14,6 +14,6 @@
 -- along with this program.  If not, see https://www.gnu.org/licenses/.
 
 ALTER TABLE llx_doliletter_letter_sending ADD INDEX idx_doliletter_letter_sending_rowid (rowid);
-ALTER TABLE llx_doliletter_letter_sending ADD CONSTRAINT llx_doliletter_letter_sending_fk_document FOREIGN KEY (fk_document) REFERENCES llx_doliletter_document(rowid);
+ALTER TABLE llx_doliletter_letter_sending ADD CONSTRAINT llx_doliletter_letter_sending_fk_envelope FOREIGN KEY (fk_envelope) REFERENCES llx_doliletter_envelope(rowid);
 ALTER TABLE llx_doliletter_letter_sending ADD CONSTRAINT llx_doliletter_letter_sending_fk_socpeople FOREIGN KEY (fk_socpeople) REFERENCES llx_socpeople(rowid);
 

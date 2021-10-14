@@ -13,4 +13,5 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see https://www.gnu.org/licenses/.
 
-ALTER TABLE llx_doliletter_document_extrafields ADD INDEX idx_doliletter_document_fk_object(fk_object);
+ALTER TABLE llx_doliletter_envelope_signature ADD INDEX idx_doliletter_envelope_signature _rowid (rowid);
+ALTER TABLE llx_doliletter_envelope_signature  ADD CONSTRAINT llx_doliletter_envelope_signature_fk_object FOREIGN KEY (fk_object) REFERENCES llx_doliletter_envelope(rowid);
