@@ -58,7 +58,7 @@ class Envelope extends CommonObject
 	/**
 	 * @var string String with name of icon for document. Must be the part after the 'object_' into object_document.png
 	 */
-	public $picto = 'doliletter@doliletter';
+	public $picto = 'doliletter32px@doliletter';
 
 	/**
 	 *  'type' field format ('integer', 'integer:ObjectClass:PathToClass[:AddCreateButtonOrNot[:Filter]]', 'sellist:TableName:LabelFieldName[:KeyFieldName[:KeyFieldParent[:Filter]]]', 'varchar(x)', 'double(24,8)', 'real', 'price', 'text', 'text:none', 'html', 'date', 'datetime', 'timestamp', 'duration', 'mail', 'phone', 'url', 'password')
