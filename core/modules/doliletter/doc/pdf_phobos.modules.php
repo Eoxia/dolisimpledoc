@@ -165,7 +165,7 @@ class pdf_phobos extends ModelePDFEnvelope
 	/**
 	 *  Function to build pdf onto disk
 	 *
-	 *  @param		Contrat			$object				Object to generate
+	 *  @param		Envelope			$object				Object to generate
 	 *  @param		Translate		$outputlangs		Lang output object
 	 *  @param		string			$srctemplatepath	Full path of source filename for generator using a template file
 	 *  @param		int				$hidedetails		Do not show line details
@@ -185,18 +185,18 @@ class pdf_phobos extends ModelePDFEnvelope
 		// Load traductions files required by page
 		$outputlangs->loadLangs(array("main", "dict", "companies", "contracts"));
 
-		if ($conf->contrat->dir_output)
+		if ($conf->doliletter->dir_output)
 		{
 			$object->fetch_thirdparty();
 
 			// Definition of $dir and $file
 			if ($object->specimen)
 			{
-				$dir = $conf->contrat->dir_output;
+				$dir = $conf->doliletter->dir_output;
 				$file = $dir."/SPECIMEN.pdf";
 			} else {
 				$objectref = dol_sanitizeFileName($object->ref);
-				$dir = $conf->contrat->multidir_output[$object->entity]."/".$objectref;
+				$dir = $conf->doliletter->multidir_output[$object->entity]."/envelope/".$objectref;
 				$file = $dir."/".$objectref.".pdf";
 			}
 
@@ -580,7 +580,7 @@ class pdf_phobos extends ModelePDFEnvelope
 	 *  Show top header of page.
 	 *
 	 *  @param	TCPDF		$pdf     		Object PDF
-	 *  @param  Contrat		$object     	Object to show
+	 *  @param  Envelope    $object     	Object to show
 	 *  @param  int	    	$showaddress    0=no, 1=yes
 	 *  @param  Translate	$outputlangs	Object lang for output
 	 *  @return	void

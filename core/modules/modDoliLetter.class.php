@@ -82,7 +82,9 @@ class modDoliLetter extends DolibarrModules {
 			'moduleforexternal' => 0,
 		);
 
-		$this->dirs = array("/doliletter/temp");
+		$this->dirs = array(
+			"/doliletter/temp",
+		);
 
 		// Config pages. Put here list of php page, stored into doliletter/admin directory, to use to setup module.
 		$this->config_page_url = array("setup.php@doliletter");
@@ -277,7 +279,8 @@ class modDoliLetter extends DolibarrModules {
 	public function init($options = '') {
 		$this->_load_tables('/doliletter/sql/');
 
-		addDocumentModel('phobos','envelope','PDF template','DOLILETTER_ENVELOPE_ADDON_PDF');
+		delDocumentModel('phobos', 'envelope');
+		addDocumentModel('phobos','envelope','','');
 
 		$sql = array();
 
