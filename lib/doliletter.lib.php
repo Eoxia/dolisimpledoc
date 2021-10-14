@@ -26,7 +26,7 @@
  *
  * @return array
  */
-function dolisimpledocAdminPrepareHead()
+function doliletterAdminPrepareHead()
 {
 	global $langs, $conf;
 

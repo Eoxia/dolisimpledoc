@@ -32,7 +32,6 @@ CREATE TABLE llx_doliletter_document(
 	sender_service varchar(255),
 	document_url varchar(255),
 	fk_soc integer,
-	fk_socpeople integer,
 	fk_user_creat integer NOT NULL,
 	fk_user_modif integer
 ) ENGINE=innodb;

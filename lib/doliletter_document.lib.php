@@ -16,7 +16,7 @@
  */
 
 /**
- * \file    lib/doliletter_letter.lib.php
+ * \file    lib/doliletter_document.lib.php
  * \ingroup doliletter
  * \brief   Library files with common functions for SimpleDoc
  */
@@ -27,7 +27,7 @@
  * @param	SimpleDoc	$object		SimpleDoc
  * @return 	array					Array of tabs
  */
-function simpledocPrepareHead($object)
+function documentPrepareHead($object)
 {
 	global $db, $langs, $conf;
 

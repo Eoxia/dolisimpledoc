@@ -37,7 +37,7 @@ class Document extends CommonObject
 	/**
 	 * @var string ID to identify managed object.
 	 */
-	public $element = 'simpledoc';
+	public $element = 'document';
 
 	/**
 	 * @var string Name of table without prefix where object is stored. This is also the key used for extrafields management.
@@ -56,7 +56,7 @@ class Document extends CommonObject
 	public $isextrafieldmanaged = 1;
 
 	/**
-	 * @var string String with name of icon for simpledoc. Must be the part after the 'object_' into object_simpledoc.png
+	 * @var string String with name of icon for document. Must be the part after the 'object_' into object_document.png
 	 */
 	public $picto = 'doliletter@doliletter';
 
@@ -108,7 +108,6 @@ class Document extends CommonObject
 		'sender_service' => array('type'=>'varchar(255)', 'label'=>'SenderService', 'enabled'=>'1', 'position'=>140, 'notnull'=>0, 'visible'=>1,),
 		'document_url'   => array('type'=>'varchar(255)', 'label'=>'DocumentUrl', 'enabled'=>'1', 'position'=>150, 'notnull'=>0, 'visible'=>1,),
 		'fk_soc'         => array('type'=>'integer', 'label'=>'Societe', 'enabled'=>'1', 'position'=>160, 'notnull'=>1, 'visible'=>1,),
-		'fk_socpeople'   => array('type'=>'integer', 'label'=>'SocPeople', 'enabled'=>'1', 'position'=>170, 'notnull'=>1, 'visible'=>1,),
 		'fk_user_creat'  => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserAuthor', 'enabled'=>'1', 'position'=>180, 'notnull'=>1, 'visible'=>-2, 'foreignkey'=>'user.rowid',),
 		'fk_user_modif'  => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserModif', 'enabled'=>'1', 'position'=>190, 'notnull'=>-1, 'visible'=>-2,),
 	);
@@ -130,7 +129,6 @@ class Document extends CommonObject
 	public $sender_service;
 	public $document_url;
 	public $fk_soc;
-	public $fk_socpeople;
 	public $fk_user_creat;
 	public $fk_user_modif;
 
@@ -152,7 +150,7 @@ class Document extends CommonObject
 		}
 
 		// Example to show how to set values of fields definition dynamically
-		/*if ($user->rights->doliletter->simpledoc->read) {
+		/*if ($user->rights->doliletter->document->read) {
 			$this->fields['myfield']['visible'] = 1;
 			$this->fields['myfield']['noteditable'] = 0;
 		}*/
@@ -405,7 +403,7 @@ class Document extends CommonObject
 		//if ($withpicto != 2) $result.=(($addlabel && $this->label) ? $sep . dol_trunc($this->label, ($addlabel > 1 ? $addlabel : 0)) : '');
 
 		global $action, $hookmanager;
-		$hookmanager->initHooks(array('simpledocdao'));
+		$hookmanager->initHooks(array('documentdao'));
 		$parameters = array('id'=>$this->id, 'getnomurl'=>$result);
 		$reshook = $hookmanager->executeHooks('getNomUrl', $parameters, $this, $action); // Note that $action and $object may have been modified by some hooks
 		if ($reshook > 0) {
@@ -436,25 +434,25 @@ class Document extends CommonObject
 	 *  @return string 			       Label of status
 	 */
 	public function LibStatut($status, $mode = 0) {
-		// phpcs:enable
-		if (empty($this->labelStatus) || empty($this->labelStatusShort)) {
-			global $langs;
-			//$langs->load("doliletter@doliletter");
-			$this->labelStatus[self::STATUS_DRAFT] = $langs->trans('Draft');
-			$this->labelStatus[self::STATUS_VALIDATED] = $langs->trans('Enabled');
-			$this->labelStatus[self::STATUS_CANCELED] = $langs->trans('Disabled');
-			$this->labelStatusShort[self::STATUS_DRAFT] = $langs->trans('Draft');
-			$this->labelStatusShort[self::STATUS_VALIDATED] = $langs->trans('Enabled');
-			$this->labelStatusShort[self::STATUS_CANCELED] = $langs->trans('Disabled');
-		}
-
-		$statusType = 'status'.$status;
-		//if ($status == self::STATUS_VALIDATED) $statusType = 'status1';
-		if ($status == self::STATUS_CANCELED) {
-			$statusType = 'status6';
-		}
-
-		return dolGetStatus($this->labelStatus[$status], $this->labelStatusShort[$status], '', $statusType, $mode);
+//		// phpcs:enable
+//		if (empty($this->labelStatus) || empty($this->labelStatusShort)) {
+//			global $langs;
+//			//$langs->load("doliletter@doliletter");
+//			$this->labelStatus[self::STATUS_DRAFT] = $langs->trans('Draft');
+//			$this->labelStatus[self::STATUS_VALIDATED] = $langs->trans('Enabled');
+//			$this->labelStatus[self::STATUS_CANCELED] = $langs->trans('Disabled');
+//			$this->labelStatusShort[self::STATUS_DRAFT] = $langs->trans('Draft');
+//			$this->labelStatusShort[self::STATUS_VALIDATED] = $langs->trans('Enabled');
+//			$this->labelStatusShort[self::STATUS_CANCELED] = $langs->trans('Disabled');
+//		}
+//
+//		$statusType = 'status'.$status;
+//		//if ($status == self::STATUS_VALIDATED) $statusType = 'status1';
+//		if ($status == self::STATUS_CANCELED) {
+//			$statusType = 'status6';
+//		}
+//
+//		return dolGetStatus($this->labelStatus[$status], $this->labelStatusShort[$status], '', $statusType, $mode);
 	}
 
 	/**
@@ -538,7 +536,7 @@ class Document extends CommonObject
 		$langs->load("doliletter@doliletter");
 
 		if (!dol_strlen($modele)) {
-			$modele = 'standard_simpledoc';
+			$modele = 'standard_document';
 
 			if (!empty($this->model_pdf)) {
 				$modele = $this->model_pdf;

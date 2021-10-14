@@ -79,7 +79,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/images.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
 dol_include_once('/doliletter/class/doliletter.class.php');
-dol_include_once('/doliletter/lib/doliletter_letter.lib.php');
+dol_include_once('/doliletter/lib/doliletter_document.lib.php');
 
 // Load translation files required by the page
 $langs->loadLangs(array("doliletter@doliletter", "companies", "other", "mails"));
