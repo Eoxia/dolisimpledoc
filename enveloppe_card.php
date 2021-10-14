@@ -16,9 +16,9 @@
  */
 
 /**
- *   	\file       doliletter_card.php
- *		\ingroup    doliletter
- *		\brief      Page to create/edit/view doliletter
+ *   	\file       enveloppe_card.php
+ *		\ingroup    enveloppe
+ *		\brief      Page to create/edit/view enveloppe
  */
 
 // Load Dolibarr environment
@@ -41,13 +41,13 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/doleditor.class.php';
 require_once './class/document.class.php';
-require_once './core/modules/doliletter/mod_document_standard.php';
-require_once './lib/doliletter_document.lib.php';
+require_once './core/modules/enveloppe/mod_document_standard.php';
+require_once './lib/enveloppe_document.lib.php';
 
 global $db, $conf, $langs, $user, $hookmanager;
 
 // Load translation files required by the page
-$langs->loadLangs(array("doliletter@doliletter", "other"));
+$langs->loadLangs(array("enveloppe@enveloppe", "other"));
 
 // Get parameters
 $id          = GETPOST('id', 'int');
@@ -89,19 +89,19 @@ if (empty($action) && empty($id) && empty($ref)) {
 include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be include, not include_once.
 
 
-$permissiontoread = $user->rights->doliletter->letter->read;
-$permissiontoadd = $user->rights->doliletter->letter->write; // Used by the include of actions_addupdatedelete.inc.php and actions_lineupdown.inc.php
-$permissiontodelete = $user->rights->doliletter->letter->delete || ($permissiontoadd && isset($object->status) && $object->status == $object::STATUS_DRAFT);
-$permissionnote = $user->rights->doliletter->letter->write; // Used by the include of actions_setnotes.inc.php
-$permissiondellink = $user->rights->doliletter->letter->write; // Used by the include of actions_dellink.inc.php
-$upload_dir = $conf->doliletter->multidir_output[isset($object->entity) ? $object->entity : 1].'/letter';
+$permissiontoread = $user->rights->enveloppe->letter->read;
+$permissiontoadd = $user->rights->enveloppe->letter->write; // Used by the include of actions_addupdatedelete.inc.php and actions_lineupdown.inc.php
+$permissiontodelete = $user->rights->enveloppe->letter->delete || ($permissiontoadd && isset($object->status) && $object->status == $object::STATUS_DRAFT);
+$permissionnote = $user->rights->enveloppe->letter->write; // Used by the include of actions_setnotes.inc.php
+$permissiondellink = $user->rights->enveloppe->letter->write; // Used by the include of actions_dellink.inc.php
+$upload_dir = $conf->enveloppe->multidir_output[isset($object->entity) ? $object->entity : 1].'/letter';
 
 // Security check (enable the most restrictive one)
 //if ($user->socid > 0) accessforbidden();
 //if ($user->socid > 0) $socid = $user->socid;
 //$isdraft = (($object->status == $object::STATUS_DRAFT) ? 1 : 0);
 //restrictedArea($user, $object->element, $object->id, $object->table_element, '', 'fk_soc', 'rowid', $isdraft);
-//if (empty($conf->doliletter->enabled)) accessforbidden();
+//if (empty($conf->enveloppe->enabled)) accessforbidden();
 //if (!$permissiontoread) accessforbidden();
 
 
@@ -120,14 +120,14 @@ if (empty($reshook)) {
 
 	$error = 0;
 
-	$backurlforlist = dol_buildpath('/doliletter/doliletter_list.php', 1);
+	$backurlforlist = dol_buildpath('/enveloppe/enveloppe_list.php', 1);
 
 	if (empty($backtopage) || ($cancel && empty($id))) {
 		if (empty($backtopage) || ($cancel && strpos($backtopage, '__ID__'))) {
 			if (empty($id) && (($action != 'add' && $action != 'create') || $cancel)) {
 				$backtopage = $backurlforlist;
 			} else {
-				$backtopage = dol_buildpath('/doliletter/doliletter_card.php', 1).'?id='.($id > 0 ? $id : '__ID__');
+				$backtopage = dol_buildpath('/enveloppe/enveloppe_card.php', 1).'?id='.($id > 0 ? $id : '__ID__');
 			}
 		}
 	}

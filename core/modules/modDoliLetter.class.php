@@ -113,7 +113,7 @@ class modDoliLetter extends DolibarrModules {
 		// );
 		$this->const = array(
 			// CONST DOCUMENT
-			1 => array('DOLILETTER_DOCUMENT_ADDON','chaine', 'mod_document_standard' ,'', $conf->entity),
+			1 => array('DOLILETTER_DOCUMENT_ADDON','chaine', 'mod_enveloppe_standard','', $conf->entity),
 		);
 
 		if (!isset($conf->doliletter) || !isset($conf->doliletter->enabled)) {

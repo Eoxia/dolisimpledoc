@@ -17,8 +17,8 @@
  */
 
 /**
- *  \file       doliletter_note.php
- *  \ingroup    doliletter
+ *  \file       enveloppe_note.php
+ *  \ingroup    enveloppe
  *  \brief      Tab for notes on SimpleDoc
  */
 
@@ -74,11 +74,11 @@ if (!$res) {
 	die("Include of main fails");
 }
 
-dol_include_once('/doliletter/class/doliletter.class.php');
-dol_include_once('/doliletter/lib/doliletter_letter.lib.php');
+dol_include_once('/enveloppe/class/enveloppe.class.php');
+dol_include_once('/enveloppe/lib/enveloppe_letter.lib.php');
 
 // Load translation files required by the page
-$langs->loadLangs(array("doliletter@doliletter", "companies"));
+$langs->loadLangs(array("enveloppe@enveloppe", "companies"));
 
 // Get parameters
 $id = GETPOST('id', 'int');
@@ -109,7 +109,7 @@ $permissiontoadd = $user->rights->dolisimpledoc->simpledoc->write; // Used by th
 //if ($user->socid > 0) $socid = $user->socid;
 //$isdraft = (($object->status == $object::STATUS_DRAFT) ? 1 : 0);
 //restrictedArea($user, $object->element, $object->id, $object->table_element, '', 'fk_soc', 'rowid', $isdraft);
-//if (empty($conf->doliletter->enabled)) accessforbidden();
+//if (empty($conf->enveloppe->enabled)) accessforbidden();
 //if (!$permissiontoread) accessforbidden();
 
 
@@ -139,7 +139,7 @@ if ($id > 0 || !empty($ref)) {
 
 	// Object card
 	// ------------------------------------------------------------
-	$linkback = '<a href="'.dol_buildpath('/doliletter/doliletter_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
+	$linkback = '<a href="'.dol_buildpath('/enveloppe/enveloppe_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
 
 	$morehtmlref = '<div class="refidno">';
 	/*

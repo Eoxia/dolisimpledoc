@@ -27,7 +27,7 @@ require_once __DIR__ . '/modules_document.php';
 /**
  *	Class to manage customer order numbering rules standard
  */
-class mod_document_standard extends ModeleNumRefDocument
+class mod_enveloppe_standard extends ModeleNumRefEnveloppe
 {
 	/**
 	 * Dolibarr version of the loaded document

@@ -17,8 +17,8 @@
  */
 
 /**
- *   	\file       doliletter_list.php
- *		\ingroup    doliletter
+ *   	\file       enveloppe_list.php
+ *		\ingroup    enveloppe
  *		\brief      List page for document
  */
 
@@ -62,14 +62,14 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/html.formcompany.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
 
-// load doliletter libraries
+// load enveloppe libraries
 require_once __DIR__ . '/class/document.class.php';
 
 // for other modules
 //dol_include_once('/othermodule/class/otherobject.class.php');
 global $user;
 // Load translation files required by the page
-$langs->loadLangs(array("doliletter@doliletter", "other"));
+$langs->loadLangs(array("enveloppe@enveloppe", "other"));
 
 $action     = GETPOST('action', 'aZ09') ?GETPOST('action', 'aZ09') : 'view'; // The action 'add', 'create', 'edit', 'update', 'view', ...
 $massaction = GETPOST('massaction', 'alpha'); // The bulk action (combo box choice into lists)
@@ -99,7 +99,7 @@ $pagenext = $page + 1;
 // Initialize technical objects
 $object = new Document($db);
 $extrafields = new ExtraFields($db);
-$diroutputmassaction = $conf->doliletter->dir_output.'/temp/massgeneration/'.$user->id;
+$diroutputmassaction = $conf->enveloppe->dir_output.'/temp/massgeneration/'.$user->id;
 $hookmanager->initHooks(array('documentlist')); // Note that conf->hooks_modules contains array
 
 // Fetch optionals attributes and labels
@@ -159,12 +159,12 @@ include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_list_array_fields.tpl.php';
 $object->fields = dol_sort_array($object->fields, 'position');
 $arrayfields = dol_sort_array($arrayfields, 'position');
 
-$permissiontoread = $user->rights->doliletter->document->read;
-$permissiontoadd = $user->rights->doliletter->document->write;
-$permissiontodelete = $user->rights->doliletter->document->delete;
+$permissiontoread = $user->rights->enveloppe->document->read;
+$permissiontoadd = $user->rights->enveloppe->document->write;
+$permissiontodelete = $user->rights->enveloppe->document->delete;
 
 // Security check
-if (empty($conf->doliletter->enabled)) {
+if (empty($conf->enveloppe->enabled)) {
 	accessforbidden('Module not enabled');
 }
 
@@ -174,7 +174,7 @@ if ($user->socid > 0) accessforbidden();
 //$socid = 0; if ($user->socid > 0) $socid = $user->socid;
 //$isdraft = (($object->status == $object::STATUS_DRAFT) ? 1 : 0);
 //restrictedArea($user, $object->element, $object->id, $object->table_element, '', 'fk_soc', 'rowid', $isdraft);
-//if (empty($conf->doliletter->enabled)) accessforbidden();
+//if (empty($conf->enveloppe->enabled)) accessforbidden();
 //if (!$permissiontoread) accessforbidden();
 
 
@@ -221,7 +221,7 @@ if (empty($reshook)) {
 	// Mass actions
 	$objectclass = 'SimpleDoc';
 	$objectlabel = 'SimpleDoc';
-	$uploaddir = $conf->doliletter->dir_output;
+	$uploaddir = $conf->enveloppe->dir_output;
 //	include DOL_DOCUMENT_ROOT.'/core/actions_massactions.inc.php';
 }
 
@@ -361,7 +361,7 @@ if (is_numeric($nbtotalofrecords) && ($limit > $nbtotalofrecords || empty($limit
 if ($num == 1 && !empty($conf->global->MAIN_SEARCH_DIRECT_OPEN_IF_ONLY_ONE) && $search_all && !$page) {
 	$obj = $db->fetch_object($resql);
 	$id = $obj->rowid;
-	header("Location: ".dol_buildpath('/doliletter/doliletter_card.php', 1).'?id='.$id);
+	header("Location: ".dol_buildpath('/enveloppe/enveloppe_card.php', 1).'?id='.$id);
 	exit;
 }
 
@@ -441,7 +441,7 @@ print '<input type="hidden" name="sortorder" value="'.$sortorder.'">';
 print '<input type="hidden" name="page" value="'.$page.'">';
 print '<input type="hidden" name="contextpage" value="'.$contextpage.'">';
 
-$newcardbutton = dolGetButtonTitle($langs->trans('New'), '', 'fa fa-plus-circle', dol_buildpath('/doliletter/doliletter_card.php', 1).'?action=create&backtopage='.urlencode($_SERVER['PHP_SELF']), '', $permissiontoadd);
+$newcardbutton = dolGetButtonTitle($langs->trans('New'), '', 'fa fa-plus-circle', dol_buildpath('/enveloppe/enveloppe_card.php', 1).'?action=create&backtopage='.urlencode($_SERVER['PHP_SELF']), '', $permissiontoadd);
 
 print_barre_liste($title, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, $massactionbutton, $num, $nbtotalofrecords, 'object_'.$object->picto, 0, $newcardbutton, '', $limit, 0, 0, 1);
 
@@ -704,7 +704,7 @@ if (in_array('builddoc', $arrayofmassactions) && ($nbtotalofrecords === '' || $n
 	$genallowed = $permissiontoread;
 	$delallowed = $permissiontoadd;
 
-	print $formfile->showdocuments('massfilesarea_doliletter', '', $filedir, $urlsource, 0, $delallowed, '', 1, 1, 0, 48, 1, $param, $title, '', '', '', null, $hidegeneratedfilelistifempty);
+	print $formfile->showdocuments('massfilesarea_enveloppe', '', $filedir, $urlsource, 0, $delallowed, '', 1, 1, 0, 48, 1, $param, $title, '', '', '', null, $hidegeneratedfilelistifempty);
 }
 
 // End of page

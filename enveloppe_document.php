@@ -17,8 +17,8 @@
  */
 
 /**
- *  \file       doliletter_document.php
- *  \ingroup    doliletter
+ *  \file       enveloppe_document.php
+ *  \ingroup    enveloppe
  *  \brief      Tab for documents linked to SimpleDoc
  */
 
@@ -78,11 +78,11 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/images.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
-dol_include_once('/doliletter/class/doliletter.class.php');
-dol_include_once('/doliletter/lib/doliletter_document.lib.php');
+dol_include_once('/enveloppe/class/enveloppe.class.php');
+dol_include_once('/enveloppe/lib/enveloppe_document.lib.php');
 
 // Load translation files required by the page
-$langs->loadLangs(array("doliletter@doliletter", "companies", "other", "mails"));
+$langs->loadLangs(array("enveloppe@enveloppe", "companies", "other", "mails"));
 
 
 $action = GETPOST('action', 'aZ09');
@@ -131,7 +131,7 @@ $permissiontoadd = $user->rights->dolisimpledoc->simpledoc->write; // Used by th
 //if ($user->socid > 0) $socid = $user->socid;
 //$isdraft = (($object->status == $object::STATUS_DRAFT) ? 1 : 0);
 //restrictedArea($user, $object->element, $object->id, $object->table_element, '', 'fk_soc', 'rowid', $isdraft);
-//if (empty($conf->doliletter->enabled)) accessforbidden();
+//if (empty($conf->enveloppe->enabled)) accessforbidden();
 //if (!$permissiontoread) accessforbidden();
 
 
@@ -171,7 +171,7 @@ if ($object->id) {
 
 	// Object card
 	// ------------------------------------------------------------
-	$linkback = '<a href="'.dol_buildpath('/doliletter/doliletter_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
+	$linkback = '<a href="'.dol_buildpath('/enveloppe/enveloppe_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
 
 	$morehtmlref = '<div class="refidno">';
 	/*
@@ -232,10 +232,10 @@ if ($object->id) {
 
 	print dol_get_fiche_end();
 
-	$modulepart = 'doliletter';
-	//$permissiontoadd = $user->rights->doliletter->simpledoc->write;
+	$modulepart = 'enveloppe';
+	//$permissiontoadd = $user->rights->enveloppe->simpledoc->write;
 	$permissiontoadd = 1;
-	//$permtoedit = $user->rights->doliletter->simpledoc->write;
+	//$permtoedit = $user->rights->enveloppe->simpledoc->write;
 	$permtoedit = 1;
 	$param = '&id='.$object->id;
 
