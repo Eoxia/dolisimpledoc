@@ -113,7 +113,7 @@ class modDoliLetter extends DolibarrModules {
 		// );
 		$this->const = array(
 			// CONST DOCUMENT
-			1 => array('DOLILETTER_DOCUMENT_ADDON','chaine', 'mod_enveloppe_standard','', $conf->entity),
+			1 => array('DOLILETTER_ENVELOPPE_ADDON','chaine', 'mod_enveloppe_standard','', $conf->entity),
 		);
 
 		if (!isset($conf->doliletter) || !isset($conf->doliletter->enabled)) {
@@ -219,8 +219,8 @@ class modDoliLetter extends DolibarrModules {
 			'type'=>'left', // This is a Left menu entry
 			'titre'=>$langs->trans('DoliLetterCreate'),
 			'mainmenu'=>'doliletter',
-			'leftmenu'=>'doliletter_create',
-			'url'=>'/doliletter/doliletter_card.php?action=create',
+			'leftmenu'=>'enveloppe_card',
+			'url'=>'/doliletter/enveloppe_card.php?action=create',
 			'langs'=>'doliletter@doliletter', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1100+$r,
 			'enabled'=>'$conf->doliletter->enabled',  // Define condition to show or hide menu entry. Use '$conf->digiriskdolibarr->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
@@ -234,8 +234,8 @@ class modDoliLetter extends DolibarrModules {
 			'type'=>'left', // This is a Left menu entry
 			'titre'=>'<i class="fas fa-list"></i>  ' . $langs->trans('DoliLetterList'),
 			'mainmenu'=>'doliletter',
-			'leftmenu'=>'doliletter_list',
-			'url'=>'/doliletter/doliletter_list.php',
+			'leftmenu'=>'enveloppe_list',
+			'url'=>'/doliletter/enveloppe_list.php',
 			'langs'=>'doliletter@doliletter', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1100+$r,
 			'enabled'=>'$conf->doliletter->enabled',  // Define condition to show or hide menu entry. Use '$conf->digiriskdolibarr->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.

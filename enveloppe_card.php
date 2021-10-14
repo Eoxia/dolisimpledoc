@@ -222,10 +222,10 @@ if ($action == 'create') {
 	print ' <a href="'.DOL_URL_ROOT.'/societe/card.php?action=create&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create').'" target="_blank"><span class="fa fa-plus-circle valignmiddle paddingleft" title="'.$langs->trans("AddThirdParty").'"></span></a>';
 	print '</td></tr>';
 
-	//External responsible -- Responsable de la société extérieure
-	print '<tr><td class="fieldrequired">'.$langs->trans("Contact").'</td><td>';
-	print $form->selectcontacts(GETPOST('contact', 'int'), GETPOST('contact'), 'contact', 1, '', '', 0, 'minwidth300', false, 0, array(), false, '', 'contact');
-	print '</td></tr>';
+//	//External responsible -- Responsable de la société extérieure
+//	print '<tr><td class="fieldrequired">'.$langs->trans("Contact").'</td><td>';
+//	print $form->selectcontacts(GETPOST('contact', 'int'), GETPOST('contact'), 'contact', 1, '', '', 0, 'minwidth300', false, 0, array(), false, '', 'contact');
+//	print '</td></tr>';
 
 	//Content -- Contenue
 	print '<tr class="content_field"><td><label for="content">'.$langs->trans("Content").'</label></td><td>';
