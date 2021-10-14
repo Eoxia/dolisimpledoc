@@ -47,7 +47,7 @@ require_once './lib/doliletter_envelope.lib.php';
 global $db, $conf, $langs, $user, $hookmanager;
 
 // Load translation files required by the page
-$langs->loadLangs(array("enveloppe@enveloppe", "other"));
+$langs->loadLangs(array("doliletter@doliletter", "other"));
 
 // Get parameters
 $id          = GETPOST('id', 'int');
@@ -59,8 +59,8 @@ $contextpage = GETPOST('contextpage', 'aZ') ?GETPOST('contextpage', 'aZ') : 'ris
 $backtopage  = GETPOST('backtopage', 'alpha');
 
 // Initialize technical objects
-$object         = new Document($db);
-$refDocumentMod = new $conf->global->DOLILETTER_DOCUMENT_ADDON();
+$object         = new Envelope($db);
+$refEnvelopeMod = new $conf->global->DOLILETTER_ENVELOPE_ADDON();
 $extrafields    = new ExtraFields($db);
 
 $object->fetch($id);
@@ -210,8 +210,8 @@ if ($action == 'create') {
 
 	//Ref -- Ref
 	print '<tr><td class="fieldrequired">'.$langs->trans("Ref").'</td><td>';
-	print '<input hidden class="flat" type="text" size="36" name="ref" id="ref" value="'.$refDocumentMod->getNextValue($object).'">';
-	print $refDocumentMod->getNextValue($object);
+	print '<input hidden class="flat" type="text" size="36" name="ref" id="ref" value="'.$refEnvelopeMod->getNextValue($object).'">';
+	print $refEnvelopeMod->getNextValue($object);
 	print '</td></tr>';
 
 	//Society -- Société
