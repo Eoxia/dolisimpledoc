@@ -129,7 +129,27 @@ class modDoliLetter extends DolibarrModules {
 		// $this->tabs[] = array('data'=>'objecttype:-tabname:NU:conditiontoremove');                                                     										// To remove an existing tab identified by code tabname
 
 		// Dictionaries
-		$this->dictionaries = array();
+		$this->dictionaries=array(
+			'langs'=>'doliletter@doliletter',
+			// List of tables we want to see into dictonnary editor
+			'tabname'=>array(MAIN_DB_PREFIX."c_sender_service"),
+			// Label of tables
+			'tablib'=>array("SenderService"),
+			// Request to select fields
+			'tabsql'=>array('SELECT f.rowid as rowid, f.ref, f.label, f.active FROM '.MAIN_DB_PREFIX.'c_sender_service as f'),
+			// Sort order
+			'tabsqlsort'=>array("label ASC"),
+			// List of fields (result of select to show dictionary)
+			'tabfield'=>array("ref,label"),
+			// List of fields (list of fields to edit a record)
+			'tabfieldvalue'=>array("ref,label"),
+			// List of fields (list of fields for insert)
+			'tabfieldinsert'=>array("ref,label"),
+			// Name of columns with primary key (try to always name it 'rowid')
+			'tabrowid'=>array("rowid"),
+			// Condition to show each dictionary
+			'tabcond'=>array($conf->doliletter->enabled, $conf->doliletter->enabled, $conf->doliletter->enabled)
+		);
 		/* Example:
 		$this->dictionaries=array(
 			'langs'=>'doliletter@doliletter',
@@ -165,18 +185,18 @@ class modDoliLetter extends DolibarrModules {
 		$r            = 0;
 		/* DoliLetter PERMISSIONS */
 		$this->rights[$r][0] = $this->numero . sprintf("%02d", $r + 1);
-		$this->rights[$r][1] = $langs->trans('ReadDoliLetter');
-		$this->rights[$r][4] = 'letter';
+		$this->rights[$r][1] = $langs->trans('ReadEnvelope');
+		$this->rights[$r][4] = 'envelope';
 		$this->rights[$r][5] = 'read';
 		$r++;
 		$this->rights[$r][0] = $this->numero . sprintf("%02d", $r + 1);
-		$this->rights[$r][1] = $langs->trans('CreateDoliLetter');
-		$this->rights[$r][4] = 'letter';
+		$this->rights[$r][1] = $langs->trans('CreateEnvelope');
+		$this->rights[$r][4] = 'envelope';
 		$this->rights[$r][5] = 'write';
 		$r++;
 		$this->rights[$r][0] = $this->numero . sprintf("%02d", $r + 1);
-		$this->rights[$r][1] = $langs->trans('DeleteDoliLetter');
-		$this->rights[$r][4] = 'letter';
+		$this->rights[$r][1] = $langs->trans('DeleteEnvelope');
+		$this->rights[$r][4] = 'envelope';
 		$this->rights[$r][5] = 'delete';
 
 		// Main menu entries to add

@@ -39,6 +39,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/html.formcompany.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
+require_once DOL_DOCUMENT_ROOT.'/core/class/html.formother.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/doleditor.class.php';
 require_once './class/envelope.class.php';
 require_once './core/modules/doliletter/mod_envelope_standard.php';
@@ -88,11 +89,10 @@ if (empty($action) && empty($id) && empty($ref)) {
 // Load object
 include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be include, not include_once.
 
-
-$permissiontoread = $user->rights->enveloppe->letter->read;
-$permissiontoadd = $user->rights->enveloppe->letter->write; // Used by the include of actions_addupdatedelete.inc.php and actions_lineupdown.inc.php
-$permissiontodelete = $user->rights->enveloppe->letter->delete || ($permissiontoadd && isset($object->status) && $object->status == $object::STATUS_DRAFT);
-$permissionnote = $user->rights->enveloppe->letter->write; // Used by the include of actions_setnotes.inc.php
+$permissiontoread = $user->rights->doliletter->envelope->read;
+$permissiontoadd = $user->rights->doliletter->envelope->write; // Used by the include of actions_addupdatedelete.inc.php and actions_lineupdown.inc.php
+$permissiontodelete = $user->rights->doliletter->envelope->delete || ($permissiontoadd && isset($object->status) && $object->status == $object::STATUS_DRAFT);
+$permissionnote = $user->rights->enveloppe->envelope->write; // Used by the include of actions_setnotes.inc.php
 $permissiondellink = $user->rights->enveloppe->letter->write; // Used by the include of actions_dellink.inc.php
 $upload_dir = $conf->enveloppe->multidir_output[isset($object->entity) ? $object->entity : 1].'/letter';
 
@@ -120,14 +120,14 @@ if (empty($reshook)) {
 
 	$error = 0;
 
-	$backurlforlist = dol_buildpath('/enveloppe/envelope_list.php', 1);
+	$backurlforlist = dol_buildpath('/doliletter/envelope_list.php', 1);
 
 	if (empty($backtopage) || ($cancel && empty($id))) {
 		if (empty($backtopage) || ($cancel && strpos($backtopage, '__ID__'))) {
 			if (empty($id) && (($action != 'add' && $action != 'create') || $cancel)) {
 				$backtopage = $backurlforlist;
 			} else {
-				$backtopage = dol_buildpath('/enveloppe/envelope_card.php', 1).'?id='.($id > 0 ? $id : '__ID__');
+				$backtopage = dol_buildpath('/doliletter/envelope_card.php', 1).'?id='.($id > 0 ? $id : '__ID__');
 			}
 		}
 	}
@@ -167,6 +167,7 @@ if (empty($reshook)) {
  */
 
 $form = new Form($db);
+$formother = new FormOther($db);
 $formfile = new FormFile($db);
 $formproject = new FormProjets($db);
 
@@ -208,6 +209,14 @@ if ($action == 'create') {
 
 	print '<table class="border centpercent tableforfieldcreate">'."\n";
 
+	unset($object->fields['ref']);
+	unset($object->fields['model_pdf']);
+	unset($object->fields['last_main_doc']);
+	unset($object->fields['content']);
+	unset($object->fields['fk_soc']);
+	unset($object->fields['sender_service']);
+
+
 	//Ref -- Ref
 	print '<tr><td class="fieldrequired">'.$langs->trans("Ref").'</td><td>';
 	print '<input hidden class="flat" type="text" size="36" name="ref" id="ref" value="'.$refEnvelopeMod->getNextValue($object).'">';
@@ -218,14 +227,15 @@ if ($action == 'create') {
 	print '<tr><td class="fieldrequired">'.$langs->trans("Society").'</td><td>';
 	$events = array();
 	$events[1] = array('method' => 'getContacts', 'url' => dol_buildpath('/core/ajax/contacts.php?showempty=1', 1), 'htmlname' => 'contact', 'params' => array('add-customer-contact' => 'disabled'));
-	print $form->select_company(GETPOST('society'), 'society', '', 'SelectThirdParty', 1, 0, $events, 0, 'minwidth300');
+	print $form->select_company(GETPOST('fk_soc'), 'fk_soc', '', 'SelectThirdParty', 1, 0, $events, 0, 'minwidth300');
 	print ' <a href="'.DOL_URL_ROOT.'/societe/card.php?action=create&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create').'" target="_blank"><span class="fa fa-plus-circle valignmiddle paddingleft" title="'.$langs->trans("AddThirdParty").'"></span></a>';
 	print '</td></tr>';
 
-//	//External responsible -- Responsable de la société extérieure
-//	print '<tr><td class="fieldrequired">'.$langs->trans("Contact").'</td><td>';
-//	print $form->selectcontacts(GETPOST('contact', 'int'), GETPOST('contact'), 'contact', 1, '', '', 0, 'minwidth300', false, 0, array(), false, '', 'contact');
-//	print '</td></tr>';
+
+	//SenderService -- Moyen d'envoi
+	print '<tr><td class="fieldrequired">'.$langs->trans("SenderService").'</td><td>';
+	print $formother->select_dictionary('sender_service','c_sender_service', 'ref', 'label', '', 1);
+	print '</td></tr>';
 
 	//Content -- Contenue
 	print '<tr class="content_field"><td><label for="content">'.$langs->trans("Content").'</label></td><td>';
@@ -233,8 +243,8 @@ if ($action == 'create') {
 	$doleditor->Create();
 	print '</td></tr>';
 
-
-
+	// Common attributes
+	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_add.tpl.php';
 
 	// Other attributes
 	include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_add.tpl.php';
@@ -294,8 +304,8 @@ if (($id || $ref) && $action == 'edit') {
 if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'create'))) {
 	$res = $object->fetch_optionals();
 
-	$head = documentPrepareHead($object);
-	print dol_get_fiche_head($head, 'card', $langs->trans("Workstation"), -1, $object->picto);
+	$head = envelopePrepareHead($object);
+	print dol_get_fiche_head($head, 'card', $langs->trans("Envelope"), -1, $object->picto);
 
 	$formconfirm = '';
 
