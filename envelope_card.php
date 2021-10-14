@@ -171,25 +171,9 @@ $formother = new FormOther($db);
 $formfile = new FormFile($db);
 $formproject = new FormProjets($db);
 
-$title = $langs->trans("MyObject");
+$title = $langs->trans("Envelope");
 $help_url = '';
 llxHeader('', $title, $help_url);
-
-// Example : Adding jquery code
-// print '<script type="text/javascript" language="javascript">
-// jQuery(document).ready(function() {
-// 	function init_myfunc()
-// 	{
-// 		jQuery("#myid").removeAttr(\'disabled\');
-// 		jQuery("#myid").attr(\'disabled\',\'disabled\');
-// 	}
-// 	init_myfunc();
-// 	jQuery("#mybutton").click(function() {
-// 		init_myfunc();
-// 	});
-// });
-// </script>';
-
 
 // Part to create
 if ($action == 'create') {
@@ -215,6 +199,7 @@ if ($action == 'create') {
 	unset($object->fields['content']);
 	unset($object->fields['fk_soc']);
 	unset($object->fields['sender_service']);
+	unset($object->fields['sender']);
 
 
 	//Ref -- Ref
@@ -229,6 +214,15 @@ if ($action == 'create') {
 	$events[1] = array('method' => 'getContacts', 'url' => dol_buildpath('/core/ajax/contacts.php?showempty=1', 1), 'htmlname' => 'contact', 'params' => array('add-customer-contact' => 'disabled'));
 	print $form->select_company(GETPOST('fk_soc'), 'fk_soc', '', 'SelectThirdParty', 1, 0, $events, 0, 'minwidth300');
 	print ' <a href="'.DOL_URL_ROOT.'/societe/card.php?action=create&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create').'" target="_blank"><span class="fa fa-plus-circle valignmiddle paddingleft" title="'.$langs->trans("AddThirdParty").'"></span></a>';
+	print '</td></tr>';
+
+	//Sender
+	$userlist = $form->select_dolusers(GETPOST('sender'), '', 0, null, 0, '', '', 0, 0, 0, 'AND u.statut = 1', 0, '', 'minwidth300', 0, 1);
+	print '<tr>';
+	print '<td class="fieldrequired" style="width:10%">'.$form->editfieldkey('Sender', 'Sender_id', '', $object, 0).'</td>';
+	print '<td>';
+	print $form->selectarray('sender', $userlist, GETPOST('sender'), $langs->trans('SelectUser'), null, null, null, "40%", 0,0,'','minwidth300',1);
+	print ' <a href="'.DOL_URL_ROOT.'/user/card.php?action=create&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create').'" target="_blank"><span class="fa fa-plus-circle valignmiddle paddingleft" title="'.$langs->trans("AddUser").'"></span></a>';
 	print '</td></tr>';
 
 
@@ -407,6 +401,21 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	//$keyforbreak='fieldkeytoswitchonsecondcolumn';	// We change column just before this field
 	//unset($object->fields['fk_project']);				// Hide field already shown in banner
 	//unset($object->fields['fk_soc']);					// Hide field already shown in banner
+	print '<tr><td class="titlefield">';
+	print $langs->trans("Sender");
+	print '</td>';
+	print '<td>';
+	print $user->getNomUrl(1);
+	print '</td></tr>';
+
+//	print '<tr><td class="titlefield">';
+//	print $langs->trans("Label");
+//	print '</td>';
+//	print '<td>';
+//	print $thirparty->getNomUrl(1);
+//	print '</td></tr>';
+
+
 	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_view.tpl.php';
 
 	// Other attributes. Fields from hook formObjectOptions and Extrafields.

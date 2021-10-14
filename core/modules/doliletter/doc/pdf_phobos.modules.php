@@ -248,7 +248,7 @@ class pdf_phobos extends ModelePDFEnvelope
 				$pdf->SetDrawColor(128, 128, 128);
 
 				$pdf->SetTitle($outputlangs->convToOutputCharset($object->ref));
-				$pdf->SetSubject($outputlangs->transnoentities("ContractCard"));
+				$pdf->SetSubject($outputlangs->transnoentities("EnvelopeCard"));
 				$pdf->SetCreator("Dolibarr ".DOL_VERSION);
 				$pdf->SetAuthor($outputlangs->convToOutputCharset($user->getFullName($outputlangs)));
 				$pdf->SetKeyWords($outputlangs->convToOutputCharset($object->ref)." ".$outputlangs->transnoentities("ContractCard")." ".$outputlangs->convToOutputCharset($object->thirdparty->name));
@@ -418,9 +418,9 @@ class pdf_phobos extends ModelePDFEnvelope
 							$pdf->setPage($pagenb);
 							if ($pagenb == 1)
 							{
-								$this->_tableau($pdf, $tab_top, $this->page_hauteur - $tab_top - $heightforfooter - $heightforfreetext, 0, $outputlangs, 0, 1);
+								$this->_tableau($pdf, $object, $tab_top, $this->page_hauteur - $tab_top - $heightforfooter - $heightforfreetext, 0, $outputlangs, 0, 1);
 							} else {
-								$this->_tableau($pdf, $tab_top_newpage, $this->page_hauteur - $tab_top_newpage - $heightforfooter - $heightforfreetext, 0, $outputlangs, 1, 1);
+								$this->_tableau($pdf, $object, $tab_top_newpage, $this->page_hauteur - $tab_top_newpage - $heightforfooter - $heightforfreetext, 0, $outputlangs, 1, 1);
 							}
 							$this->_pagefoot($pdf, $object, $outputlangs, 1);
 							$pagenb++;
@@ -432,9 +432,9 @@ class pdf_phobos extends ModelePDFEnvelope
 						{
 							if ($pagenb == 1)
 							{
-								$this->_tableau($pdf, $tab_top, $this->page_hauteur - $tab_top - $heightforfooter - $heightforfreetext, 0, $outputlangs, 0, 1);
+								$this->_tableau($pdf, $object, $tab_top, $this->page_hauteur - $tab_top - $heightforfooter - $heightforfreetext, 0, $outputlangs, 0, 1);
 							} else {
-								$this->_tableau($pdf, $tab_top_newpage, $this->page_hauteur - $tab_top_newpage - $heightforfooter - $heightforfreetext, 0, $outputlangs, 1, 1);
+								$this->_tableau($pdf, $object, $tab_top_newpage, $this->page_hauteur - $tab_top_newpage - $heightforfooter - $heightforfreetext, 0, $outputlangs, 1, 1);
 							}
 							$this->_pagefoot($pdf, $object, $outputlangs, 1);
 							// New page
@@ -448,11 +448,11 @@ class pdf_phobos extends ModelePDFEnvelope
 				// Show square
 				if ($pagenb == 1)
 				{
-					$this->_tableau($pdf, $tab_top, $this->page_hauteur - $tab_top - $heightforinfotot - $heightforfreetext - $heightforfooter, 0, $outputlangs, 0, 0);
+					$this->_tableau($pdf, $object, $tab_top, $this->page_hauteur - $tab_top - $heightforinfotot - $heightforfreetext - $heightforfooter, 0, $outputlangs, 0, 0);
 					$this->tabSignature($pdf, $tab_top, $this->page_hauteur - $tab_top - $heightforinfotot - $heightforfreetext - $heightforfooter, $outputlangs);
 					$bottomlasttab = $this->page_hauteur - $heightforfooter - $heightforfooter + 1;
 				} else {
-					$this->_tableau($pdf, $tab_top_newpage, $this->page_hauteur - $tab_top_newpage - $heightforinfotot - $heightforfreetext - $heightforfooter, 0, $outputlangs, 0, 0);
+					$this->_tableau($pdf, $object, $tab_top_newpage, $this->page_hauteur - $tab_top_newpage - $heightforinfotot - $heightforfreetext - $heightforfooter, 0, $outputlangs, 0, 0);
 					$this->tabSignature($pdf, $tab_top_newpage, $this->page_hauteur - $tab_top_newpage - $heightforinfotot - $heightforfreetext - $heightforfooter, $outputlangs);
 					$bottomlasttab = $this->page_hauteur - $heightforfooter - $heightforfooter + 1;
 				}
@@ -509,7 +509,7 @@ class pdf_phobos extends ModelePDFEnvelope
 	 *   @param		int			$hidebottom		Hide bottom bar of array
 	 *   @return	void
 	 */
-	protected function _tableau(&$pdf, $tab_top, $tab_height, $nexY, $outputlangs, $hidetop = 0, $hidebottom = 0)
+	protected function _tableau(&$pdf, $object, $tab_top, $tab_height, $nexY, $outputlangs, $hidetop = 0, $hidebottom = 0)
 	{
 		global $conf;
 
@@ -518,7 +518,7 @@ class pdf_phobos extends ModelePDFEnvelope
 		if ($hidetop) $hidetop = -1;
 
 		$default_font_size = pdf_getPDFFontSize($outputlangs);
-		/*
+
 		$pdf->SetXY($this->marge_gauche, $tab_top);
 		$pdf->MultiCell(190,8,$outputlangs->transnoentities("Description"),0,'L',0);
 		$pdf->line($this->marge_gauche, $tab_top + 8, $this->page_largeur-$this->marge_droite, $tab_top + 8);
@@ -527,11 +527,11 @@ class pdf_phobos extends ModelePDFEnvelope
 
 		$pdf->MultiCell(0, 3, '');		// Set interline to 3
 		$pdf->SetXY($this->marge_gauche, $tab_top + 8);
-		$text=$object->description;
+		$text= $object->content;
 		if ($object->duree > 0)
 		{
 			$totaltime=convertSecondToTime($object->duree,'all',$conf->global->MAIN_DURATION_OF_WORKDAY);
-			$text.=($text?' - ':'').$langs->trans("Total").": ".$totaltime;
+			$text.=($text?' - ':'').$outputlangs->trans("Total").": ".$totaltime;
 		}
 		$desc=dol_htmlentitiesbr($text,1);
 		//print $outputlangs->convToOutputCharset($desc); exit;
@@ -542,7 +542,7 @@ class pdf_phobos extends ModelePDFEnvelope
 		$pdf->line($this->marge_gauche, $nexY, $this->page_largeur-$this->marge_droite, $nexY);
 
 		$pdf->MultiCell(0, 3, '');		// Set interline to 3. Then writeMultiCell must use 3 also.
-        */
+
 
 		// Output Rect
 		$this->printRect($pdf, $this->marge_gauche, $tab_top, $this->page_largeur - $this->marge_gauche - $this->marge_droite, $tab_height + 3); // Rect takes a length in 3rd parameter and 4th parameter
@@ -633,7 +633,7 @@ class pdf_phobos extends ModelePDFEnvelope
 		$pdf->SetFont('', 'B', $default_font_size + 3);
 		$pdf->SetXY($posx, $posy);
 		$pdf->SetTextColor(0, 0, 60);
-		$title = $outputlangs->transnoentities("ContractCard");
+		$title = $outputlangs->transnoentities("EnvelopeCard");
 		$pdf->MultiCell(100, 4, $title, '', 'R');
 
 		$pdf->SetFont('', 'B', $default_font_size + 2);
@@ -649,7 +649,7 @@ class pdf_phobos extends ModelePDFEnvelope
 		$posy += 4;
 		$pdf->SetXY($posx, $posy);
 		$pdf->SetTextColor(0, 0, 60);
-		$pdf->MultiCell(100, 3, $outputlangs->transnoentities("Date")." : ".dol_print_date($object->date_contrat, "day", false, $outputlangs, true), '', 'R');
+		$pdf->MultiCell(100, 3, $outputlangs->transnoentities("Date")." : ".dol_print_date($object->date_creation, "day", false, $outputlangs, true), '', 'R');
 
 		if ($object->thirdparty->code_client)
 		{
