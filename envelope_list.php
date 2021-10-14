@@ -61,6 +61,7 @@ if (!$res) die("Include of main fails");
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formcompany.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
 
 // load enveloppe libraries
 require_once __DIR__ . '/class/envelope.class.php';
@@ -99,6 +100,7 @@ $pagenext = $page + 1;
 // Initialize technical objects
 $object = new Envelope($db);
 $extrafields = new ExtraFields($db);
+$thirdparty = new Societe($db);
 $diroutputmassaction = $conf->enveloppe->dir_output.'/temp/massgeneration/'.$user->id;
 $hookmanager->initHooks(array('documentlist')); // Note that conf->hooks_modules contains array
 
@@ -611,7 +613,11 @@ while ($i < ($limit ? min($num, $limit) : $num)) {
 
 		if (!empty($arrayfields['t.'.$key]['checked'])) {
 			print '<td'.($cssforfield ? ' class="'.$cssforfield.'"' : '').'>';
-			if ($key == 'status') {
+			if ($key == 'fk_soc') {
+			$thirdparty->fetch($val);
+			print $thirdparty->getNomUrl();
+			}
+			else if ($key == 'status') {
 				print $object->getLibStatut(5);
 			} elseif ($key == 'rowid') {
 				print $object->showOutputField($val, $key, $object->id, '');
