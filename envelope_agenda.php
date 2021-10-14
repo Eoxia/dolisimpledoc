@@ -17,7 +17,7 @@
  */
 
 /**
- *  \file       enveloppe_agenda.php
+ *  \file       envelope_agenda.php
  *  \ingroup    enveloppe
  *  \brief      Tab of events on SimpleDoc
  */
@@ -191,7 +191,7 @@ if ($object->id > 0) {
 
 	// Object card
 	// ------------------------------------------------------------
-	$linkback = '<a href="'.dol_buildpath('/enveloppe/enveloppe_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
+	$linkback = '<a href="'.dol_buildpath('/enveloppe/envelope_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
 
 	$morehtmlref = '<div class="refidno">';
 	/*

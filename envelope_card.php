@@ -16,7 +16,7 @@
  */
 
 /**
- *   	\file       enveloppe_card.php
+ *   	\file       envelope_card.php
  *		\ingroup    enveloppe
  *		\brief      Page to create/edit/view enveloppe
  */
@@ -41,8 +41,8 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/doleditor.class.php';
 require_once './class/document.class.php';
-require_once './core/modules/enveloppe/mod_document_standard.php';
-require_once './lib/enveloppe_document.lib.php';
+require_once './core/modules/doliletter/mod_envelope_standard.php';
+require_once './lib/doliletter_envelope.lib.php';
 
 global $db, $conf, $langs, $user, $hookmanager;
 
@@ -120,14 +120,14 @@ if (empty($reshook)) {
 
 	$error = 0;
 
-	$backurlforlist = dol_buildpath('/enveloppe/enveloppe_list.php', 1);
+	$backurlforlist = dol_buildpath('/enveloppe/envelope_list.php', 1);
 
 	if (empty($backtopage) || ($cancel && empty($id))) {
 		if (empty($backtopage) || ($cancel && strpos($backtopage, '__ID__'))) {
 			if (empty($id) && (($action != 'add' && $action != 'create') || $cancel)) {
 				$backtopage = $backurlforlist;
 			} else {
-				$backtopage = dol_buildpath('/enveloppe/enveloppe_card.php', 1).'?id='.($id > 0 ? $id : '__ID__');
+				$backtopage = dol_buildpath('/enveloppe/envelope_card.php', 1).'?id='.($id > 0 ? $id : '__ID__');
 			}
 		}
 	}

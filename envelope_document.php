@@ -17,9 +17,9 @@
  */
 
 /**
- *  \file       enveloppe_note.php
+ *  \file       envelope_document.php
  *  \ingroup    enveloppe
- *  \brief      Tab for notes on SimpleDoc
+ *  \brief      Tab for documents linked to SimpleDoc
  */
 
 //if (! defined('NOREQUIREDB'))              define('NOREQUIREDB', '1');				// Do not create database handler $db
@@ -74,35 +74,57 @@ if (!$res) {
 	die("Include of main fails");
 }
 
+require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/core/lib/images.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
 dol_include_once('/enveloppe/class/enveloppe.class.php');
-dol_include_once('/enveloppe/lib/enveloppe_letter.lib.php');
+dol_include_once('/enveloppe/lib/enveloppe_document.lib.php');
 
 // Load translation files required by the page
-$langs->loadLangs(array("enveloppe@enveloppe", "companies"));
+$langs->loadLangs(array("enveloppe@enveloppe", "companies", "other", "mails"));
+
+
+$action = GETPOST('action', 'aZ09');
+$confirm = GETPOST('confirm');
+$id = (GETPOST('socid', 'int') ? GETPOST('socid', 'int') : GETPOST('id', 'int'));
+$ref = GETPOST('ref', 'alpha');
 
 // Get parameters
-$id = GETPOST('id', 'int');
-$ref        = GETPOST('ref', 'alpha');
-$action = GETPOST('action', 'aZ09');
-$cancel     = GETPOST('cancel', 'aZ09');
-$backtopage = GETPOST('backtopage', 'alpha');
+$limit = GETPOST('limit', 'int') ? GETPOST('limit', 'int') : $conf->liste_limit;
+$sortfield = GETPOST("sortfield", 'alpha');
+$sortorder = GETPOST("sortorder", 'alpha');
+$page = GETPOSTISSET('pageplusone') ? (GETPOST('pageplusone') - 1) : GETPOST("page", 'int');
+if (empty($page) || $page == -1) {
+	$page = 0;
+}     // If $page is not defined, or '' or -1
+$offset = $liste_limit * $page;
+$pageprev = $page - 1;
+$pagenext = $page + 1;
+if (!$sortorder) {
+	$sortorder = "ASC";
+}
+if (!$sortfield) {
+	$sortfield = "name";
+}
+//if (! $sortfield) $sortfield="position_name";
 
 // Initialize technical objects
 $object = new SimpleDoc($db);
 $extrafields = new ExtraFields($db);
 $diroutputmassaction = $conf->dolisimpledoc->dir_output.'/temp/massgeneration/'.$user->id;
-$hookmanager->initHooks(array('simpledocnote', 'globalcard')); // Note that conf->hooks_modules contains array
+$hookmanager->initHooks(array('simpledocdocument', 'globalcard')); // Note that conf->hooks_modules contains array
 // Fetch optionals attributes and labels
 $extrafields->fetch_name_optionals_label($object->table_element);
 
 // Load object
 include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be include, not include_once  // Must be include, not include_once. Include fetch and fetch_thirdparty but not fetch_optionals
+
 if ($id > 0 || !empty($ref)) {
-	$upload_dir = $conf->dolisimpledoc->multidir_output[$object->entity]."/".$object->id;
+	$upload_dir = $conf->dolisimpledoc->multidir_output[$object->entity ? $object->entity : $conf->entity]."/simpledoc/".get_exdir(0, 0, 0, 1, $object);
 }
 
-$permissionnote = $user->rights->dolisimpledoc->simpledoc->write; // Used by the include of actions_setnotes.inc.php
-$permissiontoadd = $user->rights->dolisimpledoc->simpledoc->write; // Used by the include of actions_addupdatedelete.inc.php
+$permissiontoadd = $user->rights->dolisimpledoc->simpledoc->write; // Used by the include of actions_addupdatedelete.inc.php and actions_linkedfiles.inc.php
 
 // Security check (enable the most restrictive one)
 //if ($user->socid > 0) accessforbidden();
@@ -117,7 +139,7 @@ $permissiontoadd = $user->rights->dolisimpledoc->simpledoc->write; // Used by th
  * Actions
  */
 
-include DOL_DOCUMENT_ROOT.'/core/actions_setnotes.inc.php'; // Must be include, not include_once
+include DOL_DOCUMENT_ROOT.'/core/actions_linkedfiles.inc.php';
 
 
 /*
@@ -126,20 +148,30 @@ include DOL_DOCUMENT_ROOT.'/core/actions_setnotes.inc.php'; // Must be include, 
 
 $form = new Form($db);
 
-//$help_url='EN:Customers_Orders|FR:Commandes_Clients|ES:Pedidos de clientes';
+$title = $langs->trans("SimpleDoc").' - '.$langs->trans("Files");
 $help_url = '';
-llxHeader('', $langs->trans('SimpleDoc'), $help_url);
+//$help_url='EN:Module_Third_Parties|FR:Module_Tiers|ES:Empresas';
+llxHeader('', $title, $help_url);
 
-if ($id > 0 || !empty($ref)) {
-	$object->fetch_thirdparty();
-
+if ($object->id) {
+	/*
+	 * Show tabs
+	 */
 	$head = simpledocPrepareHead($object);
 
-	print dol_get_fiche_head($head, 'note', '', -1, $object->picto);
+	print dol_get_fiche_head($head, 'document', '', -1, $object->picto);
+
+
+	// Build file list
+	$filearray = dol_dir_list($upload_dir, "files", 0, '', '(\.meta|_preview.*\.png)$', $sortfield, (strtolower($sortorder) == 'desc' ?SORT_DESC:SORT_ASC), 1);
+	$totalsize = 0;
+	foreach ($filearray as $key => $file) {
+		$totalsize += $file['size'];
+	}
 
 	// Object card
 	// ------------------------------------------------------------
-	$linkback = '<a href="'.dol_buildpath('/enveloppe/enveloppe_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
+	$linkback = '<a href="'.dol_buildpath('/enveloppe/envelope_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
 
 	$morehtmlref = '<div class="refidno">';
 	/*
@@ -179,22 +211,40 @@ if ($id > 0 || !empty($ref)) {
 	 }
 	 }
 	 }*/
-	 $morehtmlref .= '</div>';
-
+	$morehtmlref .= '</div>';
 
 	dol_banner_tab($object, 'ref', $linkback, 1, 'ref', 'ref', $morehtmlref);
 
-
 	print '<div class="fichecenter">';
+
 	print '<div class="underbanner clearboth"></div>';
+	print '<table class="border centpercent tableforfield">';
 
+	// Number of files
+	print '<tr><td class="titlefield">'.$langs->trans("NbOfAttachedFiles").'</td><td colspan="3">'.count($filearray).'</td></tr>';
 
-	$cssclass = "titlefield";
-	include DOL_DOCUMENT_ROOT.'/core/tpl/notes.tpl.php';
+	// Total size
+	print '<tr><td>'.$langs->trans("TotalSizeOfAttachedFiles").'</td><td colspan="3">'.$totalsize.' '.$langs->trans("bytes").'</td></tr>';
+
+	print '</table>';
 
 	print '</div>';
 
 	print dol_get_fiche_end();
+
+	$modulepart = 'enveloppe';
+	//$permissiontoadd = $user->rights->enveloppe->simpledoc->write;
+	$permissiontoadd = 1;
+	//$permtoedit = $user->rights->enveloppe->simpledoc->write;
+	$permtoedit = 1;
+	$param = '&id='.$object->id;
+
+	//$relativepathwithnofile='simpledoc/' . dol_sanitizeFileName($object->id).'/';
+	$relativepathwithnofile = 'simpledoc/'.dol_sanitizeFileName($object->ref).'/';
+
+	include DOL_DOCUMENT_ROOT.'/core/tpl/document_actions_post_headers.tpl.php';
+} else {
+	accessforbidden('', 0, 1);
 }
 
 // End of page

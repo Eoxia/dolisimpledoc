@@ -113,7 +113,7 @@ class modDoliLetter extends DolibarrModules {
 		// );
 		$this->const = array(
 			// CONST DOCUMENT
-			1 => array('DOLILETTER_ENVELOPPE_ADDON','chaine', 'mod_enveloppe_standard','', $conf->entity),
+			1 => array('DOLILETTER_ENVELOPE_ADDON','chaine', 'mod_envelope_standard','', $conf->entity),
 		);
 
 		if (!isset($conf->doliletter) || !isset($conf->doliletter->enabled)) {
@@ -220,7 +220,7 @@ class modDoliLetter extends DolibarrModules {
 			'titre'=>$langs->trans('DoliLetterCreate'),
 			'mainmenu'=>'doliletter',
 			'leftmenu'=>'enveloppe_card',
-			'url'=>'/doliletter/enveloppe_card.php?action=create',
+			'url'=>'/doliletter/envelope_card.php?action=create',
 			'langs'=>'doliletter@doliletter', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1100+$r,
 			'enabled'=>'$conf->doliletter->enabled',  // Define condition to show or hide menu entry. Use '$conf->digiriskdolibarr->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
@@ -235,7 +235,7 @@ class modDoliLetter extends DolibarrModules {
 			'titre'=>'<i class="fas fa-list"></i>  ' . $langs->trans('DoliLetterList'),
 			'mainmenu'=>'doliletter',
 			'leftmenu'=>'enveloppe_list',
-			'url'=>'/doliletter/enveloppe_list.php',
+			'url'=>'/doliletter/envelope_list.php',
 			'langs'=>'doliletter@doliletter', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1100+$r,
 			'enabled'=>'$conf->doliletter->enabled',  // Define condition to show or hide menu entry. Use '$conf->digiriskdolibarr->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.

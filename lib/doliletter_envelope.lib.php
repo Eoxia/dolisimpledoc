@@ -16,7 +16,7 @@
  */
 
 /**
- * \file    lib/doliletter_enveloppe.lib.php
+ * \file    lib/doliletter_envelope.lib.php
  * \ingroup doliletter
  * \brief   Library files with common functions for SimpleDoc
  */
