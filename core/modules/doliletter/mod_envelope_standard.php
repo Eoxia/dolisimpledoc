@@ -83,7 +83,7 @@ class mod_envelope_standard extends ModeleNumRefEnvelope
 		$posindice = strlen($this->prefix) + 6;
 		$sql = "SELECT MAX(CAST(SUBSTRING(ref FROM ".$posindice.") AS SIGNED)) as max";
 		$sql .= " FROM ".MAIN_DB_PREFIX."doliletter_envelope";
-		$sql .= " WHERE ref LIKE '".$db->escape($this->prefix)."____-%'";
+		$sql .= " WHERE ref LIKE '".$db->escape($this->prefix)."______-%'";
 		if ($object->ismultientitymanaged == 1) {
 			$sql .= " AND entity = ".$conf->entity;
 		} elseif ($object->ismultientitymanaged == 2) {
@@ -119,7 +119,7 @@ class mod_envelope_standard extends ModeleNumRefEnvelope
 		$posindice = strlen($this->prefix) + 6;
 		$sql = "SELECT MAX(CAST(SUBSTRING(ref FROM ".$posindice.") AS SIGNED)) as max";
 		$sql .= " FROM ".MAIN_DB_PREFIX."doliletter_envelope";
-		$sql .= " WHERE ref LIKE '".$db->escape($this->prefix)."____-%'";
+		$sql .= " WHERE ref LIKE '".$db->escape($this->prefix)."______-%'";
 		if ($object->ismultientitymanaged == 1) {
 			$sql .= " AND entity = ".$conf->entity;
 		} elseif ($object->ismultientitymanaged == 2) {
