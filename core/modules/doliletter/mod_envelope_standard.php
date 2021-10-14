@@ -65,7 +65,7 @@ class mod_envelope_standard extends ModeleNumRefEnvelope
 	 */
 	public function getExample()
 	{
-		return $this->prefix."0001-001";
+		return $this->prefix."1";
 	}
 
 	/**
@@ -83,7 +83,7 @@ class mod_envelope_standard extends ModeleNumRefEnvelope
 		$posindice = strlen($this->prefix) + 6;
 		$sql = "SELECT MAX(CAST(SUBSTRING(ref FROM ".$posindice.") AS SIGNED)) as max";
 		$sql .= " FROM ".MAIN_DB_PREFIX."doliletter_envelope";
-		$sql .= " WHERE ref LIKE '".$db->escape($this->prefix)."______-%'";
+		$sql .= " WHERE ref LIKE '".$db->escape($this->prefix)."_______-%'";
 		if ($object->ismultientitymanaged == 1) {
 			$sql .= " AND entity = ".$conf->entity;
 		} elseif ($object->ismultientitymanaged == 2) {
@@ -116,40 +116,31 @@ class mod_envelope_standard extends ModeleNumRefEnvelope
 		global $db, $conf;
 
 		// first we get the max value
-		$posindice = strlen($this->prefix) + 6;
+		$posindice = strlen($this->prefix) + 1;
 		$sql = "SELECT MAX(CAST(SUBSTRING(ref FROM ".$posindice.") AS SIGNED)) as max";
 		$sql .= " FROM ".MAIN_DB_PREFIX."doliletter_envelope";
-		$sql .= " WHERE ref LIKE '".$db->escape($this->prefix)."______-%'";
+		$sql .= " WHERE ref LIKE '".$db->escape($this->prefix)."%'";
 		if ($object->ismultientitymanaged == 1) {
 			$sql .= " AND entity = ".$conf->entity;
-		} elseif ($object->ismultientitymanaged == 2) {
-			// TODO
 		}
 
 		$resql = $db->query($sql);
-		if ($resql) {
+		if ($resql)
+		{
 			$obj = $db->fetch_object($resql);
-			if ($obj) {
-				$max = intval($obj->max);
-			} else {
-				$max = 0;
-			}
-		} else {
+			if ($obj) $max = intval($obj->max);
+			else $max = 0;
+		}
+		else
+		{
 			dol_syslog("mod_envelope_standard::getNextValue", LOG_DEBUG);
 			return -1;
 		}
 
-		$date = time();
+		if ($max >= (pow(10, 4) - 1)) $num = $max + 1; // If counter > 9999, we do not format on 4 chars, we take number as it is
+		else $num = sprintf("%s", $max + 1);
 
-		$yymm = strftime("%y%m%d", $date);
-
-		if ($max >= (pow(10, 4) - 1)) {
-			$num = $max + 1; // If counter > 9999, we do not format on 4 chars, we take number as it is
-		} else {
-			$num = sprintf("%04s", $max + 1);
-		}
-
-		dol_syslog("mod_envelope_standard::getNextValue return ".$this->prefix.$yymm."-".$num);
-		return $this->prefix.$yymm."-".$num;
+		dol_syslog("mod_envelope_standard::getNextValue return ".$this->prefix.$num);
+		return $this->prefix.$num;
 	}
 }
