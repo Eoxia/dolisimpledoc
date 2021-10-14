@@ -18,7 +18,7 @@
 
 /**
  *   	\file       envelope_list.php
- *		\ingroup    enveloppe
+ *		\ingroup    doliletter
  *		\brief      List page for document
  */
 
@@ -63,7 +63,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
 
 // load enveloppe libraries
-require_once __DIR__ . '/class/document.class.php';
+require_once __DIR__ . '/class/envelope.class.php';
 
 // for other modules
 //dol_include_once('/othermodule/class/otherobject.class.php');

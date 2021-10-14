@@ -25,7 +25,7 @@
 /**
  *  \file			htdocs/core/modules/doliletter/modules_envelope.php
  *  \ingroup		doliletter
- *  \brief			File that contains parent class for enveloppe document models and parent class for enveloppe numbering models
+ *  \brief			File that contains parent class for envelope document models and parent class for envelope numbering models
  */
 
 require_once DOL_DOCUMENT_ROOT.'/core/class/commondocgenerator.class.php';
@@ -33,7 +33,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/commondocgenerator.class.php';
 /**
  *	Parent class for documents models
  */
-abstract class ModelePDFSimpleDoc extends CommonDocGenerator
+abstract class ModelePDFEnvelope extends CommonDocGenerator
 {
 
 	// phpcs:disable PEAR.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
@@ -49,7 +49,7 @@ abstract class ModelePDFSimpleDoc extends CommonDocGenerator
 		// phpcs:enable
 		global $conf;
 
-		$type = 'enveloppe';
+		$type = 'envelope';
 		$list = array();
 
 		include_once DOL_DOCUMENT_ROOT.'/core/lib/functions2.lib.php';

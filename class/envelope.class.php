@@ -16,7 +16,7 @@
  */
 
 /**
- * \file        class/doliletter.class.php
+ * \file        class/envelope.class.php
  * \ingroup     doliletter
  * \brief       This file is a CRUD class file for Document (Create/Read/Update/Delete)
  */
@@ -25,9 +25,9 @@
 require_once DOL_DOCUMENT_ROOT.'/core/class/commonobject.class.php';
 
 /**
- * Class for Document
+ * Class for Envelope
  */
-class Document extends CommonObject
+class Envelope extends CommonObject
 {
 	/**
 	 * @var string ID of module.
@@ -37,12 +37,12 @@ class Document extends CommonObject
 	/**
 	 * @var string ID to identify managed object.
 	 */
-	public $element = 'document';
+	public $element = 'envelope';
 
 	/**
 	 * @var string Name of table without prefix where object is stored. This is also the key used for extrafields management.
 	 */
-	public $table_element = 'doliletter_document';
+	public $table_element = 'doliletter_envelope';
 
 	/**
 	 * @var int  Does this object support multicompany module ?

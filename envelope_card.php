@@ -40,7 +40,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/doleditor.class.php';
-require_once './class/document.class.php';
+require_once './class/envelope.class.php';
 require_once './core/modules/doliletter/mod_envelope_standard.php';
 require_once './lib/doliletter_envelope.lib.php';
 
