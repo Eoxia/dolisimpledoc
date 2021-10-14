@@ -27,7 +27,7 @@
  * @param	SimpleDoc	$object		SimpleDoc
  * @return 	array					Array of tabs
  */
-function documentPrepareHead($object)
+function envelopePrepareHead($object)
 {
 	global $db, $langs, $conf;
 
@@ -60,10 +60,10 @@ function documentPrepareHead($object)
 
 	require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
 	require_once DOL_DOCUMENT_ROOT.'/core/class/link.class.php';
-	$upload_dir = $conf->dolisimpledoc->dir_output."/simpledoc/".dol_sanitizeFileName($object->ref);
+	$upload_dir = $conf->doliletter->dir_output."/envelope/".dol_sanitizeFileName($object->ref);
 	$nbFiles = count(dol_dir_list($upload_dir, 'files', 0, '', '(\.meta|_preview.*\.png)$'));
 	$nbLinks = Link::count($db, $object->element, $object->id);
-	$head[$h][0] = dol_buildpath("/doliletter/doliletter_document.php", 1).'?id='.$object->id;
+	$head[$h][0] = dol_buildpath("/doliletter/envelope_document.php", 1).'?id='.$object->id;
 	$head[$h][1] = $langs->trans('Documents');
 	if (($nbFiles + $nbLinks) > 0) {
 		$head[$h][1] .= '<span class="badge marginleftonlyshort">'.($nbFiles + $nbLinks).'</span>';
@@ -71,7 +71,7 @@ function documentPrepareHead($object)
 	$head[$h][2] = 'document';
 	$h++;
 
-	$head[$h][0] = dol_buildpath("/doliletter/doliletter_agenda.php", 1).'?id='.$object->id;
+	$head[$h][0] = dol_buildpath("/doliletter/envelope_agenda.php", 1).'?id='.$object->id;
 	$head[$h][1] = $langs->trans("Events");
 	$head[$h][2] = 'agenda';
 	$h++;
@@ -84,9 +84,9 @@ function documentPrepareHead($object)
 	//$this->tabs = array(
 	//	'entity:-tabname:Title:@doliletter:/doliletter/mypage.php?id=__ID__'
 	//); // to remove a tab
-	complete_head_from_modules($conf, $langs, $object, $head, $h, 'simpledoc@doliletter');
+	complete_head_from_modules($conf, $langs, $object, $head, $h, 'envelope@doliletter');
 
-	complete_head_from_modules($conf, $langs, $object, $head, $h, 'simpledoc@doliletter', 'remove');
+	complete_head_from_modules($conf, $langs, $object, $head, $h, 'envelope@doliletter', 'remove');
 
 	return $head;
 }
