@@ -196,10 +196,9 @@ class pdf_phobos extends ModelePDFEnvelope
 				$file = $dir."/SPECIMEN.pdf";
 			} else {
 				$objectref = dol_sanitizeFileName($object->ref);
-				$dir = $conf->doliletter->multidir_output[$object->entity]."/envelope/".$objectref;
+				$dir = $conf->doliletter->multidir_output[1]."/envelope/".$objectref;
 				$file = $dir."/".$objectref.".pdf";
 			}
-
 			if (!file_exists($dir))
 			{
 				if (dol_mkdir($dir) < 0)

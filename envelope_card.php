@@ -402,13 +402,18 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	//$keyforbreak='fieldkeytoswitchonsecondcolumn';	// We change column just before this field
 	//unset($object->fields['fk_project']);				// Hide field already shown in banner
 	//unset($object->fields['fk_soc']);					// Hide field already shown in banner
-	print '<tr><td class="titlefield">';
-	print $langs->trans("Sender");
-	print '</td>';
-	print '<td>';
-	print $user->getNomUrl(1);
-	print '</td></tr>';
 
+
+		//correct sender display
+//	print '<tr><td class="titlefield">';
+//	print $langs->trans("Sender");
+//	print '</td>';
+//	print '<td>';
+//	print $user->getNomUrl(1);
+//	print '</td></tr>';
+
+
+	//correct thirdparty display
 	$thirdparty->fetch($object->fk_soc);
 	print '<tr><td class="titlefield">';
 	print $langs->trans("ThirdParty");
@@ -417,7 +422,9 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	print $thirdparty->getNomUrl(1);
 	print '</td></tr>';
 
-	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_view.tpl.php';
+
+	//unused display of information
+//	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_view.tpl.php';
 
 	// Other attributes. Fields from hook formObjectOptions and Extrafields.
 	include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_view.tpl.php';
