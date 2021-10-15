@@ -44,6 +44,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/doleditor.class.php';
 require_once './class/envelope.class.php';
 require_once './core/modules/doliletter/mod_envelope_standard.php';
 require_once './lib/doliletter_envelope.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
 
 global $db, $conf, $langs, $user, $hookmanager;
 
@@ -95,7 +96,7 @@ $permissiontodelete = $user->rights->doliletter->envelope->delete || ($permissio
 $permissionnote = $user->rights->enveloppe->envelope->write; // Used by the include of actions_setnotes.inc.php
 $permissiondellink = $user->rights->enveloppe->letter->write; // Used by the include of actions_dellink.inc.php
 $upload_dir = $conf->enveloppe->multidir_output[isset($object->entity) ? $object->entity : 1].'/letter';
-
+$thirdparty = new Societe($db);
 // Security check (enable the most restrictive one)
 //if ($user->socid > 0) accessforbidden();
 //if ($user->socid > 0) $socid = $user->socid;
@@ -408,13 +409,13 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	print $user->getNomUrl(1);
 	print '</td></tr>';
 
-//	print '<tr><td class="titlefield">';
-//	print $langs->trans("Label");
-//	print '</td>';
-//	print '<td>';
-//	print $thirparty->getNomUrl(1);
-//	print '</td></tr>';
-
+	$thirdparty->fetch($object->fk_soc);
+	print '<tr><td class="titlefield">';
+	print $langs->trans("ThirdParty");
+	print '</td>';
+	print '<td>';
+	print $thirdparty->getNomUrl(1);
+	print '</td></tr>';
 
 	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_view.tpl.php';
 
