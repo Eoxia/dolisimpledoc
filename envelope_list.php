@@ -614,7 +614,7 @@ while ($i < ($limit ? min($num, $limit) : $num)) {
 		if (!empty($arrayfields['t.'.$key]['checked'])) {
 			print '<td'.($cssforfield ? ' class="'.$cssforfield.'"' : '').'>';
 			if ($key == 'fk_soc') {
-			$thirdparty->fetch($val);
+			$thirdparty->fetch($obj->fk_soc);
 			print $thirdparty->getNomUrl();
 			}
 			else if ($key == 'status') {
