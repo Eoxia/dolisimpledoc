@@ -92,17 +92,17 @@ include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be includ
 
 $permissiontoread = $user->rights->doliletter->envelope->read;
 $permissiontoadd = $user->rights->doliletter->envelope->write; // Used by the include of actions_addupdatedelete.inc.php and actions_lineupdown.inc.php
-$permissiontodelete = $user->rights->doliletter->envelope->delete || ($permissiontoadd && isset($object->status) && $object->status == $object::STATUS_DRAFT);
-$permissionnote = $user->rights->enveloppe->envelope->write; // Used by the include of actions_setnotes.inc.php
-$permissiondellink = $user->rights->enveloppe->letter->write; // Used by the include of actions_dellink.inc.php
-$upload_dir = $conf->enveloppe->multidir_output[isset($object->entity) ? $object->entity : 1].'/letter';
+$permissiontodelete = $user->rights->doliletter->envelope->delete || ($permissiontoadd && isset($object->status));
+$permissionnote = $user->rights->envelope->envelope->write; // Used by the include of actions_setnotes.inc.php
+$permissiondellink = $user->rights->envelope->letter->write; // Used by the include of actions_dellink.inc.php
+$upload_dir = $conf->doliletter->multidir_output[$conf->entity];
 $thirdparty = new Societe($db);
 // Security check (enable the most restrictive one)
 //if ($user->socid > 0) accessforbidden();
 //if ($user->socid > 0) $socid = $user->socid;
 //$isdraft = (($object->status == $object::STATUS_DRAFT) ? 1 : 0);
 //restrictedArea($user, $object->element, $object->id, $object->table_element, '', 'fk_soc', 'rowid', $isdraft);
-//if (empty($conf->enveloppe->enabled)) accessforbidden();
+//if (empty($conf->envelope->enabled)) accessforbidden();
 //if (!$permissiontoread) accessforbidden();
 
 
@@ -116,6 +116,29 @@ if ($reshook < 0) {
 	setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
 }
 
+if ($action == 'remove_file') {
+	if (!empty($upload_dir)) {
+		require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
+
+		$langs->load("other");
+		$filetodelete = GETPOST('file', 'alpha');
+		$file = $upload_dir.'/'.$filetodelete;
+		$ret = dol_delete_file($file, 0, 0, 0, $object);
+		if ($ret) setEventMessages($langs->trans("FileWasRemoved", $filetodelete), null, 'mesgs');
+		else setEventMessages($langs->trans("ErrorFailToDeleteFile", $filetodelete), null, 'errors');
+
+		// Make a redirect to avoid to keep the remove_file into the url that create side effects
+		$urltoredirect = $_SERVER['REQUEST_URI'];
+		$urltoredirect = preg_replace('/#builddoc$/', '', $urltoredirect);
+		$urltoredirect = preg_replace('/action=remove_file&?/', '', $urltoredirect);
+
+		header('Location: '.$urltoredirect);
+		exit;
+	}
+	else {
+		setEventMessages('BugFoundVarUploaddirnotDefined', null, 'errors');
+	}
+}
 
 if (empty($reshook)) {
 
@@ -449,7 +472,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		if (empty($reshook)) {
 			// Send
 			if (empty($user->socid)) {
-				print dolGetButtonAction($langs->trans('SendMail'), '', 'default', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=presend&mode=init&token='.newToken().'#formmailbeforetitle');
+				//print dolGetButtonAction($langs->trans('SendMail'), '', 'default', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=presend&mode=init&token='.newToken().'#formmailbeforetitle');
 			}
 
 			print dolGetButtonAction($langs->trans('Modify'), '', 'default', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=edit&token='.newToken(), '', $permissiontoadd);
