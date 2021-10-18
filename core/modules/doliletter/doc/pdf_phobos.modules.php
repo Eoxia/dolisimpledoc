@@ -197,7 +197,6 @@ class pdf_phobos extends ModelePDFEnvelope
 			} else {
 				$objectref = dol_sanitizeFileName($object->ref);
 				$dir = $conf->doliletter->multidir_output[1]."/envelope/".$objectref;
-				$file = $dir."/".$objectref.".pdf";
 			}
 			if (!file_exists($dir))
 			{
@@ -207,7 +206,14 @@ class pdf_phobos extends ModelePDFEnvelope
 					return 0;
 				}
 			}
-
+			// find appropriate doc number
+			if (!$object->specimen) {
+				$docnum = 0;
+					do {
+						$file = $dir . "/" . $objectref . '-' . $docnum . ".pdf";
+						$docnum++;
+					} while(file_exists($file));
+			}
 			if (file_exists($dir))
 			{
 				// Add pdfgeneration hook
