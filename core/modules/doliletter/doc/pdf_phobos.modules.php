@@ -298,7 +298,13 @@ class pdf_phobos extends ModelePDFEnvelope
 
 				$pdf->MultiCell(0, 2, ''); // Set interline to 3. Then writeMultiCell must use 3 also.
 
-				$nblines = count($object->lines);
+
+				if (is_countable($object->lines)) {
+					$nblines = count($object->lines);
+				}
+				else {
+					$nblines = 0;
+				}
 
 				// Loop on each lines
 				for ($i = 0; $i < $nblines; $i++)
