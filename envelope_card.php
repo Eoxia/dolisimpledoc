@@ -97,6 +97,7 @@ $permissionnote = $user->rights->envelope->envelope->write; // Used by the inclu
 $permissiondellink = $user->rights->envelope->letter->write; // Used by the include of actions_dellink.inc.php
 $upload_dir = $conf->doliletter->multidir_output[$conf->entity];
 $thirdparty = new Societe($db);
+$thirdparty->fetch($object->fk_soc);
 // Security check (enable the most restrictive one)
 //if ($user->socid > 0) accessforbidden();
 //if ($user->socid > 0) $socid = $user->socid;
@@ -109,6 +110,66 @@ $thirdparty = new Societe($db);
 /*
  * Actions
  */
+
+//action to send Email
+if ($action == 'presend' /**/ && false /**/) {
+	if (!$error) {
+		$langs->load('mails');
+		$sendto = $thirdparty->email;
+
+		if (dol_strlen($sendto) && (!empty($conf->global->MAIN_MAIL_EMAIL_FROM))) {
+			require_once DOL_DOCUMENT_ROOT.'/core/class/CMailFile.class.php';
+
+			$from = $conf->global->MAIN_MAIL_EMAIL_FROM;
+			$url = dol_buildpath('/custom/digiriskdolibarr/public/signature/add_signature.php?track_id='.$thirdparty->signature_url, 3);
+
+			$message = $langs->trans('SignatureEmailMessage') . ' ' . $url;
+			$subject = $langs->trans('SignatureEmailSubject') . ' ' . $object->ref;
+
+			// Create form object
+			// Send mail (substitutionarray must be done just before this)
+			$mailfile = new CMailFile($subject, $sendto, $from, $message, array(), array(), array(), "", "", 0, -1, '', '', '', '', 'mail');
+
+			if ($mailfile->error) {
+				setEventMessages($mailfile->error, $mailfile->errors, 'errors');
+			} else {
+				if (!empty($conf->global->MAIN_MAIL_SMTPS_ID)) {
+					$result = $mailfile->sendfile();
+					if ($result) {
+						$thirdparty->last_email_sent_date = dol_now('tzuser');
+						$thirdparty->update($user, true);
+						$thirdparty->setPendingSignature($user, false);
+						setEventMessages($langs->trans('SendEmailAt').' '.$thirdparty->email,array());
+						// This avoid sending mail twice if going out and then back to page
+						header('Location: '.$_SERVER["PHP_SELF"].'?id='.$object->id);
+						exit;
+					} else {
+						$langs->load("other");
+						$mesg = '<div class="error">';
+						if ($mailfile->error) {
+							$mesg .= $langs->transnoentities('ErrorFailedToSendMail', dol_escape_htmltag($from), dol_escape_htmltag($sendto));
+							$mesg .= '<br>'.$mailfile->error;
+						} else {
+							$mesg .= $langs->transnoentities('ErrorFailedToSendMail', dol_escape_htmltag($from), dol_escape_htmltag($sendto));
+						}
+						$mesg .= '</div>';
+						setEventMessages($mesg, null, 'warnings');
+					}
+				} else {
+					setEventMessages($langs->trans('ErrorSetupEmail'), '', 'errors');
+				}
+			}
+		} else {
+			$langs->load("errors");
+			setEventMessages($langs->trans('ErrorFieldRequired', $langs->transnoentitiesnoconv("MailTo")), null, 'warnings');
+			dol_syslog('Try to send email with no recipient defined', LOG_WARNING);
+		}
+	} else {
+		// Mail sent KO
+		if (!empty($thirdparty->errors)) setEventMessages(null, $thirdparty->errors, 'errors');
+		else  setEventMessages($thirdparty->error, null, 'errors');
+	}
+}
 
 $parameters = array();
 $reshook = $hookmanager->executeHooks('doActions', $parameters, $object, $action); // Note that $action and $object may have been modified by some hooks
@@ -437,7 +498,6 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 
 	//correct thirdparty display
-	$thirdparty->fetch($object->fk_soc);
 	print '<tr><td class="titlefield">';
 	print $langs->trans("ThirdParty");
 	print '</td>';
@@ -471,9 +531,8 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 		if (empty($reshook)) {
 			// Send
-			if (empty($user->socid)) {
-				//print dolGetButtonAction($langs->trans('SendMail'), '', 'default', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=presend&mode=init&token='.newToken().'#formmailbeforetitle');
-			}
+
+			print dolGetButtonAction($langs->trans('SendMail'), '', 'presend', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=presend&mode=init&token='.newToken());
 
 			print dolGetButtonAction($langs->trans('Modify'), '', 'default', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=edit&token='.newToken(), '', $permissiontoadd);
 
