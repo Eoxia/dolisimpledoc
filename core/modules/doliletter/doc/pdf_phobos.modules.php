@@ -210,7 +210,7 @@ class pdf_phobos extends ModelePDFEnvelope
 			if (!$object->specimen) {
 				$docnum = 0;
 					do {
-						$file = $dir . "/" .$date->format('y_m_d').'-'. $objectref . '-' . $docnum . ".pdf";
+						$file = $dir . "/" .$date->format('20ymd').'-'. $objectref . '_' . $docnum . ".pdf";
 						$docnum++;
 					} while(file_exists($file));
 			}
