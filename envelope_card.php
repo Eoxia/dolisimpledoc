@@ -112,64 +112,6 @@ $thirdparty->fetch($object->fk_soc);
  */
 
 //action to send Email
-if ($action == 'presend' /**/ && false /**/) {
-	if (!$error) {
-		$langs->load('mails');
-		$sendto = $thirdparty->email;
-
-		if (dol_strlen($sendto) && (!empty($conf->global->MAIN_MAIL_EMAIL_FROM))) {
-			require_once DOL_DOCUMENT_ROOT.'/core/class/CMailFile.class.php';
-
-			$from = $conf->global->MAIN_MAIL_EMAIL_FROM;
-			$url = dol_buildpath('/custom/digiriskdolibarr/public/signature/add_signature.php?track_id='.$thirdparty->signature_url, 3);
-
-			$message = $langs->trans('SignatureEmailMessage') . ' ' . $url;
-			$subject = $langs->trans('SignatureEmailSubject') . ' ' . $object->ref;
-
-			// Create form object
-			// Send mail (substitutionarray must be done just before this)
-			$mailfile = new CMailFile($subject, $sendto, $from, $message, array(), array(), array(), "", "", 0, -1, '', '', '', '', 'mail');
-
-			if ($mailfile->error) {
-				setEventMessages($mailfile->error, $mailfile->errors, 'errors');
-			} else {
-				if (!empty($conf->global->MAIN_MAIL_SMTPS_ID)) {
-					$result = $mailfile->sendfile();
-					if ($result) {
-						$thirdparty->last_email_sent_date = dol_now('tzuser');
-						$thirdparty->update($user, true);
-						$thirdparty->setPendingSignature($user, false);
-						setEventMessages($langs->trans('SendEmailAt').' '.$thirdparty->email,array());
-						// This avoid sending mail twice if going out and then back to page
-						header('Location: '.$_SERVER["PHP_SELF"].'?id='.$object->id);
-						exit;
-					} else {
-						$langs->load("other");
-						$mesg = '<div class="error">';
-						if ($mailfile->error) {
-							$mesg .= $langs->transnoentities('ErrorFailedToSendMail', dol_escape_htmltag($from), dol_escape_htmltag($sendto));
-							$mesg .= '<br>'.$mailfile->error;
-						} else {
-							$mesg .= $langs->transnoentities('ErrorFailedToSendMail', dol_escape_htmltag($from), dol_escape_htmltag($sendto));
-						}
-						$mesg .= '</div>';
-						setEventMessages($mesg, null, 'warnings');
-					}
-				} else {
-					setEventMessages($langs->trans('ErrorSetupEmail'), '', 'errors');
-				}
-			}
-		} else {
-			$langs->load("errors");
-			setEventMessages($langs->trans('ErrorFieldRequired', $langs->transnoentitiesnoconv("MailTo")), null, 'warnings');
-			dol_syslog('Try to send email with no recipient defined', LOG_WARNING);
-		}
-	} else {
-		// Mail sent KO
-		if (!empty($thirdparty->errors)) setEventMessages(null, $thirdparty->errors, 'errors');
-		else  setEventMessages($thirdparty->error, null, 'errors');
-	}
-}
 
 $parameters = array();
 $reshook = $hookmanager->executeHooks('doActions', $parameters, $object, $action); // Note that $action and $object may have been modified by some hooks
@@ -262,7 +204,7 @@ llxHeader('', $title, $help_url);
 
 // Part to create
 if ($action == 'create') {
-	print load_fiche_titre($langs->trans("NewObject", $langs->transnoentitiesnoconv("MyObject")), '', 'object_'.$object->picto);
+	print load_fiche_titre($langs->trans("NewObject", $langs->transnoentitiesnoconv("Envelope")), '', 'object_'.$object->picto);
 
 	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
 	print '<input type="hidden" name="token" value="'.newToken().'">';
@@ -544,52 +486,15 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 
 	// Select mail models is same action as presend
-	if (GETPOST('modelselected')) {
-		$action = 'presend';
-	}
+//	if (GETPOST('modelselected')) {
+//		$action = 'presend';
+//	}
 
-	if ($action != 'presend') {
-		print '<div class="fichecenter"><div class="fichehalfleft">';
-		print '<a name="builddoc"></a>'; // ancre
-
-		$includedocgeneration = 1;
-
-		// Documents
-		if ($includedocgeneration) {
-			$objref = dol_sanitizeFileName($object->ref);
-			$relativepath = $objref.'/'.$objref.'.pdf';
-			$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$objref;
-			$urlsource = $_SERVER["PHP_SELF"]."?id=".$object->id;
-			$genallowed = $user->rights->doliletter->envelope->read; // If you can read, you can build the PDF to read content
-			$delallowed = $user->rights->doliletter->envelope->write; // If you can create/edit, you can remove a file on card
-			print $formfile->showdocuments('doliletter:Envelope', $object->element.'/'.$objref, $filedir, $urlsource, $genallowed, $delallowed, $conf->global->DOLILETTER_ENVELOPE_ADDON_PDF, 1, 0, 0, 28, 0, '', '', '', $langs->defaultlang);
-		}
-
-		print '</div><div class="fichehalfright"><div class="ficheaddleft">';
-
-		$MAXEVENT = 10;
-
-		$morehtmlright = '<a href="'.dol_buildpath('/doliletter/envelope_agenda.php', 1).'?id='.$object->id.'">';
-		$morehtmlright .= $langs->trans("SeeAll");
-		$morehtmlright .= '</a>';
-
-		// List of actions on element
-		include_once DOL_DOCUMENT_ROOT.'/core/class/html.formactions.class.php';
-		$formactions = new FormActions($db);
-		$somethingshown = $formactions->showactions($object, $object->element.'@'.$object->module, (is_object($object->thirdparty) ? $object->thirdparty->id : 0), 1, '', $MAXEVENT, '', $morehtmlright);
-
-		print '</div></div></div>';
-	}
-
-	//Select mail models is same action as presend
-	if (GETPOST('modelselected')) {
-		$action = 'presend';
-	}
 
 	// Presend form
 	$modelmail = 'envelope';
 	$defaulttopic = 'InformationMessage';
-	$diroutput = $conf->doliletter->dir_output;
+	$diroutput = $conf->doliletter->dir_output . '/' . $object->element;
 	$trackid = 'envelope'.$object->id;
 
 	include DOL_DOCUMENT_ROOT.'/core/tpl/card_presend.tpl.php';
