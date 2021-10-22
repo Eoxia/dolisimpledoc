@@ -310,6 +310,11 @@ if (($id || $ref) && $action == 'edit') {
 	// Other attributes
 	include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_edit.tpl.php';
 
+	print '<tr class="content_field"><td><label for="content">'.$langs->trans("Content").'</label></td><td>';
+	$doleditor = new DolEditor('content', GETPOST('content'), '', 90, 'dolibarr_notes', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
+	$doleditor->Create();
+	print '</td></tr>';
+
 	print '</table>';
 
 	print dol_get_fiche_end();
