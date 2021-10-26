@@ -180,7 +180,7 @@ if (empty($reshook)) {
 	// Actions to send emails
 	$triggersendname = 'DOLISIMPLEDOC_SIMPLEDOC_SENTBYMAIL';
 	$autocopy = 'MAIN_MAIL_AUTOCOPY_SIMPLEDOC_TO';
-	$trackid = 'letter'.$object->id;
+	$trackid = 'envelope'.$object->id;
 	include DOL_DOCUMENT_ROOT.'/core/actions_sendmails.inc.php';
 }
 
