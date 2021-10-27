@@ -98,6 +98,7 @@ $permissiondellink = $user->rights->envelope->letter->write; // Used by the incl
 $upload_dir = $conf->doliletter->multidir_output[$conf->entity];
 $thirdparty = new Societe($db);
 $thirdparty->fetch($object->fk_soc);
+$usertemp = new User($db);
 // Security check (enable the most restrictive one)
 //if ($user->socid > 0) accessforbidden();
 //if ($user->socid > 0) $socid = $user->socid;
@@ -255,7 +256,7 @@ if ($action == 'create') {
 
 	//SenderService -- Moyen d'envoi
 	print '<tr><td class="fieldrequired">'.$langs->trans("SenderService").'</td><td>';
-	print $formother->select_dictionary('sender_service','c_sender_service', 'ref', 'label', '', 1);
+	print $formother->select_dictionary('sender_service','c_sender_service', 'ref', 'label', '', 0);
 	print '</td></tr>';
 
 	//Content -- Contenue
@@ -461,9 +462,26 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	print '</td></tr>';
 
 
-	//unused display of information
-//	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_view.tpl.php';
+	$usertemp->fetch($object->sender);
+	print '<tr><td class="titlefield">';
+	print $langs->trans("Sender");
+	print '</td>';
+	print '<td>';
+	print $usertemp->getNomUrl(1);
+	print '</td></tr>';
 
+	print '<tr><td class="titlefield">';
+	print $langs->trans("Content");
+	print '</td>';
+	print '<td>';
+	print dol_trunc($object->content, 60, 'wrap'); //wrap -> middle?
+	print '</td></tr>';
+
+	//unused display of information
+	unset($object->fields['fk_soc']);
+	unset($object->fields['sender']);
+	unset($object->fields['content']);
+	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_view.tpl.php';
 	// Other attributes. Fields from hook formObjectOptions and Extrafields.
 	include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_view.tpl.php';
 
@@ -545,7 +563,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	// Presend form
 	$modelmail = 'envelope';
 	$defaulttopic = 'InformationMessage';
-	$diroutput = $conf->doliletter->dir_output . '/' . $object->element;
+	$diroutput = $upload_dir . '/' . $object->element;
 	$trackid = 'envelope'.$object->id;
 
 	include DOL_DOCUMENT_ROOT.'/core/tpl/card_presend.tpl.php';
