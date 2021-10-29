@@ -253,10 +253,9 @@ if ($action == 'create') {
 	print ' <a href="'.DOL_URL_ROOT.'/user/card.php?action=create&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create').'" target="_blank"><span class="fa fa-plus-circle valignmiddle paddingleft" title="'.$langs->trans("AddUser").'"></span></a>';
 	print '</td></tr>';
 
-
 	//SenderService -- Moyen d'envoi
 	print '<tr><td class="fieldrequired">'.$langs->trans("SenderService").'</td><td>';
-	print $formother->select_dictionary('sender_service','c_sender_service', 'ref', 'label', '', 0);
+	print $formother->select_dictionary('sender_service','c_sender_service', 'ref', 'label', 'MAIL', 0);
 	print '</td></tr>';
 
 	//Content -- Contenue
