@@ -92,11 +92,11 @@ $linkback = '<a href="'.($backtopage ? $backtopage : DOL_URL_ROOT.'/admin/module
 print load_fiche_titre($langs->trans($page_name), $linkback, 'title_setup');
 
 // Configuration header
-$head = dolisimpledocAdminPrepareHead();
+$head = doliletterAdminPrepareHead();
 print dol_get_fiche_head($head, 'about', $langs->trans($page_name), 0, 'doliletter@doliletter');
 
 dol_include_once('/doliletter/core/modules/modDoliLetter.class.php');
-$tmpmodule = new modDoliSimpleDoc($db);
+$tmpmodule = new modDoliLetter($db);
 print $tmpmodule->getDescLong();
 
 // Page end
