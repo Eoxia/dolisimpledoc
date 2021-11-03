@@ -1,9 +1,9 @@
-# Copyright (C) 2021 SuperAdmin
+# Copyright (C) 2021 EOXIA <dev@eoxia.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -14,43 +14,33 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #
-# Generic
+# Générique
 #
 
-# Module label 'ModuleDoliLetterModuleName'
-ModuleDoliLetterModuleName = DoliLetter
-# Module description 'ModuleDoliLetter'
-ModuleDoliLetterDesc = DoliLetter description
+ModuleDoliLetterName = DoliLetter
+DoliLetterDescription = Création de courrier sur les différents objets de Dolibarr
+DoliLetterDescriptionLong = Création de courrier sur les différents objets de Dolibarr
 
 #
 # Admin page
 #
-LetterModuleSetup = LetterModule setup
-Settings = Settings
-LetterModuleSetupPage = LetterModule setup page
-SIMPLEDOCMODULE_MYPARAM1 = My param 1
-SIMPLEDOCMODULE_MYPARAM1Tooltip = My param 1 tooltip
-SIMPLEDOCMODULE_MYPARAM2=My param 2
-SIMPLEDOCMODULE_MYPARAM2Tooltip=My param 2 tooltip
+Settings = Réglages
+DoliLetterSetup = Configuration du module DoliLetter
 
 
 #
 # About page
 #
-About = About
-LetterModuleAbout = About LetterModule
-LetterModuleAboutPage = LetterModule about page
+
+About = À propos
+DoliLetterAbout = À propos de DoliLetter
+
 
 #
-# Sample page
+# DoliLetter
 #
-MyPageName = My page name
 
-#
-# Sample widget
-#
-MyWidget = My widget
-MyWidgetDescription = My widget description
+# Data - Donnée
 ExtSociety = Tiers destinataire
 content = Contenu du document
 note_public = Note publique
@@ -59,3 +49,9 @@ note_private = Note privée
 DoliLetterCreate = Nouveau courrier
 DoliLetterList = Liste
 DoliLetterIndex = DoliLetter
+
+#
+# Envelope - Enveloppe
+#
+
+# Data - Donnée
