@@ -78,8 +78,8 @@ function envelopePrepareHead($object)
 
 	//Contact selection
 	$head[$h][0] = dol_buildpath("/doliletter/envelope_contact.php", 1).'?id='.$object->id;
-	$head[$h][1] = $langs->trans("Contacts");
-	$head[$h][2] = 'contact';
+	$head[$h][1] = $langs->trans("ContactsAddresses");
+	$head[$h][2] = 'envelopeContact';
 	$h++;
 	//Linked objects selection
 	$head[$h][0] = dol_buildpath("/doliletter/envelope_objects.php", 1).'?id='.$object->id;

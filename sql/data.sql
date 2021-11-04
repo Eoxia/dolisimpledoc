@@ -9,4 +9,6 @@ INSERT INTO `llx_c_element_types` (`rowid`, `entity`, `ref`, `label`, `descripti
 INSERT INTO `llx_c_element_types` (`rowid`, `entity`, `ref`, `label`, `description`, `active`) VALUES(5, 0, 'facture', 'facture', '', 1);
 INSERT INTO `llx_c_element_types` (`rowid`, `entity`, `ref`, `label`, `description`, `active`) VALUES(6, 0, 'order', 'order', '', 1);
 INSERT INTO `llx_c_element_types` (`rowid`, `entity`, `ref`, `label`, `description`, `active`) VALUES(7, 0, 'product', 'product', '', 1);
-INSERT INTO `llx_c_element_types` (`rowid`, `entity`, `ref`, `label`, `description`, `active`) VALUES(8, 0, 'ticket', 'ticket', '', 1);
+
+INSERT INTO `llx_c_type_contact` (`rowid`,`element`, `source`, `code`, `libelle`, `active`, `module`, `position`) VALUES(500, 'envelope', 'internal', 'TEST', 'test', 1, null, 0);
+INSERT INTO `llx_c_type_contact` (`rowid`,`element`, `source`, `code`, `libelle`, `active`, `module`, `position`) VALUES(501, 'envelope', 'external', 'TEST', 'test', 1, null, 0);

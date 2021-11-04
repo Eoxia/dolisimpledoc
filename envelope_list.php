@@ -60,10 +60,18 @@ if (!$res) die("Include of main fails");
 
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formcompany.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
-require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
+
 require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
 
+require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/core/lib/invoice.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/core/lib/project.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/core/lib/propal.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/core/lib/order.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/core/lib/order.lib.php';
+
 // load enveloppe libraries
+require_once './lib/doliletter_envelope.lib.php';
 require_once __DIR__ . '/class/envelope.class.php';
 
 // for other modules
@@ -81,6 +89,8 @@ $toselect   = GETPOST('toselect', 'array'); // Array of ids of elements selected
 $contextpage = GETPOST('contextpage', 'aZ') ? GETPOST('contextpage', 'aZ') : 'documentlist'; // To manage different context of search
 $backtopage = GETPOST('backtopage', 'alpha'); // Go back to a dedicated page
 $optioncss = GETPOST('optioncss', 'aZ'); // Option for the css output (always '' except when 'print')
+
+$fromtype = GETPOST('fromtype', 'alpha'); // element type
 
 $id = GETPOST('id', 'int');
 
@@ -244,7 +254,6 @@ $title = $langs->trans('ListOf', $langs->transnoentitiesnoconv("SimpleDocs"));
 $morejs = array();
 $morecss = array();
 
-
 // Build and execute select
 // --------------------------------------------------------------------
 $sql = 'SELECT ';
@@ -373,6 +382,16 @@ if ($num == 1 && !empty($conf->global->MAIN_SEARCH_DIRECT_OPEN_IF_ONLY_ONE) && $
 // --------------------------------------------------------------------
 
 llxHeader('', $title, $help_url, '', 0, 0, $morejs, $morecss, '', '');
+
+if (!empty($fromtype)) {
+	switch ($fromtype) {
+		case 'invoice' :
+			$prehead = 'facture_prepare_head';
+			break;
+	}
+	$head = $prehead($object);
+	print dol_get_fiche_head($head, 'envelopeList', $langs->trans("Envelope"), -1, $object->picto);
+}
 
 // Example : Adding jquery code
 // print '<script type="text/javascript" language="javascript">

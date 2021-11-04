@@ -126,12 +126,12 @@ class modDoliLetter extends DolibarrModules {
 
 		// Array to add new pages in new tabs
 		$this->tabs = array();
-			$this->tabs[] = array('data'=>'thirdparty:+sendmail:Envelope:@doliletter:1:/custom/doliletter/envelope_list.php?search_fk_soc=__ID__');
-			$this->tabs[] = array('data'=>'product:+sendmail:Envelope:@doliletter:1:/custom/doliletter/envelope_card.php?from=__ID__&action=create');
-			$this->tabs[] = array('data'=>'project:+sendmail:Envelope:@doliletter:1:/custom/doliletter/envelope_card.php?fromproj=__ID__&action=create');
-			$this->tabs[] = array('data'=>'propal:+sendmail:Envelope:@doliletter:1:/custom/doliletter/envelope_card.php?fromprop=__ID__&action=create');
-			$this->tabs[] = array('data'=>'order:+sendmail:Envelope:@doliletter:1:/custom/doliletter/envelope_card.php?fromcom=__ID__&action=create');
-			$this->tabs[] = array('data'=>'invoice:+sendmail:Envelope:@doliletter:1:/custom/doliletter/envelope_card.php?fromfac=__ID__&action=create');  	  	// To add a new tab identified by code tabname1
+			$this->tabs[] = array('data'=>'thirdparty:+envelopeList:Envelope:@doliletter:1:/custom/doliletter/envelope_list.php?search_fk_soc=__ID__');
+			$this->tabs[] = array('data'=>'product:+envelopeList:Envelope:@doliletter:1:/custom/doliletter/envelope_list.php?fromid=__ID__&fromtype=product');
+			$this->tabs[] = array('data'=>'project:+envelopeList:Envelope:@doliletter:1:/custom/doliletter/envelope_list.php?fromid=__ID__&fromtype=project');
+			$this->tabs[] = array('data'=>'propal:+envelopeList:Envelope:@doliletter:1:/custom/doliletter/envelope_list.php?fromid=__ID__&fromtype=propal');
+			$this->tabs[] = array('data'=>'order:+envelopeList:Envelope:@doliletter:1:/custom/doliletter/envelope_list.php?fromid=__ID__&fromtype=order');
+			$this->tabs[] = array('data'=>'invoice:+envelopeList:Envelope:@doliletter:1:/custom/doliletter/envelope_list.php?fromid=__ID__&fromtype=invoice');  	  	// To add a new tab identified by code tabname1
 		// To add a new tab identified by code tabname1
 		// Example:
 		// $this->tabs[] = array('data'=>'objecttype:+tabname1:Title1:mylangfile@doliletter:$user->rights->doliletter->read:/doliletter/mynewtab1.php?id=__ID__');  					// To add a new tab identified by code tabname1
