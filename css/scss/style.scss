@@ -1,0 +1,8 @@
+@import "variable/variable";
+@import "module/module";
+@import "page/page";
+
+.dropdown-toggle::after {
+  display: none;
+}
+
