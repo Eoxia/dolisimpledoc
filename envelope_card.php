@@ -62,8 +62,10 @@ $backtopage  = GETPOST('backtopage', 'alpha');
 
 // Initialize technical objects
 $object         = new Envelope($db);
+$signatory      = new EnvelopeSignature($db);
 $refEnvelopeMod = new $conf->global->DOLILETTER_ENVELOPE_ADDON();
 $extrafields    = new ExtraFields($db);
+$usertmp        = new User($db);
 
 $object->fetch($id);
 
@@ -98,7 +100,7 @@ $permissiondellink = $user->rights->envelope->letter->write; // Used by the incl
 $upload_dir = $conf->doliletter->multidir_output[$conf->entity];
 $thirdparty = new Societe($db);
 $thirdparty->fetch($object->fk_soc);
-$usertemp = new User($db);
+
 // Security check (enable the most restrictive one)
 //if ($user->socid > 0) accessforbidden();
 //if ($user->socid > 0) $socid = $user->socid;
@@ -163,7 +165,179 @@ if (empty($reshook)) {
 	$triggermodname = 'DOLISIMPLEDOC_SIMPLEDOC_MODIFY'; // Name of trigger action code to execute when we modify record
 
 	// Actions cancel, add, update, update_extras, confirm_validate, confirm_delete, confirm_deleteline, confirm_clone, confirm_close, confirm_setdraft, confirm_reopen
-	include DOL_DOCUMENT_ROOT.'/core/actions_addupdatedelete.inc.php';
+	//include DOL_DOCUMENT_ROOT.'/core/actions_addupdatedelete.inc.php';
+
+	// Action to add record
+	if ($action == 'add' && $permissiontoadd) {
+		// Get parameters
+		$sender_id      = GETPOST('sender');
+		$sender_service = GETPOST('sender_service');
+		$society_id     = GETPOST('fk_soc');
+		$content        = GETPOST('content');
+
+		// Initialize object preventionplan
+		$now                   = dol_now();
+		$object->ref           = $refEnvelopeMod->getNextValue($object);
+		$object->ref_ext       = 'doliletter_' . $object->ref;
+		$object->date_creation = $object->db->idate($now);
+		$object->tms           = $now;
+		$object->import_key    = "";
+
+		$object->sender         = $sender_id;
+		$object->sender_service = $sender_service;
+		$object->fk_soc         = $society_id;
+		$object->content        = $content;
+
+		$object->fk_user_creat = $user->id ? $user->id : 1;
+
+		// Check parameters
+		if ($sender_id < 0) {
+			setEventMessages($langs->trans('ErrorFieldRequired', $langs->transnoentitiesnoconv('Sender')), null, 'errors');
+			$error++;
+		} else {
+			$usertmp->fetch($sender_id);
+			if (!dol_strlen($usertmp->email)) {
+				setEventMessages($langs->trans('ErrorNoEmailForSender', $langs->transnoentitiesnoconv('Sender')) . ' : ' . '<a target="_blank" href="'.dol_buildpath('/user/card.php?id='.$usertmp->id, 2).'">'.$usertmp->lastname . ' ' . $usertmp->firstname.'</a>', null, 'errors');
+				$error++;
+			}
+		}
+
+//		if ($extsociety_id < 0) {
+//			setEventMessages($langs->trans('ErrorFieldRequired', $langs->transnoentitiesnoconv('Society')), null, 'errors');
+//			$error++;
+//		}
+
+		if (!$error) {
+			$result = $object->create($user, false);
+			if ($result > 0) {
+				if ($sender_id > 0) {
+					$signatory->setSignatory($object->id,'user', array($sender_id), 'E_SENDER');
+				}
+
+//				if ($extresponsible_id > 0) {
+//					$signatory->setSignatory($object->id,'socpeople', array($extresponsible_id), 'PP_EXT_SOCIETY_RESPONSIBLE');
+//				}
+
+				// Creation envelope OK
+				$urltogo = str_replace('__ID__', $result, $backtopage);
+				$urltogo = preg_replace('/--IDFORBACKTOPAGE--/', $id, $urltogo); // New method to autoselect project after a New on another form object creation
+				header("Location: " . $urltogo);
+				exit;
+			}
+			else {
+				// Creation envelope KO
+				if (!empty($object->errors)) setEventMessages(null, $object->errors, 'errors');
+				else  setEventMessages($object->error, null, 'errors');
+			}
+		} else {
+			$action = 'create';
+		}
+	}
+
+	// Action to update record
+	if ($action == 'update' && $permissiontoadd) {
+		// Get parameters
+		$society_id            = GETPOST('fk_soc');
+//		$extsociety_id               = GETPOST('ext_society');
+//		$extresponsible_id           = GETPOST('ext_society_responsible');
+//		$extintervenant_ids          = GETPOST('ext_intervenants');
+//		$labour_inspector_id         = GETPOST('labour_inspector');
+//		$labour_inspector_contact_id = GETPOST('labour_inspector_contact') ? GETPOST('labour_inspector_contact') : 0;
+//		$label                       = GETPOST('label');
+//		$prior_visit_bool            = GETPOST('prior_visit_bool');
+//		$prior_visit_text            = GETPOST('prior_visit_text');
+//		$cssct_intervention          = GETPOST('cssct_intervention');
+
+		// Initialize object preventionplan
+		$object->fk_soc   = $society_id;
+//		$now           = dol_now();
+//		$object->tms   = $now;
+//		$object->label = $label;
+//
+//		$date_start = dol_mktime(GETPOST('dateohour', 'int'), GETPOST('dateomin', 'int'), 0, GETPOST('dateomonth', 'int'), GETPOST('dateoday', 'int'), GETPOST('dateoyear', 'int'));
+//		$date_end = dol_mktime(GETPOST('dateehour', 'int'), GETPOST('dateemin', 'int'), 0, GETPOST('dateemonth', 'int'), GETPOST('dateeday', 'int'), GETPOST('dateeyear', 'int'));
+//		$prior_visit_date = dol_mktime(GETPOST('dateihour', 'int'), GETPOST('dateimin', 'int'), 0, GETPOST('dateimonth', 'int'), GETPOST('dateiday', 'int'), GETPOST('dateiyear', 'int'));
+//
+//		$object->date_start = $date_start;
+//		$object->date_end   = $date_end;
+//
+//		$object->prior_visit_bool = $prior_visit_bool;
+//		if ($prior_visit_bool) {
+//			$object->prior_visit_text   = $prior_visit_text;
+//			$object->prior_visit_date   = $prior_visit_date;
+//		}
+//		$object->cssct_intervention = $cssct_intervention;
+//
+//		$object->fk_user_creat = $user->id ? $user->id : 1;
+
+		// Check parameters
+//		if ($maitre_oeuvre_id < 0) {
+//			setEventMessages($langs->trans('ErrorFieldRequired', $langs->transnoentitiesnoconv('MaitreOeuvre')), null, 'errors');
+//			$error++;
+//		}   else {
+//			$usertmp->fetch($maitre_oeuvre_id);
+//			if (!dol_strlen($usertmp->email)) {
+//				setEventMessages($langs->trans('ErrorNoEmailForMaitreOeuvre', $langs->transnoentitiesnoconv('MaitreOeuvre')) . ' : ' . '<a target="_blank" href="'.dol_buildpath('/user/card.php?id='.$usertmp->id, 2).'">'.$usertmp->lastname . ' ' . $usertmp->firstname.'</a>', null, 'errors');
+//				$error++;
+//			}
+//		}
+//
+//		if ($extsociety_id < 0) {
+//			setEventMessages($langs->trans('ErrorFieldRequired', $langs->transnoentitiesnoconv('ExtSociety')), null, 'errors');
+//			$error++;
+//		}
+//
+//		if (is_array($extresponsible_id)) {
+//			if (empty(array_filter($extresponsible_id))) {
+//				setEventMessages($langs->trans('ErrorFieldRequired', $langs->transnoentitiesnoconv('ExtSocietyResponsible')), null, 'errors');
+//				$error++;
+//			}
+//		} elseif (empty($extresponsible_id)) {
+//			setEventMessages($langs->trans('ErrorFieldRequired', $langs->transnoentitiesnoconv('ExtSocietyResponsible')), null, 'errors');
+//			$error++;
+//		}
+//
+//		if ($labour_inspector_id < 0) {
+//			setEventMessages($langs->trans('ErrorFieldRequired', $langs->transnoentitiesnoconv('LabourInspectorSociety')), null, 'errors');
+//			$error++;
+//		}
+//
+//		if (is_array($labour_inspector_contact_id)) {
+//			if (empty(array_filter($labour_inspector_contact_id))) {
+//				setEventMessages($langs->trans('ErrorFieldRequired', $langs->transnoentitiesnoconv('LabourInspector')), null, 'errors');
+//				$error++;
+//			}
+//		} elseif (empty($labour_inspector_contact_id)) {
+//			setEventMessages($langs->trans('ErrorFieldRequired', $langs->transnoentitiesnoconv('LabourInspector')), null, 'errors');
+//			$error++;
+//		}
+
+		if (!$error) {
+			$result = $object->update($user, false);
+			if ($result > 0) {
+//				$digiriskresources->digirisk_dolibarr_set_resources($db, $user->id, 'PP_EXT_SOCIETY', 'societe', array($extsociety_id), $conf->entity, 'preventionplan', $object->id, 0);
+////				$digiriskresources->digirisk_dolibarr_set_resources($db, $user->id, 'PP_LABOUR_INSPECTOR', 'societe', array($labour_inspector_id), $conf->entity, 'preventionplan', $object->id, 0);
+////				$digiriskresources->digirisk_dolibarr_set_resources($db, $user->id, 'PP_LABOUR_INSPECTOR_ASSIGNED', 'socpeople', array($labour_inspector_contact_id), $conf->entity, 'preventionplan', $object->id, 0);
+////
+////				$signatory->setSignatory($object->id,'user', array($maitre_oeuvre_id), 'PP_MAITRE_OEUVRE');
+////				$signatory->setSignatory($object->id,'socpeople', array($extresponsible_id), 'PP_EXT_SOCIETY_RESPONSIBLE');
+
+				// Update prevention plan OK
+				$urltogo = str_replace('__ID__', $result, $backtopage);
+				$urltogo = preg_replace('/--IDFORBACKTOPAGE--/', $id, $urltogo); // New method to autoselect project after a New on another form object creation
+				header("Location: " . $urltogo);
+				exit;
+			}
+			else
+			{
+				// Update prevention plan KO
+				if (!empty($object->errors)) setEventMessages(null, $object->errors, 'errors');
+				else  setEventMessages($object->error, null, 'errors');
+			}
+		}  else {
+			$action = 'edit';
+		}
+	}
 
 	// Actions when linking object each other
 	include DOL_DOCUMENT_ROOT.'/core/actions_dellink.inc.php';
@@ -199,13 +373,16 @@ $formother = new FormOther($db);
 $formfile = new FormFile($db);
 $formproject = new FormProjets($db);
 
-$title = $langs->trans("Envelope");
-$help_url = '';
+$title        = $langs->trans("Envelope");
+$title_create = $langs->trans("NewEnvelope");
+$title_edit   = $langs->trans("ModifyEnvelope");
+$help_url     = '';
+
 llxHeader('', $title, $help_url);
 
 // Part to create
 if ($action == 'create') {
-	print load_fiche_titre($langs->trans("NewObject", $langs->transnoentitiesnoconv("Envelope")), '', 'object_'.$object->picto);
+	print load_fiche_titre($title_create, '', "doliletter32px@doliletter");
 
 	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
 	print '<input type="hidden" name="token" value="'.newToken().'">';
@@ -225,6 +402,8 @@ if ($action == 'create') {
 	unset($object->fields['model_pdf']);
 	unset($object->fields['last_main_doc']);
 	unset($object->fields['content']);
+	unset($object->fields['note_public']);
+	unset($object->fields['note_private']);
 	unset($object->fields['fk_soc']);
 	unset($object->fields['sender_service']);
 	unset($object->fields['sender']);
@@ -261,6 +440,18 @@ if ($action == 'create') {
 	//Content -- Contenue
 	print '<tr class="content_field"><td><label for="content">'.$langs->trans("Content").'</label></td><td>';
 	$doleditor = new DolEditor('content', GETPOST('content'), '', 90, 'dolibarr_notes', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
+	$doleditor->Create();
+	print '</td></tr>';
+
+	//PublicNote -- Note publique
+	print '<tr class="content_field"><td><label for="public_note">'.$langs->trans("PublicNote").'</label></td><td>';
+	$doleditor = new DolEditor('public_note', GETPOST('public_note'), '', 90, 'dolibarr_notes', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
+	$doleditor->Create();
+	print '</td></tr>';
+
+	//PrivateNote -- Note privée
+	print '<tr class="content_field"><td><label for="private_note">'.$langs->trans("PrivateNote").'</label></td><td>';
+	$doleditor = new DolEditor('private_note', GETPOST('private_note'), '', 90, 'dolibarr_notes', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
 	$doleditor->Create();
 	print '</td></tr>';
 
@@ -461,12 +652,12 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	print '</td></tr>';
 
 
-	$usertemp->fetch($object->sender);
+	$usertmp->fetch($object->sender);
 	print '<tr><td class="titlefield">';
 	print $langs->trans("Sender");
 	print '</td>';
 	print '<td>';
-	print $usertemp->getNomUrl(1);
+	print $usertmp->getNomUrl(1);
 	print '</td></tr>';
 
 	print '<tr><td class="titlefield">';

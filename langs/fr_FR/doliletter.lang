@@ -41,17 +41,25 @@ DoliLetterAbout = À propos de DoliLetter
 #
 
 # Data - Donnée
-ExtSociety = Tiers destinataire
-content = Contenu du document
-note_public = Note publique
-note_private = Note privée
-
-DoliLetterCreate = Nouveau courrier
-DoliLetterList = Liste
 DoliLetterIndex = DoliLetter
+DoliLetterCreate = Nouvelle enveloppe
+DoliLetterList = Liste
+
+SelectUser = Sélectionner un utilisateur
+AddUser = Créer un utilisateur
+Create = Créer
 
 #
 # Envelope - Enveloppe
 #
 
 # Data - Donnée
+Envelope = Enveloppe
+NewEnvelope = Nouvelle enveloppe
+ModifyEnvelope = Modifier l'enveloppe
+
+Society = Tiers
+Sender = Émetteur
+SenderService = Méthode d'envoi
+PublicNote = Note (publique)
+PrivateNote = Note (privée)

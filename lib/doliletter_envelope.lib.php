@@ -87,6 +87,11 @@ function envelopePrepareHead($object)
 	$head[$h][2] = 'objects';
 	$h++;
 
+	$head[$h][0] = dol_buildpath("/doliletter/envelope_signature.php", 1) . '?id=' . $object->id;
+	$head[$h][1] = '<i class="fas fa-file-signature"></i> ' . $langs->trans("Sign");
+	$head[$h][2] = 'envelopeSign';
+	$h++;
+
 	// Show more tabs from modules
 	// Entries must be declared in modules descriptor with line
 	//$this->tabs = array(

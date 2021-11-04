@@ -464,11 +464,11 @@ class pdf_phobos extends ModelePDFEnvelope
 				if ($pagenb == 1)
 				{
 					$this->_tableau($pdf, $object, $tab_top, $this->page_hauteur - $tab_top - $heightforinfotot - $heightforfreetext - $heightforfooter, 0, $outputlangs, 0, 0);
-					$this->tabSignature($pdf, $tab_top, $this->page_hauteur - $tab_top - $heightforinfotot - $heightforfreetext - $heightforfooter, $outputlangs);
+					$this->tabSignature($pdf, $tab_top, $this->page_hauteur - $tab_top - $heightforinfotot - $heightforfreetext - $heightforfooter, $outputlangs, $object);
 					$bottomlasttab = $this->page_hauteur - $heightforfooter - $heightforfooter + 1;
 				} else {
 					$this->_tableau($pdf, $object, $tab_top_newpage, $this->page_hauteur - $tab_top_newpage - $heightforinfotot - $heightforfreetext - $heightforfooter, 0, $outputlangs, 0, 0);
-					$this->tabSignature($pdf, $tab_top_newpage, $this->page_hauteur - $tab_top_newpage - $heightforinfotot - $heightforfreetext - $heightforfooter, $outputlangs);
+					$this->tabSignature($pdf, $tab_top_newpage, $this->page_hauteur - $tab_top_newpage - $heightforinfotot - $heightforfreetext - $heightforfooter, $outputlangs, $object);
 					$bottomlasttab = $this->page_hauteur - $heightforfooter - $heightforfooter + 1;
 				}
 
@@ -571,8 +571,31 @@ class pdf_phobos extends ModelePDFEnvelope
 	 * @param   Translate   $outputlangs    Object language for output
 	 * @return void
 	 */
-	protected function tabSignature(&$pdf, $tab_top, $tab_height, $outputlangs)
+	protected function tabSignature(&$pdf, $tab_top, $tab_height, $outputlangs, $object)
 	{
+		global $conf;
+
+		$signatory = new EnvelopeSignature($this->db);
+		$sender    = array_shift($signatory->fetchSignatory('E_SENDER', $object->id));
+		$recipient = array_shift($signatory->fetchSignatory('E_SOCIETY', $object->id));
+
+		$tempdir = $conf->doliletter->multidir_output[isset($object->entity) ? $object->entity : 1] . '/temp/';
+
+		//Signatures
+		if (!empty($sender) && $sender > 0) {
+			$encoded_image = explode(",",  $sender->signature)[1];
+			$decoded_image = base64_decode($encoded_image);
+			file_put_contents($tempdir."signature.png", $decoded_image);
+			$test = $tempdir."signature.png";
+		}
+
+		if (!empty($recipient) && $recipient > 0) {
+			$encoded_image = explode(",",  $recipient->signature)[1];
+			$decoded_image = base64_decode($encoded_image);
+			file_put_contents($tempdir."signature2.png", $decoded_image);
+			$test = $tempdir."signature2.png";
+		}
+
 		$pdf->SetDrawColor(128, 128, 128);
 		$posmiddle = $this->marge_gauche + round(($this->page_largeur - $this->marge_gauche - $this->marge_droite) / 2);
 		$posy = $tab_top + $tab_height + 3 + 3;
@@ -581,13 +604,15 @@ class pdf_phobos extends ModelePDFEnvelope
 		$pdf->MultiCell($posmiddle - $this->marge_gauche - 5, 5, $outputlangs->transnoentities("ContactNameAndSignature", $this->emetteur->name), 0, 'L', 0);
 
 		$pdf->SetXY($this->marge_gauche, $posy + 5);
-		$pdf->MultiCell($posmiddle - $this->marge_gauche - 5, 20, '', 1);
+		$pdf->Image($test, $this->marge_gauche, $posy - 5, 50, 50); // width=0 (auto)
+		$pdf->MultiCell($posmiddle - $this->marge_gauche - 5, 30, '', 1);
 
 		$pdf->SetXY($posmiddle + 5, $posy);
 		$pdf->MultiCell($this->page_largeur - $this->marge_droite - $posmiddle - 5, 5, $outputlangs->transnoentities("ContactNameAndSignature", $this->recipient->name), 0, 'L', 0);
 
 		$pdf->SetXY($posmiddle + 5, $posy + 5);
-		$pdf->MultiCell($this->page_largeur - $this->marge_droite - $posmiddle - 5, 20, '', 1);
+		$pdf->Image($test, $this->marge_gauche, $posy - 5, 50, 50); // width=0 (auto)
+		$pdf->MultiCell($this->page_largeur - $this->marge_droite - $posmiddle - 5, 30, '', 1);
 	}
 
 	// phpcs:disable PEAR.NamingConventions.ValidFunctionName.PublicUnderscore
