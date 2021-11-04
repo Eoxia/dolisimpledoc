@@ -376,19 +376,19 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	print '<div class="fichecenter">';
 	print '<div class="fichehalfleft">';
 	print '<div class="underbanner clearboth"></div>';
-	print '<table class="border centpercent tableforfield">'."\n";
+	print '<table class="border centpercent tableforfield">' . "\n";
 
 	print dol_get_fiche_end();
 
 
-	$titre = $langs->trans("CardProduct".$product->type);
+	$titre = $langs->trans("CardProduct" . $product->type);
 	$reshook = $hookmanager->executeHooks('formObjectOptions', $parameters, $product, $action); // Note that $action and $object may have been modified by hook
 	print $hookmanager->resPrint;
 	if ($reshook < 0) {
 		setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
 	}
 
-	$linkback = '<a href="'.DOL_URL_ROOT.'/product/list.php?restore_lastsearch_values=1">'.$langs->trans("BackToList").'</a>';
+	$linkback = '<a href="' . DOL_URL_ROOT . '/product/list.php?restore_lastsearch_values=1">' . $langs->trans("BackToList") . '</a>';
 
 	$shownav = 1;
 	if ($user->socid && !in_array('product', explode(',', $conf->global->MAIN_MODULES_FOR_EXTERNAL))) {
@@ -412,18 +412,18 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 
 	//elementtypes -- objects liés
-	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?id='.$id.'">';
-	print '<input type="hidden" name="token" value="'.newToken().'">';
+	print '<form method="POST" action="' . $_SERVER["PHP_SELF"] . '?id=' . $id . '">';
+	print '<input type="hidden" name="token" value="' . newToken() . '">';
 	print '<input type="hidden" name="action" value="addLink">';
 
-	print '<tr><td class="fieldrequired">'.$langs->trans("elementtypes").'</td><td>';
-	print $formother->select_dictionary('element_types','c_element_types', 'ref', 'label', '', 0);
+	print '<tr><td class="fieldrequired">' . $langs->trans("elementtypes") . '</td><td>';
+	print $formother->select_dictionary('element_types', 'c_element_types', 'ref', 'label', '', 0);
 	print '</td></tr><br>';
 	print  '<label for="element_id">id de l\'element a lier:</label>
 			<input type="text" id="element_id" name="element_id" required">';
 
 	print '<div>';
-	print '<input type="submit" class="button" name="addLink" value="'.dol_escape_htmltag($langs->trans("Create")).'">';
+	print '<input type="submit" class="button" name="addLink" value="' . dol_escape_htmltag($langs->trans("Create")) . '">';
 	print '&nbsp; ';
 	print '</div>';
 	print '</form>';
@@ -433,11 +433,12 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 	// Factures
 	print '<p>';
-	if (is_countable($object->linkedObjectsIds['facture']))
+	if (is_countable($object->linkedObjectsIds['facture'])) {
 		$nbfactures = count($object->linkedObjectsIds['facture']);
-	else
+	} else {
 		$nbfactures = 0;
-	print '<div class="titre inline-block">Factures<span class="opacitymedium colorblack paddingleft">'.$nbfactures.'</span></div><br>';
+	}
+	print '<div class="titre inline-block">Factures<span class="opacitymedium colorblack paddingleft">' . $nbfactures . '</span></div><br>';
 	print '<table class="border tableforfield" width="100%">';
 	if (!empty($object->linkedObjectsIds['facture'])) {
 		foreach ($object->linkedObjectsIds['facture'] as $invoiceid) {
@@ -452,11 +453,12 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 	// Commandes
 	print '</p><p>';
-	if (is_countable($object->linkedObjectsIds['facture']))
+	if (is_countable($object->linkedObjectsIds['facture'])) {
 		$nbcommandes = count($object->linkedObjectsIds['facture']);
-	else
+	} else {
 		$nbcommandes = 0;
-	print '<div class="titre inline-block">Commandes<span class="opacitymedium colorblack paddingleft">'.$nbcommandes.'</span></div><br>';
+	}
+	print '<div class="titre inline-block">Commandes<span class="opacitymedium colorblack paddingleft">' . $nbcommandes . '</span></div><br>';
 	print '<table class="border tableforfield" width="100%">';
 	if (!empty($object->linkedObjectsIds['commande'])) {
 		foreach ($object->linkedObjectsIds['commande'] as $commandeid) {
@@ -472,11 +474,12 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	print '</p><p>';
 
 	print '<p>';
-	if (is_countable($object->linkedObjectsIds['facture']))
+	if (is_countable($object->linkedObjectsIds['facture'])) {
 		$nbprojects = count($object->linkedObjectsIds['facture']);
-	else
+	} else {
 		$nbprojects = 0;
-	print '<div class="titre inline-block">Projets<span class="opacitymedium colorblack paddingleft">'.$nbprojets.'</span></div><br>';
+	}
+	print '<div class="titre inline-block">Projets<span class="opacitymedium colorblack paddingleft">' . $nbprojets . '</span></div><br>';
 	print '<table class="border tableforfield" width="100%">';
 	if (!empty($object->linkedObjectsIds['project'])) {
 		foreach ($object->linkedObjectsIds['project'] as $projectid) {
@@ -491,10 +494,11 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	// Tickets
 	print '</p><p>';
 	print '<p>';
-	if (is_countable($object->linkedObjectsIds['facture']))
+	if (is_countable($object->linkedObjectsIds['facture'])) {
 		$nbtickets = count($object->linkedObjectsIds['facture']);
-	else
+	}else {
 		$nbtickets = 0;
+	}
 	print '<div class="titre inline-block">Tickets<span class="opacitymedium colorblack paddingleft">'.$nbtickets.'</span></div><br>';
 	print '<table class="border tableforfield" width="100%">';
 	if (!empty($object->linkedObjectsIds['ticket'])) {
@@ -510,10 +514,11 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	// Propositions commerciales
 	print '</p><p>';
 	print '<p>';
-	if (is_countable($object->linkedObjectsIds['facture']))
+	if (is_countable($object->linkedObjectsIds['facture'])) {
 		$nbpropal = count($object->linkedObjectsIds['facture']);
-	else
+	}else {
 		$nbpropal = 0;
+	}
 	print '<div class="titre inline-block">Propositions commerciales<span class="opacitymedium colorblack paddingleft">'.$nbpropal.'</span></div><br>';
 	print '<table class="border tableforfield" width="100%">';
 	if (!empty($object->linkedObjectsIds['propal'])) {
