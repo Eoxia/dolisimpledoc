@@ -48,6 +48,8 @@ require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
 require_once DOL_DOCUMENT_ROOT. '/compta/facture/class/facture.class.php';
 require_once DOL_DOCUMENT_ROOT.'/ticket/class/ticket.class.php';
 require_once DOL_DOCUMENT_ROOT. '/comm/propal/class/propal.class.php';
+require_once DOL_DOCUMENT_ROOT. '/projet/class/project.class.php';
+require_once DOL_DOCUMENT_ROOT. '/commande/class/commande.class.php';
 
 global $db, $conf, $langs, $user, $hookmanager;
 
@@ -66,12 +68,15 @@ $backtopage  = GETPOST('backtopage', 'alpha');
 // Initialize technical objects
 $object         = new Envelope($db);
 $invoicetemp    = new Facture($db);
+$commandetemp      = new Commande($db);
+$projecttemp    = new Project($db);
 $tickettemp     = new Ticket($db);
 $propaltemp     = new Propal($db);
 $refEnvelopeMod = new $conf->global->DOLILETTER_ENVELOPE_ADDON();
 $extrafields    = new ExtraFields($db);
 
 $object->fetch($id);
+//echo '<pre>'; print_r( $object ); echo '</pre>'; exit;
 
 $hookmanager->initHooks(array('lettercard', 'globalcard')); // Note that conf->hooks_modules contains array
 
@@ -118,7 +123,7 @@ $usertemp = new User($db);
  * Actions
  */
 
-//action to send Email
+
 
 $parameters = array();
 $reshook = $hookmanager->executeHooks('doActions', $parameters, $object, $action); // Note that $action and $object may have been modified by some hooks
@@ -192,6 +197,12 @@ if (empty($reshook)) {
 }
 
 
+if ($action == 'addLink') {
+	//echo '<pre>'; print_r( $object->id ); echo '</pre>'; exit;
+	$element_types  =GETPOST('element_types');
+	$element_id  =GETPOST('element_id');
+	$object->add_object_linked($element_types, $element_id);
+}
 
 
 /*
@@ -399,19 +410,37 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 	print dol_get_fiche_end();
 
+
+	//elementtypes -- objects liés
+	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?id='.$id.'">';
+	print '<input type="hidden" name="token" value="'.newToken().'">';
+	print '<input type="hidden" name="action" value="addLink">';
+
+	print '<tr><td class="fieldrequired">'.$langs->trans("elementtypes").'</td><td>';
+	print $formother->select_dictionary('element_types','c_element_types', 'ref', 'label', '', 0);
+	print '</td></tr><br>';
+	print  '<label for="element_id">id de l\'element a lier:</label>
+			<input type="text" id="element_id" name="element_id" required">';
+
+	print '<div>';
+	print '<input type="submit" class="button" name="addLink" value="'.dol_escape_htmltag($langs->trans("Create")).'">';
+	print '&nbsp; ';
+	print '</div>';
+	print '</form>';
+
 	//to do: trans file for titles
 	$object->fetchObjectLinked();
-	//echo '<pre>'; print_r( $object->linkedObjectsIds ); echo '</pre>'; exit;
-
-
 
 	// Factures
 	print '<p>';
-	$nbfactures = '0';
+	if (is_countable($object->linkedObjectsIds['facture']))
+		$nbfactures = count($object->linkedObjectsIds['facture']);
+	else
+		$nbfactures = 0;
 	print '<div class="titre inline-block">Factures<span class="opacitymedium colorblack paddingleft">'.$nbfactures.'</span></div><br>';
 	print '<table class="border tableforfield" width="100%">';
-	if (!empty($object->linkedObjectsIds['invoice'])) {
-		foreach ($object->linkedObjectsIds['invoice'] as $invoiceid) {
+	if (!empty($object->linkedObjectsIds['facture'])) {
+		foreach ($object->linkedObjectsIds['facture'] as $invoiceid) {
 			print '<tr>';
 			$invoicetemp->fetch($invoiceid);
 			print $invoicetemp->getNomUrl(1);
@@ -423,14 +452,17 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 	// Commandes
 	print '</p><p>';
-	$nbcommandes= '0';
+	if (is_countable($object->linkedObjectsIds['facture']))
+		$nbcommandes = count($object->linkedObjectsIds['facture']);
+	else
+		$nbcommandes = 0;
 	print '<div class="titre inline-block">Commandes<span class="opacitymedium colorblack paddingleft">'.$nbcommandes.'</span></div><br>';
 	print '<table class="border tableforfield" width="100%">';
-	if (!empty($object->linkedObjectsIds['invoice'])) {
-		foreach ($object->linkedObjectsIds['invoice'] as $invoiceid) {
+	if (!empty($object->linkedObjectsIds['commande'])) {
+		foreach ($object->linkedObjectsIds['commande'] as $commandeid) {
 			print '<tr>';
-			$invoicetemp->fetch($invoiceid);
-			print $invoicetemp->getNomUrl(1);
+			$commandetemp->fetch($commandeid);
+			print $commandetemp->getNomUrl(1);
 			print '</tr><br>';
 		}
 	} else print 'nothing to see here';
@@ -438,14 +470,19 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 	// Projets
 	print '</p><p>';
-	$nbprojets = '0';
+
+	print '<p>';
+	if (is_countable($object->linkedObjectsIds['facture']))
+		$nbprojects = count($object->linkedObjectsIds['facture']);
+	else
+		$nbprojects = 0;
 	print '<div class="titre inline-block">Projets<span class="opacitymedium colorblack paddingleft">'.$nbprojets.'</span></div><br>';
 	print '<table class="border tableforfield" width="100%">';
-	if (!empty($object->linkedObjectsIds['invoice'])) {
-		foreach ($object->linkedObjectsIds['invoice'] as $invoiceid) {
+	if (!empty($object->linkedObjectsIds['project'])) {
+		foreach ($object->linkedObjectsIds['project'] as $projectid) {
 			print '<tr>';
-			$invoicetemp->fetch($invoiceid);
-			print $invoicetemp->getNomUrl(1);
+			$projecttemp->fetch($projectid);
+			print $projecttemp->getNomUrl(1);
 			print '</tr><br>';
 		}
 	} else print 'nothing to see here';
@@ -453,7 +490,11 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 	// Tickets
 	print '</p><p>';
-	$nbtickets = '0';
+	print '<p>';
+	if (is_countable($object->linkedObjectsIds['facture']))
+		$nbtickets = count($object->linkedObjectsIds['facture']);
+	else
+		$nbtickets = 0;
 	print '<div class="titre inline-block">Tickets<span class="opacitymedium colorblack paddingleft">'.$nbtickets.'</span></div><br>';
 	print '<table class="border tableforfield" width="100%">';
 	if (!empty($object->linkedObjectsIds['ticket'])) {
@@ -468,8 +509,12 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 	// Propositions commerciales
 	print '</p><p>';
-	$nbtickets = '0';
-	print '<div class="titre inline-block">Propositions commerciales<span class="opacitymedium colorblack paddingleft">'.$nbtickets.'</span></div><br>';
+	print '<p>';
+	if (is_countable($object->linkedObjectsIds['facture']))
+		$nbpropal = count($object->linkedObjectsIds['facture']);
+	else
+		$nbpropal = 0;
+	print '<div class="titre inline-block">Propositions commerciales<span class="opacitymedium colorblack paddingleft">'.$nbpropal.'</span></div><br>';
 	print '<table class="border tableforfield" width="100%">';
 	if (!empty($object->linkedObjectsIds['propal'])) {
 		foreach ($object->linkedObjectsIds['propal'] as $propalid) {

@@ -126,6 +126,13 @@ class modDoliLetter extends DolibarrModules {
 
 		// Array to add new pages in new tabs
 		$this->tabs = array();
+			$this->tabs[] = array('data'=>'thirdparty:+sendmail:Envelope:@doliletter:1:/custom/doliletter/envelope_list.php?search_fk_soc=__ID__');
+			$this->tabs[] = array('data'=>'product:+sendmail:Envelope:@doliletter:1:/custom/doliletter/envelope_card.php?from=__ID__&action=create');
+			$this->tabs[] = array('data'=>'project:+sendmail:Envelope:@doliletter:1:/custom/doliletter/envelope_card.php?fromproj=__ID__&action=create');
+			$this->tabs[] = array('data'=>'propal:+sendmail:Envelope:@doliletter:1:/custom/doliletter/envelope_card.php?fromprop=__ID__&action=create');
+			$this->tabs[] = array('data'=>'order:+sendmail:Envelope:@doliletter:1:/custom/doliletter/envelope_card.php?fromcom=__ID__&action=create');
+			$this->tabs[] = array('data'=>'invoice:+sendmail:Envelope:@doliletter:1:/custom/doliletter/envelope_card.php?fromfac=__ID__&action=create');  	  	// To add a new tab identified by code tabname1
+		// To add a new tab identified by code tabname1
 		// Example:
 		// $this->tabs[] = array('data'=>'objecttype:+tabname1:Title1:mylangfile@doliletter:$user->rights->doliletter->read:/doliletter/mynewtab1.php?id=__ID__');  					// To add a new tab identified by code tabname1
 		// $this->tabs[] = array('data'=>'objecttype:+tabname2:SUBSTITUTION_Title2:mylangfile@doliletter:$user->rights->othermodule->read:/doliletter/mynewtab2.php?id=__ID__',  	// To add another new tab identified by code tabname2. Label will be result of calling all substitution functions on 'Title2' key.
@@ -135,23 +142,24 @@ class modDoliLetter extends DolibarrModules {
 		$this->dictionaries=array(
 			'langs'=>'doliletter@doliletter',
 			// List of tables we want to see into dictonnary editor
-			'tabname'=>array(MAIN_DB_PREFIX."c_sender_service"),
+			'tabname'=>array(MAIN_DB_PREFIX."c_sender_service", MAIN_DB_PREFIX."c_element_types"),
 			// Label of tables
-			'tablib'=>array("SenderService"),
+			'tablib'=>array("SenderService", "ElementTypes"),
 			// Request to select fields
-			'tabsql'=>array('SELECT f.rowid as rowid, f.ref, f.label, f.active FROM '.MAIN_DB_PREFIX.'c_sender_service as f'),
+			'tabsql'=>array('SELECT f.rowid as rowid, f.ref, f.label, f.active FROM '.MAIN_DB_PREFIX.'c_sender_service as f',
+							'SELECT x.rowid as rowid, x.ref, x.label, x.active FROM '.MAIN_DB_PREFIX.'c_element_types as x'),
 			// Sort order
-			'tabsqlsort'=>array("label ASC"),
+			'tabsqlsort'=>array("label ASC", "label ASC"),
 			// List of fields (result of select to show dictionary)
-			'tabfield'=>array("ref,label"),
+			'tabfield'=>array("ref,label", "ref,label" ),
 			// List of fields (list of fields to edit a record)
-			'tabfieldvalue'=>array("ref,label"),
+			'tabfieldvalue'=>array("ref,label", "ref,label"),
 			// List of fields (list of fields for insert)
-			'tabfieldinsert'=>array("ref,label"),
+			'tabfieldinsert'=>array("ref,label", "ref,label"),
 			// Name of columns with primary key (try to always name it 'rowid')
-			'tabrowid'=>array("rowid"),
+			'tabrowid'=>array("rowid", "rowid"),
 			// Condition to show each dictionary
-			'tabcond'=>array($conf->doliletter->enabled, $conf->doliletter->enabled, $conf->doliletter->enabled)
+			'tabcond'=>array($conf->doliletter->enabled, $conf->doliletter->enabled, $conf->doliletter->enabled),
 		);
 		/* Example:
 		$this->dictionaries=array(
