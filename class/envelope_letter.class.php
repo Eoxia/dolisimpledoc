@@ -41,39 +41,23 @@ class EnvelopeLetter extends EnvelopeSending
 	 */
 	public $fields=array(
 		'rowid'         => array('type'=>'integer', 'label'=>'TechnicalID', 'enabled'=>'1', 'position'=>1, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'comment'=>"Id"),
-		'ref'           => array('type'=>'varchar(128)', 'label'=>'Ref', 'enabled'=>'1', 'position'=>10, 'notnull'=>1, 'visible'=>1, 'noteditable'=>'1', 'default'=>'(PROV)', 'index'=>1, 'searchall'=>1, 'showoncombobox'=>'1', 'comment'=>"Reference of object"),
-		'ref_ext'       => array('type'=>'varchar(128)', 'label'=>'RefExt', 'enabled'=>'1', 'position'=>20, 'notnull'=>0, 'visible'=>0,),
-		'entity'        => array('type'=>'integer', 'label'=>'Entity', 'enabled'=>'1', 'position'=>30, 'notnull'=>1, 'visible'=>-1,),
-		'date_creation' => array('type'=>'datetime', 'label'=>'DateCreation', 'enabled'=>'1', 'position'=>40, 'notnull'=>1, 'visible'=>-2,),
-		'tms'           => array('type'=>'timestamp', 'label'=>'DateModification', 'enabled'=>'1', 'position'=>50, 'notnull'=>0, 'visible'=>-2,),
-		'import_key'    => array('type'=>'integer', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>60, 'notnull'=>1, 'visible'=>-2,),
+		'fk_envelope'           => array('type'=>'integer', 'label'=>'fk_envelope', 'enabled'=>'1', 'position'=>10, 'notnull'=>1, 'visible'=>1, 'noteditable'=>'1', 'default'=>'(PROV)', 'index'=>1, 'searchall'=>1, 'showoncombobox'=>'1', 'comment'=>"Reference of object"),
+		'fk_socpeople'       => array('type'=>'integer', 'label'=>'fk_socpeople', 'enabled'=>'1', 'position'=>20, 'notnull'=>0, 'visible'=>0,),
+		'contact_fullname'        => array('type'=>'varchar(255)', 'label'=>'contact_fullname', 'enabled'=>'1', 'position'=>30, 'notnull'=>1, 'visible'=>-1,),
+		'recipient_adress' => array('type'=>'varchar(255)', 'label'=>'recipient_adress', 'enabled'=>'1', 'position'=>40, 'notnull'=>1, 'visible'=>-2,),
+		'date_creation'           => array('type'=>'datetime', 'label'=>'tms', 'enabled'=>'1', 'position'=>50, 'notnull'=>0, 'visible'=>-2,),
 		'status'        => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>70, 'notnull'=>1, 'default' => 1, 'visible'=>1, 'index'=>1,),
-		'label'         => array('type'=>'varchar(255)', 'label'=>'Label', 'enabled'=>'1', 'position'=>80, 'notnull'=>1, 'visible'=>1, 'searchall'=>1, 'css'=>'minwidth200', 'help'=>"Help text", 'showoncombobox'=>'1',),
-		'description'   => array('type'=>'textarea', 'label'=>'Description', 'enabled'=>'1', 'position'=>90, 'notnull'=>0, 'visible'=>3,),
-		'element_type'  => array('type'=>'varchar(50)', 'label'=>'ElementType', 'enabled'=>'1', 'position'=>100, 'notnull'=>-1, 'visible'=>1,),
-		'photo'         => array('type'=>'varchar(255)', 'label'=>'Photo', 'enabled'=>'1', 'position'=>100, 'notnull'=>-1, 'visible'=>-2,),
-		'fk_user_creat' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserAuthor', 'enabled'=>'1', 'position'=>110, 'notnull'=>1, 'visible'=>-2, 'foreignkey'=>'user.rowid',),
-		'fk_user_modif' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserModif', 'enabled'=>'1', 'position'=>120, 'notnull'=>-1, 'visible'=>-2,),
-		'fk_parent'     => array('type'=>'integer', 'label'=>'ParentElement', 'enabled'=>'1', 'position'=>130, 'notnull'=>1, 'visible'=>1, 'default'=>0,),
-		'fk_standard'   => array('type'=>'integer', 'label'=>'Standard', 'enabled'=>'1', 'position'=>140, 'notnull'=>1, 'visible'=>0, 'default'=>1,),
+		'letter_code'        => array('type'=>'varchar(255) ', 'label'=>'letter_code', 'enabled'=>'1', 'position'=>70, 'notnull'=>1, 'default' => 1, 'visible'=>1, 'index'=>1,),
 	);
 
 	public $rowid;
-	public $ref;
-	public $ref_ext;
-	public $entity;
+	public $fk_envelope;
+	public $fk_socpeople;
+	public $contact_fullname;
+	public $recipient_adress;
 	public $date_creation;
-	public $tms;
-	public $import_key;
 	public $status;
-	public $label;
-	public $description;
-	public $element_type;
-	public $photo;
-	public $fk_user_creat;
-	public $fk_user_modif;
-	public $fk_parent;
-	public $fk_standard;
+	public $letter_code;
 
 	/**
 	 * @var int  Does this object support multicompany module ?
