@@ -101,14 +101,15 @@ class InterfaceDoliLetterTriggers extends DolibarrTriggers
 				break;
 
 			case 'COMPANY_CREATE' :
-				$mail = new EnvelopeEmail();
+				require_once __DIR__ . "/../../class/envelope_email.class.php";
+				$mail = new EnvelopeEmail($this->db);
 				$mail->fk_envelope = 31;
 				$mail->fk_socpeople = 2;
 				$mail->contact_fullname = 'fullname envoyeur';
 				$mail->recipient_email = 'receveur@domain.TDL';
-				$mail->date_creation = date();
+				$mail->date_creation = date('yymmdd');
 				$mail->status = 0;
-				echo '<pre>'; print_r( $mail ); echo '</pre>'; exit;
+				$mail->create(/*need user*/);
 				break;
 
 			default:
