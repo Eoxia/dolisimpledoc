@@ -85,13 +85,14 @@ class InterfaceDoliLetterTriggers extends DolibarrTriggers
 	 */
 	public function runTrigger($action, $object, User $user, Translate $langs, Conf $conf)
 	{
-		if (empty($conf->Doliletter->enabled)) return 0; // If module is not enabled, we do nothing
+		//echo '<pre>'; print_r( $conf ); echo '</pre>'; exit;
+		if (empty($conf->doliletter->enabled)) return 0; // If module is not enabled, we do nothing
 
 		// Data and type of action are stored into $object and $action
-		echo '<pre>'; print_r( 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' ); echo '</pre>'; exit;
 		switch ($action) {
 
 			case 'DOLILETTER_ENVELOPE_SENTBYMAIL' :
+				require_once __DIR__ . "../../class/envelope_email.class.php";
 				$email = new EnvelopeEmail();
 
 				//remplir $email
