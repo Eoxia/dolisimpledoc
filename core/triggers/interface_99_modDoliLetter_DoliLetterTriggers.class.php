@@ -92,24 +92,31 @@ class InterfaceDoliLetterTriggers extends DolibarrTriggers
 		switch ($action) {
 
 			case 'DOLILETTER_ENVELOPE_SENTBYMAIL' :
-				require_once __DIR__ . "../../class/envelope_email.class.php";
-				$email = new EnvelopeEmail();
-
-				//remplir $email
-
-				//  $email->create();
+				require_once __DIR__ . "/../../class/envelope_email.class.php";
+				$now = dol_now();
+				$mail = new EnvelopeEmail($this->db);
+				$mail->fk_envelope = $object->id;
+				$mail->fk_socpeople = $object->fk_soc;
+				$mail->contact_fullname = 'fullname envoyeurxxxxxx';
+				$mail->recipient_email = 'receveur@domain.TDL';
+				$mail->date_creation = $mail->db->idate($now);
+				$mail->status = 0;
+				print $mail->create($user);
+				//echo '<pre>'; print_r( ':creation success?' ); echo '</pre>'; exit;
 				break;
 
 			case 'COMPANY_CREATE' :
 				require_once __DIR__ . "/../../class/envelope_email.class.php";
+				$now = dol_now();
 				$mail = new EnvelopeEmail($this->db);
 				$mail->fk_envelope = 31;
 				$mail->fk_socpeople = 2;
-				$mail->contact_fullname = 'fullname envoyeur';
+				$mail->contact_fullname = 'fullname envoyeurxxxxxx';
 				$mail->recipient_email = 'receveur@domain.TDL';
-				$mail->date_creation = date('yymmdd');
+				$mail->date_creation = $mail->db->idate($now);
 				$mail->status = 0;
-				$mail->create(/*need user*/);
+				print $mail->create($user);
+				//echo '<pre>'; print_r( ':creation success?' ); echo '</pre>'; exit;
 				break;
 
 			default:

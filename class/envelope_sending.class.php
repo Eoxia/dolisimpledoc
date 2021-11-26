@@ -33,7 +33,7 @@ class EnvelopeSending extends CommonObject
 	/**
 	 * @var string ID to identify managed object.
 	 */
-	public $element = 'digiriskelement';
+	public $element = 'EnvelopeSending';
 
 	/**
 	 * @var int  Does this object support multicompany module ?
@@ -49,7 +49,7 @@ class EnvelopeSending extends CommonObject
 	/**
 	 * @var string String with name of icon for digiriskelement. Must be the part after the 'object_' into object_digiriskelement.png
 	 */
-	public $picto = 'digiriskelement@digiriskdolibarr';
+	public $picto = 'Envelopesending@Doliletter';
 
 
 	/**
@@ -101,8 +101,7 @@ class EnvelopeSending extends CommonObject
 	public function create(User $user, $notrigger = false)
 	{
 		global $conf;
-		$this->element = $this->element_type . '@digiriskdolibarr';
-		$this->fk_standard = $conf->global->DIGIRISKDOLIBARR_ACTIVE_STANDARD;
+		$this->element = $this->element_type . '@doliletter';
 		return $this->createCommon($user, $notrigger);
 	}
 
