@@ -92,17 +92,26 @@ class InterfaceDoliLetterTriggers extends DolibarrTriggers
 		switch ($action) {
 
 			case 'DOLILETTER_ENVELOPE_SENTBYMAIL' :
+				require_once DOL_DOCUMENT_ROOT.'/contact/class/contact.class.php';
+				$contact_temp = new Contact($this->db);
 				require_once __DIR__ . "/../../class/envelope_email.class.php";
 				$now = dol_now();
 				$mail = new EnvelopeEmail($this->db);
 				$mail->fk_envelope = $object->id;
 				$mail->fk_socpeople = $object->fk_soc;
-				$mail->contact_fullname = 'fullname envoyeurxxxxxx';
-				$mail->recipient_email = 'receveur@domain.TDL';
+				if (!empty($mail->fk_socpeople))
+				{
+					$contact_temp->fetch($mail->fk_socpeople);
+					$mail->contact_fullname = $contact_temp->name;
+				}
+				else
+				{
+					$mail->contact_fullname = 'no contact set';
+				}
+				$mail->recipient_email = 'receveur@domain.tld';
 				$mail->date_creation = $mail->db->idate($now);
 				$mail->status = 0;
 				print $mail->create($user);
-				//echo '<pre>'; print_r( ':creation success?' ); echo '</pre>'; exit;
 				break;
 
 			case 'COMPANY_CREATE' :
