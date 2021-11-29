@@ -98,12 +98,13 @@ class InterfaceDoliLetterTriggers extends DolibarrTriggers
 				$now = dol_now();
 				$mail = new EnvelopeEmail($this->db);
 				$mail->fk_envelope = $object->id;
-				$mail->fk_socpeople = $object->fk_soc;
+				$mail->fk_socpeople = 1;
 				if (!empty($mail->fk_socpeople))
 				{
 					$contact_temp->fetch($mail->fk_socpeople);
-					$mail->contact_fullname = $contact_temp->name;
+					$mail->contact_fullname = $contact_temp->firstname . ' ' . $contact_temp->lastname;
 				}
+
 				else
 				{
 					$mail->contact_fullname = 'no contact set';
