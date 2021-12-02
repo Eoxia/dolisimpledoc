@@ -24,7 +24,7 @@
 /**
  * Class for Groupment
  */
-require_once "./envelope_sending.class.php";
+require_once __DIR__ . "/envelope_sending.class.php";
 class EnvelopeEmail extends EnvelopeSending
 {
 

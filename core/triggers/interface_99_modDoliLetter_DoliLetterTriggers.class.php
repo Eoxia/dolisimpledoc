@@ -92,7 +92,7 @@ class InterfaceDoliLetterTriggers extends DolibarrTriggers
 		switch ($action) {
 
 			case 'DOLILETTER_ENVELOPE_SENTBYMAIL' :
-				//echo '<pre>'; print_r(  ); echo '</pre>'; exit;
+				//echo '<pre>'; print_r( $object ); echo '</pre>'; exit;
 				require_once DOL_DOCUMENT_ROOT.'/contact/class/contact.class.php';
 				$contact_temp = new Contact($this->db);
 				require_once __DIR__ . "/../../class/envelope_email.class.php";
@@ -104,10 +104,11 @@ class InterfaceDoliLetterTriggers extends DolibarrTriggers
 				foreach($object->sendtoid as $contactid)
 				{
 					$mail->fk_socpeople = $contactid;
-					$contact_temp->fectch($contactid);
+					$contact_temp->fetch($contactid);
 					$mail->recipient_email = $contact_temp->email;
+					$mail->contact_fullname = $contact_temp->firstname . ' ' . $contact_temp->lastname;
 					$mailtemp = $mail;
-					$mailtemp->create($user);
+					$result = $mailtemp->create($user);
 				}
 				break;
 
