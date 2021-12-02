@@ -578,23 +578,25 @@ class pdf_phobos extends ModelePDFEnvelope
 		$signatory = new EnvelopeSignature($this->db);
 		$sender    = array_shift($signatory->fetchSignatory('E_SENDER', $object->id));
 		$recipient = array_shift($signatory->fetchSignatory('E_SOCIETY', $object->id));
+		if (dol_strlen($sender->signature) > 0) {
+			$tempdir = $conf->doliletter->multidir_output[isset($object->entity) ? $object->entity : 1] . '/temp/';
 
-		$tempdir = $conf->doliletter->multidir_output[isset($object->entity) ? $object->entity : 1] . '/temp/';
+			//Signatures
+			if (!empty($sender) && $sender > 0) {
+				$encoded_image = explode(",",  $sender->signature)[1];
+				$decoded_image = base64_decode($encoded_image);
+				file_put_contents($tempdir."signature.png", $decoded_image);
+				$test = $tempdir."signature.png";
+			}
 
-		//Signatures
-		if (!empty($sender) && $sender > 0) {
-			$encoded_image = explode(",",  $sender->signature)[1];
-			$decoded_image = base64_decode($encoded_image);
-			file_put_contents($tempdir."signature.png", $decoded_image);
-			$test = $tempdir."signature.png";
+			if (!empty($recipient) && $recipient > 0) {
+				$encoded_image = explode(",",  $recipient->signature)[1];
+				$decoded_image = base64_decode($encoded_image);
+				file_put_contents($tempdir."signature2.png", $decoded_image);
+				$test = $tempdir."signature2.png";
+			}
 		}
 
-		if (!empty($recipient) && $recipient > 0) {
-			$encoded_image = explode(",",  $recipient->signature)[1];
-			$decoded_image = base64_decode($encoded_image);
-			file_put_contents($tempdir."signature2.png", $decoded_image);
-			$test = $tempdir."signature2.png";
-		}
 
 		$pdf->SetDrawColor(128, 128, 128);
 		$posmiddle = $this->marge_gauche + round(($this->page_largeur - $this->marge_gauche - $this->marge_droite) / 2);

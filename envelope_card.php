@@ -170,8 +170,6 @@ if (empty($reshook)) {
 	// Action to add record
 	if ($action == 'add' && $permissiontoadd) {
 		// Get parameters
-		$sender_id      = GETPOST('sender');
-		$sender_service = GETPOST('sender_service');
 		$society_id     = GETPOST('fk_soc');
 		$content        = GETPOST('content');
 
@@ -183,25 +181,12 @@ if (empty($reshook)) {
 		$object->tms           = $now;
 		$object->import_key    = "";
 
-		$object->sender         = $sender_id;
-		$object->sender_service = $sender_service;
 		$object->fk_soc         = $society_id;
 		$object->content        = $content;
 
 		$object->fk_user_creat = $user->id ? $user->id : 1;
 
 		// Check parameters
-		if ($sender_id < 0) {
-			setEventMessages($langs->trans('ErrorFieldRequired', $langs->transnoentitiesnoconv('Sender')), null, 'errors');
-			$error++;
-		} else {
-			$usertmp->fetch($sender_id);
-			if (!dol_strlen($usertmp->email)) {
-				setEventMessages($langs->trans('ErrorNoEmailForSender', $langs->transnoentitiesnoconv('Sender')) . ' : ' . '<a target="_blank" href="'.dol_buildpath('/user/card.php?id='.$usertmp->id, 2).'">'.$usertmp->lastname . ' ' . $usertmp->firstname.'</a>', null, 'errors');
-				$error++;
-			}
-		}
-
 //		if ($extsociety_id < 0) {
 //			setEventMessages($langs->trans('ErrorFieldRequired', $langs->transnoentitiesnoconv('Society')), null, 'errors');
 //			$error++;
@@ -210,9 +195,6 @@ if (empty($reshook)) {
 		if (!$error) {
 			$result = $object->create($user, false);
 			if ($result > 0) {
-				if ($sender_id > 0) {
-					$signatory->setSignatory($object->id,'user', array($sender_id), 'E_SENDER');
-				}
 
 //				if ($extresponsible_id > 0) {
 //					$signatory->setSignatory($object->id,'socpeople', array($extresponsible_id), 'PP_EXT_SOCIETY_RESPONSIBLE');
@@ -356,6 +338,7 @@ if (empty($reshook)) {
 	$triggersendname = 'DOLILETTER_ENVELOPE_SENTBYMAIL';
 	$autocopy = 'MAIN_MAIL_AUTOCOPY_SIMPLEDOC_TO';
 	$trackid = 'envelope'.$object->id;
+
 	include DOL_DOCUMENT_ROOT.'/core/actions_sendmails.inc.php';
 }
 
@@ -405,8 +388,6 @@ if ($action == 'create') {
 	unset($object->fields['note_public']);
 	unset($object->fields['note_private']);
 	unset($object->fields['fk_soc']);
-	unset($object->fields['sender_service']);
-	unset($object->fields['sender']);
 
 
 	//Ref -- Ref
@@ -423,19 +404,6 @@ if ($action == 'create') {
 	print ' <a href="'.DOL_URL_ROOT.'/societe/card.php?action=create&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create').'" target="_blank"><span class="fa fa-plus-circle valignmiddle paddingleft" title="'.$langs->trans("AddThirdParty").'"></span></a>';
 	print '</td></tr>';
 
-	//Sender
-	$userlist = $form->select_dolusers(GETPOST('sender'), '', 0, null, 0, '', '', 0, 0, 0, 'AND u.statut = 1', 0, '', 'minwidth300', 0, 1);
-	print '<tr>';
-	print '<td class="fieldrequired" style="width:10%">'.$form->editfieldkey('Sender', 'Sender_id', '', $object, 0).'</td>';
-	print '<td>';
-	print $form->selectarray('sender', $userlist, GETPOST('sender'), $langs->trans('SelectUser'), null, null, null, "40%", 0,0,'','minwidth300',1);
-	print ' <a href="'.DOL_URL_ROOT.'/user/card.php?action=create&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create').'" target="_blank"><span class="fa fa-plus-circle valignmiddle paddingleft" title="'.$langs->trans("AddUser").'"></span></a>';
-	print '</td></tr>';
-
-	//SenderService -- Moyen d'envoi
-	print '<tr><td class="fieldrequired">'.$langs->trans("SenderService").'</td><td>';
-	print $formother->select_dictionary('sender_service','c_sender_service', 'ref', 'label', 'MAIL', 0);
-	print '</td></tr>';
 
 	//Content -- Contenue
 	print '<tr class="content_field"><td><label for="content">'.$langs->trans("Content").'</label></td><td>';
@@ -542,12 +510,6 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	if ($action == 'deleteline') {
 		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id.'&lineid='.$lineid, $langs->trans('DeleteLine'), $langs->trans('ConfirmDeleteLine'), 'confirm_deleteline', '', 0, 1);
 	}
-	// Clone confirmation
-	if ($action == 'clone') {
-		// Create an array for form
-		$formquestion = array();
-		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id, $langs->trans('ToClone'), $langs->trans('ConfirmCloneAsk', $object->ref), 'confirm_clone', $formquestion, 'yes', 1);
-	}
 
 	// Confirmation of action xxxx
 	if ($action == 'xxx') {
@@ -651,15 +613,6 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	print $thirdparty->getNomUrl(1);
 	print '</td></tr>';
 
-
-	$usertmp->fetch($object->sender);
-	print '<tr><td class="titlefield">';
-	print $langs->trans("Sender");
-	print '</td>';
-	print '<td>';
-	print $usertmp->getNomUrl(1);
-	print '</td></tr>';
-
 	print '<tr><td class="titlefield">';
 	print $langs->trans("Content");
 	print '</td>';
@@ -669,7 +622,6 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 	//unused display of information
 	unset($object->fields['fk_soc']);
-	unset($object->fields['sender']);
 	unset($object->fields['content']);
 	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_view.tpl.php';
 	// Other attributes. Fields from hook formObjectOptions and Extrafields.
@@ -697,6 +649,8 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 			print dolGetButtonAction($langs->trans('SendMail'), '', 'presend', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=presend&mode=init&token='.newToken());
 
+			print dolGetButtonAction($langs->trans('SendLetter'), '', 'lettersend', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=lettersend&mode=init&token='.newToken());
+
 			print dolGetButtonAction($langs->trans('Modify'), '', 'default', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=edit&token='.newToken(), '', $permissiontoadd);
 
 			// Delete (need delete permission, or if draft, just need create/modify permission)
@@ -706,12 +660,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	}
 
 
-	// Select mail models is same action as presend
-//	if (GETPOST('modelselected')) {
-//		$action = 'presend';
-//	}
-
-	if ($action != 'presend') {
+	if ($action != 'presend' && $action != 'lettersend') {
 		print '<div class="fichecenter"><div class="fichehalfleft">';
 		print '<a name="builddoc"></a>'; // ancre
 
@@ -749,14 +698,187 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		$action = 'presend';
 	}
 
-
 	// Presend form
 	$modelmail = 'envelope';
 	$defaulttopic = 'InformationMessage';
 	$diroutput = $upload_dir . '/' . $object->element;
 	$trackid = 'envelope'.$object->id;
 
-	include DOL_DOCUMENT_ROOT.'/core/tpl/card_presend.tpl.php';
+	if ($action == 'presend')
+	{
+		$langs->load("mails");
+
+		$titreform = 'SendMail';
+
+		$object->fetch_projet();
+
+		if (!in_array($object->element, array('societe', 'user', 'member')))
+		{
+			$ref = dol_sanitizeFileName($object->ref);
+			include_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
+			$fileparams = dol_most_recent_file($diroutput.'/'.$ref, '');
+			$file = $fileparams['fullname'];
+		}
+
+		// Define output language
+		$outputlangs = $langs;
+		$newlang = '';
+		if ($conf->global->MAIN_MULTILANGS && empty($newlang) && !empty($_REQUEST['lang_id']))
+		{
+			$newlang = $_REQUEST['lang_id'];
+		}
+		if ($conf->global->MAIN_MULTILANGS && empty($newlang))
+		{
+			$newlang = $object->thirdparty->default_lang;
+		}
+
+		if (!empty($newlang))
+		{
+			$outputlangs = new Translate('', $conf);
+			$outputlangs->setDefaultLang($newlang);
+			// Load traductions files required by page
+			$outputlangs->loadLangs(array('digiriskdolibarr'));
+		}
+
+		$topicmail = '';
+		if (empty($object->ref_client)) {
+			$topicmail = $outputlangs->trans($defaulttopic, '__REF__');
+		} elseif (!empty($object->ref_client)) {
+			$topicmail = $outputlangs->trans($defaulttopic, '__REF__ (__REFCLIENT__)');
+		}
+
+		// Build document if it not exists
+		$forcebuilddoc = true;
+		if ($forcebuilddoc)    // If there is no default value for supplier invoice, we do not generate file, even if modelpdf was set by a manual generation
+		{
+			if ((!$file || !is_readable($file)) && method_exists($object, 'generateDocument'))
+			{
+				$result = $object->generateDocument(GETPOST('model') ? GETPOST('model') : $object->model_pdf, $outputlangs, $hidedetails, $hidedesc, $hideref);
+				if ($result < 0) {
+					dol_print_error($db, $object->error, $object->errors);
+					exit();
+				}
+				$fileparams = dol_most_recent_file($diroutput.'/'.$ref, preg_quote($ref, '/').'[^\-]+');
+				$file = $fileparams['fullname'];
+			}
+		}
+
+		print '<div id="formmailbeforetitle" name="formmailbeforetitle"></div>';
+		print '<div class="clearboth"></div>';
+		print '<br>';
+		print load_fiche_titre($langs->trans($titreform));
+
+		print dol_get_fiche_head('');
+
+		// Create form for email
+		include_once DOL_DOCUMENT_ROOT.'/core/class/html.formmail.class.php';
+		$formmail = new FormMail($db);
+
+		$formmail->param['langsmodels'] = (empty($newlang) ? $langs->defaultlang : $newlang);
+		$formmail->fromtype = (GETPOST('fromtype') ?GETPOST('fromtype') : (!empty($conf->global->MAIN_MAIL_DEFAULT_FROMTYPE) ? $conf->global->MAIN_MAIL_DEFAULT_FROMTYPE : 'user'));
+
+		$formmail->trackid = $trackid;
+
+		if (!empty($conf->global->MAIN_EMAIL_ADD_TRACK_ID) && ($conf->global->MAIN_EMAIL_ADD_TRACK_ID & 2))	// If bit 2 is set
+		{
+			include DOL_DOCUMENT_ROOT.'/core/lib/functions2.lib.php';
+			$formmail->frommail = dolAddEmailTrackId($formmail->frommail, $trackid);
+		}
+		$formmail->withfrom = 1;
+
+		// Fill list of recipient with email inside <>.
+		$liste = array();
+
+		if (!empty($object->socid) && $object->socid > 0 && !is_object($object->thirdparty) && method_exists($object, 'fetch_thirdparty')) {
+			$object->fetch_thirdparty();
+		}
+		if (is_object($object->thirdparty))
+		{
+			foreach ($object->thirdparty->thirdparty_and_contact_email_array(0) as $key => $value) {
+				$liste[$key] = $value;
+
+			}
+		}
+
+		if (!empty($conf->global->MAIN_MAIL_ENABLED_USER_DEST_SELECT)) {
+			$listeuser = array();
+			$fuserdest = new User($db);
+
+			$result = $fuserdest->fetchAll('ASC', 't.lastname', 0, 0, array('customsql'=>'t.statut=1 AND t.employee=1 AND t.email IS NOT NULL AND t.email<>\'\''), 'AND', true);
+			if ($result > 0 && is_array($fuserdest->users) && count($fuserdest->users) > 0) {
+				foreach ($fuserdest->users as $uuserdest) {
+					$listeuser[$uuserdest->id] = $uuserdest->user_get_property($uuserdest->id, 'email');
+				}
+			} elseif ($result < 0) {
+				setEventMessages(null, $fuserdest->errors, 'errors');
+			}
+			if (count($listeuser) > 0) {
+				$formmail->withtouser = $listeuser;
+				$formmail->withtoccuser = $listeuser;
+			}
+		}
+
+		$formmail->withto = $liste;
+		$formmail->withtofree = (GETPOSTISSET('sendto') ? (GETPOST('sendto', 'alphawithlgt') ? GETPOST('sendto', 'alphawithlgt') : '1') : '1');
+		$formmail->withtocc = $liste;
+		$formmail->withtoccc = $conf->global->MAIN_EMAIL_USECCC;
+		$formmail->withtopic = $topicmail;
+		$formmail->withfile = 2;
+		$formmail->withbody = 1;
+		$formmail->withdeliveryreceipt = 1;
+		$formmail->withcancel = 1;
+
+		//$arrayoffamiliestoexclude=array('system', 'mycompany', 'object', 'objectamount', 'date', 'user', ...);
+		if (!isset($arrayoffamiliestoexclude)) $arrayoffamiliestoexclude = null;
+
+		// Make substitution in email content
+		$substitutionarray = getCommonSubstitutionArray($outputlangs, 0, $arrayoffamiliestoexclude, $object);
+		$substitutionarray['__CHECK_READ__'] = (is_object($object) && is_object($object->thirdparty)) ? '<img src="'.DOL_MAIN_URL_ROOT.'/public/emailing/mailing-read.php?tag='.$object->thirdparty->tag.'&securitykey='.urlencode($conf->global->MAILING_EMAIL_UNSUBSCRIBE_KEY).'" width="1" height="1" style="width:1px;height:1px" border="0"/>' : '';
+		$substitutionarray['__PERSONALIZED__'] = ''; // deprecated
+		$substitutionarray['__CONTACTCIVNAME__'] = '';
+		$parameters = array(
+			'mode' => 'formemail'
+		);
+		complete_substitutions_array($substitutionarray, $outputlangs, $object, $parameters);
+
+		// Find the good contact address
+		$tmpobject = $object;
+
+		$contactarr = array();
+		$contactarr = $tmpobject->liste_contact(-1, 'external');
+
+		if (is_array($contactarr) && count($contactarr) > 0) {
+			require_once DOL_DOCUMENT_ROOT.'/contact/class/contact.class.php';
+			$contactstatic = new Contact($db);
+
+			foreach ($contactarr as $contact) {
+				$contactstatic->fetch($contact['id']);
+				$substitutionarray['__CONTACT_NAME_'.$contact['code'].'__'] = $contactstatic->getFullName($outputlangs, 1);
+			}
+		}
+
+		// Array of substitutions
+		$formmail->substit = $substitutionarray;
+
+		// Array of other parameters
+		$formmail->param['action'] = 'send';
+		$formmail->param['models'] = $modelmail;
+		$formmail->param['models_id'] = GETPOST('modelmailselected', 'int');
+		$formmail->param['id'] = $object->id;
+		$formmail->param['returnurl'] = $_SERVER["PHP_SELF"].'?id='.$object->id;
+		$formmail->param['fileinit'] = array($file);
+
+		// Show form
+		print $formmail->get_form();
+
+		print dol_get_fiche_end();
+	}
+	if ($action == 'lettersend')
+	{
+		//form
+			//contact
+		//save
+	}
 }
 
 // End of page

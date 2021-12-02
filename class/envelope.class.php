@@ -106,8 +106,6 @@ class Envelope extends CommonObject
 		'model_pdf'      => array('type'=>'varchar(255)', 'label'=>'PdfModel', 'enabled'=>'1', 'position'=>100, 'notnull'=>0, 'visible'=>0,),
 		'last_main_doc'  => array('type'=>'varchar(255)', 'label'=>'LastMainDoc', 'enabled'=>'1', 'position'=>110, 'notnull'=>0, 'visible'=>0,),
 		'content'        => array('type'=>'textarea', 'label'=>'Content', 'enabled'=>'1', 'position'=>120, 'notnull'=>1, 'visible'=>3,),
-		'sender'         => array('type'=>'varchar(255)', 'label'=>'Sender', 'enabled'=>'1', 'position'=>130, 'notnull'=>1, 'visible'=>1,),
-		'sender_service' => array('type'=>'varchar(255)', 'label'=>'SenderService', 'enabled'=>'1', 'position'=>140, 'notnull'=>0, 'visible'=>1,),
 		'document_url'   => array('type'=>'varchar(255)', 'label'=>'DocumentUrl', 'enabled'=>'1', 'position'=>150, 'notnull'=>0, 'visible'=>0,),
 		'fk_soc'         => array('type'=>'integer', 'label'=>'ThirdParty', 'enabled'=>'1', 'position'=>160, 'notnull'=>1, 'visible'=>1,),
 		'fk_user_creat'  => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserAuthor', 'enabled'=>'1', 'position'=>180, 'notnull'=>1, 'visible'=>-2, 'foreignkey'=>'user.rowid',),

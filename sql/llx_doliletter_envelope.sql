@@ -28,8 +28,6 @@ CREATE TABLE llx_doliletter_envelope(
 	model_pdf varchar(255),
 	last_main_doc varchar(255),
 	content text,
-	sender varchar(255),
-	sender_service varchar(255),
 	document_url varchar(255),
 	fk_soc integer,
 	fk_user_creat integer NOT NULL,
