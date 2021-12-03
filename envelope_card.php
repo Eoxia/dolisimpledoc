@@ -172,6 +172,8 @@ if (empty($reshook)) {
 		// Get parameters
 		$society_id     = GETPOST('fk_soc');
 		$content        = GETPOST('content');
+		$note_private     = GETPOST('note_private');
+		$note_public        = GETPOST('note_public');
 
 		// Initialize object preventionplan
 		$now                   = dol_now();
@@ -180,6 +182,8 @@ if (empty($reshook)) {
 		$object->date_creation = $object->db->idate($now);
 		$object->tms           = $now;
 		$object->import_key    = "";
+		$object->note_private  = $note_private;
+		$object->note_public  = $note_public;
 
 		$object->fk_soc         = $society_id;
 		$object->content        = $content;
@@ -412,14 +416,14 @@ if ($action == 'create') {
 	print '</td></tr>';
 
 	//PublicNote -- Note publique
-	print '<tr class="content_field"><td><label for="public_note">'.$langs->trans("PublicNote").'</label></td><td>';
-	$doleditor = new DolEditor('public_note', GETPOST('public_note'), '', 90, 'dolibarr_notes', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
+	print '<tr class="content_field"><td><label for="note_public">'.$langs->trans("PublicNote").'</label></td><td>';
+	$doleditor = new DolEditor('note_public', GETPOST('note_public'), '', 90, 'dolibarr_notes', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
 	$doleditor->Create();
 	print '</td></tr>';
 
 	//PrivateNote -- Note privée
-	print '<tr class="content_field"><td><label for="private_note">'.$langs->trans("PrivateNote").'</label></td><td>';
-	$doleditor = new DolEditor('private_note', GETPOST('private_note'), '', 90, 'dolibarr_notes', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
+	print '<tr class="content_field"><td><label for="note_private">'.$langs->trans("PrivateNote").'</label></td><td>';
+	$doleditor = new DolEditor('note_private', GETPOST('note_private'), '', 90, 'dolibarr_notes', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
 	$doleditor->Create();
 	print '</td></tr>';
 
