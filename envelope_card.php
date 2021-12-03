@@ -526,8 +526,24 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 		if (empty($reshook)) {
 			// Send
+			$class = 'ModelePDFEnvelope';
+			$modellist = call_user_func($class.'::liste_modeles', $db, 100);
+			if (!empty($modellist))
+			{
+				asort($modellist);
 
-			print dolGetButtonAction($langs->trans('SendMail'), '', 'presend', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=presend&mode=init&token='.newToken());
+				$modellist = array_filter($modellist, 'remove_index');
+
+				if (is_array($modellist) && count($modellist) == 1)    // If there is only one element
+				{
+					$arraykeys = array_keys($modellist);
+					$arrayvalues = preg_replace('/template_/','', array_values($modellist)[0]);
+
+					$modellist[$arraykeys[0]] = $arrayvalues;
+					$modelselected = $arraykeys[0];
+				}
+			}
+			print dolGetButtonAction($langs->trans('SendMail'), '', 'presend', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=presend&mode=init&model='.$modelselected.'&token='.newToken());
 
 			print dolGetButtonAction($langs->trans('SendLetter'), '', 'lettersend', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=lettersend&mode=init&token='.newToken());
 

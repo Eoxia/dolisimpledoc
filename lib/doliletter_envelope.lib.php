@@ -27,6 +27,15 @@
  * @param	Envelope	$object		Envelope
  * @return 	array					Array of tabs
  */
+
+function remove_index($model) {
+	if (preg_match('/index.php/',$model)) {
+		return '';
+	} else {
+		return $model;
+	}
+}
+
 function envelopePrepareHead($object)
 {
 	global $db, $langs, $conf;
