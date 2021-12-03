@@ -43,6 +43,8 @@ class EnvelopeLetter extends EnvelopeSending
 		'rowid'         => array('type'=>'integer', 'label'=>'TechnicalID', 'enabled'=>'1', 'position'=>1, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'comment'=>"Id"),
 		'fk_envelope'           => array('type'=>'integer', 'label'=>'fk_envelope', 'enabled'=>'1', 'position'=>10, 'notnull'=>1, 'visible'=>1, 'noteditable'=>'1', 'default'=>'(PROV)', 'index'=>1, 'searchall'=>1, 'showoncombobox'=>'1', 'comment'=>"Reference of object"),
 		'fk_socpeople'       => array('type'=>'integer', 'label'=>'fk_socpeople', 'enabled'=>'1', 'position'=>20, 'notnull'=>0, 'visible'=>0,),
+		'fk_user'       => array('type'=>'integer', 'label'=>'fk_user', 'enabled'=>'1', 'position'=>20, 'notnull'=>0, 'visible'=>0,),
+		'sender_fullname'        => array('type'=>'varchar(255)', 'label'=>'sender_fullname', 'enabled'=>'1', 'position'=>30, 'notnull'=>1, 'visible'=>-1,),
 		'contact_fullname'        => array('type'=>'varchar(255)', 'label'=>'contact_fullname', 'enabled'=>'1', 'position'=>30, 'notnull'=>1, 'visible'=>-1,),
 		'recipient_adress' => array('type'=>'varchar(255)', 'label'=>'recipient_adress', 'enabled'=>'1', 'position'=>40, 'notnull'=>1, 'visible'=>-2,),
 		'date_creation'           => array('type'=>'datetime', 'label'=>'tms', 'enabled'=>'1', 'position'=>50, 'notnull'=>0, 'visible'=>-2,),
@@ -58,7 +60,8 @@ class EnvelopeLetter extends EnvelopeSending
 	public $date_creation;
 	public $status;
 	public $letter_code;
-
+	public $fk_user;
+	public $sender_fullname;
 	/**
 	 * @var int  Does this object support multicompany module ?
 	 * 0=No test on entity, 1=Test with field entity, 'field@table'=Test with link by field@table
