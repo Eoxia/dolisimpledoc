@@ -39,7 +39,7 @@ class modDoliLetter extends DolibarrModules {
 
 		$this->db = $db;
 
-		$this->numero          = 500000; // TODO Go on page https://wiki.dolibarr.org/index.php/List_of_modules_id to reserve an id number for your module
+		$this->numero          = 436360; // TODO Go on page https://wiki.dolibarr.org/index.php/List_of_modules_id to reserve an id number for your module
 		$this->rights_class    = 'doliletter';
 		$this->family          = '';
 		$this->module_position = '';

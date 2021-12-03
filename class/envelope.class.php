@@ -540,8 +540,8 @@ class Envelope extends CommonObject
 
 			if (!empty($this->model_pdf)) {
 				$modele = $this->model_pdf;
-			} elseif (!empty($conf->global->SIMPLEDOC_ADDON_PDF)) {
-				$modele = $conf->global->SIMPLEDOC_ADDON_PDF;
+			} elseif (!empty($conf->global->DOLILETTER_ADDON_PDF)) {
+				$modele = $conf->global->DOLILETTER_ADDON_PDF;
 			}
 		}
 
