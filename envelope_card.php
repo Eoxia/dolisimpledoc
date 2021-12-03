@@ -222,93 +222,16 @@ if (empty($reshook)) {
 
 	// Action to update record
 	if ($action == 'update' && $permissiontoadd) {
-		// Get parameters
 		$society_id            = GETPOST('fk_soc');
 //		$extsociety_id               = GETPOST('ext_society');
-//		$extresponsible_id           = GETPOST('ext_society_responsible');
-//		$extintervenant_ids          = GETPOST('ext_intervenants');
-//		$labour_inspector_id         = GETPOST('labour_inspector');
-//		$labour_inspector_contact_id = GETPOST('labour_inspector_contact') ? GETPOST('labour_inspector_contact') : 0;
-//		$label                       = GETPOST('label');
-//		$prior_visit_bool            = GETPOST('prior_visit_bool');
-//		$prior_visit_text            = GETPOST('prior_visit_text');
-//		$cssct_intervention          = GETPOST('cssct_intervention');
 
-		// Initialize object preventionplan
+		// Initialize object
 		$object->fk_soc   = $society_id;
 //		$now           = dol_now();
-//		$object->tms   = $now;
-//		$object->label = $label;
-//
-//		$date_start = dol_mktime(GETPOST('dateohour', 'int'), GETPOST('dateomin', 'int'), 0, GETPOST('dateomonth', 'int'), GETPOST('dateoday', 'int'), GETPOST('dateoyear', 'int'));
-//		$date_end = dol_mktime(GETPOST('dateehour', 'int'), GETPOST('dateemin', 'int'), 0, GETPOST('dateemonth', 'int'), GETPOST('dateeday', 'int'), GETPOST('dateeyear', 'int'));
-//		$prior_visit_date = dol_mktime(GETPOST('dateihour', 'int'), GETPOST('dateimin', 'int'), 0, GETPOST('dateimonth', 'int'), GETPOST('dateiday', 'int'), GETPOST('dateiyear', 'int'));
-//
-//		$object->date_start = $date_start;
-//		$object->date_end   = $date_end;
-//
-//		$object->prior_visit_bool = $prior_visit_bool;
-//		if ($prior_visit_bool) {
-//			$object->prior_visit_text   = $prior_visit_text;
-//			$object->prior_visit_date   = $prior_visit_date;
-//		}
-//		$object->cssct_intervention = $cssct_intervention;
-//
-//		$object->fk_user_creat = $user->id ? $user->id : 1;
-
-		// Check parameters
-//		if ($maitre_oeuvre_id < 0) {
-//			setEventMessages($langs->trans('ErrorFieldRequired', $langs->transnoentitiesnoconv('MaitreOeuvre')), null, 'errors');
-//			$error++;
-//		}   else {
-//			$usertmp->fetch($maitre_oeuvre_id);
-//			if (!dol_strlen($usertmp->email)) {
-//				setEventMessages($langs->trans('ErrorNoEmailForMaitreOeuvre', $langs->transnoentitiesnoconv('MaitreOeuvre')) . ' : ' . '<a target="_blank" href="'.dol_buildpath('/user/card.php?id='.$usertmp->id, 2).'">'.$usertmp->lastname . ' ' . $usertmp->firstname.'</a>', null, 'errors');
-//				$error++;
-//			}
-//		}
-//
-//		if ($extsociety_id < 0) {
-//			setEventMessages($langs->trans('ErrorFieldRequired', $langs->transnoentitiesnoconv('ExtSociety')), null, 'errors');
-//			$error++;
-//		}
-//
-//		if (is_array($extresponsible_id)) {
-//			if (empty(array_filter($extresponsible_id))) {
-//				setEventMessages($langs->trans('ErrorFieldRequired', $langs->transnoentitiesnoconv('ExtSocietyResponsible')), null, 'errors');
-//				$error++;
-//			}
-//		} elseif (empty($extresponsible_id)) {
-//			setEventMessages($langs->trans('ErrorFieldRequired', $langs->transnoentitiesnoconv('ExtSocietyResponsible')), null, 'errors');
-//			$error++;
-//		}
-//
-//		if ($labour_inspector_id < 0) {
-//			setEventMessages($langs->trans('ErrorFieldRequired', $langs->transnoentitiesnoconv('LabourInspectorSociety')), null, 'errors');
-//			$error++;
-//		}
-//
-//		if (is_array($labour_inspector_contact_id)) {
-//			if (empty(array_filter($labour_inspector_contact_id))) {
-//				setEventMessages($langs->trans('ErrorFieldRequired', $langs->transnoentitiesnoconv('LabourInspector')), null, 'errors');
-//				$error++;
-//			}
-//		} elseif (empty($labour_inspector_contact_id)) {
-//			setEventMessages($langs->trans('ErrorFieldRequired', $langs->transnoentitiesnoconv('LabourInspector')), null, 'errors');
-//			$error++;
-//		}
 
 		if (!$error) {
 			$result = $object->update($user, false);
 			if ($result > 0) {
-//				$digiriskresources->digirisk_dolibarr_set_resources($db, $user->id, 'PP_EXT_SOCIETY', 'societe', array($extsociety_id), $conf->entity, 'preventionplan', $object->id, 0);
-////				$digiriskresources->digirisk_dolibarr_set_resources($db, $user->id, 'PP_LABOUR_INSPECTOR', 'societe', array($labour_inspector_id), $conf->entity, 'preventionplan', $object->id, 0);
-////				$digiriskresources->digirisk_dolibarr_set_resources($db, $user->id, 'PP_LABOUR_INSPECTOR_ASSIGNED', 'socpeople', array($labour_inspector_contact_id), $conf->entity, 'preventionplan', $object->id, 0);
-////
-////				$signatory->setSignatory($object->id,'user', array($maitre_oeuvre_id), 'PP_MAITRE_OEUVRE');
-////				$signatory->setSignatory($object->id,'socpeople', array($extresponsible_id), 'PP_EXT_SOCIETY_RESPONSIBLE');
-
-				// Update prevention plan OK
 				$urltogo = str_replace('__ID__', $result, $backtopage);
 				$urltogo = preg_replace('/--IDFORBACKTOPAGE--/', $id, $urltogo); // New method to autoselect project after a New on another form object creation
 				header("Location: " . $urltogo);
@@ -316,7 +239,6 @@ if (empty($reshook)) {
 			}
 			else
 			{
-				// Update prevention plan KO
 				if (!empty($object->errors)) setEventMessages(null, $object->errors, 'errors');
 				else  setEventMessages($object->error, null, 'errors');
 			}
@@ -549,40 +471,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	$linkback = '<a href="'.dol_buildpath('/doliletter/envelope_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
 
 	$morehtmlref = '<div class="refidno">';
-	/*
-	 // Ref customer
-	 $morehtmlref.=$form->editfieldkey("RefCustomer", 'ref_client', $object->ref_client, $object, 0, 'string', '', 0, 1);
-	 $morehtmlref.=$form->editfieldval("RefCustomer", 'ref_client', $object->ref_client, $object, 0, 'string', '', null, null, '', 1);
-	 // Thirdparty
-	 $morehtmlref.='<br>'.$langs->trans('ThirdParty') . ' : ' . (is_object($object->thirdparty) ? $object->thirdparty->getNomUrl(1) : '');
-	 // Project
-	 if (! empty($conf->projet->enabled)) {
-	 $langs->load("projects");
-	 $morehtmlref .= '<br>'.$langs->trans('Project') . ' ';
-	 if ($permissiontoadd) {
-	 //if ($action != 'classify') $morehtmlref.='<a class="editfielda" href="' . $_SERVER['PHP_SELF'] . '?action=classify&amp;id=' . $object->id . '">' . img_edit($langs->transnoentitiesnoconv('SetProject')) . '</a> ';
-	 $morehtmlref .= ' : ';
-	 if ($action == 'classify') {
-	 //$morehtmlref .= $form->form_project($_SERVER['PHP_SELF'] . '?id=' . $object->id, $object->socid, $object->fk_project, 'projectid', 0, 0, 1, 1);
-	 $morehtmlref .= '<form method="post" action="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'">';
-	 $morehtmlref .= '<input type="hidden" name="action" value="classin">';
-	 $morehtmlref .= '<input type="hidden" name="token" value="'.newToken().'">';
-	 $morehtmlref .= $formproject->select_projects($object->socid, $object->fk_project, 'projectid', $maxlength, 0, 1, 0, 1, 0, 0, '', 1);
-	 $morehtmlref .= '<input type="submit" class="button valignmiddle" value="'.$langs->trans("Modify").'">';
-	 $morehtmlref .= '</form>';
-	 } else {
-	 $morehtmlref.=$form->form_project($_SERVER['PHP_SELF'] . '?id=' . $object->id, $object->socid, $object->fk_project, 'none', 0, 0, 0, 1);
-	 }
-	 } else {
-	 if (! empty($object->fk_project)) {
-	 $proj = new Project($db);
-	 $proj->fetch($object->fk_project);
-	 $morehtmlref .= ': '.$proj->getNomUrl();
-	 } else {
-	 $morehtmlref .= '';
-	 }
-	 }
-	 }*/
+
 	$morehtmlref .= '</div>';
 
 
@@ -594,19 +483,6 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	print '<div class="underbanner clearboth"></div>';
 	print '<table class="border centpercent tableforfield">'."\n";
 
-	// Common attributes
-	//$keyforbreak='fieldkeytoswitchonsecondcolumn';	// We change column just before this field
-	//unset($object->fields['fk_project']);				// Hide field already shown in banner
-	//unset($object->fields['fk_soc']);					// Hide field already shown in banner
-
-
-		//correct sender display
-//	print '<tr><td class="titlefield">';
-//	print $langs->trans("Sender");
-//	print '</td>';
-//	print '<td>';
-//	print $user->getNomUrl(1);
-//	print '</td></tr>';
 
 
 	//correct thirdparty display
@@ -879,9 +755,8 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	}
 	if ($action == 'lettersend')
 	{
-		//form
-			//contact
-		//save
+		//form for contacts
+		//save -> to lettersave action, which creates the object and saves it in DB
 	}
 }
 
