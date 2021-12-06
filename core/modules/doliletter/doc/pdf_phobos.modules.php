@@ -536,10 +536,6 @@ class pdf_phobos extends ModelePDFEnvelope
 
 		$default_font_size = pdf_getPDFFontSize($outputlangs);
 
-		$pdf->SetXY($this->marge_gauche, $tab_top);
-		$pdf->MultiCell(190,8,$outputlangs->transnoentities("Description"),0,'L',0);
-		$pdf->line($this->marge_gauche, $tab_top + 8, $this->page_largeur-$this->marge_droite, $tab_top + 8);
-
 		$pdf->SetFont('','', $default_font_size - 1);
 
 		$pdf->MultiCell(0, 3, '');		// Set interline to 3
