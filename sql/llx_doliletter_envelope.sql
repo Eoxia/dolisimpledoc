@@ -16,7 +16,8 @@
 
 CREATE TABLE llx_doliletter_envelope(
 	rowid integer AUTO_INCREMENT PRIMARY KEY NOT NULL, 
-	ref varchar(128) DEFAULT '(PROV)' NOT NULL, 
+	ref varchar(128) DEFAULT '(PROV)' NOT NULL,
+	label varchar(32),
 	ref_ext varchar(128),
 	entity integer,
 	date_creation datetime NOT NULL,

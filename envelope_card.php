@@ -174,6 +174,7 @@ if (empty($reshook)) {
 		$content        = GETPOST('content');
 		$note_private     = GETPOST('note_private');
 		$note_public        = GETPOST('note_public');
+		$label        = GETPOST('label');
 
 		// Initialize object preventionplan
 		$now                   = dol_now();
@@ -184,6 +185,7 @@ if (empty($reshook)) {
 		$object->import_key    = "";
 		$object->note_private  = $note_private;
 		$object->note_public  = $note_public;
+		$object->label        = $label;
 
 		$object->fk_soc         = $society_id;
 		$object->content        = $content;
@@ -199,6 +201,7 @@ if (empty($reshook)) {
 		if (!$error) {
 			$result = $object->create($user, false);
 			if ($result > 0) {
+				$signatory->setSignatory($object->id,'user', array($user), 'E_SENDER');
 
 //				if ($extresponsible_id > 0) {
 //					$signatory->setSignatory($object->id,'socpeople', array($extresponsible_id), 'PP_EXT_SOCIETY_RESPONSIBLE');
@@ -322,6 +325,9 @@ if ($action == 'create') {
 	print $refEnvelopeMod->getNextValue($object);
 	print '</td></tr>';
 
+	// Common attributes
+	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_add.tpl.php';
+
 	//Society -- Société
 	print '<tr><td class="fieldrequired">'.$langs->trans("Society").'</td><td>';
 	$events = array();
@@ -349,8 +355,6 @@ if ($action == 'create') {
 	$doleditor->Create();
 	print '</td></tr>';
 
-	// Common attributes
-	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_add.tpl.php';
 
 	// Other attributes
 	include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_add.tpl.php';
