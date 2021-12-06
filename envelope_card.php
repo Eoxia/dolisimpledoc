@@ -547,7 +547,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 					$modelselected = $arraykeys[0];
 				}
 			}
-			print dolGetButtonAction($langs->trans('Sign'), '', '', __DIR__ . '/envelope_signature.php'.'?id='.$object->id.'&action=presend&mode=init&token='.newToken(),  '', $object->status == 1);
+			print dolGetButtonAction($langs->trans('Sign'), '', '',  DOL_URL_ROOT . '/custom/doliletter/envelope_signature.php'.'?id='.$object->id.'&mode=init&token='.newToken(),  '', $object->status == 1);
 
 			print dolGetButtonAction($langs->trans('SendMail'), '', 'presend', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=presend&mode=init&model='.$modelselected.'&token='.newToken(),  '', $object->status == 2);
 
