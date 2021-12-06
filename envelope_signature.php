@@ -142,6 +142,7 @@ if ($action == 'addSignature') {
 			$urltogo = str_replace('__ID__', $result, $backtopage);
 			$urltogo = preg_replace('/--IDFORBACKTOPAGE--/', $id, $urltogo); // New method to autoselect project after a New on another form object creation
 			header("Location: " . $urltogo);
+			$object->setStatusCommon($user, 2);
 			exit;
 		}
 		else

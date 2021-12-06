@@ -547,9 +547,11 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 					$modelselected = $arraykeys[0];
 				}
 			}
-			print dolGetButtonAction($langs->trans('SendMail'), '', 'presend', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=presend&mode=init&model='.$modelselected.'&token='.newToken());
+			print dolGetButtonAction($langs->trans('Sign'), '', '', __DIR__ . '/envelope_signature.php'.'?id='.$object->id.'&action=presend&mode=init&token='.newToken(),  '', $object->status == 1);
 
-			print dolGetButtonAction($langs->trans('SendLetter'), '', 'lettersend', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=lettersend&mode=init&token='.newToken());
+			print dolGetButtonAction($langs->trans('SendMail'), '', 'presend', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=presend&mode=init&model='.$modelselected.'&token='.newToken(),  '', $object->status == 2);
+
+			print dolGetButtonAction($langs->trans('SendLetter'), '', 'lettersend', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=lettersend&mode=init&token='.newToken(), '', $object->status == 2);
 
 			print dolGetButtonAction($langs->trans('Modify'), '', 'default', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=edit&token='.newToken(), '', $permissiontoadd);
 
