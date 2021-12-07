@@ -63,3 +63,6 @@ Sender = Émetteur
 SenderService = Méthode d'envoi
 PublicNote = Note (publique)
 PrivateNote = Note (privée)
+Content = Contenu
+SendLetter = Envoyer une Lettre
+alreadySigned = Déjà Signé
