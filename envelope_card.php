@@ -225,13 +225,20 @@ if (empty($reshook)) {
 
 	// Action to update record
 	if ($action == 'update' && $permissiontoadd) {
-		$society_id            = GETPOST('fk_soc');
-//		$extsociety_id               = GETPOST('ext_society');
+		$society_id     = GETPOST('fk_soc');
+		$content        = GETPOST('content');
+		$note_private     = GETPOST('note_private');
+		$note_public        = GETPOST('note_public');
+		$label        = GETPOST('label');
 
-		// Initialize object
-		$object->fk_soc   = $society_id;
-//		$now           = dol_now();
 
+		$object->note_private  = $note_private;
+		$object->note_public  = $note_public;
+		$object->label        = $label;
+		$object->fk_soc         = $society_id;
+		$object->content        = $content;
+
+		$object->fk_user_creat = $user->id ? $user->id : 1;
 		if (!$error) {
 			$result = $object->update($user, false);
 			if ($result > 0) {
@@ -332,7 +339,7 @@ if ($action == 'create') {
 	print '<tr><td class="fieldrequired">'.$langs->trans("Society").'</td><td>';
 	$events = array();
 	$events[1] = array('method' => 'getContacts', 'url' => dol_buildpath('/core/ajax/contacts.php?showempty=1', 1), 'htmlname' => 'contact', 'params' => array('add-customer-contact' => 'disabled'));
-	print $form->select_company(GETPOST('fk_soc'), 'fk_soc', '', 'SelectThirdParty', 1, 0, $events, 0, 'minwidth300');
+	print $form->select_company(GETPOST('fromtype') == 'thirdparty' ? GETPOST('fromid') : GETPOST('fk_soc'), 'fk_soc', '', 'SelectThirdParty', 1, 0, $events, 0, 'minwidth300');
 	print ' <a href="'.DOL_URL_ROOT.'/societe/card.php?action=create&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create').'" target="_blank"><span class="fa fa-plus-circle valignmiddle paddingleft" title="'.$langs->trans("AddThirdParty").'"></span></a>';
 	print '</td></tr>';
 
@@ -396,6 +403,13 @@ if (($id || $ref) && $action == 'edit') {
 	// Common attributes
 	//include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_edit.tpl.php';
 
+	unset($object->fields['ref']);
+	unset($object->fields['model_pdf']);
+	unset($object->fields['last_main_doc']);
+	unset($object->fields['content']);
+	unset($object->fields['note_public']);
+	unset($object->fields['note_private']);
+	unset($object->fields['fk_soc']);
 
 	//Society -- Société
 	print '<tr><td class="fieldrequired">'.$langs->trans("Society").'</td><td>';
@@ -405,13 +419,16 @@ if (($id || $ref) && $action == 'edit') {
 	print ' <a href="'.DOL_URL_ROOT.'/societe/card.php?action=create&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create').'" target="_blank"><span class="fa fa-plus-circle valignmiddle paddingleft" title="'.$langs->trans("AddThirdParty").'"></span></a>';
 	print '</td></tr>';
 
-	// Other attributes
-	include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_edit.tpl.php';
+	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_edit.tpl.php';
 
+
+	//Content -- Contenue
 	print '<tr class="content_field"><td><label for="content">'.$langs->trans("Content").'</label></td><td>';
-	$doleditor = new DolEditor('content', GETPOST('content'), '', 90, 'dolibarr_notes', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
+	$doleditor = new DolEditor('content', $object->content, '', 90, 'dolibarr_notes', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
 	$doleditor->Create();
 	print '</td></tr>';
+
+
 
 	print '</table>';
 
