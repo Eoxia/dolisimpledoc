@@ -193,10 +193,20 @@ if (empty($reshook)) {
 		$object->fk_user_creat = $user->id ? $user->id : 1;
 
 		// Check parameters
-//		if ($extsociety_id < 0) {
-//			setEventMessages($langs->trans('ErrorFieldRequired', $langs->transnoentitiesnoconv('Society')), null, 'errors');
-//			$error++;
-//		}
+		switch (1) {
+			case $society_id == -1:
+				setEventMessages($langs->trans('ErrorFieldRequired', $langs->transnoentitiesnoconv('Society')), null, 'errors');
+				$error++;
+				break;
+			case empty($label):
+				setEventMessages($langs->trans('ErrorFieldRequired', $langs->transnoentitiesnoconv('Label')), null, 'errors');
+				$error++;
+				break;
+			case empty($content):
+				setEventMessages($langs->trans('ErrorFieldRequired', $langs->transnoentitiesnoconv('Content')), null, 'errors');
+				$error++;
+				break;
+		}
 
 		if (!$error) {
 			$result = $object->create($user, false);
