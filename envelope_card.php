@@ -658,12 +658,12 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 				}
 			}
 
-		$no_new_file = empty($file) && $allspecimen;
+		$needcreate = empty($file) || $allspecimen;
 
 		$forcebuilddoc = true;
 		if ($forcebuilddoc)    // If there is no default value for supplier invoice, we do not generate file, even if modelpdf was set by a manual generation
 		{
-			if ((!$no_new_file || !is_readable($file)) && method_exists($object, 'generateDocument'))
+			if (($needcreate || !is_readable($file)) && method_exists($object, 'generateDocument'))
 			{
 				$result = $object->generateDocument(GETPOST('model') ? GETPOST('model') : $object->model_pdf, $outputlangs, $hidedetails, $hidedesc, $hideref);
 				if ($result < 0) {
