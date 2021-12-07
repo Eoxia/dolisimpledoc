@@ -91,6 +91,7 @@ $backtopage = GETPOST('backtopage', 'alpha'); // Go back to a dedicated page
 $optioncss = GETPOST('optioncss', 'aZ'); // Option for the css output (always '' except when 'print')
 
 $fromtype = GETPOST('fromtype', 'alpha'); // element type
+$fromid = GETPOST('fromid', 'int'); //element id
 
 $id = GETPOST('id', 'int');
 
@@ -140,6 +141,12 @@ foreach ($object->fields as $key => $val) {
 	if (preg_match('/^(date|timestamp|datetime)/', $val['type'])) {
 		$search[$key.'_dtstart'] = dol_mktime(0, 0, 0, GETPOST('search_'.$key.'_dtstartmonth', 'int'), GETPOST('search_'.$key.'_dtstartday', 'int'), GETPOST('search_'.$key.'_dtstartyear', 'int'));
 		$search[$key.'_dtend'] = dol_mktime(23, 59, 59, GETPOST('search_'.$key.'_dtendmonth', 'int'), GETPOST('search_'.$key.'_dtendday', 'int'), GETPOST('search_'.$key.'_dtendyear', 'int'));
+	}
+}
+if(!empty($fromtype)) {
+	switch ($fromtype) {
+		case 'thirdparty':
+			$search['fk_soc'] = $fromid;
 	}
 }
 
@@ -387,10 +394,10 @@ if (!empty($fromtype)) {
 	switch ($fromtype) {
 		case 'invoice' :
 			$prehead = 'facture_prepare_head';
+			$head = $prehead($object);
+			print dol_get_fiche_head($head, 'envelopeList', $langs->trans("Envelope"), -1, $object->picto);
 			break;
 	}
-	$head = $prehead($object);
-	print dol_get_fiche_head($head, 'envelopeList', $langs->trans("Envelope"), -1, $object->picto);
 }
 
 // Example : Adding jquery code
@@ -463,7 +470,11 @@ print '<input type="hidden" name="sortorder" value="'.$sortorder.'">';
 print '<input type="hidden" name="page" value="'.$page.'">';
 print '<input type="hidden" name="contextpage" value="'.$contextpage.'">';
 
-$newcardbutton = dolGetButtonTitle($langs->trans('New'), '', 'fa fa-plus-circle', dol_buildpath('/doliletter/envelope_card.php', 1).'?action=create&backtopage='.urlencode($_SERVER['PHP_SELF']), '', $permissiontoadd);
+$fromurl = '';
+if (!empty($fromtype)) {
+	$fromurl = '&fromtype='.$fromtype.'&fromid='.$fromid;
+}
+$newcardbutton = dolGetButtonTitle($langs->trans('New'), '', 'fa fa-plus-circle', dol_buildpath('/doliletter/envelope_card.php', 1).'?action=create'.$fromurl.'&backtopage='.urlencode($_SERVER['PHP_SELF']), '', $permissiontoadd);
 
 print_barre_liste($title, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, $massactionbutton, $num, $nbtotalofrecords, 'object_'.$object->picto, 0, $newcardbutton, '', $limit, 0, 0, 1);
 

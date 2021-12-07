@@ -397,10 +397,11 @@ if (($id || $ref) && $action == 'edit') {
 	//include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_edit.tpl.php';
 
 
+	//Society -- Société
 	print '<tr><td class="fieldrequired">'.$langs->trans("Society").'</td><td>';
 	$events = array();
 	$events[1] = array('method' => 'getContacts', 'url' => dol_buildpath('/core/ajax/contacts.php?showempty=1', 1), 'htmlname' => 'contact', 'params' => array('add-customer-contact' => 'disabled'));
-	print $form->select_company(GETPOST('fk_soc'), 'fk_soc', '', 'SelectThirdParty', 1, 0, $events, 0, 'minwidth300');
+	print $form->select_company($object->fk_soc, 'fk_soc', '', 'SelectThirdParty', 1, 0, $events, 0, 'minwidth300');
 	print ' <a href="'.DOL_URL_ROOT.'/societe/card.php?action=create&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create').'" target="_blank"><span class="fa fa-plus-circle valignmiddle paddingleft" title="'.$langs->trans("AddThirdParty").'"></span></a>';
 	print '</td></tr>';
 
