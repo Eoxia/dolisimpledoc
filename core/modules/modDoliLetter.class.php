@@ -126,7 +126,7 @@ class modDoliLetter extends DolibarrModules {
 
 		// Array to add new pages in new tabs
 		$this->tabs = array();
-			$this->tabs[] = array('data'=>'thirdparty:+envelopeList:Envelope:@doliletter:1:/custom/doliletter/envelope_list.php?search_fk_soc=__ID__');
+			$this->tabs[] = array('data'=>'thirdparty:+envelopeList:Envelope:@doliletter:1:/custom/doliletter/envelope_list.php?fromid=__ID__&fromtype=thirdparty');
 			$this->tabs[] = array('data'=>'product:+envelopeList:Envelope:@doliletter:1:/custom/doliletter/envelope_list.php?fromid=__ID__&fromtype=product');
 			$this->tabs[] = array('data'=>'project:+envelopeList:Envelope:@doliletter:1:/custom/doliletter/envelope_list.php?fromid=__ID__&fromtype=project');
 			$this->tabs[] = array('data'=>'propal:+envelopeList:Envelope:@doliletter:1:/custom/doliletter/envelope_list.php?fromid=__ID__&fromtype=propal');
