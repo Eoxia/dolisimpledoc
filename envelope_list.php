@@ -284,11 +284,13 @@ if (isset($extrafields->attributes[$object->table_element]['label']) && is_array
 $parameters = array();
 $reshook = $hookmanager->executeHooks('printFieldListFrom', $parameters, $object); // Note that $action and $object may have been modified by hook
 $sql .= $hookmanager->resPrint;
+$sql .= " WHERE 1 = 1 ";
+
 if ($object->ismultientitymanaged == 1) {
-	$sql .= " WHERE t.entity IN (".getEntity($object->element).")";
-} else {
-	$sql .= " WHERE 1 = 1";
+	$sql .= " AND t.entity IN (".getEntity($object->element).")";
 }
+$sql .= " AND t.status > 0";
+
 foreach ($search as $key => $val) {
 	if (array_key_exists($key, $object->fields)) {
 		if ($key == 'status' && $search[$key] == -1) {

@@ -112,8 +112,8 @@ if (!$sortfield) {
 // Initialize technical objects
 $object = new Envelope($db);
 $extrafields = new ExtraFields($db);
-$diroutputmassaction = $conf->dolisimpledoc->dir_output.'/temp/massgeneration/'.$user->id;
-$hookmanager->initHooks(array('simpledocdocument', 'globalcard')); // Note that conf->hooks_modules contains array
+$diroutputmassaction = $conf->doliletter->dir_output.'/temp/massgeneration/'.$user->id;
+$hookmanager->initHooks(array('doliletterdocument', 'globalcard')); // Note that conf->hooks_modules contains array
 // Fetch optionals attributes and labels
 $extrafields->fetch_name_optionals_label($object->table_element);
 
@@ -121,10 +121,10 @@ $extrafields->fetch_name_optionals_label($object->table_element);
 include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be include, not include_once  // Must be include, not include_once. Include fetch and fetch_thirdparty but not fetch_optionals
 
 if ($id > 0 || !empty($ref)) {
-	$upload_dir = $conf->dolisimpledoc->multidir_output[$object->entity ? $object->entity : $conf->entity]."/simpledoc/".get_exdir(0, 0, 0, 1, $object);
+	$upload_dir = $conf->doliletter->multidir_output[$conf->entity ? $conf->entity : $conf->entity]."/envelope/".get_exdir(0, 0, 0, 1, $object);
 }
 
-$permissiontoadd = $user->rights->dolisimpledoc->simpledoc->write; // Used by the include of actions_addupdatedelete.inc.php and actions_linkedfiles.inc.php
+$permissiontoadd = $user->rights->doliletter->doliletter->write; // Used by the include of actions_addupdatedelete.inc.php and actions_linkedfiles.inc.php
 
 // Security check (enable the most restrictive one)
 //if ($user->socid > 0) accessforbidden();
@@ -171,7 +171,7 @@ if ($object->id) {
 
 	// Object card
 	// ------------------------------------------------------------
-	$linkback = '<a href="'.dol_buildpath('/enveloppe/envelope_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
+	$linkback = '<a href="'.dol_buildpath('/envelope/envelope_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
 
 	$morehtmlref = '<div class="refidno">';
 	/*
@@ -233,14 +233,14 @@ if ($object->id) {
 	print dol_get_fiche_end();
 
 	$modulepart = 'enveloppe';
-	//$permissiontoadd = $user->rights->enveloppe->simpledoc->write;
+	//$permissiontoadd = $user->rights->enveloppe->doliletter->write;
 	$permissiontoadd = 1;
-	//$permtoedit = $user->rights->enveloppe->simpledoc->write;
+	//$permtoedit = $user->rights->enveloppe->doliletter->write;
 	$permtoedit = 1;
 	$param = '&id='.$object->id;
 
-	//$relativepathwithnofile='simpledoc/' . dol_sanitizeFileName($object->id).'/';
-	$relativepathwithnofile = 'simpledoc/'.dol_sanitizeFileName($object->ref).'/';
+	//$relativepathwithnofile='doliletter/' . dol_sanitizeFileName($object->id).'/';
+	$relativepathwithnofile = 'doliletter/'.dol_sanitizeFileName($object->ref).'/';
 
 	include DOL_DOCUMENT_ROOT.'/core/tpl/document_actions_post_headers.tpl.php';
 } else {

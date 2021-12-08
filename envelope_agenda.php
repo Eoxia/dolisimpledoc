@@ -121,18 +121,18 @@ if (!$sortorder) {
 // Initialize technical objects
 $object = new Envelope($db);
 $extrafields = new ExtraFields($db);
-$diroutputmassaction = $conf->dolisimpledoc->dir_output.'/temp/massgeneration/'.$user->id;
-$hookmanager->initHooks(array('simpledocagenda', 'globalcard')); // Note that conf->hooks_modules contains array
+$diroutputmassaction = $conf->dolidoliletter->dir_output.'/temp/massgeneration/'.$user->id;
+$hookmanager->initHooks(array('doliletteragenda', 'globalcard')); // Note that conf->hooks_modules contains array
 // Fetch optionals attributes and labels
 $extrafields->fetch_name_optionals_label($object->table_element);
 
 // Load object
 include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be include, not include_once  // Must be include, not include_once. Include fetch and fetch_thirdparty but not fetch_optionals
 if ($id > 0 || !empty($ref)) {
-	$upload_dir = $conf->dolisimpledoc->multidir_output[$object->entity]."/".$object->id;
+	$upload_dir = $conf->dolidoliletter->multidir_output[$object->entity]."/".$object->id;
 }
 
-$permissiontoadd = $user->rights->dolisimpledoc->simpledoc->write; // Used by the include of actions_addupdatedelete.inc.php
+$permissiontoadd = $user->rights->dolidoliletter->simpledoc->write; // Used by the include of actions_addupdatedelete.inc.php
 
 // Security check (enable the most restrictive one)
 //if ($user->socid > 0) accessforbidden();

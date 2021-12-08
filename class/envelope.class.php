@@ -50,7 +50,7 @@ class Envelope extends CommonObject
 	 * @var int  Does this object support multicompany module ?
 	 * 0=No test on entity, 1=Test with field entity, 'field@table'=Test with link by field@table
 	 */
-	public $ismultientitymanaged = 0;
+	public $ismultientitymanaged = 1;
 
 	/**
 	 * @var int  Does object support extrafields ? 0=No, 1=Yes
@@ -299,8 +299,9 @@ class Envelope extends CommonObject
 	 * @return int             <0 if KO, >0 if OK
 	 */
 	public function delete(User $user, $notrigger = false) {
-		return $this->deleteCommon($user, $notrigger);
-		//return $this->deleteCommon($user, $notrigger, 1);
+		$this->setStatusCommon($user, 0);
+		$this->call_trigger('ENVELOPE_DELETE', $user);
+		//return $this->deleteCommon($user, $notrigger);
 	}
 
 	/**

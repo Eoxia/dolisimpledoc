@@ -68,6 +68,9 @@ $permissiontoadd    = $user->rights->doliletter->envelope->write;
 $permissiontodelete = $user->rights->doliletter->envelope->delete;
 if (!$permissiontoread) accessforbidden();
 
+$upload_dir = $conf->doliletter->multidir_output[$conf->entity ? $conf->entity : $conf->entity]."/envelope/".get_exdir(0, 0, 0, 1, $object);
+echo '<pre>'; print_r( $upload_dir ); echo '</pre>'; exit;
+
 /*
 /*
  * Actions
@@ -79,7 +82,7 @@ if ($reshook < 0) setEventMessages($hookmanager->error, $hookmanager->errors, 'e
 
 if (empty($backtopage) || ($cancel && empty($id))) {
 	if (empty($backtopage) || ($cancel && strpos($backtopage, '__ID__'))) {
-		$backtopage = dol_buildpath('/doliletter/preventionplan_attendants.php', 1).'?id='.($object->id > 0 ? $object->id : '__ID__');
+		$backtopage = dol_buildpath('/doliletter/envelope_signature.php', 1).'?id='.($object->id > 0 ? $object->id : '__ID__');
 	}
 }
 
@@ -125,10 +128,11 @@ if ($action == 'addAttendant') {
 // Action to add record
 if ($action == 'addSignature') {
 
-	$signatoryID  = GETPOST('signatoryID');
 	$request_body = file_get_contents('php://input');
 
-	$signatory->fetch($signatoryID);
+	$signatory->setSignatory($object->id,'user', array($user), 'E_SENDER');
+
+	$signatory->fetch($signatory->id);
 	$signatory->signature = $request_body;
 	$signatory->signature_date = dol_now('tzuser');
 
@@ -289,6 +293,7 @@ $head = envelopePrepareHead($object);
 print dol_get_fiche_head($head, 'envelopeSign', $langs->trans("Sign"), -1, "doliletter@doliletter");
 dol_strlen($object->label) ? $morehtmlref = ' - ' . $object->label : '';
 
+
 dol_banner_tab($object, 'ref', '', 0, 'ref', 'ref', $morehtmlref, '', 0, $morehtmlleft, $object->getLibStatut(5));
 
 print dol_get_fiche_end(); ?>
@@ -299,7 +304,7 @@ print dol_get_fiche_end(); ?>
 		<div class="notice-title"><?php echo $langs->trans('DisclaimerSignatureTitle') ?></div>
 		<div class="notice-subtitle"><?php echo $langs->trans("PreventionPlanMustBeValidatedToSign") ?></div>
 	</div>
-	<a class="butAction" style="width = 100%;margin-right:0" href="<?php echo DOL_URL_ROOT ?>/custom/doliletter/preventionplan_card.php?id=<?php echo $id ?>"><?php echo $langs->trans("GoToValidate") ?></a>;
+	<a class="butAction" style="width = 100%;margin-right:0" href="<?php echo DOL_URL_ROOT ?>/custom/doliletter/envelope_signature.php?id=<?php echo $id ?>"><?php echo $langs->trans("GoToValidate") ?></a>;
 </div>
 <?php endif; ?>
 <div class="noticeSignatureSuccess wpeo-notice notice-success hidden">
@@ -310,7 +315,7 @@ print dol_get_fiche_end(); ?>
 		</div>
 		<?php
 		if ($signatory->checkSignatoriesSignatures($object->id)) {
-			print '<a class="butAction" style="width = 100%;margin-right:0" href="'.DOL_URL_ROOT . '/custom/doliletter/preventionplan_card.php?id='.$id.'">'. $langs->trans("GoToLock").'</a>';
+			print '<a class="butAction" style="width = 100%;margin-right:0" href="'.DOL_URL_ROOT . '/custom/doliletter/envelope_signature.php?id='.$id.'">'. $langs->trans("GoToLock").'</a>';
 		}
 		?>
 	</div>
@@ -340,7 +345,7 @@ if ((empty($action) || ($action != 'create' && $action != 'edit'))) {
 	print '<td class="center">' . $langs->trans("SignatureLink") . '</td>';
 	print '<td class="center">' . $langs->trans("SendMailDate") . '</td>';
 	print '<td class="center">' . $langs->trans("SignatureDate") . '</td>';
-	print '<td class="center">' . $langs->trans("Status") . '</td>';
+	//print '<td class="center">' . $langs->trans("Status") . '</td>';
 	print '<td class="center">' . $langs->trans("ActionsSignature") . '</td>';
 	print '<td class="center">' . $langs->trans("Signature") . '</td>';
 	print '</tr>';
@@ -360,8 +365,8 @@ if ((empty($action) || ($action != 'create' && $action != 'edit'))) {
 	print dol_print_date($element->last_email_sent_date, 'dayhour');
 	print '</td><td class="center">';
 	print dol_print_date($element->signature_date, 'dayhour');
-	print '</td><td class="center">';
-	print $element->getLibStatut(5);
+	//print '</td><td class="center">';
+	//print $element->getLibStatut(5);
 	print '</td>';
 
 	print '<td class="center">';

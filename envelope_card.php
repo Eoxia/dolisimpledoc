@@ -88,7 +88,7 @@ foreach ($object->fields as $key => $val) {
 if (empty($action) && empty($id) && empty($ref)) {
 	$action = 'view';
 }
-
+$upload_dir = $conf->doliletter->multidir_output[$conf->entity ? $conf->entity : $conf->entity]."/envelope/".get_exdir(0, 0, 0, 1, $object);
 // Load object
 include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be include, not include_once.
 
@@ -211,7 +211,7 @@ if (empty($reshook)) {
 		if (!$error) {
 			$result = $object->create($user, false);
 			if ($result > 0) {
-				$signatory->setSignatory($object->id,'user', array($user), 'E_SENDER');
+				//$signatory->setSignatory($object->id,'user', array($user), 'E_SENDER');
 
 //				if ($extresponsible_id > 0) {
 //					$signatory->setSignatory($object->id,'socpeople', array($extresponsible_id), 'PP_EXT_SOCIETY_RESPONSIBLE');
@@ -265,6 +265,14 @@ if (empty($reshook)) {
 		}  else {
 			$action = 'edit';
 		}
+	}
+
+	if ($action == 'confirm_delete' && GETPOST("confirm") == "yes")
+	{
+		$object->setStatusCommon($user, 0);
+		$urltogo = DOL_URL_ROOT . '/custom/doliletter/envelope_list.php';
+		header("Location: " . $urltogo);
+		exit;
 	}
 
 	// Actions when linking object each other
