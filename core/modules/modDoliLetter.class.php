@@ -213,6 +213,9 @@ class modDoliLetter extends DolibarrModules {
 		// Main menu entries to add
 		$this->menu = array();
 		$r          = 0;
+
+		$langs->load("doliletter@doliletter");
+
 		// Add here entries to declare new menus
 		$this->menu[$r++] = array(
 			'fk_menu'=>'', // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
@@ -233,7 +236,7 @@ class modDoliLetter extends DolibarrModules {
 		$this->menu[$r++] = array(
 			'fk_menu'=>'fk_mainmenu=doliletter', // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type'=>'left', // This is a Top menu entry
-			'titre'=>$langs->trans('DoliLetterIndex'),
+			'titre'=> '<i class="fas fa-home"></i> ' . $langs->trans('DoliLetterIndex'),
 			'mainmenu'=>'doliletter',
 			'leftmenu'=>'doliletterindex',
 			'url'=>'/doliletter/doliletterindex.php',
@@ -244,11 +247,11 @@ class modDoliLetter extends DolibarrModules {
 			'target'=>'',
 			'user'=>2, // 0=Menu for internal users, 1=external users, 2=both
 		);
-
+	//echo '<pre>'; print_r( $langs ); echo '</pre>'; exit;
 		$this->menu[$r++]=array(
 			'fk_menu'=>'fk_mainmenu=doliletter',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type'=>'left', // This is a Left menu entry
-			'titre'=>$langs->trans('DoliLetterCreate'),
+			'titre'=> '<i class="fas fa-paper-plane"></i> ' . $langs->trans('DoliLetterCreate'),
 			'mainmenu'=>'doliletter',
 			'leftmenu'=>'enveloppe_card',
 			'url'=>'/doliletter/envelope_card.php?action=create',
@@ -263,7 +266,7 @@ class modDoliLetter extends DolibarrModules {
 		$this->menu[$r++]=array(
 			'fk_menu'=>'fk_mainmenu=doliletter',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type'=>'left', // This is a Left menu entry
-			'titre'=>'<i class="fas fa-list"></i>  ' . $langs->trans('DoliLetterList'),
+			'titre'=>'<i class="fas fa-list"></i> '. $langs->trans('DoliLetterList'),
 			'mainmenu'=>'doliletter',
 			'leftmenu'=>'enveloppe_list',
 			'url'=>'/doliletter/envelope_list.php',
