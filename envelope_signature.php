@@ -69,7 +69,6 @@ $permissiontodelete = $user->rights->doliletter->envelope->delete;
 if (!$permissiontoread) accessforbidden();
 
 $upload_dir = $conf->doliletter->multidir_output[$conf->entity ? $conf->entity : $conf->entity]."/envelope/".get_exdir(0, 0, 0, 1, $object);
-echo '<pre>'; print_r( $upload_dir ); echo '</pre>'; exit;
 
 /*
 /*
