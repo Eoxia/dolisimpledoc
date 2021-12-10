@@ -44,6 +44,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/doleditor.class.php';
 require_once './class/envelope.class.php';
 require_once './core/modules/doliletter/mod_envelope_standard.php';
 require_once './lib/doliletter_envelope.lib.php';
+require_once './lib/doliletter.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
 
 global $db, $conf, $langs, $user, $hookmanager;
