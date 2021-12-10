@@ -238,13 +238,9 @@ if (empty($reshook)) {
 	if ($action == 'update' && $permissiontoadd) {
 		$society_id     = GETPOST('fk_soc');
 		$content        = GETPOST('content');
-		$note_private     = GETPOST('note_private');
-		$note_public        = GETPOST('note_public');
 		$label        = GETPOST('label');
 
 
-		$object->note_private  = $note_private;
-		$object->note_public  = $note_public;
 		$object->label        = $label;
 		$object->fk_soc         = $society_id;
 		$object->content        = $content;
