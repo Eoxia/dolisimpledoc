@@ -34,7 +34,7 @@ DoliLetterSetup = Configuration du module DoliLetter
 
 About = À propos
 DoliLetterAbout = À propos de DoliLetter
-
+DoliSimpleDocArea = Bienvenue dans le module DoliLetter :)
 
 #
 # DoliLetter

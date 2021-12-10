@@ -94,36 +94,13 @@ $now = dol_now();
 $form = new Form($db);
 //$formfile = new FormFile($db);
 
-llxHeader("", $langs->trans("DoliSimpleDocArea"));
+llxHeader("", $langs->trans("DoliLetterArea"));
 
-print load_fiche_titre($langs->trans("DoliSimpleDocArea"), '', 'doliletter.png@doliletter');
+print load_fiche_titre($langs->trans("DoliSimpleDocArea"), '', 'object_doliletter64px@doliletter');
 
 
-print "
-<h1>DIGIRISKDOLIBARR FOR <a href='https://www.dolibarr.org'>DOLIBARR ERP CRM</a></h1>
-<h2>Fonctionnalités</h2>
-<p>Gérez les risques de votre entreprise et créez votre document unique en toute simplicité</p>
-<p>Other modules are available on <a href='https://www.dolistore.com'>Dolistore.com</a>.</p>
-<h2>Traduction</h2>
-<p>La traduction de ce module peut être définie manuellement en éditant les fichiers dans le dossier <em>langs</em>.</p>
-<h2>Installation</h2>
-<h3>Méthode 1 :</h3>
-<ul>
-<li>Depuis le menu 'Déployer/Installer un module externe' de Dolibarr : </li>
-<li>Glisser l\'archive ZIP \'module_digiriskdolibarr-1.0.0\' et cliquer sur 'SEND'</li>
-<li>Activer le module dans la liste des Modules/Applications installés</li>
-</ul>
-<h3>Méthode 2 :</h3>
-<ul>
-<li>Dans le dossier 'dolibarr/htdocs/custom' copier la ligne suivante :
-<pre><code>git clone https://github.com/Evarisk/digiriskdolibarr.git digiriskdolibarr</code></pre></li>
-</ul>
-<h2>Licenses</h2>
-<p>Ce module est publié sous licence GPLv3.</p>
-<h3>Documentation</h3>
-<p>La documentation de ce module est accessible sur la page suivante :
-<a href='https://wiki.dolibarr.org/index.php/Module_DigiriskDolibarr'>https://wiki.dolibarr.org/index.php/Module_DigiriskDolibarr</a></p>";
-
+//Todo: Index page view
+print "";
 
 
 /* BEGIN MODULEBUILDER DRAFT MYOBJECT

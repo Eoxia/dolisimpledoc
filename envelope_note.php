@@ -134,7 +134,7 @@ if ($id > 0 || !empty($ref)) {
 
 	$head = envelopePrepareHead($object);
 
-	print dol_get_fiche_head($head, 'note', '', -1, $object->picto);
+	print dol_get_fiche_head($head, 'note', '', -1, "doliletter@doliletter");
 
 	// Object card
 	// ------------------------------------------------------------

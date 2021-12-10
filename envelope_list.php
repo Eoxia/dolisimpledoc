@@ -477,9 +477,9 @@ if (!empty($fromtype)) {
 	$fromurl = '&fromtype='.$fromtype.'&fromid='.$fromid;
 }
 $newcardbutton = dolGetButtonTitle($langs->trans('New'), '', 'fa fa-plus-circle', dol_buildpath('/doliletter/envelope_card.php', 1).'?action=create'.$fromurl.'&backtopage='.urlencode($_SERVER['PHP_SELF']), '', $permissiontoadd);
-
+$object->picto ='doliletter32px@doliletter';
 print_barre_liste($title, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, $massactionbutton, $num, $nbtotalofrecords, 'object_'.$object->picto, 0, $newcardbutton, '', $limit, 0, 0, 1);
-
+$object->picto ='doliletter16px@doliletter';
 // Add code for pre mass action (confirmation or email presend form)
 $topicmail = "SendEnvelopeRef";
 $modelmail = "document";
