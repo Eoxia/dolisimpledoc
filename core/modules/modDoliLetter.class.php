@@ -39,7 +39,7 @@ class modDoliLetter extends DolibarrModules {
 
 		$this->db = $db;
 
-		$this->numero          = 436360; // TODO Go on page https://wiki.dolibarr.org/index.php/List_of_modules_id to reserve an id number for your module
+		$this->numero          = 436360;
 		$this->rights_class    = 'doliletter';
 		$this->family          = '';
 		$this->module_position = '';
@@ -51,7 +51,7 @@ class modDoliLetter extends DolibarrModules {
 		$this->editor_url      = 'https://eoxia.com/';
 		$this->version         = '1.0.0';
 		$this->const_name      = 'MAIN_MODULE_'.strtoupper($this->name);
-		$this->picto           = 'doliletter@doliletter';
+		$this->picto           = 'doliletter256px@doliletter';
 
 		$this->module_parts = array(
 			// Set this to 1 if module has its own trigger directory (core/triggers)
