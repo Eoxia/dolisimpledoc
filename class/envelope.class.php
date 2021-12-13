@@ -99,8 +99,8 @@ class Envelope extends CommonObject
 		'ref_ext'        => array('type'=>'varchar(128)', 'label'=>'RefExt', 'enabled'=>'1', 'position'=>20, 'notnull'=>0, 'visible'=>0,),
 		'entity'         => array('type'=>'integer', 'label'=>'Entity', 'enabled'=>'1', 'position'=>30, 'notnull'=>1, 'visible'=>0,),
 		'date_creation'  => array('type'=>'datetime', 'label'=>'DateCreation', 'enabled'=>'1', 'position'=>40, 'notnull'=>1, 'visible'=>2,),
-		'tms'            => array('type'=>'timestamp', 'label'=>'DateModification', 'enabled'=>'1', 'position'=>50, 'notnull'=>0, 'visible'=>-2,),
-		'import_key'     => array('type'=>'integer', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>60, 'notnull'=>1, 'visible'=>-2,),
+		'tms'            => array('type'=>'timestamp', 'label'=>'DateModification', 'enabled'=>'1', 'position'=>50, 'notnull'=>0, 'visible'=>0,),
+		'import_key'     => array('type'=>'integer', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>60, 'notnull'=>1, 'visible'=>0,),
 		'status'         => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>70, 'notnull'=>1, 'default' => 1, 'visible'=>0, 'index'=>1,),
 		'note_public'    => array('type'=>'textarea', 'label'=>'PublicNote', 'enabled'=>'1', 'position'=>80, 'notnull'=>0, 'visible'=>0,),
 		'note_private'   => array('type'=>'textarea', 'label'=>'PrivateNote', 'enabled'=>'1', 'position'=>90, 'notnull'=>0, 'visible'=>0,),
@@ -110,7 +110,7 @@ class Envelope extends CommonObject
 		'document_url'   => array('type'=>'varchar(255)', 'label'=>'DocumentUrl', 'enabled'=>'1', 'position'=>150, 'notnull'=>0, 'visible'=>0,),
 		'fk_soc'         => array('type'=>'integer', 'label'=>'ThirdParty', 'enabled'=>'1', 'position'=>160, 'notnull'=>1, 'visible'=>1,),
 		'fk_user_creat'  => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserAuthor', 'enabled'=>'1', 'position'=>180, 'notnull'=>1, 'visible'=>-2, 'foreignkey'=>'user.rowid',),
-		'fk_user_modif'  => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserModif', 'enabled'=>'1', 'position'=>190, 'notnull'=>-1, 'visible'=>-2,),
+		'fk_user_modif'  => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserModif', 'enabled'=>'1', 'position'=>190, 'notnull'=>-1, 'visible'=>0,),
 	);
 
 	public $rowid;

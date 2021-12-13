@@ -530,7 +530,14 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	$linkback = '<a href="'.dol_buildpath('/doliletter/envelope_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
 
 	$morehtmlref = '<div class="refidno">';
-
+//correct thirdparty display
+	$morehtmlref .=  '<tr><td class="titlefield">';
+	$morehtmlref .=  $langs->trans("ThirdParty");
+	$morehtmlref .= ' : ';
+	$morehtmlref .=  '</td>';
+	$morehtmlref .=  '<td>';
+	$morehtmlref .=  $thirdparty->getNomUrl(1);
+	$morehtmlref .=  '</td></tr>';
 	$morehtmlref .= '</div>';
 
 
@@ -544,13 +551,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 
 
-	//correct thirdparty display
-	print '<tr><td class="titlefield">';
-	print $langs->trans("ThirdParty");
-	print '</td>';
-	print '<td>';
-	print $thirdparty->getNomUrl(1);
-	print '</td></tr>';
+
 
 	print '<tr><td class="titlefield">';
 	print $langs->trans("Content");
