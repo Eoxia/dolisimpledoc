@@ -129,7 +129,7 @@ if ($action == 'addSignature') {
 
 	$request_body = file_get_contents('php://input');
 
-	$signatory->setSignatory($object->id,'user', array($user), 'E_SENDER');
+	$signatory->setSignatory($object->id,'user', array($user->id), 'E_SENDER');
 
 	$signatory->fetch($signatory->id);
 	$signatory->signature = $request_body;
@@ -146,6 +146,7 @@ if ($action == 'addSignature') {
 			$urltogo = preg_replace('/--IDFORBACKTOPAGE--/', $id, $urltogo); // New method to autoselect project after a New on another form object creation
 			header("Location: " . $urltogo);
 			$object->setStatusCommon($user, 2);
+			$object->call_trigger('ENVELOPE_SIGN', $user);
 			exit;
 		}
 		else

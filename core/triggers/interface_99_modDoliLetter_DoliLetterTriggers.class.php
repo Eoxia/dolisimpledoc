@@ -129,6 +129,45 @@ class InterfaceDoliLetterTriggers extends DolibarrTriggers
 
 				$actioncomm->create($user);
 				break;
+			case 'ENVELOPE_LETTER' :
+				//echo '<pre>'; print_r( $object ); echo '</pre>'; exit;
+				require_once DOL_DOCUMENT_ROOT.'/contact/class/contact.class.php';
+				$contact_temp = new Contact($this->db);
+				require_once __DIR__ . "/../../class/envelope_email.class.php";
+				$now = dol_now();
+				$mail = new EnvelopeEmail($this->db);
+				$mail->fk_envelope = $object->id;
+				$mail->date_creation = $mail->db->idate($now);
+				$mail->status = 1;
+				$mail->fk_user = $user->id;
+				$mail->sender_fullname = $user->firstname . ' ' . $user->lastname;
+				foreach($object->sendtoid as $contactid)
+					{
+					$mail->fk_socpeople = $contactid;
+					$contact_temp->fetch($contactid);
+					$mail->recipient_email = $contact_temp->email;
+					$mail->contact_fullname = $contact_temp->firstname . ' ' . $contact_temp->lastname;
+					$mailtemp = $mail;
+					$result = $mailtemp->create($user);
+				}
+
+				dol_syslog("Trigger '".$this->name."' for action '$action' launched by ".__FILE__.". id=".$object->id);
+				require_once DOL_DOCUMENT_ROOT.'/comm/action/class/actioncomm.class.php';
+				$now = dol_now();
+				$actioncomm = new ActionComm($this->db);
+
+				$actioncomm->elementtype = 'envelope@doliletter';
+				$actioncomm->code        = 'AC_ENVELOPE_LETTER';
+				$actioncomm->type_code   = 'AC_OTH_AUTO';
+				$actioncomm->label       = $langs->trans('EnvelopeSendbyLetterTrigger');
+				$actioncomm->datep       = $now;
+				$actioncomm->fk_element  = $object->id;
+				$actioncomm->userownerid = $user->id;
+				$actioncomm->percentage  = -1;
+
+				$actioncomm->create($user);
+				break;
+
 			case 'ENVELOPE_CREATE' :
 				dol_syslog("Trigger '".$this->name."' for action '$action' launched by ".__FILE__.". id=".$object->id);
 				require_once DOL_DOCUMENT_ROOT.'/comm/action/class/actioncomm.class.php';
@@ -175,6 +214,24 @@ class InterfaceDoliLetterTriggers extends DolibarrTriggers
 				$actioncomm->code        = 'AC_ENVELOPE_DELETE';
 				$actioncomm->type_code   = 'AC_OTH_AUTO';
 				$actioncomm->label       = $langs->trans('EnvelopeDeleteTrigger');
+				$actioncomm->datep       = $now;
+				$actioncomm->fk_element  = $object->id;
+				$actioncomm->userownerid = $user->id;
+				$actioncomm->percentage  = -1;
+
+				$actioncomm->create($user);
+				break;
+			case 'ENVELOPE_SIGN' :
+
+				dol_syslog("Trigger '".$this->name."' for action '$action' launched by ".__FILE__.". id=".$object->id);
+				require_once DOL_DOCUMENT_ROOT.'/comm/action/class/actioncomm.class.php';
+				$now = dol_now();
+				$actioncomm = new ActionComm($this->db);
+
+				$actioncomm->elementtype = 'envelope@doliletter';
+				$actioncomm->code        = 'AC_ENVELOPE_SIGN';
+				$actioncomm->type_code   = 'AC_OTH_AUTO';
+				$actioncomm->label       = $langs->trans('EnvelopeSignTrigger');
 				$actioncomm->datep       = $now;
 				$actioncomm->fk_element  = $object->id;
 				$actioncomm->userownerid = $user->id;
