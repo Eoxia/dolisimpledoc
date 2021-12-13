@@ -291,6 +291,28 @@ if (empty($reshook)) {
 	$trackid = 'envelope'.$object->id;
 
 	include DOL_DOCUMENT_ROOT.'/core/actions_sendmails.inc.php';
+
+	if ($action == 'lettersend') {
+		$error = 0;
+		$receiver = GETPOST('receiver');
+
+		if (!is_array($receiver)) {
+			if ($receiver == '-1') {
+				$receiver = array();
+				$error++;
+			} else {
+				$receiver = array($receiver);
+			}
+		}
+		foreach ($receiver as $receiving) {
+			$object->sendtoid[] = $receiving;
+		}
+		if (!$error) {
+
+			$object->call_trigger('ENVELOPE_LETTER', $user);
+		}
+		unset($action);
+	}
 }
 
 
@@ -553,7 +575,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	print dol_get_fiche_end();
 
 	// Buttons for actions
-	if ($action != 'presend' && $action != 'editline') {
+	if ($action != 'presend' && $action != 'editline' && $action != 'letterpresend') {
 		print '<div class="tabsAction">'."\n";
 		$parameters = array();
 		$reshook = $hookmanager->executeHooks('addMoreActionsButtons', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
@@ -584,7 +606,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 			print dolGetButtonAction($langs->trans('SendMail'), '', 'presend', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=presend&mode=init&model='.$modelselected.'&token='.newToken(),  '', $object->status == 2);
 
-			print dolGetButtonAction($langs->trans('SendLetter'), '', 'lettersend', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=lettersend&mode=init&token='.newToken(), '', $object->status == 2);
+			print dolGetButtonAction($langs->trans('SendLetter'), '', 'letterpresend', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=letterpresend&mode=init&token='.newToken(), '', $object->status == 2);
 
 			print dolGetButtonAction($langs->trans('Modify'), '', 'default', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=edit&token='.newToken(), '', $permissiontoadd);
 
@@ -595,7 +617,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	}
 
 
-	if ($action != 'presend' && $action != 'lettersend') {
+	if ($action != 'presend' && $action != 'letterpresend') {
 		print '<div class="fichecenter"><div class="fichehalfleft">';
 		print '<a name="builddoc"></a>'; // ancre
 
@@ -818,10 +840,30 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 		print dol_get_fiche_end();
 	}
-	if ($action == 'lettersend')
+	if ($action == 'letterpresend')
 	{
-		//form for contacts
-		//save -> to lettersave action, which creates the object and saves it in DB
+		$contact_list= array();
+
+
+
+		print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
+		print '<input type="hidden" name="token" value="'.newToken().'">';
+		print '<input type="hidden" name="action" value="lettersend">';
+		print '<input type="hidden" name="id" value="'.$object->id.'">';
+		//Combobox multiple selection for contacts saved as receivers
+		//button save -> to lettersend action
+		print '<tr class="oddeven"><td>'.$langs->trans("receivers").'</td><td>';
+		print $form->selectcontacts($object->fk_soc, '', 'receiver', 0, '', '', 0, 'quatrevingtpercent', false, 0, array(), false, 'multiple');
+		print '</td></tr>';
+		print '</table>'."\n";
+
+
+		print '<input type="submit" class="button" name="lettersend" value="'.dol_escape_htmltag($langs->trans("Send")).'">';
+		print '&nbsp; ';
+		print '<input type="'.($backtopage ? "submit" : "button").'" class="button button-cancel" name="cancel" value="'.dol_escape_htmltag($langs->trans("Cancel")).'"'.($backtopage ? '' : ' onclick="javascript:history.go(-1)"').'>'; // Cancel for create does not post form if we don't know the backtopage
+		print '</div>';
+
+		print '</form>';
 	}
 }
 
