@@ -50,6 +50,8 @@ require_once DOL_DOCUMENT_ROOT.'/ticket/class/ticket.class.php';
 require_once DOL_DOCUMENT_ROOT. '/comm/propal/class/propal.class.php';
 require_once DOL_DOCUMENT_ROOT. '/projet/class/project.class.php';
 require_once DOL_DOCUMENT_ROOT. '/commande/class/commande.class.php';
+require_once DOL_DOCUMENT_ROOT. '/contrat/class/contrat.class.php';
+require_once DOL_DOCUMENT_ROOT. '/product/class/product.class.php';
 
 global $db, $conf, $langs, $user, $hookmanager;
 
@@ -67,10 +69,12 @@ $backtopage  = GETPOST('backtopage', 'alpha');
 
 // Initialize technical objects
 $object         = new Envelope($db);
+$contracttemp   = new Contrat($db);
 $invoicetemp    = new Facture($db);
-$commandetemp      = new Commande($db);
+$commandetemp   = new Commande($db);
 $projecttemp    = new Project($db);
 $tickettemp     = new Ticket($db);
+$producttemp    = new Product($db);
 $propaltemp     = new Propal($db);
 $refEnvelopeMod = new $conf->global->DOLILETTER_ENVELOPE_ADDON();
 $extrafields    = new ExtraFields($db);
@@ -431,6 +435,27 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	//to do: trans file for titles
 	$object->fetchObjectLinked();
 
+	// Propositions commerciales
+	print '</p><p>';
+	print '<p>';
+	if (is_countable($object->linkedObjectsIds['contract'])) {
+		$nbcontract = count($object->linkedObjectsIds['contract']);
+	}else {
+		$nbcontract = 0;
+	}
+	print '<div class="titre inline-block"> Contrats <span class="opacitymedium colorblack paddingleft">'.$nbcontract.'</span></div><br>';
+	print '<table class="border tableforfield" width="100%">';
+	if (!empty($object->linkedObjectsIds['contract'])) {
+		foreach ($object->linkedObjectsIds['contract'] as $contractid) {
+			print '<tr>';
+			$contracttemp->fetch($contractid);
+			print $contracttemp->getNomUrl(1);
+			print '</tr><br>';
+		}
+	} else print 'nothing to see here';
+	print '</table>';
+	print '</p>';
+
 	// Factures
 	print '<p>';
 	if (is_countable($object->linkedObjectsIds['facture'])) {
@@ -453,8 +478,8 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 	// Commandes
 	print '</p><p>';
-	if (is_countable($object->linkedObjectsIds['facture'])) {
-		$nbcommandes = count($object->linkedObjectsIds['facture']);
+	if (is_countable($object->linkedObjectsIds['commande'])) {
+		$nbcommandes = count($object->linkedObjectsIds['commande']);
 	} else {
 		$nbcommandes = 0;
 	}
@@ -474,18 +499,39 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	print '</p><p>';
 
 	print '<p>';
-	if (is_countable($object->linkedObjectsIds['facture'])) {
-		$nbprojects = count($object->linkedObjectsIds['facture']);
+	if (is_countable($object->linkedObjectsIds['project'])) {
+		$nbprojects = count($object->linkedObjectsIds['project']);
 	} else {
 		$nbprojects = 0;
 	}
-	print '<div class="titre inline-block">Projets<span class="opacitymedium colorblack paddingleft">' . $nbprojets . '</span></div><br>';
+	print '<div class="titre inline-block">Projets<span class="opacitymedium colorblack paddingleft">' . $nbprojects . '</span></div><br>';
 	print '<table class="border tableforfield" width="100%">';
 	if (!empty($object->linkedObjectsIds['project'])) {
 		foreach ($object->linkedObjectsIds['project'] as $projectid) {
 			print '<tr>';
 			$projecttemp->fetch($projectid);
 			print $projecttemp->getNomUrl(1);
+			print '</tr>';
+		}
+	} else print 'nothing to see here';
+	print '</table>';
+
+	// Product
+	print '</p><p>';
+
+	print '<p>';
+	if (is_countable($object->linkedObjectsIds['product'])) {
+		$nbproducts = count($object->linkedObjectsIds['product']);
+	} else {
+		$nbproducts = 0;
+	}
+	print '<div class="titre inline-block">Produit<span class="opacitymedium colorblack paddingleft">' . $nbproducts . '</span></div><br>';
+	print '<table class="border tableforfield" width="100%">';
+	if (!empty($object->linkedObjectsIds['product'])) {
+		foreach ($object->linkedObjectsIds['product'] as $productid) {
+			print '<tr>';
+			$producttemp->fetch($productid);
+			print $producttemp->getNomUrl(1);
 			print '</tr><br>';
 		}
 	} else print 'nothing to see here';
@@ -494,8 +540,8 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	// Tickets
 	print '</p><p>';
 	print '<p>';
-	if (is_countable($object->linkedObjectsIds['facture'])) {
-		$nbtickets = count($object->linkedObjectsIds['facture']);
+	if (is_countable($object->linkedObjectsIds['ticket'])) {
+		$nbtickets = count($object->linkedObjectsIds['ticket']);
 	}else {
 		$nbtickets = 0;
 	}
@@ -514,8 +560,8 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	// Propositions commerciales
 	print '</p><p>';
 	print '<p>';
-	if (is_countable($object->linkedObjectsIds['facture'])) {
-		$nbpropal = count($object->linkedObjectsIds['facture']);
+	if (is_countable($object->linkedObjectsIds['propal'])) {
+		$nbpropal = count($object->linkedObjectsIds['propal']);
 	}else {
 		$nbpropal = 0;
 	}
