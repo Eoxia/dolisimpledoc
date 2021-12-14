@@ -24,16 +24,16 @@
 /**
  * Class for WorkUnit
  */
+require_once __DIR__ . "/envelope_sending.class.php";
 class EnvelopeLetter extends EnvelopeSending
 {
-
 	/**
 	 * @var int  Does this object support multicompany module ?
 	 * 0=No test on entity, 1=Test with field entity, 'field@table'=Test with link by field@table
 	 */
 	public $element = 'EnvelopeLetter';
 
-	public $table_element = 'doliletter_envelope';
+	public $table_element = 'doliletter_letter_sending';
 
 
 	/**
@@ -46,7 +46,7 @@ class EnvelopeLetter extends EnvelopeSending
 		'fk_user'       => array('type'=>'integer', 'label'=>'fk_user', 'enabled'=>'1', 'position'=>20, 'notnull'=>0, 'visible'=>0,),
 		'sender_fullname'        => array('type'=>'varchar(255)', 'label'=>'sender_fullname', 'enabled'=>'1', 'position'=>30, 'notnull'=>1, 'visible'=>-1,),
 		'contact_fullname'        => array('type'=>'varchar(255)', 'label'=>'contact_fullname', 'enabled'=>'1', 'position'=>30, 'notnull'=>1, 'visible'=>-1,),
-		'recipient_adress' => array('type'=>'varchar(255)', 'label'=>'recipient_adress', 'enabled'=>'1', 'position'=>40, 'notnull'=>1, 'visible'=>-2,),
+		'recipient_address' => array('type'=>'varchar(255)', 'label'=>'recipient_adress', 'enabled'=>'1', 'position'=>40, 'notnull'=>1, 'visible'=>-2,),
 		'date_creation'           => array('type'=>'datetime', 'label'=>'tms', 'enabled'=>'1', 'position'=>50, 'notnull'=>0, 'visible'=>-2,),
 		'status'        => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>70, 'notnull'=>1, 'default' => 1, 'visible'=>1, 'index'=>1,),
 		'letter_code'        => array('type'=>'varchar(255) ', 'label'=>'letter_code', 'enabled'=>'1', 'position'=>70, 'notnull'=>1, 'default' => 1, 'visible'=>1, 'index'=>1,),
@@ -56,7 +56,7 @@ class EnvelopeLetter extends EnvelopeSending
 	public $fk_envelope;
 	public $fk_socpeople;
 	public $contact_fullname;
-	public $recipient_adress;
+	public $recipient_address;
 	public $date_creation;
 	public $status;
 	public $letter_code;

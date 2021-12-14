@@ -308,13 +308,11 @@ if (empty($reshook)) {
 			$object->sendtoid[] = $receiving;
 		}
 		if (!$error) {
-
 			$object->call_trigger('ENVELOPE_LETTER', $user);
 		}
 		unset($action);
 	}
 }
-
 
 
 
@@ -852,13 +850,13 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<input type="hidden" name="action" value="lettersend">';
 		print '<input type="hidden" name="id" value="'.$object->id.'">';
 		//Combobox multiple selection for contacts saved as receivers
-		//button save -> to lettersend action
 		print '<tr class="oddeven"><td>'.$langs->trans("receivers").'</td><td>';
-		print $form->selectcontacts($object->fk_soc, '', 'receiver', 0, '', '', 0, 'quatrevingtpercent', false, 0, array(), false, 'multiple');
+		print $form->selectcontacts($object->fk_soc, '', 'receiver[]', 0, '', '', 0, 'quatrevingtpercent', false, 0, array(), false, 'multiple', 'receiver');
 		print '</td></tr>';
 		print '</table>'."\n";
 
 
+		//button save -> to lettersend action
 		print '<input type="submit" class="button" name="lettersend" value="'.dol_escape_htmltag($langs->trans("Send")).'">';
 		print '&nbsp; ';
 		print '<input type="'.($backtopage ? "submit" : "button").'" class="button button-cancel" name="cancel" value="'.dol_escape_htmltag($langs->trans("Cancel")).'"'.($backtopage ? '' : ' onclick="javascript:history.go(-1)"').'>'; // Cancel for create does not post form if we don't know the backtopage

@@ -133,9 +133,9 @@ class InterfaceDoliLetterTriggers extends DolibarrTriggers
 				//echo '<pre>'; print_r( $object ); echo '</pre>'; exit;
 				require_once DOL_DOCUMENT_ROOT.'/contact/class/contact.class.php';
 				$contact_temp = new Contact($this->db);
-				require_once __DIR__ . "/../../class/envelope_email.class.php";
+				require_once __DIR__ . "/../../class/envelope_letter.class.php";
 				$now = dol_now();
-				$mail = new EnvelopeEmail($this->db);
+				$mail = new EnvelopeLetter($this->db);
 				$mail->fk_envelope = $object->id;
 				$mail->date_creation = $mail->db->idate($now);
 				$mail->status = 1;
@@ -145,8 +145,9 @@ class InterfaceDoliLetterTriggers extends DolibarrTriggers
 					{
 					$mail->fk_socpeople = $contactid;
 					$contact_temp->fetch($contactid);
-					$mail->recipient_email = $contact_temp->email;
+					$mail->recipient_address = $contact_temp->address;
 					$mail->contact_fullname = $contact_temp->firstname . ' ' . $contact_temp->lastname;
+					$mail->letter_code = '0'; // todo, for LRAR
 					$mailtemp = $mail;
 					$result = $mailtemp->create($user);
 				}
