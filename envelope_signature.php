@@ -298,15 +298,7 @@ dol_banner_tab($object, 'ref', '', 0, 'ref', 'ref', $morehtmlref, '', 0, $moreht
 
 print dol_get_fiche_end(); ?>
 
-<?php if ( $object->status == 1 ) : ?>
-<div class="wpeo-notice notice-warning">
-	<div class="notice-content">
-		<div class="notice-title"><?php echo $langs->trans('DisclaimerSignatureTitle') ?></div>
-		<div class="notice-subtitle"><?php echo $langs->trans("PreventionPlanMustBeValidatedToSign") ?></div>
-	</div>
-	<a class="butAction" style="width = 100%;margin-right:0" href="<?php echo DOL_URL_ROOT ?>/custom/doliletter/envelope_signature.php?id=<?php echo $id ?>"><?php echo $langs->trans("GoToValidate") ?></a>;
-</div>
-<?php endif; ?>
+
 <div class="noticeSignatureSuccess wpeo-notice notice-success hidden">
 	<div class="all-notice-content">
 		<div class="notice-content">
@@ -315,7 +307,7 @@ print dol_get_fiche_end(); ?>
 		</div>
 		<?php
 		if ($signatory->checkSignatoriesSignatures($object->id)) {
-			print '<a class="butAction" style="width = 100%;margin-right:0" href="'.DOL_URL_ROOT . '/custom/doliletter/envelope_signature.php?id='.$id.'">'. $langs->trans("GoToLock").'</a>';
+			print '<a style="width = 100%;margin-right:0" href="'.DOL_URL_ROOT . '/custom/doliletter/envelope_signature.php?id='.$id.'">'.'</a>';
 		}
 		?>
 	</div>
