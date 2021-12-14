@@ -53,10 +53,13 @@ Create = Créer
 # Envelope - Enveloppe
 #
 
+
 # Data - Donnée
 Envelope = Enveloppe
+Envelopes = Enveloppes
 NewEnvelope = Nouvelle enveloppe
 ModifyEnvelope = Modifier l'enveloppe
+ListEnvelopes = Liste d'enveloppes
 
 Society = Tiers
 Sender = Émetteur
