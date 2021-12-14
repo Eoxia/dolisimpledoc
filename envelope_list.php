@@ -239,8 +239,8 @@ if (empty($reshook)) {
 	}
 
 	// Mass actions
-	$objectclass = 'SimpleDoc';
-	$objectlabel = 'SimpleDoc';
+	$objectclass = 'Envelope';
+	$objectlabel = 'Envelope';
 	$uploaddir = $conf->enveloppe->dir_output;
 //	include DOL_DOCUMENT_ROOT.'/core/actions_massactions.inc.php';
 }
@@ -255,9 +255,9 @@ $form = new Form($db);
 
 $now = dol_now();
 
-//$help_url="EN:Module_SimpleDoc|FR:Module_SimpleDoc_FR|ES:Módulo_SimpleDoc";
+//$help_url="EN:Module_Envelope|FR:Module_Envelope_FR|ES:Módulo_Envelope";
 $help_url = '';
-$title = $langs->trans('ListOf', $langs->transnoentitiesnoconv("SimpleDocs"));
+$title = $langs->trans('ListEnvelopes');
 $morejs = array();
 $morecss = array();
 
