@@ -75,3 +75,4 @@ EnvelopeCreateTrigger = Création d'une enveloppe
 EnvelopeModifyTrigger = Modification d'une enveloppe
 EnvelopeSendbyMailTrigger = Envoi par Email
 EnvelopeSignTrigger = Signature de l'enveloppe
+Sending = Envoi
