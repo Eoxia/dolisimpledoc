@@ -23,5 +23,6 @@ CREATE TABLE llx_doliletter_letter_sending(
     fk_user                 integer NOT NULL,
     sender_fullname         varchar(255),
     letter_code             varchar(128),
-    status                  integer NOT NULL
+    status                  integer NOT NULL,
+    entity            integer NOT NULL
 ) ENGINE=innodb;

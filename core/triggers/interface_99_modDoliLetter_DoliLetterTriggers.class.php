@@ -101,6 +101,7 @@ class InterfaceDoliLetterTriggers extends DolibarrTriggers
 				$mail->fk_envelope = $object->id;
 				$mail->date_creation = $mail->db->idate($now);
 				$mail->status = 1;
+				$mail->entity = $object->entity;
 				$mail->fk_user = $user->id;
 				$mail->sender_fullname = $user->firstname . ' ' . $user->lastname;
 				foreach($object->sendtoid as $contactid)
@@ -140,6 +141,7 @@ class InterfaceDoliLetterTriggers extends DolibarrTriggers
 				$mail->date_creation = $mail->db->idate($now);
 				$mail->status = 1;
 				$mail->fk_user = $user->id;
+				$mail->entity = $object->entity; 
 				$mail->sender_fullname = $user->firstname . ' ' . $user->lastname;
 				foreach($object->sendtoid as $contactid)
 					{

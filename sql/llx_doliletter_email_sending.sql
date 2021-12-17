@@ -22,5 +22,6 @@ CREATE TABLE llx_doliletter_email_sending(
     fk_socpeople      integer NOT NULL,
     fk_user           integer NOT NULL,
     sender_fullname   varchar(255),
-    status            integer NOT NULL
+    status            integer NOT NULL,
+    entity            integer NOT NULL
 ) ENGINE=innodb;

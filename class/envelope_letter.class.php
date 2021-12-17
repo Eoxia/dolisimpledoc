@@ -50,6 +50,7 @@ class EnvelopeLetter extends EnvelopeSending
 		'date_creation'           => array('type'=>'datetime', 'label'=>'tms', 'enabled'=>'1', 'position'=>50, 'notnull'=>0, 'visible'=>-2,),
 		'status'        => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>70, 'notnull'=>1, 'default' => 1, 'visible'=>1, 'index'=>1,),
 		'letter_code'        => array('type'=>'varchar(255) ', 'label'=>'letter_code', 'enabled'=>'1', 'position'=>70, 'notnull'=>1, 'default' => 1, 'visible'=>1, 'index'=>1,),
+		'entity'         => array('type'=> 'integer', 'label'=>'entity', 'enabled'=>'1', 'notnull'=>1),
 	);
 
 	public $rowid;
@@ -62,6 +63,7 @@ class EnvelopeLetter extends EnvelopeSending
 	public $letter_code;
 	public $fk_user;
 	public $sender_fullname;
+	public $entity;
 	/**
 	 * @var int  Does this object support multicompany module ?
 	 * 0=No test on entity, 1=Test with field entity, 'field@table'=Test with link by field@table

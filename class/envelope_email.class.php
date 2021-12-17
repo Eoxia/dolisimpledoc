@@ -49,6 +49,7 @@ class EnvelopeEmail extends EnvelopeSending
 		'recipient_email' => array('type'=>'varchar(255)', 'label'=>'recipient_email', 'enabled'=>'1', 'position'=>40, 'notnull'=>1, 'visible'=>-2,),
 		'date_creation'           => array('type'=>'datetime', 'label'=>'DateCreation', 'enabled'=>'1', 'position'=>50, 'notnull'=>0, 'visible'=>-2,),
 		'status'        => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>70, 'notnull'=>1, 'default' => 1, 'visible'=>1, 'index'=>1,),
+		'entity'         => array('type'=> 'integer', 'label'=>'entity', 'enabled'=>'1', 'notnull'=>1),
 	);
 
 	public $rowid;
@@ -60,6 +61,7 @@ class EnvelopeEmail extends EnvelopeSending
 	public $sender_fullname;
 	public $date_creation;
 	public $status;
+	public $entity;
 
 	/**
 	 * @var int  Does this object support multicompany module ?
