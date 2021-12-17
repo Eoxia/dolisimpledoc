@@ -15,7 +15,7 @@
 
 CREATE TABLE llx_c_sender_service(
 	rowid       integer AUTO_INCREMENT PRIMARY KEY NOT NULL,
-	entity      integer default 1,
+    entity      integer DEFAULT 1 NOT NULL,
 	ref         varchar(128),
 	label       varchar(255),
 	description text,

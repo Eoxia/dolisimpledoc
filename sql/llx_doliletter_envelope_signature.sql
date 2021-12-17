@@ -15,12 +15,12 @@
 
 CREATE TABLE llx_doliletter_envelope_signature(
 	rowid                integer AUTO_INCREMENT PRIMARY KEY NOT NULL,
-	entity               integer DEFAULT 1 NOT NULL,
 	date_creation        datetime NOT NULL,
 	tms                  timestamp,
 	import_key           integer DEFAULT NULL,
 	status               smallint,
-	role                 varchar(255),
+    entity               integer DEFAULT 1 NOT NULL,
+    role                 varchar(255),
     firstname            varchar(255),
 	lastname             varchar(255),
 	email                varchar(255),

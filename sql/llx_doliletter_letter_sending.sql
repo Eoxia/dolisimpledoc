@@ -17,12 +17,13 @@ CREATE TABLE llx_doliletter_letter_sending(
     rowid                   integer AUTO_INCREMENT PRIMARY KEY NOT NULL,
     date_creation           datetime NOT NULL,
     contact_fullname        varchar(255),
-    recipient_address varchar(255),
+    recipient_address       varchar(255),
     fk_envelope             integer NOT NULL,
     fk_socpeople            integer NOT NULL,
     fk_user                 integer NOT NULL,
     sender_fullname         varchar(255),
     letter_code             varchar(128),
     status                  integer NOT NULL,
-    entity            integer NOT NULL
+    entity                  integer DEFAULT 1 NOT NULL,
+
 ) ENGINE=innodb;
