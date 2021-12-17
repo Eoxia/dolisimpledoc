@@ -189,7 +189,9 @@ if (empty($reshook)) {
 		$object->label        = $label;
 
 		$object->fk_soc         = $society_id;
+
 		$object->content        = $content;
+		$object->entity = $conf->entity ?: 1;
 
 		$object->fk_user_creat = $user->id ? $user->id : 1;
 
