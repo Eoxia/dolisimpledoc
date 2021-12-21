@@ -33,7 +33,6 @@ class EnvelopeSending extends CommonObject
 	/**
 	 * @var string ID to identify managed object.
 	 */
-	public $element = 'EnvelopeSending';
 
 	/**
 	 * @var int  Does this object support multicompany module ?
@@ -168,16 +167,16 @@ class EnvelopeSending extends CommonObject
 			$sql .= ' '.$this->db->plimit($limit, $offset);
 		}
 		$resql = $this->db->query($sql);
+
 		if ($resql) {
 			$num = $this->db->num_rows($resql);
 			$i = 0;
 			while ($i < ($limit ? min($limit, $num) : $num))
 			{
 				$obj = $this->db->fetch_object($resql);
-
-				$record = new self($this->db);
+				$class = get_class($this);
+				$record = new $class($this->db);
 				$record->setVarsFromFetchObj($obj);
-
 				$records[$record->id] = $record;
 
 				$i++;
