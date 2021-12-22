@@ -65,8 +65,8 @@ $backtopage  = GETPOST('backtopage', 'alpha');
 
 // Initialize technical objects
 $object         = new Envelope($db);
-$lettertemp       = new EnvelopeLetter($db);
-$mailtemp       = new EnvelopeEmail($db);
+$lettertemp       = new LetterSending($db);
+$mailtemp       = new EmailSending($db);
 $thirdparty = new Societe($db);
 $refEnvelopeMod = new $conf->global->DOLILETTER_ENVELOPE_ADDON();
 $extrafields    = new ExtraFields($db);
@@ -207,7 +207,7 @@ if (empty($reshook)) {
  *
  * Put here all code to build page
  */
-$lettertemp       = new EnvelopeLetter($db);
+$lettertemp       = new LetterSending($db);
 $letterlist = $lettertemp->fetchAll();
 
 

@@ -22,16 +22,16 @@
  */
 
 /**
- * Class for EnvelopeLetter
+ * Class for LetterSending
  */
 require_once __DIR__ . "/envelope_sending.class.php";
-class EnvelopeLetter extends EnvelopeSending
+class LetterSending extends EnvelopeSending
 {
 	/**
 	 * @var int  Does this object support multicompany module ?
 	 * 0=No test on entity, 1=Test with field entity, 'field@table'=Test with link by field@table
 	 */
-	public $element = 'envelopeletter';
+	public $element = 'lettersending';
 
 	public $table_element = 'doliletter_letter_sending';
 
