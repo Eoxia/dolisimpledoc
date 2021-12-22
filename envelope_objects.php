@@ -17,8 +17,8 @@
 
 /**
  *   	\file       envelope_card.php
- *		\ingroup    enveloppe
- *		\brief      Page to create/edit/view enveloppe
+ *		\ingroup    envelope
+ *		\brief      Page to create/edit/view envelope
  */
 
 // Load Dolibarr environment

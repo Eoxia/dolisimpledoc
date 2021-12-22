@@ -18,7 +18,7 @@
 
 /**
  *  \file       envelope_document.php
- *  \ingroup    enveloppe
+ *  \ingroup    envelope
  *  \brief      Tab for documents linked to SimpleDoc
  */
 
@@ -82,7 +82,7 @@ require_once './class/envelope.class.php';
 require_once './lib/doliletter_envelope.lib.php';
 
 // Load translation files required by the page
-$langs->loadLangs(array("enveloppe@enveloppe", "companies", "other", "mails"));
+$langs->loadLangs(array("envelope@envelope", "companies", "other", "mails"));
 
 
 $action = GETPOST('action', 'aZ09');
@@ -131,7 +131,7 @@ $permissiontoadd = $user->rights->doliletter->doliletter->write; // Used by the 
 //if ($user->socid > 0) $socid = $user->socid;
 //$isdraft = (($object->status == $object::STATUS_DRAFT) ? 1 : 0);
 //restrictedArea($user, $object->element, $object->id, $object->table_element, '', 'fk_soc', 'rowid', $isdraft);
-//if (empty($conf->enveloppe->enabled)) accessforbidden();
+//if (empty($conf->envelope->enabled)) accessforbidden();
 //if (!$permissiontoread) accessforbidden();
 
 
@@ -232,10 +232,10 @@ if ($object->id) {
 
 	print dol_get_fiche_end();
 
-	$modulepart = 'enveloppe';
-	//$permissiontoadd = $user->rights->enveloppe->doliletter->write;
+	$modulepart = 'envelope';
+	//$permissiontoadd = $user->rights->envelope->doliletter->write;
 	$permissiontoadd = 1;
-	//$permtoedit = $user->rights->enveloppe->doliletter->write;
+	//$permtoedit = $user->rights->envelope->doliletter->write;
 	$permtoedit = 1;
 	$param = '&id='.$object->id;
 

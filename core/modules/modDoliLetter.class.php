@@ -253,7 +253,7 @@ class modDoliLetter extends DolibarrModules {
 			'type'=>'left', // This is a Left menu entry
 			'titre'=> '<i class="fas fa-paper-plane"></i> ' . $langs->trans('DoliLetterCreate'),
 			'mainmenu'=>'doliletter',
-			'leftmenu'=>'enveloppe_card',
+			'leftmenu'=>'envelope_card',
 			'url'=>'/doliletter/envelope_card.php?action=create',
 			'langs'=>'doliletter@doliletter', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1100+$r,
@@ -268,7 +268,7 @@ class modDoliLetter extends DolibarrModules {
 			'type'=>'left', // This is a Left menu entry
 			'titre'=>'<i class="fas fa-list"></i> '. $langs->trans('DoliLetterList'),
 			'mainmenu'=>'doliletter',
-			'leftmenu'=>'enveloppe_list',
+			'leftmenu'=>'envelope_list',
 			'url'=>'/doliletter/envelope_list.php',
 			'langs'=>'doliletter@doliletter', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1100+$r,

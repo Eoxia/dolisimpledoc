@@ -70,7 +70,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/propal.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/order.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/order.lib.php';
 
-// load enveloppe libraries
+// load envelope libraries
 require_once './lib/doliletter_envelope.lib.php';
 require_once __DIR__ . '/class/envelope.class.php';
 
@@ -113,7 +113,7 @@ $object = new Envelope($db);
 $extrafields = new ExtraFields($db);
 $thirdparty = new Societe($db);
 $sender =new user($db);
-$diroutputmassaction = $conf->enveloppe->dir_output.'/temp/massgeneration/'.$user->id;
+$diroutputmassaction = $conf->envelope->dir_output.'/temp/massgeneration/'.$user->id;
 $hookmanager->initHooks(array('documentlist')); // Note that conf->hooks_modules contains array
 
 // Fetch optionals attributes and labels
@@ -194,7 +194,7 @@ if ($user->socid > 0) accessforbidden();
 //$socid = 0; if ($user->socid > 0) $socid = $user->socid;
 //$isdraft = (($object->status == $object::STATUS_DRAFT) ? 1 : 0);
 //restrictedArea($user, $object->element, $object->id, $object->table_element, '', 'fk_soc', 'rowid', $isdraft);
-//if (empty($conf->enveloppe->enabled)) accessforbidden();
+//if (empty($conf->envelope->enabled)) accessforbidden();
 //if (!$permissiontoread) accessforbidden();
 
 
@@ -241,7 +241,7 @@ if (empty($reshook)) {
 	// Mass actions
 	$objectclass = 'Envelope';
 	$objectlabel = 'Envelope';
-	$uploaddir = $conf->enveloppe->dir_output;
+	$uploaddir = $conf->envelope->dir_output;
 //	include DOL_DOCUMENT_ROOT.'/core/actions_massactions.inc.php';
 }
 
@@ -382,7 +382,7 @@ if (is_numeric($nbtotalofrecords) && ($limit > $nbtotalofrecords || empty($limit
 if ($num == 1 && !empty($conf->global->MAIN_SEARCH_DIRECT_OPEN_IF_ONLY_ONE) && $search_all && !$page) {
 	$obj = $db->fetch_object($resql);
 	$id = $obj->rowid;
-	header("Location: ".dol_buildpath('/enveloppe/envelope_card.php', 1).'?id='.$id);
+	header("Location: ".dol_buildpath('/envelope/envelope_card.php', 1).'?id='.$id);
 	exit;
 }
 
@@ -747,7 +747,7 @@ if (in_array('builddoc', $arrayofmassactions) && ($nbtotalofrecords === '' || $n
 	$genallowed = $permissiontoread;
 	$delallowed = $permissiontoadd;
 
-	print $formfile->showdocuments('massfilesarea_enveloppe', '', $filedir, $urlsource, 0, $delallowed, '', 1, 1, 0, 48, 1, $param, $title, '', '', '', null, $hidegeneratedfilelistifempty);
+	print $formfile->showdocuments('massfilesarea_envelope', '', $filedir, $urlsource, 0, $delallowed, '', 1, 1, 0, 48, 1, $param, $title, '', '', '', null, $hidegeneratedfilelistifempty);
 }
 
 // End of page

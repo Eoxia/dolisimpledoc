@@ -17,8 +17,8 @@
 
 /**
  *   	\file       envelope_card.php
- *		\ingroup    enveloppe
- *		\brief      Page to create/edit/view enveloppe
+ *		\ingroup    envelope
+ *		\brief      Page to create/edit/view envelope
  */
 
 // Load Dolibarr environment
@@ -155,7 +155,7 @@ if ($user->socid > 0) accessforbidden();
 //$socid = 0; if ($user->socid > 0) $socid = $user->socid;
 //$isdraft = (($object->status == $object::STATUS_DRAFT) ? 1 : 0);
 //restrictedArea($user, $object->element, $object->id, $object->table_element, '', 'fk_soc', 'rowid', $isdraft);
-//if (empty($conf->enveloppe->enabled)) accessforbidden();
+//if (empty($conf->envelope->enabled)) accessforbidden();
 //if (!$permissiontoread) accessforbidden();
 
 
@@ -196,7 +196,7 @@ if (empty($reshook)) {
 	// Mass actions
 	$objectclass = 'Envelope';
 	$objectlabel = 'Envelope';
-	$uploaddir = $conf->enveloppe->dir_output;
+	$uploaddir = $conf->envelope->dir_output;
 //	include DOL_DOCUMENT_ROOT.'/core/actions_massactions.inc.php';
 }
 
@@ -334,7 +334,7 @@ if (is_numeric($nbtotalofrecords) && ($limit > $nbtotalofrecords || empty($limit
 if ($num == 1 && !empty($conf->global->MAIN_SEARCH_DIRECT_OPEN_IF_ONLY_ONE) && $search_all && !$page) {
 	$obj = $db->fetch_object($resql);
 	$id = $obj->rowid;
-	header("Location: ".dol_buildpath('/enveloppe/envelope_card.php', 1).'?id='.$id);
+	header("Location: ".dol_buildpath('/envelope/envelope_card.php', 1).'?id='.$id);
 	exit;
 }
 

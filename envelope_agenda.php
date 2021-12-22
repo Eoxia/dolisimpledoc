@@ -18,7 +18,7 @@
 
 /**
  *  \file       envelope_agenda.php
- *  \ingroup    enveloppe
+ *  \ingroup    envelope
  *  \brief      Tab of events on SimpleDoc
  */
 
@@ -82,7 +82,7 @@ require_once './lib/doliletter_envelope.lib.php';
 
 
 // Load translation files required by the page
-$langs->loadLangs(array("enveloppe@enveloppe", "other"));
+$langs->loadLangs(array("envelope@envelope", "other"));
 
 // Get parameters
 $id = GETPOST('id', 'int');
@@ -121,7 +121,7 @@ if (!$sortorder) {
 // Initialize technical objects
 $object = new Envelope($db);
 $extrafields = new ExtraFields($db);
-$diroutputmassaction = $conf->dolidoliletter->dir_output.'/temp/massgeneration/'.$user->id;
+$diroutputmassaction = $conf->doliletter->dir_output.'/temp/massgeneration/'.$user->id;
 $hookmanager->initHooks(array('doliletteragenda', 'globalcard')); // Note that conf->hooks_modules contains array
 // Fetch optionals attributes and labels
 $extrafields->fetch_name_optionals_label($object->table_element);
@@ -129,17 +129,17 @@ $extrafields->fetch_name_optionals_label($object->table_element);
 // Load object
 include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be include, not include_once  // Must be include, not include_once. Include fetch and fetch_thirdparty but not fetch_optionals
 if ($id > 0 || !empty($ref)) {
-	$upload_dir = $conf->dolidoliletter->multidir_output[$object->entity]."/".$object->id;
+	$upload_dir = $conf->doliletter->multidir_output[$object->entity]."/".$object->id;
 }
 
-$permissiontoadd = $user->rights->dolidoliletter->simpledoc->write; // Used by the include of actions_addupdatedelete.inc.php
+$permissiontoadd = $user->rights->doliletter->envelope->write; // Used by the include of actions_addupdatedelete.inc.php
 
 // Security check (enable the most restrictive one)
 //if ($user->socid > 0) accessforbidden();
 //if ($user->socid > 0) $socid = $user->socid;
 //$isdraft = (($object->status == $object::STATUS_DRAFT) ? 1 : 0);
 //restrictedArea($user, $object->element, $object->id, $object->table_element, '', 'fk_soc', 'rowid', $isdraft);
-//if (empty($conf->enveloppe->enabled)) accessforbidden();
+//if (empty($conf->envelope->enabled)) accessforbidden();
 //if (!$permissiontoread) accessforbidden();
 
 
@@ -191,7 +191,7 @@ if ($object->id > 0) {
 
 	// Object card
 	// ------------------------------------------------------------
-	$linkback = '<a href="'.dol_buildpath('/enveloppe/envelope_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
+	$linkback = '<a href="'.dol_buildpath('/envelope/envelope_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
 
 	$morehtmlref = '<div class="refidno">';
 	/*

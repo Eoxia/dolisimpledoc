@@ -39,7 +39,7 @@ use PHPUnit_Extensions_Selenium2TestCase_WebDriverException;
  * @todo Windows support (IE, Google Chrome, Mozilla Firefox, Safari)
  * @todo OSX support (Safari, Google Chrome, Mozilla Firefox)
  *
- * @package Testdolisimpledoc
+ * @package Testdoliletter
  */
 class DoliSimpleDocFunctionalTest extends \PHPUnit_Extensions_Selenium2TestCase
 {
@@ -241,7 +241,7 @@ class DoliSimpleDocFunctionalTest extends \PHPUnit_Extensions_Selenium2TestCase
 	{
 		$this->url('/admin/boxes.php');
 		$this->authenticate();
-		return $this->assertContains('dolisimpledocwidget1', $this->source(), "Box enabled");
+		return $this->assertContains('doliletterwidget1', $this->source(), "Box enabled");
 	}
 
 	/**

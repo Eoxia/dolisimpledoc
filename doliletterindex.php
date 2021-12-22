@@ -58,14 +58,14 @@ if (!$res) {
 
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/doleditor.class.php';
-//require_once __DIR__ . '/class/enveloppe.class.php';
+//require_once __DIR__ . '/class/envelope.class.php';
 
 // Load translation files required by the page
 $langs->loadLangs(array("doliletter@doliletter"));
 
 $action = GETPOST('action', 'aZ09');
 
-//$simpledoc = new Document($db);
+//$envelope = new Document($db);
 
 // Security check
 // if (! $user->rights->doliletter->myobject->read) {
@@ -189,7 +189,7 @@ $max = $conf->global->MAIN_SIZE_SHORTLIST_LIMIT;
 if (! empty($conf->doliletter->enabled) && $user->rights->doliletter->read)
 {
 	$sql = "SELECT s.rowid, s.ref, s.label, s.date_creation, s.tms";
-	$sql.= " FROM ".MAIN_DB_PREFIX."dolisimpledoc_myobject as s";
+	$sql.= " FROM ".MAIN_DB_PREFIX."doliletter_myobject as s";
 	//if (! $user->rights->societe->client->voir && ! $socid) $sql.= ", ".MAIN_DB_PREFIX."societe_commerciaux as sc";
 	$sql.= " WHERE s.entity IN (".getEntity($myobjectstatic->element).")";
 	//if (! $user->rights->societe->client->voir && ! $socid) $sql.= " AND s.rowid = sc.fk_soc AND sc.fk_user = ".((int) $user->id);
