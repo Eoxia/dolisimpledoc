@@ -833,7 +833,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<tr class="oddeven"><td>'.$langs->trans("receivers").'</td><td>';
 		print $form->selectcontacts($object->fk_soc, '', 'receiver[]', 0, '', '', 0, 'quatrevingtpercent', false, 0, array(), false, 'multiple', 'receiver');
 		print '</td></tr>';
-		print '</table>'."\n";
+		print '</table>'."<br>";
 
 
 		//button save -> to lettersend action
