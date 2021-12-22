@@ -233,6 +233,7 @@ if ($object->id) {
 	print dol_get_fiche_end();
 
 	$modulepart = 'envelope';
+	//todo:perms
 	//$permissiontoadd = $user->rights->envelope->doliletter->write;
 	$permissiontoadd = 1;
 	//$permtoedit = $user->rights->envelope->doliletter->write;

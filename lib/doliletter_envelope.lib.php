@@ -85,7 +85,7 @@ function envelopePrepareHead($object)
 	$head[$h][2] = 'agenda';
 	$h++;
 
-//	//Contact selection
+//	//Contact selection is unused
 //	$head[$h][0] = dol_buildpath("/doliletter/envelope_contact.php", 1).'?id='.$object->id;
 //	$head[$h][1] = $langs->trans("ContactsAddresses");
 //	$head[$h][2] = 'envelopeContact';

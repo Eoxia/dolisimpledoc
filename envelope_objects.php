@@ -448,7 +448,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	print '<input type="hidden" name="action" value="addLink">';
 	print '<input type="hidden" name="element_types" value="contract">';
 
-	print selectForm( new Contrat($db), 'element_id[]', 'element_id', $object->linkedObjectsIds['contract']);
+	print selectForm( $contracttemp, 'element_id[]', 'element_id', $object->linkedObjectsIds['contract']);
 
 	print '<input type="submit" class="button" name="addLink" value="' . dol_escape_htmltag($langs->trans("Create")) . '">';
 	print '</div>';
@@ -478,7 +478,7 @@ print '<div>';
 	print '<input type="hidden" name="action" value="addLink">';
 	print '<input type="hidden" name="element_types" value="facture">';
 
-	print selectForm( new Facture($db), 'element_id[]', 'element_id', $object->linkedObjectsIds['facture']);
+	print selectForm( $invoicetemp, 'element_id[]', 'element_id', $object->linkedObjectsIds['facture']);
 
 	print '<input type="submit" class="button" name="addLink" value="' . dol_escape_htmltag($langs->trans("Create")) . '">';
 	print '</div>';
@@ -507,7 +507,7 @@ print '<div>';
 	print '<input type="hidden" name="action" value="addLink">';
 	print '<input type="hidden" name="element_types" value="order">';
 
-	print selectForm( new Commande($db), 'element_id[]', 'element_id', $object->linkedObjectsIds['order']);
+	print selectForm( $commandetemp, 'element_id[]', 'element_id', $object->linkedObjectsIds['order']);
 
 	print '<input type="submit" class="button" name="addLink" value="' . dol_escape_htmltag($langs->trans("Create")) . '">';
 	print '</div>';
@@ -536,7 +536,7 @@ print '<div>';
 	print '<input type="hidden" name="action" value="addLink">';
 	print '<input type="hidden" name="element_types" value="project">';
 
-	print selectForm( new Project($db), 'element_id[]', 'element_id', $object->linkedObjectsIds['project']);
+	print selectForm( $projecttemp, 'element_id[]', 'element_id', $object->linkedObjectsIds['project']);
 
 	print '<input type="submit" class="button" name="addLink" value="' . dol_escape_htmltag($langs->trans("Create")) . '">';
 	print '</div>';
@@ -565,7 +565,7 @@ print '<div>';
 	print '<input type="hidden" name="action" value="addLink">';
 	print '<input type="hidden" name="element_types" value="product">';
 
-	print selectForm( new Product($db), 'element_id[]', 'element_id', $object->linkedObjectsIds['product']);
+	print selectForm( $producttemp, 'element_id[]', 'element_id', $object->linkedObjectsIds['product']);
 
 	print '<input type="submit" class="button" name="addLink" value="' . dol_escape_htmltag($langs->trans("Create")) . '">';
 	print '</div>';
@@ -595,7 +595,7 @@ print '<div>';
 	print '<input type="hidden" name="action" value="addLink">';
 	print '<input type="hidden" name="element_types" value="propal">';
 
-	print selectForm( new Propal($db), 'element_id[]', 'element_id', $object->linkedObjectsIds['propal']);
+	print selectForm( $propaltemp, 'element_id[]', 'element_id', $object->linkedObjectsIds['propal']);
 
 	print '<input type="submit" class="button" name="addLink" value="' . dol_escape_htmltag($langs->trans("Create")) . '">';
 	print '</div>';
@@ -624,7 +624,7 @@ print '<input type="hidden" name="action" value="addLink">';
 print '<input type="hidden" name="element_types" value="ticket">';
 
 print ajax_combobox('parent');
-print selectForm( new Ticket($db), 'element_id[]', 'element_id', $object->linkedObjectsIds['ticket']);
+print selectForm( $tickettemp, 'element_id[]', 'element_id', $object->linkedObjectsIds['ticket']);
 
 print '<input type="submit" class="button" name="addLink" value="' . dol_escape_htmltag($langs->trans("Create")) . '">';
 print '</div>';

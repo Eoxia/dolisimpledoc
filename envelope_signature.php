@@ -48,7 +48,7 @@ $langs->loadLangs(array("doliletter@doliletter", "other"));
 // Get parameters
 $id                  = GETPOST('id', 'int');
 $action              = GETPOST('action', 'aZ09');
-$contextpage         = GETPOST('contextpage', 'aZ') ?GETPOST('contextpage', 'aZ') : 'preventionplansignature'; // To manage different context of search
+$contextpage         = GETPOST('contextpage', 'aZ') ?GETPOST('contextpage', 'aZ') : 'envelope_signature'; // To manage different context of search
 $backtopage          = GETPOST('backtopage', 'alpha');
 
 // Initialize technical objects
