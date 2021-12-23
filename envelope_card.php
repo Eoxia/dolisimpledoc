@@ -673,7 +673,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			$outputlangs = new Translate('', $conf);
 			$outputlangs->setDefaultLang($newlang);
 			// Load traductions files required by page
-			$outputlangs->loadLangs(array('digiriskdolibarr'));
+			$outputlangs->loadLangs(array('doliletter'));
 		}
 
 		$topicmail = '';

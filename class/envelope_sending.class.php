@@ -16,9 +16,9 @@
  */
 
 /**
- * \file        class/digiriskelement.class.php
- * \ingroup     digiriskdolibarr
- * \brief       This file is a CRUD class file for DigiriskElement (Create/Read/Update/Delete)
+ * \file        class/envelopesending.class.php
+ * \ingroup     doliletter
+ * \brief       This file is a CRUD class file for EnvelopeSending (Create/Read/Update/Delete)
  */
 
 // Put here all includes required by your class file
@@ -26,7 +26,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/commonobject.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
 
 /**
- * Class for DigiriskElement
+ * Class for EnvelopeSending
  */
 class EnvelopeSending extends CommonObject
 {
@@ -46,7 +46,7 @@ class EnvelopeSending extends CommonObject
 	public $isextrafieldmanaged = 1;
 
 	/**
-	 * @var string String with name of icon for digiriskelement. Must be the part after the 'object_' into object_digiriskelement.png
+	 * @var string String with name of icon for envelopesending. Must be the part after the 'object_' into object_envelopesending.png
 	 */
 	public $picto = 'Envelopesending@Doliletter';
 

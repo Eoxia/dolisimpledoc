@@ -17,7 +17,7 @@
 
 /**
  * \file        class/workunit.class.php
- * \ingroup     digiriskdolibarr
+ * \ingroup     doliletter
  * \brief       This file is a class file for WorkUnit
  */
 

@@ -18,15 +18,15 @@
 
 
 /**
- * \file    core/triggers/interface_99_modDigiriskdolibarr_DigiriskdolibarrTriggers.class.php
- * \ingroup digiriskdolibarr
- * \brief   Digirisk Dolibarr trigger.
+ * \file    core/triggers/interface_99_modDoliletter_DoliletterTriggers.class.php
+ * \ingroup doliletter
+ * \brief   Doliletter trigger.
  */
 
 require_once DOL_DOCUMENT_ROOT.'/core/triggers/dolibarrtriggers.class.php';
 
 /**
- *  Class of triggers for Digiriskdolibarr module
+ *  Class of triggers for Doliletter module
  */
 class InterfaceDoliLetterTriggers extends DolibarrTriggers
 {

@@ -41,7 +41,7 @@ if (!$res) die("Include of main fails");
 
 require_once DOL_DOCUMENT_ROOT.'/contact/class/contact.class.php';
 
-require_once __DIR__ . '/../../lib/digiriskdolibarr_function.lib.php';
+require_once __DIR__ . '/../../lib/doliletter_function.lib.php';
 
 // Get parameters
 $id        = GETPOST('id', 'int'); // id of thirdparty

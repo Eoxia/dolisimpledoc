@@ -17,12 +17,12 @@
  */
 
 /**
- * \file    digiriskdolibarr/js/digiriskdolibarr.js.php
- * \ingroup digiriskdolibarr
- * \brief   JavaScript file for module DigiriskDolibarr.
+ * \file    doliletter/js/doliletter.js.php
+ * \ingroup doliletter
+ * \brief   JavaScript file for module DoliLetter.
  */
 
-/* Javascript library of module DigiriskDolibarr */
+/* Javascript library of module DoliLetter */
 
 'use strict';
 /**
@@ -1122,18 +1122,18 @@ window.eoxiaJS.mediaGallery.savePhoto = function( event ) {
             }
         });
 
-	} else if (type === 'digiriskelement') {
+	} else if (type === 'envelopesending') {
 		mediaLinked = $('#digirisk_element_medias_modal_'+idToSave).find('.element-linked-medias')
 		window.eoxiaJS.loader.display(mediaLinked);
 
 		let digiriskElementPhoto = ''
         digiriskElementPhoto = $('.digirisk-element-'+idToSave).find('.clicked-photo-preview')
 
-        let filepath = $('.digirisk-element-'+idToSave).find('.filepath-to-digiriskelement').val()
+        let filepath = $('.digirisk-element-'+idToSave).find('.filepath-to-envelopesending').val()
         let newPhoto = filepath + favorite.replace(/\./, '_small.')
 
         $.ajax({
-            url: document.URL + "&action=addFiles&digiriskelement_id="+idToSave+"&filenames="+filenames,
+            url: document.URL + "&action=addFiles&envelopesending_id="+idToSave+"&filenames="+filenames,
             type: "POST",
             processData: false,
             contentType: false,
@@ -1277,7 +1277,7 @@ window.eoxiaJS.mediaGallery.unlinkFile = function( event ) {
 				mediaContainer.hide()
 			}
 		});
-	} else if (type === 'digiriskelement') {
+	} else if (type === 'envelopesending') {
 		previousPhoto = $('.digirisk-element-'+element_linked_id).find('.photo.clicked-photo-preview')
 		previousName = previousPhoto[0].src.trim().split(/thumbs%2F/)[1].split(/"/)[0]
 
@@ -1288,7 +1288,7 @@ window.eoxiaJS.mediaGallery.unlinkFile = function( event ) {
 		}
 
 		$.ajax({
-			url: document.URL + querySeparator + "action=unlinkFile&digiriskelement_id="+element_linked_id+"&filename="+filename,
+			url: document.URL + querySeparator + "action=unlinkFile&envelopesending_id="+element_linked_id+"&filename="+filename,
 			type: "POST",
 			processData: false,
 			success: function ( ) {
@@ -1365,13 +1365,13 @@ window.eoxiaJS.mediaGallery.addToFavorite = function( event ) {
 				$('.wpeo-loader').removeClass('wpeo-loader')
 			}
 		});
-	} else if (type === 'digiriskelement') {
+	} else if (type === 'envelopesending') {
 		previousPhoto = $('.digirisk-element-'+element_linked_id).find('.photo.clicked-photo-preview')
 
 		let previousName = previousPhoto[0].src.trim().split(/thumbs%2F/)[1].split(/"/)[0]
 
 		$.ajax({
-			url: document.URL + querySeparator + "action=addToFavorite&digiriskelement_id="+element_linked_id+"&filename="+filename,
+			url: document.URL + querySeparator + "action=addToFavorite&envelopesending_id="+element_linked_id+"&filename="+filename,
 			type: "POST",
 			processData: false,
 			success: function ( ) {
@@ -2921,7 +2921,7 @@ window.eoxiaJS.ticket.getPertinence = function(  ) {
 };
 
 /**
- * Upload automatiquement le(s) fichier(s) séelectionnés dans ecm/digiriskdolibarr/ticket/tmp/__REF__
+ * Upload automatiquement le(s) fichier(s) séelectionnés dans ecm/doliletter/ticket/tmp/__REF__
  *
  * @since   1.1.0
  * @version 1.1.0
@@ -2952,7 +2952,7 @@ window.eoxiaJS.ticket.tmpStockFile = function( ) {
 };
 
 /**
- * Upload automatiquement le(s) fichier(s) séelectionnés dans ecm/digiriskdolibarr/ticket/tmp/__REF__
+ * Upload automatiquement le(s) fichier(s) séelectionnés dans ecm/doliletter/ticket/tmp/__REF__
  *
  * @since   1.1.0
  * @version 1.1.0

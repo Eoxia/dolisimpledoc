@@ -256,8 +256,8 @@ class modDoliLetter extends DolibarrModules {
 			'url'=>'/doliletter/envelope_card.php?action=create',
 			'langs'=>'doliletter@doliletter', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1100+$r,
-			'enabled'=>'$conf->doliletter->enabled',  // Define condition to show or hide menu entry. Use '$conf->digiriskdolibarr->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-			'perms'=>'1', // Use 'perms'=>'$user->rights->digiriskdolibarr->level1->level2' if you want your menu with a permission rules
+			'enabled'=>'$conf->doliletter->enabled',  // Define condition to show or hide menu entry. Use '$conf->doliletter->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'perms'=>'1', // Use 'perms'=>'$user->rights->doliletter->level1->level2' if you want your menu with a permission rules
 			'target'=>'',
 			'user'=>0, // 0=Menu for internal users, 1=external users, 2=both
 		);
@@ -270,8 +270,8 @@ class modDoliLetter extends DolibarrModules {
 			'url'=>'/doliletter/envelope_list.php',
 			'langs'=>'doliletter@doliletter', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1100+$r,
-			'enabled'=>'$conf->doliletter->enabled',  // Define condition to show or hide menu entry. Use '$conf->digiriskdolibarr->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-			'perms'=>'1', // Use 'perms'=>'$user->rights->digiriskdolibarr->level1->level2' if you want your menu with a permission rules
+			'enabled'=>'$conf->doliletter->enabled',  // Define condition to show or hide menu entry. Use '$conf->doliletter->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'perms'=>'1', // Use 'perms'=>'$user->rights->doliletter->level1->level2' if you want your menu with a permission rules
 			'target'=>'',
 			'user'=>0, // 0=Menu for internal users, 1=external users, 2=both
 		);

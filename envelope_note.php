@@ -19,7 +19,7 @@
 /**
  *  \file       envelope_note.php
  *  \ingroup    envelope
- *  \brief      Tab for notes on SimpleDoc
+ *  \brief      Tab for notes on Envelope
  */
 
 //if (! defined('NOREQUIREDB'))              define('NOREQUIREDB', '1');				// Do not create database handler $db
