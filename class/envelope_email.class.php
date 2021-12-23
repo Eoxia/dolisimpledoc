@@ -34,34 +34,37 @@ class EmailSending extends EnvelopeSending
 	 */
 	public $element = 'emailsending';
 
+	/**
+	 * @var string Name of table without prefix where object is stored. This is also the key used for extrafields management.
+	 */
 	public $table_element = 'doliletter_email_sending';
 
 	/**
 	 * @var array  Array with all fields and their property. Do not use it as a static var. It may be modified by constructor.
 	 */
 	public $fields=array(
-		'rowid'         => array('type'=>'integer', 'label'=>'TechnicalID', 'enabled'=>'1', 'position'=>1, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'comment'=>"Id"),
+		'rowid'                 => array('type'=>'integer', 'label'=>'TechnicalID', 'enabled'=>'1', 'position'=>1, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'comment'=>"Id"),
+		'status'                => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>70, 'notnull'=>1, 'default' => 1, 'visible'=>1, 'index'=>1,),
+		'entity'                => array('type'=> 'integer', 'label'=>'entity', 'enabled'=>'1', 'notnull'=>1),
+		'date_creation'         => array('type'=>'datetime', 'label'=>'DateCreation', 'enabled'=>'1', 'position'=>50, 'notnull'=>0, 'visible'=>-2,),
+		'sender_fullname'       => array('type'=>'varchar(255)', 'label'=>'sender_fullname', 'enabled'=>'1', 'position'=>30, 'notnull'=>1, 'visible'=>-1,),
+		'contact_fullname'      => array('type'=>'varchar(255)', 'label'=>'Entity', 'enabled'=>'1', 'position'=>30, 'notnull'=>1, 'visible'=>-1,),
+		'recipient_email'       => array('type'=>'varchar(255)', 'label'=>'recipient_email', 'enabled'=>'1', 'position'=>40, 'notnull'=>1, 'visible'=>-2,),
+		'fk_user'               => array('type'=>'integer', 'label'=>'fk_user', 'enabled'=>'1', 'position'=>20, 'notnull'=>0, 'visible'=>0,),
 		'fk_envelope'           => array('type'=>'varchar(128)', 'label'=>'Ref', 'enabled'=>'1', 'position'=>10, 'notnull'=>1, 'visible'=>1, 'noteditable'=>'1', 'default'=>'(PROV)', 'index'=>1, 'searchall'=>1, 'showoncombobox'=>'1', 'comment'=>"Reference of object"),
-		'fk_socpeople'       => array('type'=>'varchar(128)', 'label'=>'RefExt', 'enabled'=>'1', 'position'=>20, 'notnull'=>0, 'visible'=>0,),
-		'fk_user'       => array('type'=>'integer', 'label'=>'fk_user', 'enabled'=>'1', 'position'=>20, 'notnull'=>0, 'visible'=>0,),
-		'sender_fullname'        => array('type'=>'varchar(255)', 'label'=>'sender_fullname', 'enabled'=>'1', 'position'=>30, 'notnull'=>1, 'visible'=>-1,),
-		'contact_fullname'        => array('type'=>'varchar(255)', 'label'=>'Entity', 'enabled'=>'1', 'position'=>30, 'notnull'=>1, 'visible'=>-1,),
-		'recipient_email' => array('type'=>'varchar(255)', 'label'=>'recipient_email', 'enabled'=>'1', 'position'=>40, 'notnull'=>1, 'visible'=>-2,),
-		'date_creation'           => array('type'=>'datetime', 'label'=>'DateCreation', 'enabled'=>'1', 'position'=>50, 'notnull'=>0, 'visible'=>-2,),
-		'status'        => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>70, 'notnull'=>1, 'default' => 1, 'visible'=>1, 'index'=>1,),
-		'entity'         => array('type'=> 'integer', 'label'=>'entity', 'enabled'=>'1', 'notnull'=>1),
-	);
+		'fk_socpeople'          => array('type'=>'varchar(128)', 'label'=>'RefExt', 'enabled'=>'1', 'position'=>20, 'notnull'=>0, 'visible'=>0,),
+		);
 
 	public $rowid;
-	public $fk_envelope;
-	public $fk_socpeople;
+	public $status;
+	public $entity;
+	public $date_creation;
+	public $sender_fullname;
 	public $contact_fullname;
 	public $recipient_email;
 	public $fk_user;
-	public $sender_fullname;
-	public $date_creation;
-	public $status;
-	public $entity;
+	public $fk_envelope;
+	public $fk_socpeople;
 
 	/**
 	 * @var int  Does this object support multicompany module ?

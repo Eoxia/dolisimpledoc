@@ -33,6 +33,9 @@ class LetterSending extends EnvelopeSending
 	 */
 	public $element = 'lettersending';
 
+	/**
+	 * @var string Name of table without prefix where object is stored. This is also the key used for extrafields management.
+	 */
 	public $table_element = 'doliletter_letter_sending';
 
 
@@ -40,18 +43,18 @@ class LetterSending extends EnvelopeSending
 	 * @var array  Array with all fields and their property. Do not use it as a static var. It may be modified by constructor.
 	 */
 	public $fields=array(
-		'rowid'         => array('type'=>'integer', 'label'=>'TechnicalID', 'enabled'=>'1', 'position'=>1, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'comment'=>"Id"),
+		'rowid'                 => array('type'=>'integer', 'label'=>'TechnicalID', 'enabled'=>'1', 'position'=>1, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'comment'=>"Id"),
+		'entity'                => array('type'=> 'integer', 'label'=>'entity', 'enabled'=>'1', 'notnull'=>1),
+		'status'                => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>70, 'notnull'=>1, 'default' => 1, 'visible'=>1, 'index'=>1,),
+		'date_creation'         => array('type'=>'datetime', 'label'=>'tms', 'enabled'=>'1', 'position'=>50, 'notnull'=>0, 'visible'=>-2,),
+		'sender_fullname'       => array('type'=>'varchar(255)', 'label'=>'sender_fullname', 'enabled'=>'1', 'position'=>30, 'notnull'=>1, 'visible'=>-1,),
+		'contact_fullname'      => array('type'=>'varchar(255)', 'label'=>'contact_fullname', 'enabled'=>'1', 'position'=>30, 'notnull'=>1, 'visible'=>-1,),
+		'recipient_address'     => array('type'=>'varchar(255)', 'label'=>'recipient_adress', 'enabled'=>'1', 'position'=>40, 'notnull'=>1, 'visible'=>-2,),
+		'letter_code'           => array('type'=>'varchar(255) ', 'label'=>'letter_code', 'enabled'=>'1', 'position'=>70, 'notnull'=>1, 'default' => 1, 'visible'=>1, 'index'=>1,),
+		'fk_user'               => array('type'=>'integer', 'label'=>'fk_user', 'enabled'=>'1', 'position'=>20, 'notnull'=>0, 'visible'=>0,),
 		'fk_envelope'           => array('type'=>'integer', 'label'=>'fk_envelope', 'enabled'=>'1', 'position'=>10, 'notnull'=>1, 'visible'=>1, 'noteditable'=>'1', 'default'=>'(PROV)', 'index'=>1, 'searchall'=>1, 'showoncombobox'=>'1', 'comment'=>"Reference of object"),
-		'fk_socpeople'       => array('type'=>'integer', 'label'=>'fk_socpeople', 'enabled'=>'1', 'position'=>20, 'notnull'=>0, 'visible'=>0,),
-		'fk_user'       => array('type'=>'integer', 'label'=>'fk_user', 'enabled'=>'1', 'position'=>20, 'notnull'=>0, 'visible'=>0,),
-		'sender_fullname'        => array('type'=>'varchar(255)', 'label'=>'sender_fullname', 'enabled'=>'1', 'position'=>30, 'notnull'=>1, 'visible'=>-1,),
-		'contact_fullname'        => array('type'=>'varchar(255)', 'label'=>'contact_fullname', 'enabled'=>'1', 'position'=>30, 'notnull'=>1, 'visible'=>-1,),
-		'recipient_address' => array('type'=>'varchar(255)', 'label'=>'recipient_adress', 'enabled'=>'1', 'position'=>40, 'notnull'=>1, 'visible'=>-2,),
-		'date_creation'           => array('type'=>'datetime', 'label'=>'tms', 'enabled'=>'1', 'position'=>50, 'notnull'=>0, 'visible'=>-2,),
-		'status'        => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>70, 'notnull'=>1, 'default' => 1, 'visible'=>1, 'index'=>1,),
-		'letter_code'        => array('type'=>'varchar(255) ', 'label'=>'letter_code', 'enabled'=>'1', 'position'=>70, 'notnull'=>1, 'default' => 1, 'visible'=>1, 'index'=>1,),
-		'entity'         => array('type'=> 'integer', 'label'=>'entity', 'enabled'=>'1', 'notnull'=>1),
-	);
+		'fk_socpeople'          => array('type'=>'integer', 'label'=>'fk_socpeople', 'enabled'=>'1', 'position'=>20, 'notnull'=>0, 'visible'=>0,),
+		);
 
 	public $rowid;
 	public $fk_envelope;
