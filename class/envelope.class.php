@@ -437,25 +437,6 @@ class Envelope extends CommonObject
 	 *  @return string 			       Label of status
 	 */
 	public function LibStatut($status, $mode = 0) {
-//		// phpcs:enable
-//		if (empty($this->labelStatus) || empty($this->labelStatusShort)) {
-//			global $langs;
-//			//$langs->load("doliletter@doliletter");
-//			$this->labelStatus[self::STATUS_DRAFT] = $langs->trans('Draft');
-//			$this->labelStatus[self::STATUS_VALIDATED] = $langs->trans('Enabled');
-//			$this->labelStatus[self::STATUS_CANCELED] = $langs->trans('Disabled');
-//			$this->labelStatusShort[self::STATUS_DRAFT] = $langs->trans('Draft');
-//			$this->labelStatusShort[self::STATUS_VALIDATED] = $langs->trans('Enabled');
-//			$this->labelStatusShort[self::STATUS_CANCELED] = $langs->trans('Disabled');
-//		}
-//
-//		$statusType = 'status'.$status;
-//		//if ($status == self::STATUS_VALIDATED) $statusType = 'status1';
-//		if ($status == self::STATUS_CANCELED) {
-//			$statusType = 'status6';
-//		}
-//
-//		return dolGetStatus($this->labelStatus[$status], $this->labelStatusShort[$status], '', $statusType, $mode);
 	}
 
 	/**
