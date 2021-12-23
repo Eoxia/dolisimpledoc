@@ -216,7 +216,6 @@ class EnvelopeSending extends CommonObject
 	{
 		global $conf;
 
-		$this->fk_parent = $conf->global->DIGIRISKDOLIBARR_DIGIRISKELEMENT_TRASH;
 		return $this->update($user);
 	}
 

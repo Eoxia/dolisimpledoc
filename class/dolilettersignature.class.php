@@ -306,7 +306,7 @@ class DoliletterSignature extends CommonObject
 	 */
 	public function setRegistered($user, $notrigger = 0)
 	{
-		return $this->setStatusCommon($user, self::STATUS_REGISTERED, $notrigger, 'DIGIRISKSIGNATURE_REGISTERED');
+		return $this->setStatusCommon($user, self::STATUS_REGISTERED, $notrigger, 'ENVELOPESIGNATURE_REGISTERED');
 	}
 
 	/**
@@ -318,7 +318,7 @@ class DoliletterSignature extends CommonObject
 	 */
 	public function setPending($user, $notrigger = 0)
 	{
-		return $this->setStatusCommon($user, self::STATUS_PENDING_SIGNATURE, $notrigger, 'DIGIRISKSIGNATURE_PENDING_SIGNATURE');
+		return $this->setStatusCommon($user, self::STATUS_PENDING_SIGNATURE, $notrigger, 'ENVELOPESIGNATURE_PENDING_SIGNATURE');
 	}
 
 	/**
@@ -330,7 +330,7 @@ class DoliletterSignature extends CommonObject
 	 */
 	public function setSigned($user, $notrigger = 0)
 	{
-		return $this->setStatusCommon($user, self::STATUS_SIGNED, $notrigger, 'DIGIRISKSIGNATURE_SIGNED');
+		return $this->setStatusCommon($user, self::STATUS_SIGNED, $notrigger, 'ENVELOPESIGNATURE_SIGNED');
 	}
 
 	/**
@@ -342,7 +342,7 @@ class DoliletterSignature extends CommonObject
 	 */
 	public function setAbsent($user, $notrigger = 0)
 	{
-		return $this->setStatusCommon($user, self::STATUS_ABSENT, $notrigger, 'DIGIRISKSIGNATURE_ABSENT');
+		return $this->setStatusCommon($user, self::STATUS_ABSENT, $notrigger, 'ENVELOPESIGNATURE_ABSENT');
 	}
 
 	/**
@@ -354,7 +354,7 @@ class DoliletterSignature extends CommonObject
 	 */
 	public function setDeleted($user, $notrigger = 0)
 	{
-		return $this->setStatusCommon($user, self::STATUS_DELETED, $notrigger, 'DIGIRISKSIGNATURE_DELETED');
+		return $this->setStatusCommon($user, self::STATUS_DELETED, $notrigger, 'ENVELOPESIGNATURE_DELETED');
 	}
 
 	/**
