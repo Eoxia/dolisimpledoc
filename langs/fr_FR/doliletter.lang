@@ -77,3 +77,5 @@ EnvelopeSendbyMailTrigger = Envoi par Email
 EnvelopeSignTrigger = Signature de l'enveloppe
 Sending = Envoi
 Sign = Signer
+Signatursender = Signataire
+Objects = Objets liés

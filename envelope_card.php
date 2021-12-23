@@ -115,6 +115,8 @@ $thirdparty->fetch($object->fk_soc);
  * Actions
  */
 
+//cancelling current action
+if (GETPOST('cancel')) $action = null;
 //action to send Email
 
 $parameters = array();
@@ -375,8 +377,8 @@ if ($action == 'create') {
 	print '</td></tr>';
 
 
-	//Content -- Contenue
-	print '<tr class="content_field"><td><label for="content">'.$langs->trans("Content").'</label></td><td>';
+	//Content -- Contenu
+	print '<tr class="fieldrequired"><td><label for="content">'.$langs->trans("Content").'</label></td><td>';
 	$doleditor = new DolEditor('content', GETPOST('content'), '', 90, 'dolibarr_notes', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
 	$doleditor->Create();
 	print '</td></tr>';
