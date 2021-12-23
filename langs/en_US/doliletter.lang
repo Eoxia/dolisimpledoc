@@ -28,10 +28,10 @@ ModuleDoliLetterDesc = DoliLetter description
 DoliLetterSetup = DoliLetter setup
 Settings = Settings
 DoliLetterSetupPage = DoliLetter setup page
-DOLISIMPLEDOC_MYPARAM1 = My param 1
-DOLISIMPLEDOC_MYPARAM1Tooltip = My param 1 tooltip
-DOLISIMPLEDOC_MYPARAM2=My param 2
-DOLISIMPLEDOC_MYPARAM2Tooltip=My param 2 tooltip
+DOLILETTER_MYPARAM1 = My param 1
+DOLILETTER_MYPARAM1Tooltip = My param 1 tooltip
+DOLILETTER_MYPARAM2=My param 2
+DOLILETTER_MYPARAM2Tooltip=My param 2 tooltip
 
 
 #
