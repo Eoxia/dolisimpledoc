@@ -96,7 +96,7 @@ $form = new Form($db);
 
 llxHeader("", $langs->trans("DoliLetterArea"));
 
-print load_fiche_titre($langs->trans("DoliSimpleDocArea"), '', 'object_doliletter64px@doliletter');
+print load_fiche_titre($langs->trans("DoliLetterArea"), '', 'object_doliletter64px@doliletter');
 
 
 //Todo: Index page view

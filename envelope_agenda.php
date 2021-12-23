@@ -19,7 +19,7 @@
 /**
  *  \file       envelope_agenda.php
  *  \ingroup    envelope
- *  \brief      Tab of events on SimpleDoc
+ *  \brief      Tab of events on Envelope
  */
 
 //if (! defined('NOREQUIREDB'))              define('NOREQUIREDB', '1');				// Do not create database handler $db
@@ -290,7 +290,7 @@ if ($object->id > 0) {
 		}
 
 
-		//print load_fiche_titre($langs->trans("ActionsOnSimpleDoc"), '', '');
+		//print load_fiche_titre($langs->trans("ActionsOnEnvelope"), '', '');
 
 		// List of all actions
 		$filters = array();

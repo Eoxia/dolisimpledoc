@@ -19,7 +19,7 @@
 /**
  *  \file       envelope_document.php
  *  \ingroup    envelope
- *  \brief      Tab for documents linked to SimpleDoc
+ *  \brief      Tab for documents linked to Envelope
  */
 
 //if (! defined('NOREQUIREDB'))              define('NOREQUIREDB', '1');				// Do not create database handler $db
@@ -148,7 +148,7 @@ include DOL_DOCUMENT_ROOT.'/core/actions_linkedfiles.inc.php';
 
 $form = new Form($db);
 
-$title = $langs->trans("SimpleDoc").' - '.$langs->trans("Files");
+$title = $langs->trans("Envelope").' - '.$langs->trans("Files");
 $help_url = '';
 //$help_url='EN:Module_Third_Parties|FR:Module_Tiers|ES:Empresas';
 llxHeader('', $title, $help_url);

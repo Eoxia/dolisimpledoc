@@ -323,7 +323,7 @@ class Envelope extends CommonObject
 
 		$result = '';
 
-		$label = img_picto('', $this->picto).' <u>'.$langs->trans("SimpleDoc").'</u>';
+		$label = img_picto('', $this->picto).' <u>'.$langs->trans("Envelope").'</u>';
 		if (isset($this->status)) {
 			$label .= ' '.$this->getLibStatut(5);
 		}
@@ -346,7 +346,7 @@ class Envelope extends CommonObject
 		$linkclose = '';
 		if (empty($notooltip)) {
 			if (!empty($conf->global->MAIN_OPTIMIZEFORTEXTBROWSER)) {
-				$label = $langs->trans("ShowSimpleDoc");
+				$label = $langs->trans("ShowEnvelope");
 				$linkclose .= ' alt="'.dol_escape_htmltag($label, 1).'"';
 			}
 			$linkclose .= ' title="'.dol_escape_htmltag($label, 1).'"';

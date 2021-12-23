@@ -62,7 +62,7 @@ abstract class ModelePDFEnvelope extends CommonDocGenerator
 
 
 /**
- *  Parent class to manage numbering of SimpleDoc
+ *  Parent class to manage numbering of Envelope
  */
 abstract class ModeleNumRefEnvelope
 {

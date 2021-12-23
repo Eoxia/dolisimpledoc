@@ -18,11 +18,11 @@
 /**
  * \file    lib/doliletter_envelope.lib.php
  * \ingroup doliletter
- * \brief   Library files with common functions for SimpleDoc
+ * \brief   Library files with common functions for Envelope
  */
 
 /**
- * Prepare array of tabs for SimpleDoc
+ * Prepare array of tabs for Envelope
  *
  * @param	Envelope	$object		Envelope
  * @return 	array					Array of tabs

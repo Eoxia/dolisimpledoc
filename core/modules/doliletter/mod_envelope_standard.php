@@ -19,7 +19,7 @@
 /**
  *  \file       htdocs/core/modules/doliletter/mod_envelope_standard.php
  *  \ingroup    doliletter
- *  \brief      File of class to manage SimpleDoc numbering rules standard
+ *  \brief      File of class to manage Envelope numbering rules standard
  */
 
 require_once __DIR__ . '/modules_envelope.php';

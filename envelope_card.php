@@ -163,7 +163,7 @@ if (empty($reshook)) {
 		}
 	}
 
-	$triggermodname = 'DOLISIMPLEDOC_SIMPLEDOC_MODIFY'; // Name of trigger action code to execute when we modify record
+	$triggermodname = 'DOLILETTER_ENVELOPE_MODIFY'; // Name of trigger action code to execute when we modify record
 
 	// Actions cancel, add, update, update_extras, confirm_validate, confirm_delete, confirm_deleteline, confirm_clone, confirm_close, confirm_setdraft, confirm_reopen
 	//include DOL_DOCUMENT_ROOT.'/core/actions_addupdatedelete.inc.php';
@@ -283,7 +283,7 @@ if (empty($reshook)) {
 
 	// Actions to send emails
 	$triggersendname = 'DOLILETTER_ENVELOPE_SENTBYMAIL';
-	$autocopy = 'MAIN_MAIL_AUTOCOPY_SIMPLEDOC_TO';
+	$autocopy = 'MAIN_MAIL_AUTOCOPY_ENVELOPE_TO';
 	$trackid = 'envelope'.$object->id;
 
 	include DOL_DOCUMENT_ROOT.'/core/actions_sendmails.inc.php';
