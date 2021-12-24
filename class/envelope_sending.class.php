@@ -214,8 +214,6 @@ class EnvelopeSending extends CommonObject
 	 */
 	public function delete(User $user, $notrigger = false)
 	{
-		global $conf;
-
 		return $this->update($user);
 	}
 

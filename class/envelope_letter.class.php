@@ -25,6 +25,7 @@
  * Class for LetterSending
  */
 require_once __DIR__ . "/envelope_sending.class.php";
+
 class LetterSending extends EnvelopeSending
 {
 	/**

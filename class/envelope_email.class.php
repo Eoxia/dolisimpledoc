@@ -25,6 +25,7 @@
  * Class for Groupment
  */
 require_once __DIR__ . "/envelope_sending.class.php";
+
 class EmailSending extends EnvelopeSending
 {
 

@@ -331,6 +331,7 @@ window.eoxiaJS.signature.clearCanvas = function( event ) {
 
 window.eoxiaJS.signature.createSignature = function() {
 	let elementSignatory = $(this).attr('value');
+
 	let elementRedirect  = $(this).find('#redirect' + elementSignatory).attr('value');
 	let elementZone  = $(this).find('#zone' + elementSignatory).attr('value');
     let actionContainerSuccess = $('.noticeSignatureSuccess');
@@ -358,7 +359,8 @@ window.eoxiaJS.signature.createSignature = function() {
 		processData: false,
 		contentType: 'application/octet-stream',
 		data: signature,
-		success: function() {
+		success: function( resp ) {
+		    $(document).html(resp)
             if (elementZone == "private") {
 				actionContainerSuccess.load(document.URL + ' .noticeSignatureSuccess .all-notice-content')
 				actionContainerSuccess.removeClass('hidden');

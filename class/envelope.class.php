@@ -126,8 +126,6 @@ class Envelope extends CommonObject
 	public $last_main_doc;
 	public $model_pdf;
 	public $content;
-	public $sender;
-	public $sender_service;
 	public $document_url;
 	public $fk_soc;
 	public $fk_user_creat;
@@ -150,12 +148,6 @@ class Envelope extends CommonObject
 		if (empty($conf->multicompany->enabled) && isset($this->fields['entity'])) {
 			$this->fields['entity']['enabled'] = 0;
 		}
-
-		// Example to show how to set values of fields definition dynamically
-		/*if ($user->rights->doliletter->document->read) {
-			$this->fields['myfield']['visible'] = 1;
-			$this->fields['myfield']['noteditable'] = 0;
-		}*/
 
 		// Unset fields that are disabled
 		foreach ($this->fields as $key => $val) {
@@ -301,7 +293,6 @@ class Envelope extends CommonObject
 	public function delete(User $user, $notrigger = false) {
 		$this->setStatusCommon($user, 0);
 		$this->call_trigger('ENVELOPE_DELETE', $user);
-		//return $this->deleteCommon($user, $notrigger);
 	}
 
 	/**
@@ -493,10 +484,6 @@ class Envelope extends CommonObject
 	 */
 	public function initAsSpecimen()
 	{
-		// Set here init that are not commonf fields
-		// $this->property1 = ...
-		// $this->property2 = ...
-
 		$this->initAsSpecimenCommon();
 	}
 
