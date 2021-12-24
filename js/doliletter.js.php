@@ -359,8 +359,7 @@ window.eoxiaJS.signature.createSignature = function() {
 		processData: false,
 		contentType: 'application/octet-stream',
 		data: signature,
-		success: function( resp ) {
-		    $(document).html(resp)
+		success: function() {
             if (elementZone == "private") {
 				actionContainerSuccess.load(document.URL + ' .noticeSignatureSuccess .all-notice-content')
 				actionContainerSuccess.removeClass('hidden');
