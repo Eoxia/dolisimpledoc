@@ -62,12 +62,15 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/html.formcompany.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
 
 require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
+require_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facture.class.php';
+require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
+require_once DOL_DOCUMENT_ROOT.'/comm/propal/class/propal.class.php';
+require_once DOL_DOCUMENT_ROOT.'/commande/class/commande.class.php';
 
 require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/invoice.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/project.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/propal.lib.php';
-require_once DOL_DOCUMENT_ROOT.'/core/lib/order.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/order.lib.php';
 
 // load envelope libraries
@@ -395,11 +398,44 @@ llxHeader('', $title, $help_url, '', 0, 0, $morejs, $morecss, '', '');
 if (!empty($fromtype)) {
 	switch ($fromtype) {
 		case 'invoice' :
+			$facture = new Facture($db);
+			$facture->fetch($fromid);
 			$prehead = 'facture_prepare_head';
-			$head = $prehead($object);
-			print dol_get_fiche_head($head, 'envelopeList', $langs->trans("Envelope"), -1, $object->picto);
+			$head = $prehead($facture);
 			break;
+		case 'thirdparty' :
+			$societe = new Societe($db);
+			$societe->fetch($fromid);
+			$prehead = 'societe_prepare_head';
+			$head = $prehead($societe);
+			break;
+		case 'product' :
+			$product = new Product($db);
+			$product->fetch($fromid);
+			$prehead = 'product_prepare_head';
+			$head = $prehead($product);
+			break;
+		case 'project' :
+			$project = new Project($db);
+			$project->fetch($fromid);
+			$prehead = 'project_prepare_head';
+			$head = $prehead($project);
+			break;
+		case 'propal' :
+			$propal = new Propal($db);
+			$propal->fetch($fromid);
+			$prehead = 'propal_prepare_head';
+			$head = $prehead($propal);
+			break;
+		case 'order' :
+			$order = new Commande($db);
+			$order->fetch($fromid);
+			$prehead = 'commande_prepare_head';
+			$head = $prehead($order);
+			break;
+
 	}
+	print dol_get_fiche_head($head, 'envelopeList', $langs->trans("Envelope"), -1, $object->picto);
 }
 
 // Example : Adding jquery code
