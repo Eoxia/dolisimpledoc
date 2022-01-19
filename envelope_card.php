@@ -379,19 +379,19 @@ if ($action == 'create') {
 
 	//Content -- Contenu
 	print '<tr class="fieldrequired"><td><label for="content">'.$langs->trans("Content").'</label></td><td>';
-	$doleditor = new DolEditor('content', GETPOST('content'), '', 90, 'dolibarr_notes', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
+	$doleditor = new DolEditor('content', GETPOST('content'), '', 90, 'dolibarr_details', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
 	$doleditor->Create();
 	print '</td></tr>';
 
 	//PublicNote -- Note publique
 	print '<tr class="content_field"><td><label for="note_public">'.$langs->trans("PublicNote").'</label></td><td>';
-	$doleditor = new DolEditor('note_public', GETPOST('note_public'), '', 90, 'dolibarr_notes', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
+	$doleditor = new DolEditor('note_public', GETPOST('note_public'), '', 90, 'dolibarr_details', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
 	$doleditor->Create();
 	print '</td></tr>';
 
 	//PrivateNote -- Note privée
 	print '<tr class="content_field"><td><label for="note_private">'.$langs->trans("PrivateNote").'</label></td><td>';
-	$doleditor = new DolEditor('note_private', GETPOST('note_private'), '', 90, 'dolibarr_notes', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
+	$doleditor = new DolEditor('note_private', GETPOST('note_private'), '', 90, 'dolibarr_details', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
 	$doleditor->Create();
 	print '</td></tr>';
 
@@ -457,7 +457,7 @@ if (($id || $ref) && $action == 'edit') {
 
 	//Content -- Contenue
 	print '<tr class="content_field"><td><label for="content">'.$langs->trans("Content").'</label></td><td>';
-	$doleditor = new DolEditor('content', $object->content, '', 90, 'dolibarr_notes', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
+	$doleditor = new DolEditor('content', $object->content, '', 90, 'dolibarr_details', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
 	$doleditor->Create();
 	print '</td></tr>';
 
