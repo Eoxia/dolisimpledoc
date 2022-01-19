@@ -681,7 +681,7 @@ while ($i < ($limit ? min($num, $limit) : $num)) {
 		//if (in_array($key, array('fk_soc', 'fk_user', 'fk_warehouse'))) $cssforfield = 'tdoverflowmax100';
 
 		if (!empty($arrayfields['t.'.$key]['checked'])) {
-			print '<td'.($cssforfield ? ' class="'.$cssforfield.'"' : '').'>';
+			print '<td'.($cssforfield ? ' class="'.$cssforfield.'"' : '') .'>';
 			if ($key == 'fk_soc') {
 			$thirdparty->fetch($obj->fk_soc);
 			print $thirdparty->getNomUrl();

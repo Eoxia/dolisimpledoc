@@ -576,16 +576,25 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 					$modelselected = $arraykeys[0];
 				}
 			}
-			print dolGetButtonAction($langs->trans($object->status == 1 ? 'Sign' : 'alreadySigned'), '', '',  DOL_URL_ROOT . '/custom/doliletter/envelope_signature.php'.'?id='.$object->id.'&mode=init&token='.newToken(),  '', $object->status == 1);
+			if ($permissiontoadd) {
+				print '<a class="'. ($object->status == 1 ? 'butAction' : 'butActionRefused classfortooltip') .'" title="'. $langs->trans('AlreadySigned').'" id="actionButtonSign"' . ($object->status == 1 ? ' href="' . DOL_URL_ROOT . '/custom/doliletter/envelope_signature.php'.'?id='.$object->id.'&mode=init&token='.newToken().'"' : '') .' >' . $langs->trans("Sign") . '</a>' . "\n";
+				print '<a class="'. ($object->status == 2 ? 'butAction' : 'butActionRefused classfortooltip') .'" title="'. $langs->trans('MustBeSignedBeforeSending').'" id="actionButtonSendMail"' . ($object->status == 2 ? ' href="' . $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=presend&mode=init&model='.$modelselected.'&token='.newToken().'"' : '') .' >' . $langs->trans("SendMail") . '</a>' . "\n";
+				print '<a class="'. ($object->status == 2 ? 'butAction' : 'butActionRefused classfortooltip') .'" title="'. $langs->trans('MustBeSignedBeforeSending').'" id="actionButtonSendMail"' . ($object->status == 2 ? ' href="' . $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=letterpresend&mode=init&model='.$modelselected.'&token='.newToken().'"' : '') .' >' . $langs->trans("SendLetter") . '</a>' . "\n";
+				print '<a class="butAction" id="actionButtonSendMail" href="' . $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=edit&token='.newToken().'">' . $langs->trans("Modify") . '</a>' . "\n";
+			} else {
+				print '<a class="butActionRefused classfortooltip" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans('Sign') . '</a>' . "\n";
+				print '<a class="butActionRefused classfortooltip" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans('SendMail') . '</a>' . "\n";
+				print '<a class="butActionRefused classfortooltip" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans('SendLetter') . '</a>' . "\n";
+				print '<a class="butActionRefused classfortooltip" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans('Modify') . '</a>' . "\n";
 
-			print dolGetButtonAction($langs->trans('SendMail'), '', 'presend', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=presend&mode=init&model='.$modelselected.'&token='.newToken(),  '', $object->status == 2);
 
-			print dolGetButtonAction($langs->trans('SendLetter'), '', 'letterpresend', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=letterpresend&mode=init&token='.newToken(), '', $object->status == 2);
 
-			print dolGetButtonAction($langs->trans('Modify'), '', 'default', $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=edit&token='.newToken(), '', $permissiontoadd);
-
-			// Delete (need delete permission, or if draft, just need create/modify permission)
-			print dolGetButtonAction($langs->trans('Delete'), '', 'delete', $_SERVER['PHP_SELF'].'?id='.$object->id.'&action=delete&token='.newToken(), '', $permissiontodelete || ($object->status == $object::STATUS_DRAFT && $permissiontoadd));
+			}
+			if ($permissiontodelete) {
+				print '<a class="butActionDelete" id="actionButtonSendMail" href="' . $_SERVER['PHP_SELF'].'?id='.$object->id.'&action=delete&token='.newToken().'">' . $langs->trans("Delete") . '</a>' . "\n";
+			} else {
+				print '<a class="butActionRefused classfortooltip" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans('Delete') . '</a>' . "\n";
+			}
 		}
 		print '</div>'."\n";
 	}
@@ -817,8 +826,6 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	if ($action == 'letterpresend')
 	{
 		$contact_list= array();
-
-
 
 		print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
 		print '<input type="hidden" name="token" value="'.newToken().'">';
