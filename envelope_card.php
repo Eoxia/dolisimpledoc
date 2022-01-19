@@ -207,10 +207,6 @@ if (empty($reshook)) {
 				setEventMessages($langs->trans('ErrorFieldRequired', $langs->transnoentitiesnoconv('Label')), null, 'errors');
 				$error++;
 				break;
-			case empty($content):
-				setEventMessages($langs->trans('ErrorFieldRequired', $langs->transnoentitiesnoconv('Content')), null, 'errors');
-				$error++;
-				break;
 		}
 
 		if (!$error) {
@@ -378,7 +374,7 @@ if ($action == 'create') {
 
 
 	//Content -- Contenu
-	print '<tr class="fieldrequired"><td><label for="content">'.$langs->trans("Content").'</label></td><td>';
+	print '<tr class=""><td><label for="content">'.$langs->trans("Content").'</label></td><td>';
 	$doleditor = new DolEditor('content', GETPOST('content'), '', 90, 'dolibarr_details', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
 	$doleditor->Create();
 	print '</td></tr>';
@@ -455,7 +451,7 @@ if (($id || $ref) && $action == 'edit') {
 	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_edit.tpl.php';
 
 
-	//Content -- Contenue
+	//Content -- Contenu
 	print '<tr class="content_field"><td><label for="content">'.$langs->trans("Content").'</label></td><td>';
 	$doleditor = new DolEditor('content', $object->content, '', 90, 'dolibarr_details', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
 	$doleditor->Create();
