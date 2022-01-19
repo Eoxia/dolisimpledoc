@@ -34,7 +34,7 @@ DoliLetterSetup = Configuration du module DoliLetter
 
 About = À propos
 DoliLetterAbout = À propos de DoliLetter
-DoliLetterArea = Bienvenue dans le module DoliLetter :)
+DoliLetterArea = Bienvenue dans le module DoliLetter
 
 #
 # DoliLetter
@@ -79,3 +79,14 @@ Sending = Envoi
 Sign = Signer
 Signatursender = Signataire
 Objects = Objets liés
+
+#
+# Signature - Signature
+#
+
+SignatureSender = Signature de l'envoyeur
+Role = Rôle
+SignatureLink = Lien de signature
+SendMailDate = Date d'envoi du mail de signature
+SignatureDate = Date de signature
+ActionsSignature = Actions
