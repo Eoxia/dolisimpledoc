@@ -48,6 +48,7 @@ DoliLetterList = Liste
 SelectUser = Sélectionner un utilisateur
 AddUser = Créer un utilisateur
 Create = Créer
+GoBackToCard = Retour à la fiche
 
 #
 # Envelope - Enveloppe

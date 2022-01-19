@@ -372,6 +372,9 @@ if ((empty($action) || ($action != 'create' && $action != 'edit'))) {
 		print '</td>';
 	}
 	print '</tr>';
+	print '<tr><td>';
+	print '<a href="envelope_card?id='. $object->id .'" class="butAction">' . $langs->trans('GoBackToCard') . '</a>';
+	print '</td></tr>';
 	print '</table>';
 	print '<br>';
 }
