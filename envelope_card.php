@@ -525,15 +525,12 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	print '<div class="underbanner clearboth"></div>';
 	print '<table class="border centpercent tableforfield">'."\n";
 
-
-
-
-
 	print '<tr><td class="titlefield">';
 	print $langs->trans("Content");
 	print '</td>';
 	print '<td>';
-	print dol_trunc($object->content, 60, 'wrap'); //wrap -> middle?
+
+	print dol_htmlentitiesbr($object->content); //wrap -> middle?
 	print '</td></tr>';
 
 	//unused display of information
