@@ -349,7 +349,7 @@ class Envelope extends CommonObject
 		if ($option == 'nolink') {
 			$linkstart = '<span';
 		} else {
-			$linkstart = '<a href="'.$url.'"';
+			$linkstart = '<a href="'.$url.'" target="_blank"';
 		}
 		$linkstart .= $linkclose.'>';
 		if ($option == 'nolink') {
