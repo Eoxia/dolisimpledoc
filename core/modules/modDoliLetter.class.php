@@ -250,10 +250,10 @@ class modDoliLetter extends DolibarrModules {
 		$this->menu[$r++]=array(
 			'fk_menu'=>'fk_mainmenu=doliletter',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type'=>'left', // This is a Left menu entry
-			'titre'=> '<i class="fas fa-paper-plane"></i> ' . $langs->trans('DoliLetterCreate'),
+			'titre'=>'<i class="fas fa-list"></i> '. $langs->trans('EnvelopeList'),
 			'mainmenu'=>'doliletter',
-			'leftmenu'=>'envelope_card',
-			'url'=>'/doliletter/envelope_card.php?action=create',
+			'leftmenu'=>'envelope_list',
+			'url'=>'/doliletter/envelope_list.php',
 			'langs'=>'doliletter@doliletter', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1100+$r,
 			'enabled'=>'$conf->doliletter->enabled',  // Define condition to show or hide menu entry. Use '$conf->doliletter->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
@@ -262,12 +262,12 @@ class modDoliLetter extends DolibarrModules {
 			'user'=>0, // 0=Menu for internal users, 1=external users, 2=both
 		);
 		$this->menu[$r++]=array(
-			'fk_menu'=>'fk_mainmenu=doliletter',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu'=>'fk_mainmenu=doliletter,fk_leftmenu=envelope_list',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type'=>'left', // This is a Left menu entry
-			'titre'=>'<i class="fas fa-list"></i> '. $langs->trans('DoliLetterList'),
+			'titre'=> '<i class="fas fa-paper-plane"></i> ' . $langs->trans('EnvelopeCreate'),
 			'mainmenu'=>'doliletter',
-			'leftmenu'=>'envelope_list',
-			'url'=>'/doliletter/envelope_list.php',
+			'leftmenu'=>'envelope_card',
+			'url'=>'/doliletter/envelope_card.php?action=create',
 			'langs'=>'doliletter@doliletter', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1100+$r,
 			'enabled'=>'$conf->doliletter->enabled',  // Define condition to show or hide menu entry. Use '$conf->doliletter->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.

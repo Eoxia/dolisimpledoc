@@ -79,6 +79,8 @@ Sending = Envoi
 Sign = Signer
 Signatursender = Signataire
 Objects = Objets liés
+EnvelopeList = Liste des courriers
+EnvelopeCreate = Créer un courrier
 
 #
 # Signature - Signature
