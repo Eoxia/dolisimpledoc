@@ -30,7 +30,8 @@ CREATE TABLE llx_doliletter_envelope(
 	last_main_doc varchar(255),
 	content       text,
 	document_url  varchar(255),
-	fk_soc        integer,
+    fk_soc        integer,
+    fk_contact    integer,
 	fk_user_creat integer NOT NULL,
 	fk_user_modif integer
 ) ENGINE=innodb;

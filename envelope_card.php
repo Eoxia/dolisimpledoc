@@ -353,6 +353,7 @@ if ($action == 'create') {
 	unset($object->fields['note_public']);
 	unset($object->fields['note_private']);
 	unset($object->fields['fk_soc']);
+	unset($object->fields['fk_contact']);
 
 
 	//Ref -- Ref
@@ -367,11 +368,15 @@ if ($action == 'create') {
 	//Society -- Société
 	print '<tr><td class="fieldrequired">'.$langs->trans("Society").'</td><td>';
 	$events = array();
-	$events[1] = array('method' => 'getContacts', 'url' => dol_buildpath('/core/ajax/contacts.php?showempty=1', 1), 'htmlname' => 'contact', 'params' => array('add-customer-contact' => 'disabled'));
+	$events[1] = array('method' => 'getContacts', 'url' => dol_buildpath('/core/ajax/contacts.php?showempty=1', 1), 'htmlname' => 'fk_contact', 'params' => array('add-customer-contact' => 'disabled'));
 	print $form->select_company(GETPOST('fromtype') == 'thirdparty' ? GETPOST('fromid') : GETPOST('fk_soc'), 'fk_soc', '', 'SelectThirdParty', 1, 0, $events, 0, 'minwidth300');
 	print ' <a href="'.DOL_URL_ROOT.'/societe/card.php?action=create&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create').'" target="_blank"><span class="fa fa-plus-circle valignmiddle paddingleft" title="'.$langs->trans("AddThirdParty").'"></span></a>';
 	print '</td></tr>';
 
+	//Contact -- Contact
+	print '<tr><td class="fieldrequired">'.$langs->trans("Contact").'</td><td>';
+	print $form->selectcontacts(GETPOST('fk_soc', 'int'), '', 'fk_contact', 1, '', '', 0, 'quatrevingtpercent', false, 0, array(), false, '', 'fk_contact');
+	print '</td></tr>';
 
 	//Content -- Contenu
 	print '<tr class=""><td><label for="content">'.$langs->trans("Content").'</label></td><td>';
@@ -439,6 +444,7 @@ if (($id || $ref) && $action == 'edit') {
 	unset($object->fields['note_public']);
 	unset($object->fields['note_private']);
 	unset($object->fields['fk_soc']);
+	unset($object->fields['fk_contact']);
 
 	//Society -- Société
 	print '<tr><td class="fieldrequired">'.$langs->trans("Society").'</td><td>';
