@@ -117,15 +117,14 @@ function selectForm($objecttype, $htmlname = 'form[]', $htmlid ='', $notid = arr
 		$htmlid == substr($htmlname, 0, -2);
 	$records =fetchAllAny($objecttype);
 
-	$str .=('<select class="minwidth200" data-select2-id="'.$htmlname.'" name="' . $htmlname . ($multiplechoices ? '" multiple ">' : '">'));
+	$str .=('<select class="minwidth200" data-select2-id="'.$htmlname.'" name="' . $htmlname . '">');
 	foreach ($records as $line) {
 		if (!in_array($line->id, $notid)) {
 			$str .= '<option data-select2-id="'.$line->id.$line->ref.'" value="' . $line->id . '">' . $line->ref . '</option>';
 		}
 	}
 	$str .= '</select>';
-	//print 'debug </div>';
-	//include_once DOL_DOCUMENT_ROOT.'/core/lib/ajax.lib.php';
-	//$str .= ajax_combobox($htmlname);
+	include_once DOL_DOCUMENT_ROOT.'/core/lib/ajax.lib.php';
+	$str .= ajax_combobox($htmlname);
 	return $str;
 }
