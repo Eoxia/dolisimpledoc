@@ -84,8 +84,8 @@ $extrafields->fetch_name_optionals_label($lettertemp->table_element);
 
 // Default sort order (if not yet defined by previous GETPOST)
 if (!$sortfield) {
-	reset($object->fields);					// Reset is required to avoid key() to return null.
-	$sortfield = "t.".key($object->fields); // Set here default search field. By default 1st field in definition.
+	reset($lettertemp->fields);					// Reset is required to avoid key() to return null.
+	$sortfield = "t.".key($lettertemp->fields); // Set here default search field. By default 1st field in definition.
 }
 if (!$sortorder) {
 	$sortorder = "ASC";
@@ -94,7 +94,7 @@ if (!$sortorder) {
 // Initialize array of search criterias
 $search_all = GETPOST('search_all', 'alphanohtml') ? GETPOST('search_all', 'alphanohtml') : GETPOST('sall', 'alphanohtml');
 $search = array();
-foreach ($object->fields as $key => $val) {
+foreach ($lettertemp->fields as $key => $val) {
 	if (GETPOST('search_'.$key, 'alpha') !== '') {
 		$search[$key] = GETPOST('search_'.$key, 'alpha');
 	}
@@ -112,7 +112,7 @@ if(!empty($fromtype)) {
 
 // List of fields to search into when doing a "search in all"
 $fieldstosearchall = array();
-foreach ($object->fields as $key => $val) {
+foreach ($lettertemp->fields as $key => $val) {
 	if (!empty($val['searchall'])) {
 		$fieldstosearchall['t.'.$key] = $val['label'];
 	}
@@ -120,7 +120,7 @@ foreach ($object->fields as $key => $val) {
 
 // Definition of array of fields for columns
 $arrayfields = array();
-foreach ($object->fields as $key => $val) {
+foreach ($lettertemp->fields as $key => $val) {
 	// If $val['visible']==0, then we never show the field
 	if (!empty($val['visible'])) {
 		$visible = (int) dol_eval($val['visible'], 1);
@@ -134,10 +134,11 @@ foreach ($object->fields as $key => $val) {
 	}
 }
 
+
 // Extra fields
 include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_list_array_fields.tpl.php';
 
-$object->fields = dol_sort_array($object->fields, 'position');
+$lettertemp->fields = dol_sort_array($lettertemp->fields, 'position');
 $arrayfields = dol_sort_array($arrayfields, 'position');
 
 $permissiontoread = $user->rights->doliletter->envelope->read;
@@ -207,37 +208,34 @@ if (empty($reshook)) {
  *
  * Put here all code to build page
  */
-$lettertemp       = new LetterSending($db);
-$letterlist = $lettertemp->fetchAll();
-
 
 // Build and execute select
 // --------------------------------------------------------------------
 $sql = 'SELECT ';
 $sql .= $lettertemp->getFieldList('t');
 // Add fields from extrafields
-if (!empty($extrafields->attributes[$object->table_element]['label'])) {
-	foreach ($extrafields->attributes[$object->table_element]['label'] as $key => $val) {
-		$sql .= ($extrafields->attributes[$object->table_element]['type'][$key] != 'separate' ? ", ef.".$key.' as options_'.$key.', ' : '');
+if (!empty($extrafields->attributes[$lettertemp->table_element]['label'])) {
+	foreach ($extrafields->attributes[$lettertemp->table_element]['label'] as $key => $val) {
+		$sql .= ($extrafields->attributes[$lettertemp->table_element]['type'][$key] != 'separate' ? ", ef.".$key.' as options_'.$key.', ' : '');
 	}
 }
 // Add fields from hooks
 $parameters = array();
-$reshook = $hookmanager->executeHooks('printFieldListSelect', $parameters, $object); // Note that $action and $object may have been modified by hook
+$reshook = $hookmanager->executeHooks('printFieldListSelect', $parameters, $lettertemp); // Note that $action and $lettertemp may have been modified by hook
 $sql .= preg_replace('/^,/', '', $hookmanager->resPrint);
 $sql = preg_replace('/,\s*$/', '', $sql);
 $sql .= " FROM ".MAIN_DB_PREFIX.$lettertemp->table_element." as t";
-if (isset($extrafields->attributes[$object->table_element]['label']) && is_array($extrafields->attributes[$object->table_element]['label']) && count($extrafields->attributes[$object->table_element]['label'])) {
+if (isset($extrafields->attributes[$lettertemp->table_element]['label']) && is_array($extrafields->attributes[$lettertemp->table_element]['label']) && count($extrafields->attributes[$lettertemp->table_element]['label'])) {
 	$sql .= " LEFT JOIN ".MAIN_DB_PREFIX.$lettertemp->table_element."_extrafields as ef on (t.rowid = ef.fk_object)";
 }
 // Add table from hooks
 $parameters = array();
-$reshook = $hookmanager->executeHooks('printFieldListFrom', $parameters, $object); // Note that $action and $object may have been modified by hook
+$reshook = $hookmanager->executeHooks('printFieldListFrom', $parameters, $lettertemp); // Note that $action and $object may have been modified by hook
 $sql .= $hookmanager->resPrint;
 $sql .= " WHERE fk_envelope = ".$object->id." ";
 
 if ($object->ismultientitymanaged == 1) {
-	$sql .= " AND t.entity IN (".getEntity($object->element).")";
+	$sql .= " AND t.entity IN (".getEntity($lettertemp->element).")";
 }
 $sql .= " AND t.status > 0";
 
@@ -452,7 +450,7 @@ if ($object->id > 0) {
 	$selectedfields = $form->multiSelectArrayWithCheckbox('selectedfields', $arrayfields, $varpage); // This also change content of $arrayfields
 	$selectedfields .= (count($arrayofmassactions) ? $form->showCheckAddButtons('checkforselect', 1) : '');
 
-	print '<div class="div-table-responsive">'; // You can use div-table-responsive-no-min if you dont need reserved height for your table
+	print '<div class="div-table-responsive fichehalfleft">'; // You can use div-table-responsive-no-min if you dont need reserved height for your table
 	print '<table class="tagtable nobottomiftotal liste'.($moreforfilter ? " listwithfilterbefore" : "").'">'."\n";
 
 
@@ -507,7 +505,7 @@ if ($object->id > 0) {
 // Fields title label
 // --------------------------------------------------------------------
 	print '<tr class="liste_titre">';
-	foreach ($object->fields as $key => $val) {
+	foreach ($lettertemp->fields as $key => $val) {
 		$cssforfield = (empty($val['csslist']) ? (empty($val['css']) ? '' : $val['css']) : $val['csslist']);
 		if ($key == 'status') {
 			$cssforfield .= ($cssforfield ? ' ' : '').'center';
