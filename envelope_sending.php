@@ -80,7 +80,18 @@ $hookmanager->initHooks(array('lettercard', 'globalcard')); // Note that conf->h
 $extrafields->fetch_name_optionals_label($mailtemp->table_element);
 $extrafields->fetch_name_optionals_label($lettertemp->table_element);
 
+$permissiontoread = $user->rights->doliletter->envelope->read;
+$permissiontoadd = $user->rights->doliletter->envelope->write; // Used by the include of actions_addupdatedelete.inc.php and actions_lineupdown.inc.php
+$permissiontodelete = $user->rights->doliletter->envelope->delete || ($permissiontoadd && isset($object->status));
+$permissionnote = $user->rights->doliletter->envelope->write; // Used by the include of actions_setnotes.inc.php
+$permissiondellink = $user->rights->envelope->letter->write; // Used by the include of actions_dellink.inc.php
+$upload_dir = $conf->doliletter->multidir_output[$conf->entity];
 
+// Security check (enable the most restrictive one)
+if ($user->socid > 0) accessforbidden();
+if ($user->socid > 0) $socid = $user->socid;
+if (empty($conf->doliletter->enabled)) accessforbidden();
+if (!$permissiontoread) accessforbidden();
 
 // Default sort order (if not yet defined by previous GETPOST)
 if (!$sortfield) {

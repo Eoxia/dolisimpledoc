@@ -73,13 +73,24 @@ $object->fetch($id);
 
 $hookmanager->initHooks(array('envelopecontact', 'globalcard')); // Note that conf->hooks_modules contains array
 
-$permission = $user->rights->doliletter->envelope->write;
+$permissiontoread = $user->rights->doliletter->envelope->read;
+$permissiontoadd = $user->rights->doliletter->envelope->write; // Used by the include of actions_addupdatedelete.inc.php and actions_lineupdown.inc.php
+$permissiontodelete = $user->rights->doliletter->envelope->delete || ($permissiontoadd && isset($object->status));
+$permissionnote = $user->rights->doliletter->envelope->write; // Used by the include of actions_setnotes.inc.php
+$permissiondellink = $user->rights->envelope->letter->write; // Used by the include of actions_dellink.inc.php
+$upload_dir = $conf->doliletter->multidir_output[$conf->entity];
+
+// Security check (enable the most restrictive one)
+if ($user->socid > 0) accessforbidden();
+if ($user->socid > 0) $socid = $user->socid;
+if (empty($conf->doliletter->enabled)) accessforbidden();
+if (!$permissiontoread) accessforbidden();
 
 /*
  * Actions
  */
 
-if ($action == 'addcontact' && $permission) {
+if ($action == 'addcontact' && $permissiontoadd) {
 	$result = $object->fetch($id);
 
 	if ($result > 0 && $id > 0) {

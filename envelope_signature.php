@@ -40,7 +40,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/images.lib.php';
 require_once __DIR__ . '/class/envelope.class.php';
 require_once __DIR__ . '/lib/doliletter_envelope.lib.php';
 
-global $db, $langs;
+global $db, $langs, $user, $conf;
 
 // Load translation files required by the page
 $langs->loadLangs(array("doliletter@doliletter", "other"));
@@ -62,10 +62,17 @@ $object->fetch($id);
 
 $hookmanager->initHooks(array('envelopesignature', 'globalcard')); // Note that conf->hooks_modules contains array
 
-//Security check
-$permissiontoread   = $user->rights->doliletter->envelope->read;
-$permissiontoadd    = $user->rights->doliletter->envelope->write;
-$permissiontodelete = $user->rights->doliletter->envelope->delete;
+$permissiontoread = $user->rights->doliletter->envelope->read;
+$permissiontoadd = $user->rights->doliletter->envelope->write; // Used by the include of actions_addupdatedelete.inc.php and actions_lineupdown.inc.php
+$permissiontodelete = $user->rights->doliletter->envelope->delete || ($permissiontoadd && isset($object->status));
+$permissionnote = $user->rights->doliletter->envelope->write; // Used by the include of actions_setnotes.inc.php
+$permissiondellink = $user->rights->envelope->letter->write; // Used by the include of actions_dellink.inc.php
+$upload_dir = $conf->doliletter->multidir_output[$conf->entity];
+
+// Security check (enable the most restrictive one)
+if ($user->socid > 0) accessforbidden();
+if ($user->socid > 0) $socid = $user->socid;
+if (empty($conf->doliletter->enabled)) accessforbidden();
 if (!$permissiontoread) accessforbidden();
 
 $upload_dir = $conf->doliletter->multidir_output[$conf->entity ? $conf->entity : $conf->entity]."/envelope/".get_exdir(0, 0, 0, 1, $object);
