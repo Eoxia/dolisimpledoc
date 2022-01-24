@@ -66,6 +66,7 @@ require_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facture.class.php';
 require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
 require_once DOL_DOCUMENT_ROOT.'/comm/propal/class/propal.class.php';
 require_once DOL_DOCUMENT_ROOT.'/commande/class/commande.class.php';
+require_once DOL_DOCUMENT_ROOT.'/contact/class/contact.class.php';
 
 require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/invoice.lib.php';
@@ -115,6 +116,7 @@ $pagenext = $page + 1;
 $object = new Envelope($db);
 $extrafields = new ExtraFields($db);
 $thirdparty = new Societe($db);
+$contact = new Contact($db);
 $sender =new user($db);
 $diroutputmassaction = $conf->envelope->dir_output.'/temp/massgeneration/'.$user->id;
 $hookmanager->initHooks(array('documentlist')); // Note that conf->hooks_modules contains array
@@ -679,13 +681,17 @@ while ($i < ($limit ? min($num, $limit) : $num)) {
 			$thirdparty->fetch($obj->fk_soc);
 			print $thirdparty->getNomUrl();
 			}
+			else if ($key == 'fk_contact') {
+				$contact->fetch($obj->fk_soc);
+				print $contact->getNomUrl();
+			}
 			else if ($key == 'sender') {
 				$sender->fetch($obj->sender);
 				print $sender->getNomUrl();
 			}
 			else if ($key == 'status') {
 				print $object->getLibStatut(5);
-			} elseif ($key == 'rowid') {
+			} else if ($key == 'rowid') {
 				print $object->showOutputField($val, $key, $object->id, '');
 			} else {
 				print $object->showOutputField($val, $key, $object->$key, '');
