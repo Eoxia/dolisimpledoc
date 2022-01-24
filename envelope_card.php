@@ -46,6 +46,7 @@ require_once './core/modules/doliletter/mod_envelope_standard.php';
 require_once './lib/doliletter_envelope.lib.php';
 require_once './lib/doliletter.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
+require_once DOL_DOCUMENT_ROOT.'/contact/class/contact.class.php';
 
 global $db, $conf, $langs, $user, $hookmanager;
 
@@ -63,6 +64,7 @@ $backtopage  = GETPOST('backtopage', 'alpha');
 
 // Initialize technical objects
 $object         = new Envelope($db);
+$contact        = new Contact($db);
 $signatory      = new EnvelopeSignature($db);
 $refEnvelopeMod = new $conf->global->DOLILETTER_ENVELOPE_ADDON();
 $extrafields    = new ExtraFields($db);
@@ -178,6 +180,7 @@ if (empty($reshook)) {
 		$note_private     = GETPOST('note_private');
 		$note_public        = GETPOST('note_public');
 		$label        = GETPOST('label');
+		$contact_id        = GETPOST('fk_contact');
 
 		// Initialize object
 		$now                   = dol_now();
@@ -187,12 +190,13 @@ if (empty($reshook)) {
 		$object->tms           = $now;
 		$object->import_key    = "";
 		$object->note_private  = $note_private;
-		$object->note_public  = $note_public;
-		$object->label        = $label;
+		$object->note_public   = $note_public;
+		$object->label         = $label;
 
-		$object->fk_soc         = $society_id;
+		$object->fk_soc        = $society_id;
+		$object->fk_contact    = $contact_id;
 
-		$object->content        = $content;
+		$object->content       = $content;
 		$object->entity = $conf->entity ?: 1;
 
 		$object->fk_user_creat = $user->id ? $user->id : 1;
@@ -232,12 +236,14 @@ if (empty($reshook)) {
 	if ($action == 'update' && $permissiontoadd) {
 		$society_id     = GETPOST('fk_soc');
 		$content        = GETPOST('content');
-		$label        = GETPOST('label');
+		$label          = GETPOST('label');
+		$contact_id     = GETPOST('fk_contact');
 
 
-		$object->label        = $label;
-		$object->fk_soc         = $society_id;
-		$object->content        = $content;
+		$object->label      = $label;
+		$object->fk_soc     = $society_id;
+		$object->content    = $content;
+		$object->fk_contact = $contact_id;
 
 		$object->fk_user_creat = $user->id ? $user->id : 1;
 		if (!$error) {
@@ -307,8 +313,6 @@ if (empty($reshook)) {
 		unset($action);
 	}
 }
-
-
 
 /*
  * View
@@ -454,6 +458,11 @@ if (($id || $ref) && $action == 'edit') {
 	print ' <a href="'.DOL_URL_ROOT.'/societe/card.php?action=create&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create').'" target="_blank"><span class="fa fa-plus-circle valignmiddle paddingleft" title="'.$langs->trans("AddThirdParty").'"></span></a>';
 	print '</td></tr>';
 
+	//Contact -- Contact
+	print '<tr><td class="fieldrequired">'.$langs->trans("Contact").'</td><td>';
+	print $form->selectcontacts(GETPOST('fk_soc', 'int'), $object->fk_contact, 'fk_contact', 1, '', '', 0, 'quatrevingtpercent', false, 0, array(), false, '', 'fk_contact');
+	print '</td></tr>';
+
 	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_edit.tpl.php';
 
 
@@ -506,7 +515,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	// Print form confirm
 	print $formconfirm;
 
-
+	$contact->fetch($object->fk_contact);
 	// Object card
 	// ------------------------------------------------------------
 	$linkback = '<a href="'.dol_buildpath('/doliletter/envelope_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
@@ -519,6 +528,13 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	$morehtmlref .=  '</td>';
 	$morehtmlref .=  '<td>';
 	$morehtmlref .=  $thirdparty->getNomUrl(1);
+	$morehtmlref .=  '</td></tr><br>';
+	$morehtmlref .=  '<tr><td class="titlefield">';
+	$morehtmlref .=  $langs->trans("Contact");
+	$morehtmlref .= ' : ';
+	$morehtmlref .=  '</td>';
+	$morehtmlref .=  '<td>';
+	$morehtmlref .=  $contact->getNomUrl(1);
 	$morehtmlref .=  '</td></tr>';
 	$morehtmlref .= '</div>';
 
@@ -541,6 +557,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 	//unused display of information
 	unset($object->fields['fk_soc']);
+	unset($object->fields['fk_contact']);
 	unset($object->fields['content']);
 	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_view.tpl.php';
 	// Other attributes. Fields from hook formObjectOptions and Extrafields.
