@@ -856,7 +856,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '<input type="hidden" name="id" value="'.$object->id.'">';
 		//Combobox multiple selection for contacts saved as receivers
 		print '<tr class="oddeven"><td>'.$langs->trans("receivers").'</td><td>';
-		print $form->selectcontacts($object->fk_soc, '', 'receiver[]', 0, '', '', 0, 'quatrevingtpercent', false, 0, array(), false, 'multiple', 'receiver');
+		print $form->selectcontacts($object->fk_soc, $object->fk_contact, 'receiver[]', 0, '', '', 0, 'quatrevingtpercent', false, 0, array(), false, 'multiple', 'receiver');
 		print '</td></tr>';
 		print '</table>'."<br>";
 
