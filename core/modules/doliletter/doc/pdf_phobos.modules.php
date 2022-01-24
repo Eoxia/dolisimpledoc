@@ -259,7 +259,7 @@ class pdf_phobos extends ModelePDFEnvelope
 				$pdf->SetDrawColor(128, 128, 128);
 
 				$pdf->SetTitle($outputlangs->convToOutputCharset($object->ref));
-				$pdf->SetSubject($outputlangs->transnoentities("EnvelopeCard"));
+				$pdf->SetSubject($outputlangs->transnoentities("Envelope"));
 				$pdf->SetCreator("Dolibarr ".DOL_VERSION);
 				$pdf->SetAuthor($outputlangs->convToOutputCharset($user->getFullName($outputlangs)));
 				$pdf->SetKeyWords($outputlangs->convToOutputCharset($object->ref)." ".$outputlangs->transnoentities("ContractCard")." ".$outputlangs->convToOutputCharset($object->thirdparty->name));
@@ -575,7 +575,7 @@ class pdf_phobos extends ModelePDFEnvelope
 
 		$signatory = new EnvelopeSignature($this->db);
 		$sender    = array_shift($signatory->fetchSignatory('E_SENDER', $object->id));
-		$recipient = array_shift($signatory->fetchSignatory('E_SOCIETY', $object->id));
+//		$recipient = array_shift($signatory->fetchSignatory('E_SOCIETY', $object->id));
 		if (dol_strlen($sender->signature) > 0) {
 			$tempdir = $conf->doliletter->multidir_output[isset($object->entity) ? $object->entity : 1] . '/temp/';
 
@@ -587,12 +587,12 @@ class pdf_phobos extends ModelePDFEnvelope
 				$test = $tempdir."signature.png";
 			}
 
-			if (!empty($recipient) && $recipient > 0) {
-				$encoded_image = explode(",",  $recipient->signature)[1];
-				$decoded_image = base64_decode($encoded_image);
-				file_put_contents($tempdir."signature2.png", $decoded_image);
-				$test = $tempdir."signature2.png";
-			}
+//			if (!empty($recipient) && $recipient > 0) {
+//				$encoded_image = explode(",",  $recipient->signature)[1];
+//				$decoded_image = base64_decode($encoded_image);
+//				file_put_contents($tempdir."signature2.png", $decoded_image);
+//				$test = $tempdir."signature2.png";
+//			}
 		}
 
 
@@ -607,12 +607,12 @@ class pdf_phobos extends ModelePDFEnvelope
 		$pdf->Image($test, $this->marge_gauche, $posy - 5, 50, 50); // width=0 (auto)
 		$pdf->MultiCell($posmiddle - $this->marge_gauche - 5, 30, '', 1);
 
-		$pdf->SetXY($posmiddle + 5, $posy);
-		$pdf->MultiCell($this->page_largeur - $this->marge_droite - $posmiddle - 5, 5, $outputlangs->transnoentities("ContactNameAndSignature", $this->recipient->name), 0, 'L', 0);
-
-		$pdf->SetXY($posmiddle + 5, $posy + 5);
-		$pdf->Image($test, $this->marge_gauche, $posy - 5, 50, 50); // width=0 (auto)
-		$pdf->MultiCell($this->page_largeur - $this->marge_droite - $posmiddle - 5, 30, '', 1);
+//		$pdf->SetXY($posmiddle + 5, $posy);
+//		$pdf->MultiCell($this->page_largeur - $this->marge_droite - $posmiddle - 5, 5, $outputlangs->transnoentities("ContactNameAndSignature", $this->recipient->name), 0, 'L', 0);
+//
+//		$pdf->SetXY($posmiddle + 5, $posy + 5);
+//		$pdf->Image($test, $this->marge_gauche, $posy - 5, 50, 50); // width=0 (auto)
+//		$pdf->MultiCell($this->page_largeur - $this->marge_droite - $posmiddle - 5, 30, '', 1);
 	}
 
 	// phpcs:disable PEAR.NamingConventions.ValidFunctionName.PublicUnderscore
@@ -673,7 +673,7 @@ class pdf_phobos extends ModelePDFEnvelope
 		$pdf->SetFont('', 'B', $default_font_size + 3);
 		$pdf->SetXY($posx, $posy);
 		$pdf->SetTextColor(0, 0, 60);
-		$title = $outputlangs->transnoentities("EnvelopeCard");
+		$title = $outputlangs->transnoentities("Envelope");
 		$pdf->MultiCell(100, 4, $title, '', 'R');
 
 		$pdf->SetFont('', 'B', $default_font_size + 2);
@@ -751,6 +751,7 @@ class pdf_phobos extends ModelePDFEnvelope
 
 			$this->recipient = $object->thirdparty;
 
+
 			// Recipient name
 			if ($usecontact && ($object->contact->fk_soc != $object->thirdparty->id && (!isset($conf->global->MAIN_USE_COMPANY_NAME_OF_CONTACT) || !empty($conf->global->MAIN_USE_COMPANY_NAME_OF_CONTACT)))) {
 				$thirdparty = $object->contact;
@@ -760,7 +761,9 @@ class pdf_phobos extends ModelePDFEnvelope
 
 			$this->recipient->name = pdfBuildThirdpartyName($thirdparty, $outputlangs);
 
-			$carac_client = pdf_build_address($outputlangs, $this->emetteur, $object->thirdparty, (isset($object->contact) ? $object->contact : ''), $usecontact, 'target', $object);
+			$contact = new Contact($this->db);
+			$contact->fetch($object->fk_contact);
+			$carac_client = pdf_build_address($outputlangs, $this->recipient, $object->thirdparty, $contact, 1, 'target', $object);
 
 			// Show recipient
 			$widthrecbox = 100;
