@@ -46,7 +46,7 @@ class LetterSending extends EnvelopeSending
 	public $fields=array(
 		'rowid'                 => array('type'=>'integer', 'label'=>'TechnicalID', 'enabled'=>'1', 'position'=>1, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'comment'=>"Id"),
 		'entity'                => array('type'=> 'integer', 'label'=>'entity', 'enabled'=>'1', 'notnull'=>1),
-		'status'                => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>70, 'notnull'=>1, 'default' => 1, 'visible'=>1, 'index'=>1,),
+		'status'                => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>70, 'notnull'=>1, 'default' => 1, 'visible'=>0, 'index'=>1,),
 		'date_creation'         => array('type'=>'datetime', 'label'=>'tms', 'enabled'=>'1', 'position'=>50, 'notnull'=>0, 'visible'=>-2,),
 		'sender_fullname'       => array('type'=>'varchar(255)', 'label'=>'sender_fullname', 'enabled'=>'1', 'position'=>30, 'notnull'=>1, 'visible'=>-1,),
 		'contact_fullname'      => array('type'=>'varchar(255)', 'label'=>'contact_fullname', 'enabled'=>'1', 'position'=>30, 'notnull'=>1, 'visible'=>-1,),

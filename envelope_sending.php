@@ -65,12 +65,13 @@ $backtopage  = GETPOST('backtopage', 'alpha');
 
 // Initialize technical objects
 $object         = new Envelope($db);
-$lettertemp       = new LetterSending($db);
+$lettertemp     = new LetterSending($db);
 $mailtemp       = new EmailSending($db);
-$thirdparty = new Societe($db);
+$thirdparty     = new Societe($db);
 $refEnvelopeMod = new $conf->global->DOLILETTER_ENVELOPE_ADDON();
 $extrafields    = new ExtraFields($db);
 $usertmp        = new User($db);
+$sender         = new User($db);
 
 $object->fetch($id);
 
@@ -459,6 +460,7 @@ if ($object->id > 0) {
 
 	$varpage = empty($contextpage) ? $_SERVER["PHP_SELF"] : $contextpage;
 	$selectedfields = $form->multiSelectArrayWithCheckbox('selectedfields', $arrayfields, $varpage); // This also change content of $arrayfields
+
 	$selectedfields .= (count($arrayofmassactions) ? $form->showCheckAddButtons('checkforselect', 1) : '');
 
 	print '<div class="div-table-responsive fichehalfleft">'; // You can use div-table-responsive-no-min if you dont need reserved height for your table
@@ -538,8 +540,9 @@ if ($object->id > 0) {
 	$reshook = $hookmanager->executeHooks('printFieldListTitle', $parameters, $object); // Note that $action and $object may have been modified by hook
 	print $hookmanager->resPrint;
 // Action column
-	print getTitleFieldOfList($selectedfields, 0, $_SERVER["PHP_SELF"], '', '', '', '', $sortfield, $sortorder, 'center maxwidthsearch ')."\n";
+	print getTitleFieldOfList($selectedfields, 0, $_SERVER["PHP_SELF"], '', '', '', '', $sortfield, $sortorder, 'center maxwidthsearch ') . "\n";
 	print '</tr>'."\n";
+	$arrayofselected = is_array($toselect) ? $toselect : array();
 
 
 // Detect if we need a fetch on each output line
@@ -599,7 +602,8 @@ if ($object->id > 0) {
 					print $sender->getNomUrl();
 				}
 				else if ($key == 'status') {
-					print $lettertemp->getLibStatut(5);
+//					print $lettertemp->getLibStatut(5);
+					print $lettertemp->status;
 				} elseif ($key == 'rowid') {
 					print $lettertemp->showOutputField($val, $key, $lettertemp->id, '');
 				} else {
@@ -630,13 +634,16 @@ if ($object->id > 0) {
 		$reshook = $hookmanager->executeHooks('printFieldListValue', $parameters, $object); // Note that $action and $object may have been modified by hook
 		print $hookmanager->resPrint;
 		// Action column
-
-		if (!$i) {
-			$totalarray['nbfield']++;
+		print '<td class="nowrap center">';
+		if ($massactionbutton || $massaction) {   // If we are in select mode (massactionbutton defined) or if we have already selected and sent an action ($massaction) defined
+			$selected                                                  = 0;
+			if (in_array($firepermit->id, $arrayofselected)) $selected = 1;
+			print '<input id="cb' . $firepermit->id . '" class="flat checkforselect" type="checkbox" name="toselect[]" value="' . $firepermit->id . '"' . ($selected ? ' checked="checked"' : '') . '>';
 		}
 
-		print '</tr>'."\n";
-
+		print '</td>';
+		if ( ! $i) $totalarray['nbfield']++;
+		print '</tr>' . "\n";
 		$i++;
 	}
 

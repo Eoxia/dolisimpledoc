@@ -117,7 +117,7 @@ $object = new Envelope($db);
 $extrafields = new ExtraFields($db);
 $thirdparty = new Societe($db);
 $contact = new Contact($db);
-$sender =new user($db);
+$sender = new User($db);
 $diroutputmassaction = $conf->envelope->dir_output.'/temp/massgeneration/'.$user->id;
 $hookmanager->initHooks(array('documentlist')); // Note that conf->hooks_modules contains array
 
