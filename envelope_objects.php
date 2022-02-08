@@ -353,7 +353,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	}
 
 	print '<br></table>';
-print '<div>';
+	print '<div>';
 	print '<form method="POST" action="' . $_SERVER["PHP_SELF"] . '?id=' . $id . '">';
 	print '<input type="hidden" name="token" value="' . newToken() . '">';
 	print '<input type="hidden" name="action" value="addLink">';

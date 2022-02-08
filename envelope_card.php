@@ -41,12 +41,14 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formother.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/doleditor.class.php';
+require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
+require_once DOL_DOCUMENT_ROOT.'/contact/class/contact.class.php';
+
 require_once './class/envelope.class.php';
+require_once './class/envelope_letter.class.php';
 require_once './core/modules/doliletter/mod_envelope_standard.php';
 require_once './lib/doliletter_envelope.lib.php';
 require_once './lib/doliletter.lib.php';
-require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
-require_once DOL_DOCUMENT_ROOT.'/contact/class/contact.class.php';
 
 global $db, $conf, $langs, $user, $hookmanager;
 
@@ -69,6 +71,7 @@ $signatory      = new EnvelopeSignature($db);
 $refEnvelopeMod = new $conf->global->DOLILETTER_ENVELOPE_ADDON();
 $extrafields    = new ExtraFields($db);
 $usertmp        = new User($db);
+$letter         = new LetterSending($db);
 
 $object->fetch($id);
 
@@ -293,18 +296,22 @@ if (empty($reshook)) {
 	if ($action == 'lettersend') {
 		$error = 0;
 		$receiver = GETPOST('receiver');
+		$lettercode = GETPOST('lettercode');
 
-		if (!is_array($receiver)) {
-			if ($receiver == '-1') {
-				$receiver = array();
-				$error++;
-			} else {
-				$receiver = array($receiver);
-			}
-		}
-		foreach ($receiver as $receiving) {
-			$object->sendtoid[] = $receiving;
-		}
+		$letter->fk_envelope = $object->id;
+		$letter->date_creation = $letter->db->idate($now);
+		$letter->status = 1;
+		$letter->fk_user = $user->id;
+		$letter->entity = $object->entity;
+		$letter->sender_fullname = $user->firstname . ' ' . $user->lastname;
+		$letter->fk_socpeople = $receiver;
+
+		$contact->fetch($receiver);
+
+		$letter->recipient_address = $contact->address;
+		$letter->contact_fullname = $contact->firstname . ' ' . $contact->lastname;
+		$letter->letter_code = $lettercode;
+		$result = $letter->create($user);
 		if (!$error) {
 			$object->call_trigger('ENVELOPE_LETTER', $user);
 		}
@@ -484,7 +491,7 @@ if (($id || $ref) && $action == 'edit') {
 }
 
 // Part to show record
-if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'create'))) {
+if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'create' && $action != 'letterpresend'))) {
 	$res = $object->fetch_optionals();
 
 	$head = envelopePrepareHead($object);
@@ -557,6 +564,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	unset($object->fields['fk_soc']);
 	unset($object->fields['fk_contact']);
 	unset($object->fields['content']);
+
 	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_view.tpl.php';
 	// Other attributes. Fields from hook formObjectOptions and Extrafields.
 	include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_view.tpl.php';
@@ -844,30 +852,45 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 		print dol_get_fiche_end();
 	}
-	if ($action == 'letterpresend')
-	{
-		$contact_list= array();
 
-		print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
-		print '<input type="hidden" name="token" value="'.newToken().'">';
-		print '<input type="hidden" name="action" value="lettersend">';
-		print '<input type="hidden" name="id" value="'.$object->id.'">';
-		//Combobox multiple selection for contacts saved as receivers
-		print '<tr class="oddeven"><td>'.$langs->trans("receivers").'</td><td>';
-		print $form->selectcontacts($object->fk_soc, $object->fk_contact, 'receiver[]', 0, '', '', 0, 'quatrevingtpercent', false, 0, array(), false, 'multiple', 'receiver');
-		print '</td></tr>';
-		print '</table>'."<br>";
+} else if ($action == 'letterpresend') {
+
+	$res = $object->fetch_optionals();
+
+	$head = envelopePrepareHead($object);
+	print dol_get_fiche_head($head, 'card', $langs->trans("EnvelopeSending"), -1, "doliletter@doliletter");
+	print load_fiche_titre($langs->trans('SendLetter'), '', "doliletter32px@doliletter");
+
+	print dol_get_fiche_head(array(), '');
+
+	$contact_list= array();
+
+	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
+	print '<input type="hidden" name="token" value="'.newToken().'">';
+	print '<input type="hidden" name="action" value="lettersend">';
+	print '<input type="hidden" name="id" value="'.$object->id.'">';
+	//Combobox multiple selection for contacts saved as receivers
 
 
-		//button save -> to lettersend action
-		print '<input type="submit" class="button" name="lettersend" value="'.dol_escape_htmltag($langs->trans("Send")).'">';
-		print '&nbsp; ';
-		print '<input type="'.($backtopage ? "submit" : "button").'" class="button button-cancel" name="cancel" value="'.dol_escape_htmltag($langs->trans("Cancel")).'"'.($backtopage ? '' : ' onclick="javascript:history.go(-1)"').'>'; // Cancel for create does not post form if we don't know the backtopage
-		print '</div>';
+	print '<table>';
+	print '<tr class="minwidth400"><td>'.$langs->trans("Receivers").'</td><td class="minwidth400">';
+	print $form->selectcontacts($object->fk_soc, $object->fk_contact, 'receiver[]', 0, '', '', 0, 'quatrevingtpercent', false, 0, array(), false, 'multiple', 'receiver');
+	print '</td></tr>';
+	print '<tr class="minwidth400"><td>'.$langs->trans("LetterCode").'</td><td class="minwidth400">';
+	print '<input name="lettercode">';
+	print '</td></tr>';
+	print '</table>'."<br>";
 
-		print '</form>';
-	}
+
+	//button save -> to lettersend action
+	print '<input type="submit" class="button" name="lettersend" value="'.dol_escape_htmltag($langs->trans("Send")).'">';
+	print '&nbsp; ';
+	print '<input type="'.($backtopage ? "submit" : "button").'" class="button button-cancel" name="cancel" value="'.dol_escape_htmltag($langs->trans("Cancel")).'"'.($backtopage ? '' : ' onclick="javascript:history.go(-1)"').'>'; // Cancel for create does not post form if we don't know the backtopage
+	print '</div>';
+
+	print '</form>';
 }
+
 
 // End of page
 llxFooter();

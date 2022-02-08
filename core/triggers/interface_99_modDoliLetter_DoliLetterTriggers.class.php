@@ -131,29 +131,6 @@ class InterfaceDoliLetterTriggers extends DolibarrTriggers
 				$actioncomm->create($user);
 				break;
 			case 'ENVELOPE_LETTER' :
-				//echo '<pre>'; print_r( $object ); echo '</pre>'; exit;
-				require_once DOL_DOCUMENT_ROOT.'/contact/class/contact.class.php';
-				$contact_temp = new Contact($this->db);
-				require_once __DIR__ . "/../../class/envelope_letter.class.php";
-				$now = dol_now();
-				$mail = new LetterSending($this->db);
-				$mail->fk_envelope = $object->id;
-				$mail->date_creation = $mail->db->idate($now);
-				$mail->status = 1;
-				$mail->fk_user = $user->id;
-				$mail->entity = $object->entity;
-				$mail->sender_fullname = $user->firstname . ' ' . $user->lastname;
-				foreach($object->sendtoid as $contactid)
-					{
-					$mail->fk_socpeople = $contactid;
-					$contact_temp->fetch($contactid);
-					$mail->recipient_address = $contact_temp->address;
-					$mail->contact_fullname = $contact_temp->firstname . ' ' . $contact_temp->lastname;
-					$mail->letter_code = '0'; // todo, for LRAR
-					$mailtemp = $mail;
-					$result = $mailtemp->create($user);
-				}
-
 				dol_syslog("Trigger '".$this->name."' for action '$action' launched by ".__FILE__.". id=".$object->id);
 				require_once DOL_DOCUMENT_ROOT.'/comm/action/class/actioncomm.class.php';
 				$now = dol_now();

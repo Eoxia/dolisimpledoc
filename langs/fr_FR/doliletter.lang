@@ -61,6 +61,8 @@ Envelopes = Enveloppes
 NewEnvelope = Nouvelle enveloppe
 ModifyEnvelope = Modifier l'enveloppe
 ListEnvelopes = Liste d'enveloppes
+Receivers = Destinataires
+LetterCode = Code du courrier
 
 Society = Tiers
 Sender = Émetteur
@@ -94,3 +96,4 @@ SignatureLink = Lien de signature
 SendMailDate = Date d'envoi du mail de signature
 SignatureDate = Date de signature
 ActionsSignature = Actions
+The = le
