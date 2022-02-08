@@ -575,6 +575,7 @@ class pdf_phobos extends ModelePDFEnvelope
 
 		$signatory = new EnvelopeSignature($this->db);
 		$sender    = array_shift($signatory->fetchSignatory('E_SENDER', $object->id));
+
 //		$recipient = array_shift($signatory->fetchSignatory('E_SOCIETY', $object->id));
 		if (dol_strlen($sender->signature) > 0) {
 			$tempdir = $conf->doliletter->multidir_output[isset($object->entity) ? $object->entity : 1] . '/temp/';
@@ -600,8 +601,11 @@ class pdf_phobos extends ModelePDFEnvelope
 		$posmiddle = $this->marge_gauche + round(($this->page_largeur - $this->marge_gauche - $this->marge_droite) / 2);
 		$posy = $tab_top + $tab_height + 3 + 3;
 
+		$contact = new Contact($this->db);
+		$contact->fetch($object->fk_contact);
+
 		$pdf->SetXY($this->marge_gauche, $posy);
-		$pdf->MultiCell($posmiddle - $this->marge_gauche - 5, 5, $outputlangs->transnoentities("ContactNameAndSignature", $this->emetteur->name), 0, 'L', 0);
+		$pdf->MultiCell($posmiddle - $this->marge_gauche - 5, 5,  $sender->firstname . ' ' . $sender->lastname . ' ' . $outputlangs->trans('The') . ' ' . dol_print_date($sender->signature_date), 0, 'L', 0);
 
 		$pdf->SetXY($this->marge_gauche, $posy + 5);
 		$pdf->Image($test, $this->marge_gauche, $posy - 5, 50, 50); // width=0 (auto)
