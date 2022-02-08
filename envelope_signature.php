@@ -152,7 +152,7 @@ if ($action == 'addSignature') {
 			$urltogo = str_replace('__ID__', $result, $backtopage);
 			$urltogo = preg_replace('/--IDFORBACKTOPAGE--/', $id, $urltogo); // New method to autoselect project after a New on another form object creation
 			header("Location: " . $urltogo);
-			$object->setStatusCommon($user, 2);
+			$object->setStatusCommon($user, 1);
 			$object->call_trigger('ENVELOPE_SIGN', $user);
 			exit;
 		}
@@ -301,7 +301,7 @@ print dol_get_fiche_head($head, 'envelopeSign', $langs->trans("Sign"), -1, "doli
 dol_strlen($object->label) ? $morehtmlref = ' - ' . $object->label : '';
 
 
-dol_banner_tab($object, 'ref', '', 0, 'ref', 'ref', $morehtmlref, '', 0, $morehtmlleft, $object->getLibStatut(5));
+dol_banner_tab($object, 'ref', '', 0, 'ref', 'ref', $morehtmlref, '', 0, $morehtmlleft);
 
 print dol_get_fiche_end(); ?>
 

@@ -273,6 +273,13 @@ if (empty($reshook)) {
 		exit;
 	}
 
+	if ($action == 'confirm_setLocked' && GETPOST('confirm') == 'yes') {
+		$object->setStatusCommon($user, 2);
+		$urltogo = str_replace('__ID__', $result, $backtopage);
+		$urltogo = preg_replace('/--IDFORBACKTOPAGE--/', $id, $urltogo); // New method to autoselect project after a New on another form object creation
+		header("Location: " . $urltogo);
+		exit;
+	}
 	// Actions when linking object each other
 	include DOL_DOCUMENT_ROOT.'/core/actions_dellink.inc.php';
 
@@ -308,11 +315,13 @@ if (empty($reshook)) {
 
 		$contact->fetch($receiver);
 
+
 		$letter->recipient_address = $contact->address;
 		$letter->contact_fullname = $contact->firstname . ' ' . $contact->lastname;
 		$letter->letter_code = $lettercode;
 		$result = $letter->create($user);
 		if (!$error) {
+			$object->setStatusCommon($user, 3);
 			$object->call_trigger('ENVELOPE_LETTER', $user);
 		}
 		unset($action);
@@ -493,7 +502,6 @@ if (($id || $ref) && $action == 'edit') {
 // Part to show record
 if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'create' && $action != 'letterpresend'))) {
 	$res = $object->fetch_optionals();
-
 	$head = envelopePrepareHead($object);
 	print dol_get_fiche_head($head, 'card', $langs->trans("Envelope"), -1, "doliletter@doliletter");
 
@@ -506,6 +514,12 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	// Confirmation to delete line
 	if ($action == 'deleteline') {
 		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id.'&lineid='.$lineid, $langs->trans('DeleteLine'), $langs->trans('ConfirmDeleteLine'), 'confirm_deleteline', '', 0, 1);
+	}
+
+	// SetLocked confirmation
+	if (($action == 'setLocked' && (empty($conf->use_javascript_ajax) || ! empty($conf->dol_use_jmobile)))		// Output when action = clone if jmobile or no js
+		|| ( ! empty($conf->use_javascript_ajax) && empty($conf->dol_use_jmobile))) {							// Always output when not jmobile nor js
+		$formconfirm .= $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('LockEnvelope'), $langs->trans('ConfirmLockEnvelope', $object->ref), 'confirm_setLocked', '', 'yes', 'actionButtonLock', 350, 600);
 	}
 
 	// Call Hook formConfirm
@@ -526,7 +540,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	$linkback = '<a href="'.dol_buildpath('/doliletter/envelope_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
 
 	$morehtmlref = '<div class="refidno">';
-//correct thirdparty display
+
 	$morehtmlref .=  '<tr><td class="titlefield">';
 	$morehtmlref .=  $langs->trans("ThirdParty");
 	$morehtmlref .= ' : ';
@@ -544,7 +558,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	$morehtmlref .= '</div>';
 
 
-	dol_banner_tab($object, 'ref', $linkback, 0, 'ref', 'ref', $morehtmlref);
+	dol_banner_tab($object, 'ref', $linkback, 0, 'ref', 'ref', $morehtmlref, '', 0, '' );
 
 
 	print '<div class="fichecenter">';
@@ -578,55 +592,54 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	print dol_get_fiche_end();
 
 	// Buttons for actions
-	if ($action != 'presend' && $action != 'letterpresend' && $action != 'editline' ) {
-		print '<div class="tabsAction">'."\n";
-		$parameters = array();
-		$reshook = $hookmanager->executeHooks('addMoreActionsButtons', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
-		if ($reshook < 0) {
-			setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
-		}
-
-		if (empty($reshook)) {
-			// Send
-			$class = 'ModelePDFEnvelope';
-			$modellist = call_user_func($class.'::liste_modeles', $db, 100);
-			if (!empty($modellist))
-			{
-				asort($modellist);
-
-				$modellist = array_filter($modellist, 'remove_index');
-
-				if (is_array($modellist) && count($modellist) == 1)    // If there is only one element
-				{
-					$arraykeys = array_keys($modellist);
-					$arrayvalues = preg_replace('/template_/','', array_values($modellist)[0]);
-
-					$modellist[$arraykeys[0]] = $arrayvalues;
-					$modelselected = $arraykeys[0];
-				}
-			}
-			if ($permissiontoadd) {
-				print '<a class="'. ($object->status == 1 ? 'butAction' : 'butActionRefused classfortooltip') .'" title="'. $langs->trans('AlreadySigned').'" id="actionButtonSign"' . ($object->status == 1 ? ' href="' . DOL_URL_ROOT . '/custom/doliletter/envelope_signature.php'.'?id='.$object->id.'&mode=init&token='.newToken().'"' : '') .' >' . $langs->trans("Sign") . '</a>' . "\n";
-				print '<a class="'. ($object->status == 2 ? 'butAction' : 'butActionRefused classfortooltip') .'" title="'. $langs->trans('MustBeSignedBeforeSending').'" id="actionButtonSendMail"' . ($object->status == 2 ? ' href="' . $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=presend&mode=init&model='.$modelselected.'&token='.newToken().'"' : '') .' >' . $langs->trans("SendMail") . '</a>' . "\n";
-				print '<a class="'. ($object->status == 2 ? 'butAction' : 'butActionRefused classfortooltip') .'" title="'. $langs->trans('MustBeSignedBeforeSending').'" id="actionButtonSendMail"' . ($object->status == 2 ? ' href="' . $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=letterpresend&mode=init&model='.$modelselected.'&token='.newToken().'"' : '') .' >' . $langs->trans("SendLetter") . '</a>' . "\n";
-				print '<a class="butAction" id="actionButtonSendMail" href="' . $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=edit&token='.newToken().'">' . $langs->trans("Modify") . '</a>' . "\n";
-			} else {
-				print '<a class="butActionRefused classfortooltip" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans('Sign') . '</a>' . "\n";
-				print '<a class="butActionRefused classfortooltip" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans('SendMail') . '</a>' . "\n";
-				print '<a class="butActionRefused classfortooltip" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans('SendLetter') . '</a>' . "\n";
-				print '<a class="butActionRefused classfortooltip" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans('Modify') . '</a>' . "\n";
-
-
-
-			}
-			if ($permissiontodelete) {
-				print '<a class="butActionDelete" id="actionButtonSendMail" href="' . $_SERVER['PHP_SELF'].'?id='.$object->id.'&action=delete&token='.newToken().'">' . $langs->trans("Delete") . '</a>' . "\n";
-			} else {
-				print '<a class="butActionRefused classfortooltip" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans('Delete') . '</a>' . "\n";
-			}
-		}
-		print '</div>'."\n";
+	print '<div class="tabsAction">'."\n";
+	$parameters = array();
+	$reshook = $hookmanager->executeHooks('addMoreActionsButtons', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
+	if ($reshook < 0) {
+		setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
 	}
+
+	if (empty($reshook)) {
+		// Send
+		$class = 'ModelePDFEnvelope';
+		$modellist = call_user_func($class.'::liste_modeles', $db, 100);
+		if (!empty($modellist))
+		{
+			asort($modellist);
+
+			$modellist = array_filter($modellist, 'remove_index');
+
+			if (is_array($modellist) && count($modellist) == 1)    // If there is only one element
+			{
+				$arraykeys = array_keys($modellist);
+				$arrayvalues = preg_replace('/template_/','', array_values($modellist)[0]);
+
+				$modellist[$arraykeys[0]] = $arrayvalues;
+				$modelselected = $arraykeys[0];
+			}
+		}
+		if ($permissiontoadd) {
+			print '<a class="'. ($object->status == 0 ? 'butAction' : 'butActionRefused classfortooltip') .'" title="'. $langs->trans('AlreadySigned').'" id="actionButtonSign"' . ($object->status == 0 ? ' href="' . DOL_URL_ROOT . '/custom/doliletter/envelope_signature.php'.'?id='.$object->id.'&mode=init&token='.newToken().'"' : '') .' >' . $langs->trans("Sign") . '</a>' . "\n";
+			print '<a class="'. ($object->status == 2 ? 'butAction' : 'butActionRefused classfortooltip') .'" title="'. $langs->trans('MustBeSignedBeforeSending').'" id="actionButtonSendMail"' . ($object->status == 2 ? ' href="' . $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=presend&mode=init&model='.$modelselected.'&token='.newToken().'"' : '') .' >' . $langs->trans("SendMail") . '</a>' . "\n";
+			print '<a class="'. ($object->status == 2 ? 'butAction' : 'butActionRefused classfortooltip') .'" title="'. $langs->trans('MustBeSignedBeforeSending').'" id="actionButtonSendLetter"' . ($object->status == 2 ? ' href="' . $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=letterpresend&mode=init&model='.$modelselected.'&token='.newToken().'"' : '') .' >' . $langs->trans("SendLetter") . '</a>' . "\n";
+			print '<a class="'. ($object->status == 0 ? 'butAction' : 'butActionRefused classfortooltip') .'" id="actionButtonEdit" href="' . $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=edit&token='.newToken().'">' . $langs->trans("Modify") . '</a>' . "\n";
+			print '<span class="' . (($object->status == 1) ? 'butAction' : 'butActionRefused classfortooltip') . '" id="' . (($object->status == 1) ? 'actionButtonLock' : '') . '" title="' . (($object->status == 1) ? '' : dol_escape_htmltag($langs->trans("EnvelopeMustBeSigned"))) . '">' . $langs->trans("Lock") . '</span>';
+
+		} else {
+			print '<a class="butActionRefused classfortooltip" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans('Sign') . '</a>' . "\n";
+			print '<a class="butActionRefused classfortooltip" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans('SendMail') . '</a>' . "\n";
+			print '<a class="butActionRefused classfortooltip" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans('SendLetter') . '</a>' . "\n";
+			print '<a class="butActionRefused classfortooltip" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans('Modify') . '</a>' . "\n";
+			print '<a class="butActionRefused classfortooltip" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans('Lock') . '</a>' . "\n";
+
+		}
+		if ($permissiontodelete) {
+			print '<a class="butActionDelete" id="actionButtonSendMail" href="' . $_SERVER['PHP_SELF'].'?id='.$object->id.'&action=delete&token='.newToken().'">' . $langs->trans("Delete") . '</a>' . "\n";
+		} else {
+			print '<a class="butActionRefused classfortooltip" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans('Delete') . '</a>' . "\n";
+		}
+	}
+	print '</div>'."\n";
 
 
 	if ($action != 'presend' && $action != 'letterpresend') {

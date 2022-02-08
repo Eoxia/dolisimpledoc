@@ -85,6 +85,11 @@ Signatursender = Signataire
 Objects = Objets liés
 EnvelopeList = Liste des courriers
 EnvelopeCreate = Créer un courrier
+EnvelopeMustBeSigned = Le courrier doit être signé
+LockEnvelope = Verrouiller le courrier
+ConfirmLockEnvelope = Êtes-vous sûr de vouloir verrouiller le courrier ?<br>Ce verrouillage permet de figer les données et la génération du document pour l'envoi.
+SentByLetter = Envoyé par courrier
+SentByMail = Envoyé par mail
 
 #
 # Signature - Signature

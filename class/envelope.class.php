@@ -62,6 +62,13 @@ class Envelope extends CommonObject
 	 */
 	public $picto = 'doliletter88px@doliletter';
 
+	public const STATUS_PENDING_SIGNATURE = 0;
+	public const STATUS_SIGNED = 1;
+	public const STATUS_LOCKED = 2;
+	public const STATUS_SENT_BY_LETTER = 3;
+	public const STATUS_SENT_BY_MAIL = 4;
+	public const STATUS_RECEIVED_AND_SIGNED = 5;
+
 	/**
 	 *  'type' field format ('integer', 'integer:ObjectClass:PathToClass[:AddCreateButtonOrNot[:Filter]]', 'sellist:TableName:LabelFieldName[:KeyFieldName[:KeyFieldParent[:Filter]]]', 'varchar(x)', 'double(24,8)', 'real', 'price', 'text', 'text:none', 'html', 'date', 'datetime', 'timestamp', 'duration', 'mail', 'phone', 'url', 'password')
 	 *         Note: Filter can be a string like "(t.ref:like:'SO-%') or (t.date_creation:<:'20160101') or (t.nature:is:NULL)"
@@ -100,7 +107,7 @@ class Envelope extends CommonObject
 		'date_creation'  => array('type'=>'datetime', 'label'=>'DateCreation', 'enabled'=>'1', 'position'=>40, 'notnull'=>1, 'visible'=>2,),
 		'tms'            => array('type'=>'timestamp', 'label'=>'DateModification', 'enabled'=>'1', 'position'=>50, 'notnull'=>0, 'visible'=>0,),
 		'import_key'     => array('type'=>'integer', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>60, 'notnull'=>1, 'visible'=>0,),
-		'status'         => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>70, 'notnull'=>1, 'default' => 1, 'visible'=>0, 'index'=>1,),
+		'status'         => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>70, 'notnull'=>1, 'default' => 0, 'visible'=>0, 'index'=>1,),
 		'note_public'    => array('type'=>'textarea', 'label'=>'PublicNote', 'enabled'=>'1', 'position'=>80, 'notnull'=>0, 'visible'=>0,),
 		'note_private'   => array('type'=>'textarea', 'label'=>'PrivateNote', 'enabled'=>'1', 'position'=>90, 'notnull'=>0, 'visible'=>0,),
 		'model_pdf'      => array('type'=>'varchar(255)', 'label'=>'PdfModel', 'enabled'=>'1', 'position'=>100, 'notnull'=>0, 'visible'=>0,),
@@ -177,9 +184,7 @@ class Envelope extends CommonObject
 	 * @return int             <0 if KO, Id of created object if OK
 	 */
 	public function create(User $user, $notrigger = false) {
-		$resultcreate = $this->createCommon($user, $notrigger);
-
-		return $resultcreate;
+		return $this->createCommon($user, $notrigger);
 	}
 
 	/**
@@ -429,6 +434,26 @@ class Envelope extends CommonObject
 	 *  @return string 			       Label of status
 	 */
 	public function LibStatut($status, $mode = 0) {
+		if (empty($this->labelStatus) || empty($this->labelStatusShort)) {
+			global $langs;
+			$langs->load("doliletter@doliletter");
+
+			$this->labelStatus[self::STATUS_PENDING_SIGNATURE]       = $langs->trans('ValidatePendingSignature');
+			$this->labelStatus[self::STATUS_SIGNED] = $langs->trans('Signed');
+			$this->labelStatus[self::STATUS_LOCKED]            = $langs->trans('Locked');
+			$this->labelStatus[self::STATUS_SENT_BY_LETTER]          = $langs->trans('SentByLetter');
+			$this->labelStatus[self::STATUS_SENT_BY_MAIL]          = $langs->trans('SentByMail');
+			$this->labelStatus[self::STATUS_RECEIVED_AND_SIGNED]          = $langs->trans('ReceivedAndSigned');
+		}
+
+		$statusType                                                = 'status' . $status;
+		if ($status == self::STATUS_PENDING_SIGNATURE) $statusType = 'status3';
+		if ($status == self::STATUS_LOCKED) $statusType            = 'status8';
+		if ($status == self::STATUS_SENT_BY_LETTER) $statusType            = 'status7';
+		if ($status == self::STATUS_SENT_BY_MAIL) $statusType            = 'status7';
+		if ($status == self::STATUS_RECEIVED_AND_SIGNED) $statusType          = 'status6';
+
+		return dolGetStatus($this->labelStatus[$status], $this->labelStatusShort[$status], '', $statusType, $mode);
 	}
 
 	/**
