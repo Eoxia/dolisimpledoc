@@ -90,6 +90,7 @@ LockEnvelope = Verrouiller le courrier
 ConfirmLockEnvelope = Êtes-vous sûr de vouloir verrouiller le courrier ?<br>Ce verrouillage permet de figer les données et la génération du document pour l'envoi.
 SentByLetter = Envoyé par courrier
 SentByMail = Envoyé par mail
+EnvelopeMustBeLockedToGenerateDocument = <b>Le courrier doit être verrouillé pour pouvoir générer le document.</b>
 
 #
 # Signature - Signature
