@@ -36,6 +36,7 @@ if (!$res && file_exists("../../../main.inc.php")) $res = @include "../../../mai
 if (!$res) die("Include of main fails");
 
 require_once DOL_DOCUMENT_ROOT.'/core/lib/images.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/contact/class/contact.class.php';
 
 require_once __DIR__ . '/class/envelope.class.php';
 require_once __DIR__ . '/lib/doliletter_envelope.lib.php';
@@ -55,7 +56,7 @@ $backtopage          = GETPOST('backtopage', 'alpha');
 $object    = new Envelope($db);
 $signatory = new EnvelopeSignature($db);
 $usertmp   = new User($db);
-//$contact   = new Contact($db);
+$contact   = new Contact($db);
 $form      = new Form($db);
 
 $object->fetch($id);
@@ -136,7 +137,8 @@ if ($action == 'addSignature') {
 
 	$request_body = file_get_contents('php://input');
 
-	$signatory->setSignatory($object->id,'user', array($user->id), 'E_SENDER');
+	$role = GETPOST('role');
+	$signatory->setSignatory($object->id,'user', array($user->id), $role);
 
 	$signatory->fetch($signatory->id);
 	$signatory->signature = $request_body;
@@ -335,7 +337,7 @@ if ((empty($action) || ($action != 'create' && $action != 'edit'))) {
 
 	print load_fiche_titre($langs->trans("SignatureSender"), '', '');
 
-	print '<div class="signatures-container">';
+	print '<div class="signatures-container sender-signature">';
 
 	print '<table class="border centpercent tableforfield">';
 	print '<tr class="liste_titre">';
@@ -349,7 +351,7 @@ if ((empty($action) || ($action != 'create' && $action != 'edit'))) {
 
 	print '<tr class="oddeven"><td class="minwidth200">';
 	print $usertmp->getNomUrl(1);
-	print '</td><td>';
+	print '</td><td class="role" value="E_SENDER">';
 	print $langs->trans("Sender");
 	print '</td><td class="center">';
 	print dol_print_date($element->last_email_sent_date, 'dayhour');
@@ -365,11 +367,55 @@ if ((empty($action) || ($action != 'create' && $action != 'edit'))) {
 		print '</td>';
 	}
 	print '</tr>';
+	print '</table></div>';
+	print '<br>';
+	if ($object->status == 4) {
+		//uniquement si le courrier a été envoyé par mail
+		print load_fiche_titre($langs->trans("SignatureReceiver"), '', '');
+		$element = $signatory->fetchSignatory('E_RECEIVER', $id);
+		if ($element > 0) {
+			$element = array_shift($element);
+			$usertmp->fetch($element->element_id);
+		}
+		print '<div class="signatures-container receiver-signature">';
+
+		print '<table class="border centpercent tableforfield">';
+		print '<tr class="liste_titre">';
+		print '<td>' . $langs->trans("Name") . '</td>';
+		print '<td>' . $langs->trans("Role") . '</td>';
+		print '<td class="center">' . $langs->trans("SendMailDate") . '</td>';
+		print '<td class="center">' . $langs->trans("SignatureDate") . '</td>';
+		//print '<td class="center">' . $langs->trans("Status") . '</td>';
+		print '<td class="center">' . $langs->trans("Signature") . '</td>';
+		print '</tr>';
+
+		$contact->fetch($object->fk_contact);
+		print '<tr class="oddeven"><td class="minwidth200">';
+		print $contact->getNomUrl(1);
+		print '</td><td class="role" value="E_RECEIVER">';
+		print $langs->trans("Receiver");
+		print '</td><td class="center">';
+		print dol_print_date($object->last_email_sent_date, 'dayhour');
+		print '</td><td class="center">';
+		print dol_print_date($element->signature_date, 'dayhour');
+		//print '</td><td class="center">';
+		//print $element->getLibStatut(5);
+		print '</td>';
+
+		if ($permissiontoadd) {
+			$modal_id = 'contact-' . $contact->id;
+			print '<td class="center">';
+			require __DIR__ . "/core/tpl/doliletter_signature_view.tpl.php";
+			print '</td>';
+		}
+		print '</tr>';
+
+		print '</table>';
+		print '<br>';
+	}
 	print '<tr><td>';
 	print '<a href="envelope_card?id='. $object->id .'" class="butAction">' . $langs->trans('GoBackToCard') . '</a>';
 	print '</td></tr>';
-	print '</table>';
-	print '<br>';
 }
 
 // End of page

@@ -331,7 +331,6 @@ window.eoxiaJS.signature.clearCanvas = function( event ) {
 
 window.eoxiaJS.signature.createSignature = function() {
 	let elementSignatory = $(this).attr('value');
-
 	let elementRedirect  = $(this).find('#redirect' + elementSignatory).attr('value');
 	let elementZone  = $(this).find('#zone' + elementSignatory).attr('value');
     let actionContainerSuccess = $('.noticeSignatureSuccess');
@@ -340,19 +339,17 @@ window.eoxiaJS.signature.createSignature = function() {
 		signatoryIDPost = '&signatoryID=' + elementSignatory;
 	}
 
+	let role = $(this).closest('.signatures-container').find('.role').attr('value')
+	console.log( $(this).closest('.signatures-container'))
+	console.log(role)
+
 	if ( ! $(this).closest( '.wpeo-modal' ).find( 'canvas' )[0].signaturePad.isEmpty() ) {
 		var signature = $(this).closest( '.wpeo-modal' ).find( 'canvas' )[0].toDataURL();
 	}
 
-	var url = '';
-	var type = '';
-	if (elementZone == "private") {
-		url = document.URL + '&action=addSignature' + signatoryIDPost;
-		type = "POST"
-	} else {
-		url = document.URL + '&action=addSignature' + signatoryIDPost;
-		type = "POST";
-	}
+	var url = document.URL + '&action=addSignature' + signatoryIDPost + '&role=' + role;
+	var type = "POST"
+
 	$.ajax({
 		url: url,
 		type: type,
