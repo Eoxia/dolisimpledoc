@@ -91,7 +91,9 @@ ConfirmLockEnvelope = Êtes-vous sûr de vouloir verrouiller le courrier ?<br>Ce
 SentByLetter = Envoyé par courrier
 SentByMail = Envoyé par mail
 EnvelopeMustBeLockedToGenerateDocument = <b>Le courrier doit être verrouillé pour pouvoir générer le document.</b>
-
+UploadAcknowledgementReceipt = Accusé de réception
+AcknowledgementReceipt = Accusé de réception
+ReceivedAndSigned = Reçu et signé
 #
 # Signature - Signature
 #

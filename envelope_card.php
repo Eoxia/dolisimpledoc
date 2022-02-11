@@ -49,6 +49,7 @@ require_once './class/envelope_letter.class.php';
 require_once './core/modules/doliletter/mod_envelope_standard.php';
 require_once './lib/doliletter_envelope.lib.php';
 require_once './lib/doliletter.lib.php';
+require_once './lib/doliletter_function.lib.php';
 
 global $db, $conf, $langs, $user, $hookmanager;
 
@@ -325,6 +326,42 @@ if (empty($reshook)) {
 			$object->call_trigger('ENVELOPE_LETTER', $user);
 		}
 		unset($action);
+	}
+
+	if ($action == 'addAcknowledgementReceipt') {
+		// Submit file
+
+		if ( ! empty($conf->global->MAIN_UPLOAD_DOC)) {
+
+			if ( ! empty($_FILES)) {
+				if (is_array($_FILES['userfile']['tmp_name'])) $userfiles = $_FILES['userfile']['tmp_name'];
+				else $userfiles                                           = array($_FILES['userfile']['tmp_name']);
+
+				foreach ($userfiles as $key => $userfile) {
+					if (empty($_FILES['userfile']['tmp_name'][$key])) {
+						$error++;
+						if ($_FILES['userfile']['error'][$key] == 1 || $_FILES['userfile']['error'][$key] == 2) {
+							setEventMessages($langs->trans('ErrorFileSizeTooLarge'), null, 'errors');
+						}
+					}
+				}
+
+				if ( ! $error) {
+					$filedir = $upload_dir . '/' . $object->element . '/' . $object->ref;
+					if (!is_dir($filedir)) {
+						dol_mkdir($filedir);
+					}
+					$ARdir = $filedir . '/acknowledgementreceipt';
+					if (!is_dir($ARdir)) {
+						dol_mkdir($ARdir);
+					}
+					$result = dol_add_file_process($ARdir, 0, 1, 'userfile', '', null, '', 0, $object);
+					if ($result > 0) {
+						$object->setStatusCommon($user, 5);
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -623,14 +660,13 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			print '<a class="'. ($object->status == 2 ? 'butAction' : 'butActionRefused classfortooltip') .'" title="'. $langs->trans('MustBeSignedBeforeSending').'" id="actionButtonSendLetter"' . ($object->status == 2 ? ' href="' . $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=letterpresend&mode=init&model='.$modelselected.'&token='.newToken().'"' : '') .' >' . $langs->trans("SendLetter") . '</a>' . "\n";
 			print '<a class="'. ($object->status == 0 ? 'butAction' : 'butActionRefused classfortooltip') .'" id="actionButtonEdit" href="' . $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=edit&token='.newToken().'">' . $langs->trans("Modify") . '</a>' . "\n";
 			print '<span class="' . (($object->status == 1) ? 'butAction' : 'butActionRefused classfortooltip') . '" id="' . (($object->status == 1) ? 'actionButtonLock' : '') . '" title="' . (($object->status == 1) ? '' : dol_escape_htmltag($langs->trans("EnvelopeMustBeSigned"))) . '">' . $langs->trans("Lock") . '</span>';
-
+			print '<a class="'. ($object->status == 3 ? 'butAction' : 'butActionRefused classfortooltip') .'" id="actionButtonUploadReceiptAcknowledgement" href="' . $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=uploadAcknowledgementReceipt&token='.newToken().'">' . $langs->trans("UploadAcknowledgementReceipt") . '</a>' . "\n";
 		} else {
 			print '<a class="butActionRefused classfortooltip" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans('Sign') . '</a>' . "\n";
 			print '<a class="butActionRefused classfortooltip" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans('SendMail') . '</a>' . "\n";
 			print '<a class="butActionRefused classfortooltip" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans('SendLetter') . '</a>' . "\n";
 			print '<a class="butActionRefused classfortooltip" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans('Modify') . '</a>' . "\n";
 			print '<a class="butActionRefused classfortooltip" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans('Lock') . '</a>' . "\n";
-
 		}
 		if ($permissiontodelete) {
 			print '<a class="butActionDelete" id="actionButtonSendMail" href="' . $_SERVER['PHP_SELF'].'?id='.$object->id.'&action=delete&token='.newToken().'">' . $langs->trans("Delete") . '</a>' . "\n";
@@ -641,7 +677,27 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	print '</div>'."\n";
 
 
-	if ($action != 'presend' && $action != 'letterpresend') {
+	if ($action == 'uploadAcknowledgementReceipt')
+	{
+		print '<form method="POST" action="'.$_SERVER["PHP_SELF"] . '?id=' . $id .'" enctype="multipart/form-data">';
+		print '<input type="hidden" name="token" value="'.newToken().'">';
+		print '<input type="hidden" name="action" value="addAcknowledgementReceipt">';
+
+		print load_fiche_titre($langs->trans('UploadAcknowledgementReceipt'), null, null);
+
+		// Disponibilité des plans
+		print '<tr>';
+		print '<td class="titlefield">' . $form->editfieldkey($langs->trans("AddFile"), 'acknowledgementReceipt', '', $object, 0) . '</td>';
+		print '<td>';
+		print '<input class="flat" type="file" name="userfile[]" id="acknowledgementReceipt" />';
+		print '<input class="butAction" type="submit" name="addAcknowledgementReceipt" id="addAcknowledgementReceipt" value="'. $langs->trans('Send').'"/>';
+
+		print '</td></tr>';
+
+		print '</form>';
+	}
+
+	if ($action != 'presend' && $action != 'letterpresend' && $action != 'uploadAcknowledgementReceipt') {
 		print '<div class="fichecenter"><div class="fichehalfleft">';
 		print '<a name="builddoc"></a>'; // ancre
 
@@ -649,17 +705,16 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 		// Documents
 		if ($includedocgeneration) {
-			if ($object->status < 2) {
-				print $langs->trans('EnvelopeMustBeLockedToGenerateDocument');
-			}
 			$objref = dol_sanitizeFileName($object->ref);
 			$relativepath = $objref.'/'.$objref.'.pdf';
 			$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$objref;
 			$urlsource = $_SERVER["PHP_SELF"]."?id=".$object->id;
 			$genallowed = $user->rights->doliletter->envelope->read; // If you can read, you can build the PDF to read content
 			$delallowed = $user->rights->doliletter->envelope->write; // If you can create/edit, you can remove a file on card
-			print $formfile->showdocuments('doliletter:Envelope', $object->element.'/'.$objref, $filedir, $urlsource, $object->status > 1 ? $genallowed : 0, $delallowed, $conf->global->DOLILETTER_ENVELOPE_ADDON_PDF, 1, 0, 0, 28, 0, '', '', '', $langs->defaultlang);
-
+			print dolilettershowdocuments('doliletter:Envelope', $object->element.'/'.$objref, $filedir, $urlsource, $genallowed, $delallowed, $conf->global->DOLILETTER_ENVELOPE_ADDON_PDF, 1, 0, 0, '', 0, '', '', '', $langs->defaultlang, $object->status == 2 ? 1 : 0, $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
+		}
+		if ($object->status == 5) {
+			print dolilettershowdocuments('doliletter:Envelope', $object->element.'/'.$objref.'/acknowledgementreceipt', $filedir.'/acknowledgementreceipt', $urlsource, 0, $delallowed, $conf->global->DOLILETTER_ENVELOPE_ADDON_PDF, 1, 0, 0, $langs->trans('AcknowledgementReceipt'), 0, '', '', '', $langs->defaultlang, $object->status == 2 ? 1 : 0, $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
 		}
 
 		print '</div><div class="fichehalfright"><div class="ficheaddleft">';
@@ -868,6 +923,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 		print dol_get_fiche_end();
 	}
+
 
 } else if ($action == 'letterpresend') {
 
