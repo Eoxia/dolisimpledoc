@@ -1,5 +1,5 @@
 <?php if (empty($element->signature) || $element->signature == $langs->trans("FileGenerated")) : ?>
-	<div class="wpeo-button button-blue wpeo-modal-event modal-signature-open modal-open" value="<?php echo $modal_id ?>">
+	<div class="wpeo-button button-blue wpeo-modal-event modal-signature-open modal-open" value="<?php echo $element->id ?>">
 		<span><i class="fas fa-signature"></i> <?php echo $langs->trans('Sign'); ?></span>
 	</div>
 <?php elseif (!empty($element->signature)) : ?>
@@ -7,7 +7,7 @@
 <?php endif; ?>
 
 <div class="modal-signature" value="<?php echo $element->id ?>">
-	<div class="wpeo-modal modal-signature" id="modal-signature<?php echo $modal_id ?>">
+	<div class="wpeo-modal modal-signature" id="modal-signature<?php echo $element->id ?>">
 		<div class="modal-container wpeo-modal-event">
 			<!-- Modal-Header-->
 			<div class="modal-header">

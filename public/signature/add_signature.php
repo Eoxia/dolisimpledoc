@@ -17,7 +17,7 @@
 
 /**
  *       \file       public/signature/add_signature.php
- *       \ingroup    digiriskdolibarr
+ *       \ingroup    doliletter
  *       \brief      Public page to add signature
  */
 
@@ -46,16 +46,15 @@ if ( ! $res && file_exists("../../../../main.inc.php")) $res = @include "../../.
 if ( ! $res) die("Include of main fails");
 
 require_once DOL_DOCUMENT_ROOT . '/core/class/html.form.class.php';
-require_once '../../class/preventionplan.class.php';
-require_once '../../class/digiriskdocuments/preventionplandocument.class.php';
-require_once '../../class/firepermit.class.php';
-require_once '../../class/digiriskdocuments/firepermitdocument.class.php';
-require_once '../../class/accident.class.php';
-//require_once '../../class/digiriskdocuments/accidentdocument.class.php';
-require_once '../../lib/digiriskdolibarr_function.lib.php';
+require_once DOL_DOCUMENT_ROOT . '/user/class/user.class.php';
+require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
 
+require_once '../../class/envelope.class.php';
+require_once '../../lib/doliletter_function.lib.php';
+
+global $conf, $langs, $user, $db;
 // Load translation files required by the page
-$langs->loadLangs(array("digiriskdolibarr@digiriskdolibarr", "other", "errors"));
+$langs->loadLangs(array("doliletter@doliletter", "other", "errors"));
 
 // Get parameters
 $track_id = GETPOST('track_id', 'alpha');
@@ -69,26 +68,15 @@ $user = new User($db);
 
 switch ($type) {
 	case 'envelope':
-		$object         = new PreventionPlan($db);
-		$signatory      = new PreventionPlanSignature($db);
-		$objectdocument = new PreventionPlanDocument($db);
-		break;
-	case 'firepermit':
-		$object         = new FirePermit($db);
-		$signatory      = new FirePermitSignature($db);
-		$objectdocument = new FirePermitDocument($db);
-		break;
-	case 'accident':
-		$object         = new Accident($db);
-		$signatory      = new AccidentSignature($db);
-		//$objectdocument = new AccidentDocument($db);
+		$object         = new Envelope($db);
+		$signatory      = new EnvelopeSignature($db);
 		break;
 }
 
 $signatory->fetch('', '', " AND signature_url =" . "'" . $track_id . "'");
 $object->fetch($signatory->fk_object);
 
-$upload_dir = $conf->digiriskdolibarr->multidir_output[isset($object->entity) ? $object->entity : 1];
+$upload_dir = $conf->doliletter->multidir_output[isset($object->entity) ? $object->entity : 1];
 
 /*
  * Actions
@@ -121,57 +109,6 @@ if ($action == 'addSignature') {
 	}
 }
 
-if ($action == 'builddoc') {
-	$outputlangs = $langs;
-	$newlang     = '';
-
-	if ($conf->global->MAIN_MULTILANGS && empty($newlang) && GETPOST('lang_id', 'aZ09')) $newlang = GETPOST('lang_id', 'aZ09');
-	if ( ! empty($newlang)) {
-		$outputlangs = new Translate("", $conf);
-		$outputlangs->setDefaultLang($newlang);
-	}
-
-	// To be sure vars is defined
-	if (empty($hidedetails)) $hidedetails = 0;
-	if (empty($hidedesc)) $hidedesc       = 0;
-	if (empty($hideref)) $hideref         = 0;
-	if (empty($moreparams)) $moreparams   = null;
-
-	$model = $type.'_specimen_odt';
-
-	$moreparams['object'] = $object;
-	$moreparams['user']   = $user;
-
-	$result = $objectdocument->generateDocument($model, $outputlangs, $hidedetails, $hidedesc, $hideref, $moreparams);
-	if ($result <= 0) {
-		setEventMessages($object->error, $object->errors, 'errors');
-
-		$action = '';
-	} elseif (empty($donotredirect)) {
-		$document_name = $objectdocument->last_main_doc;
-
-		copy($conf->digiriskdolibarr->multidir_output[isset($object->entity) ? $object->entity : 1] . '/' . $type . '/' . $object->ref . '/specimen/' . $document_name, DOL_DOCUMENT_ROOT . '/custom/digiriskdolibarr/documents/temp/' . $type . '_specimen_' . $track_id . '.odt');
-
-		setEventMessages($langs->trans("FileGenerated") . ' - ' . $document_name, null);
-
-		$urltoredirect = $_SERVER['REQUEST_URI'];
-		$urltoredirect = preg_replace('/#builddoc$/', '', $urltoredirect);
-		$urltoredirect = preg_replace('/action=builddoc&?/', '', $urltoredirect); // To avoid infinite loop
-
-		header('Location: ' . $urltoredirect . '#builddoc');
-		exit;
-	}
-}
-
-if ($action == 'remove_file') {
-	$files = dol_dir_list(DOL_DOCUMENT_ROOT . '/custom/digiriskdolibarr/documents/temp/'); // get all file names
-
-	foreach ($files as $file) {
-		if (is_file($file['fullname'])) {
-			dol_delete_file($file['fullname']);
-		}
-	}
-}
 /*
  * View
  */
@@ -183,30 +120,35 @@ if (empty($conf->global->DIGIRISKDOLIBARR_SIGNATURE_ENABLE_PUBLIC_INTERFACE)) {
 	exit;
 }
 
-$morejs  = array("/digiriskdolibarr/js/signature-pad.min.js", "/digiriskdolibarr/js/digiriskdolibarr.js.php");
-$morecss = array("/digiriskdolibarr/css/digiriskdolibarr.css");
+$morejs  = array("/doliletter/js/signature-pad.min.js", "/doliletter/js/doliletter.js.php");
+$morecss = array("/doliletter/css/doliletter.css");
 
 llxHeaderSignature($langs->trans("Signature"), "", 0, 0, $morejs, $morecss);
 
-if ( $signatory->role == 'PP_EXT_SOCIETY_INTERVENANTS') {
-	$element = $signatory;
-} else {
-	$element = $signatory->fetchSignatory($signatory->role, $signatory->fk_object, $type);
-	$element = array_shift($element);
-}
+$element = $signatory->fetchSignatory($signatory->role, $signatory->fk_object, $type);
+$element = array_shift($element);
+
 ?>
 <div class="digirisk-signature-container">
 	<div class="wpeo-gridlayout grid-2">
 		<div class="informations">
 			<div class="wpeo-gridlayout grid-2 file-generation">
-				<strong class="grid-align-middle"><?php echo $langs->trans("ThisIsInformationOnDocumentToSign"); ?></strong>
-				<?php if ($type == 'preventionplan') : ?>
-					<?php $path = DOL_MAIN_URL_ROOT . '/custom/digiriskdolibarr/documents/temp/';	?>
-					<input type="hidden" class="specimen-name" value="<?php echo $type . '_specimen_' . $track_id . '.odt' ?>">
-					<input type="hidden" class="specimen-path" value="<?php echo $path ?>">
-					<input type="hidden" class="track-id" value="<?php echo $track_id ?>">
-					<span class="wpeo-button button-primary  button-radius-2 grid-align-right auto-download"><i class="button-icon fas fa-file-pdf"></i><?php echo '  ' . $langs->trans('ShowDocument'); ?></span>
-				<?php endif; ?>
+				<strong class="grid-align-middle"><?php echo $langs->trans("AcknowledgementReceipt"); ?></strong>
+<!--				--><?php //if ($type == 'envelope') : ?>
+<!--				--><?php
+//					$filelist = dol_dir_list($upload_dir . '/' . $object->element . '/' . $object->ref);
+//					if (!empty($filelist)) {
+//						$file = array_shift($filelist);
+//						$fileurl = $file['fullname'];
+//						$filename = $file['name'];
+//						dol_copy($fileurl, DOL_DOCUMENT_ROOT . '/custom/doliletter/documents/temp');
+//					}
+//
+//					?>
+<!--				<a href="--><?php //echo $fileurl ?><!--">-->
+<!--					<span class="wpeo-button button-primary button-radius-2 grid-align-right"><i class="button-icon fas fa-file-pdf"></i>--><?php //echo '  ' . $langs->trans('ShowDocument'); ?><!--</span>-->
+<!--				</a>-->
+<!--				--><?php //endif; ?>
 			</div>
 			<br>
 			<div class="wpeo-table table-flex table-2">
@@ -220,16 +162,20 @@ if ( $signatory->role == 'PP_EXT_SOCIETY_INTERVENANTS') {
 				</div>
 			</div>
 		</div>
-		<div class="signature">
+		<div class="signature signatures-container">
+			<input hidden class="role" value="E_RECEIVER">
 			<div class="wpeo-gridlayout grid-2">
 				<strong class="grid-align-middle"><?php echo $langs->trans("Signature"); ?></strong>
+				<?php
+				$modal_id = 'contact-' . $object->fk_contact;
+				?>
 				<div class="wpeo-button button-primary button-square-40 button-radius-2 grid-align-right wpeo-modal-event modal-signature-open modal-open" value="<?php echo $element->id ?>">
 					<span><i class="fas fa-pen-nib"></i> <?php echo $langs->trans('Sign'); ?></span>
 				</div>
 			</div>
 			<br>
 			<div class="signature-element">
-				<?php require  "../../core/tpl/digiriskdolibarr_signature_view.tpl.php"; ?>
+				<?php require  "../../core/tpl/doliletter_signature_view.tpl.php"; ?>
 			</div>
 		</div>
 	</div>

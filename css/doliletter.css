@@ -865,6 +865,210 @@
   text-align: center;
 }
 
+/*--------------------------------------------------------------
+	Module : Table
+	Version : 1.0.0
+	.wpeo-table -> classe de base du mobule
+--------------------------------------------------------------*/
+/*--------------------------------------------------------------
+	Table Flex
+
+    .table-25  : max-width: 25px
+    .table-50  : max-width: 50px
+    .table-75  : max-width: 75px
+    .table-100 : max-width: 100px
+    ...
+    .table-500 : max-width: 500px;
+
+    .table-end       : Utiliser la classe table-end justifie la cellule sur la droite
+    .table-padding-0 : Enleve les marges internes d’une cellule
+--------------------------------------------------------------*/
+.wpeo-table.table-flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  font-size: 14px;
+}
+
+/** Ligne */
+.wpeo-table.table-flex .table-row {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+}
+.wpeo-table.table-flex .table-row:not(.table-header):nth-of-type(odd) {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/** Ligne entete */
+.wpeo-table.table-flex .table-row.table-header {
+  background: #263C5C;
+}
+.wpeo-table.table-flex .table-row.table-header .table-cell {
+  font-weight: 700;
+  color: #fff;
+}
+
+/** Cellule */
+.wpeo-table.table-flex .table-cell {
+  margin: auto 0;
+  width: 100%;
+  padding: 0.8em 0.6em;
+}
+@media (max-width: 770px) {
+  .wpeo-table.table-flex .table-cell {
+    padding: 0.4em;
+  }
+}
+
+/** Taille générale des cellules */
+.wpeo-table.table-flex.table-1 .table-cell {
+  width: 100%;
+}
+.wpeo-table.table-flex.table-2 .table-cell {
+  width: 50%;
+}
+.wpeo-table.table-flex.table-3 .table-cell {
+  width: 33.3333333333%;
+}
+.wpeo-table.table-flex.table-4 .table-cell {
+  width: 25%;
+}
+.wpeo-table.table-flex.table-5 .table-cell {
+  width: 20%;
+}
+.wpeo-table.table-flex.table-6 .table-cell {
+  width: 16.6666666667%;
+}
+.wpeo-table.table-flex.table-7 .table-cell {
+  width: 14.2857142857%;
+}
+.wpeo-table.table-flex.table-8 .table-cell {
+  width: 12.5%;
+}
+.wpeo-table.table-flex.table-9 .table-cell {
+  width: 11.1111111111%;
+}
+.wpeo-table.table-flex.table-10 .table-cell {
+  width: 10%;
+}
+
+/** Taille spécifiques des cellules */
+.wpeo-table.table-flex .table-cell.table-25 {
+  max-width: 25px;
+  min-width: 25px;
+}
+.wpeo-table.table-flex .table-cell.table-50 {
+  max-width: 50px;
+  min-width: 50px;
+}
+.wpeo-table.table-flex .table-cell.table-75 {
+  max-width: 75px;
+  min-width: 75px;
+}
+.wpeo-table.table-flex .table-cell.table-100 {
+  max-width: 100px;
+  min-width: 100px;
+}
+.wpeo-table.table-flex .table-cell.table-125 {
+  max-width: 125px;
+  min-width: 125px;
+}
+.wpeo-table.table-flex .table-cell.table-150 {
+  max-width: 150px;
+  min-width: 150px;
+}
+.wpeo-table.table-flex .table-cell.table-175 {
+  max-width: 175px;
+  min-width: 175px;
+}
+.wpeo-table.table-flex .table-cell.table-200 {
+  max-width: 200px;
+  min-width: 200px;
+}
+.wpeo-table.table-flex .table-cell.table-225 {
+  max-width: 225px;
+  min-width: 225px;
+}
+.wpeo-table.table-flex .table-cell.table-250 {
+  max-width: 250px;
+  min-width: 250px;
+}
+.wpeo-table.table-flex .table-cell.table-275 {
+  max-width: 275px;
+  min-width: 275px;
+}
+.wpeo-table.table-flex .table-cell.table-300 {
+  max-width: 300px;
+  min-width: 300px;
+}
+.wpeo-table.table-flex .table-cell.table-325 {
+  max-width: 325px;
+  min-width: 325px;
+}
+.wpeo-table.table-flex .table-cell.table-350 {
+  max-width: 350px;
+  min-width: 350px;
+}
+.wpeo-table.table-flex .table-cell.table-375 {
+  max-width: 375px;
+  min-width: 375px;
+}
+.wpeo-table.table-flex .table-cell.table-400 {
+  max-width: 400px;
+  min-width: 400px;
+}
+.wpeo-table.table-flex .table-cell.table-425 {
+  max-width: 425px;
+  min-width: 425px;
+}
+.wpeo-table.table-flex .table-cell.table-450 {
+  max-width: 450px;
+  min-width: 450px;
+}
+.wpeo-table.table-flex .table-cell.table-475 {
+  max-width: 475px;
+  min-width: 475px;
+}
+.wpeo-table.table-flex .table-cell.table-500 {
+  max-width: 500px;
+  min-width: 500px;
+}
+.wpeo-table.table-flex .table-cell.table-full {
+  width: 100%;
+}
+
+/** Différentes classes */
+.wpeo-table.table-flex .table-cell.table-end {
+  text-align: right;
+  margin-left: auto;
+}
+.wpeo-table.table-flex .table-cell.table-padding-0 {
+  padding: 0;
+}
+
+/** Responsive mobile */
+@media (max-width: 480px) {
+  .wpeo-table.table-flex .table-row {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+  }
+  .wpeo-table.table-flex .table-cell {
+    width: 100%;
+  }
+}
 .digirisk-signature-container {
   max-width: 800px;
   background: #fff;
@@ -882,6 +1086,32 @@
 .digirisk-signature-container .signature .signature-element .wpeo-button.modal-signature-open {
   display: none;
 }
+.digirisk-signature-container .signature .signature-element img {
+  width: 100%;
+  height: auto;
+  border: 1px solid rgba(0, 0, 0, 0.4) !important;
+}
+
+.digirisk-signature-container {
+  max-width: 800px;
+  background: #fff;
+  -webkit-box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.1);
+  margin: 1.5em auto 0 auto;
+  padding: 2em;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.digirisk-signature-container * {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.digirisk-signature-container .signature .signature-element .wpeo-button.modal-signature-open {
+  display: none;
+}
+
 .digirisk-signature-container .signature .signature-element img {
   width: 100%;
   height: auto;

@@ -107,3 +107,4 @@ SendMailDate = Date d'envoi du mail de signature
 SignatureDate = Date de signature
 ActionsSignature = Actions
 The = le
+DocumentName = Nom du document

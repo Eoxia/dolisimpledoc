@@ -301,7 +301,8 @@ window.eoxiaJS.signature.init = function() {
 window.eoxiaJS.signature.event = function() {
 	jQuery( document ).on( 'click', '.signature-erase', window.eoxiaJS.signature.clearCanvas );
     jQuery( document ).on( 'click', '.signature-validate', window.eoxiaJS.signature.createSignature );
-    jQuery( document ).on( 'click', '.auto-download', window.eoxiaJS.signature.autoDownloadSpecimen );
+	jQuery( document ).on( 'click', '.auto-download', window.eoxiaJS.signature.autoDownloadSpecimen );
+	jQuery( document ).on( 'click', '.download-file', window.eoxiaJS.signature.download );
 };
 
 window.eoxiaJS.signature.modalSignatureOpened = function( triggeredElement ) {
@@ -362,7 +363,10 @@ window.eoxiaJS.signature.createSignature = function() {
 				actionContainerSuccess.removeClass('hidden');
 				$('.signatures-container').load( document.URL + ' .signatures-container');
             } else {
-                window.location.replace(elementRedirect);
+				actionContainerSuccess.load(document.URL + ' .noticeSignatureSuccess .all-notice-content')
+				actionContainerSuccess.removeClass('hidden');
+				$('.signatures-container').load( document.URL + ' .signatures-container');
+                //window.location.replace(elementRedirect);
             }
 		},
 		error: function ( ) {
@@ -371,9 +375,13 @@ window.eoxiaJS.signature.createSignature = function() {
 	});
 };
 
-window.eoxiaJS.signature.download = function(fileUrl, filename) {
+window.eoxiaJS.signature.download = function( event ) {
+	let filename = $(this).closest('.file-generation').find('.filename').attr('value')
+	let fileurl = $(this).closest('.file-generation').find('.fileurl').attr('value')
+	console.log(filename)
+	console.log(fileurl)
     var a = document.createElement("a");
-    a.href = fileUrl;
+    a.href = fileurl;
     a.setAttribute("download", filename);
     a.click();
 }
