@@ -94,6 +94,8 @@ EnvelopeMustBeLockedToGenerateDocument = <b>Le courrier doit être verrouillé p
 UploadAcknowledgementReceipt = Accusé de réception
 AcknowledgementReceipt = Accusé de réception
 ReceivedAndSigned = Reçu et signé
+AddAttendantMessage = Le destinataire a bien été enregistré :
+
 #
 # Signature - Signature
 #
