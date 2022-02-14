@@ -110,3 +110,4 @@ SignatureDate = Date de signature
 ActionsSignature = Actions
 The = le
 DocumentName = Nom du document
+AcknowledgementReceiptText = Je soussigné %s avoir reçu le document %s

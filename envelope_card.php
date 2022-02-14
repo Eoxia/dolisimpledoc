@@ -1098,7 +1098,8 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			print dolilettershowdocuments('doliletter:Envelope', $object->element.'/'.$objref, $filedir, $urlsource, $genallowed, $delallowed, $conf->global->DOLILETTER_ENVELOPE_ADDON_PDF, 1, 0, 0, '', 0, '', '', '', $langs->defaultlang, $object->status == 2 ? 1 : 0, $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
 		}
 		if ($object->status == 5) {
-			print dolilettershowdocuments('doliletter:Envelope', $object->element.'/'.$objref.'/acknowledgementreceipt', $filedir.'/acknowledgementreceipt', $urlsource, 0, $delallowed, $conf->global->DOLILETTER_ENVELOPE_ADDON_PDF, 1, 0, 0, $langs->trans('AcknowledgementReceipt'), 0, '', '', '', $langs->defaultlang, $object->status == 2 ? 1 : 0, $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
+			$acknowledgement_receipt_files = count(dol_dir_list($filedir.'/acknowledgementreceipt'));
+			print dolilettershowdocuments('doliletter:AcknowledgementReceipt', $object->element.'/'.$objref.'/acknowledgementreceipt', $filedir.'/acknowledgementreceipt', $urlsource, $permissiontoadd, $delallowed, $conf->global->DOLILETTER_ACKNOWLEDGEMENTRECEIPT_ADDON_PDF, 1, 0, 0, $langs->trans('AcknowledgementReceipt'), 0, '', '', '', $langs->defaultlang, $acknowledgement_receipt_files > 0 ? 0 : 1, $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
 		}
 
 		print '</div><div class="fichehalfright"><div class="ficheaddleft">';
