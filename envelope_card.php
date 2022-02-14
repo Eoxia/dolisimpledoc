@@ -1265,11 +1265,14 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		//$arrayoffamiliestoexclude=array('system', 'mycompany', 'object', 'objectamount', 'date', 'user', ...);
 		if (!isset($arrayoffamiliestoexclude)) $arrayoffamiliestoexclude = null;
 
+		$receiver = $signatory->fetchSignatory('E_RECEIVER', $id);
+		$receiver = array_shift($receiver);
 		// Make substitution in email content
 		$substitutionarray = getCommonSubstitutionArray($outputlangs, 0, $arrayoffamiliestoexclude, $object);
 		$substitutionarray['__CHECK_READ__'] = (is_object($object) && is_object($object->thirdparty)) ? '<img src="'.DOL_MAIN_URL_ROOT.'/public/emailing/mailing-read.php?tag='.$object->thirdparty->tag.'&securitykey='.urlencode($conf->global->MAILING_EMAIL_UNSUBSCRIBE_KEY).'" width="1" height="1" style="width:1px;height:1px" border="0"/>' : '';
 		$substitutionarray['__PERSONALIZED__'] = ''; // deprecated
 		$substitutionarray['__CONTACTCIVNAME__'] = '';
+		$substitutionarray['__SIGNATURE_LINK__'] = dol_buildpath('/custom/doliletter/public/signature/add_signature.php?track_id=' . $receiver->signature_url  . '&type=' . $object->element, 3);
 		$parameters = array(
 			'mode' => 'formemail'
 		);

@@ -63,6 +63,8 @@ ModifyEnvelope = Modifier l'enveloppe
 ListEnvelopes = Liste d'enveloppes
 Receivers = Destinataires
 LetterCode = Code du courrier
+AdministrativeService = Service administratif
+EnvelopeContent = Veuillez trouver ci-joint les documents relatifs à votre projet. Pour attester de la réception de ces documents, signez numériquement en cliquant sur ce lien : __SIGNATURE_LINK__ <b> %s </b>
 
 Society = Tiers
 Sender = Émetteur

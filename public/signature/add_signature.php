@@ -94,11 +94,13 @@ if ($action == 'addSignature') {
 	$signatory->fetch($signatoryID);
 	$signatory->signature      = $request_body;
 	$signatory->signature_date = dol_now();
+	$object->fetch($signatory->fk_object);
 
 	if ( ! $error) {
 		$result = $signatory->update($user, false);
 		if ($result > 0) {
 			$signatory->setSigned($user, false);
+			$object->setStatusCommon($user, 5);
 			// Creation signature OK
 			exit;
 		} else {
