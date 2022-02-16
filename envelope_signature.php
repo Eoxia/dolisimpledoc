@@ -416,7 +416,7 @@ if ((empty($action) || ($action != 'create' && $action != 'edit'))) {
 		print '<br>';
 	}
 	print '<tr><td>';
-	print '<a href="envelope_card?id='. $object->id .'" class="butAction">' . $langs->trans('GoBackToCard') . '</a>';
+	print '<a href="envelope_card.php?id='. $object->id .'" class="butAction">' . $langs->trans('GoBackToCard') . '</a>';
 	print '</td></tr>';
 }
 
