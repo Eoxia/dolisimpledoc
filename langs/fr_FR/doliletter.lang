@@ -112,3 +112,4 @@ The = le
 DocumentName = Nom du document
 AcknowledgementReceiptText = Je soussigné %s avoir reçu le document %s
 DocumentGenerated = Document généré
+DocumentHasAlreadyBeenGenerated = Le document a déjà été généré
