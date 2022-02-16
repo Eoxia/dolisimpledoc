@@ -357,11 +357,11 @@ window.eoxiaJS.signature.createSignature = function() {
 		processData: false,
 		contentType: 'application/octet-stream',
 		data: signature,
-		success: function() {
+		success: function( resp ) {
             if (elementZone == "private") {
 				actionContainerSuccess.load(document.URL + ' .noticeSignatureSuccess .all-notice-content')
 				actionContainerSuccess.removeClass('hidden');
-				$('.signatures-container').load( document.URL + ' .signatures-container');
+				$('.fiche').html($(resp).find('.fiche').children());
             } else {
 				actionContainerSuccess.load(document.URL + ' .noticeSignatureSuccess .all-notice-content')
 				actionContainerSuccess.removeClass('hidden');
