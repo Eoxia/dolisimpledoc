@@ -516,6 +516,8 @@ class pdf_deimos extends ModelePDFAcknowledgementReceipt
 					@chmod($file, octdec($conf->global->MAIN_UMASK));
 
 				$this->result = array('fullpath'=>$file);
+				$signatory = new EnvelopeSignature($this->db);
+				$signatory->deleteSignatoriesSignatures($object->id);
 
 				return 1;
 			} else {

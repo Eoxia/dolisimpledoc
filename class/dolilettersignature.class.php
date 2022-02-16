@@ -534,16 +534,14 @@ class DoliletterSignature extends CommonObject
 	 * @return int
 	 */
 	public function deleteSignatoriesSignatures($fk_object) {
-		global $user;
+		global $langs, $user;
 
 		$signatories = $this->fetchSignatories($fk_object);
 
 		if (!empty($signatories) && $signatories > 0) {
 			foreach ($signatories as $signatory) {
 				if (dol_strlen($signatory->signature)) {
-					$signatory->signature = '';
-					$signatory->signature_date = '';
-					$signatory->status = 1;
+					$signatory->signature = $langs->trans('DocumentGenerated');
 					$signatory->update($user);
 				}
 			}

@@ -1,8 +1,11 @@
-<?php if (empty($element->signature) || $element->signature == $langs->trans("FileGenerated")) : ?>
+<?php if (empty($element->signature)) : ?>
 	<div class="wpeo-button button-blue wpeo-modal-event modal-signature-open modal-open" value="<?php echo $element->id ?>">
 		<span><i class="fas fa-signature"></i> <?php echo $langs->trans('Sign'); ?></span>
 	</div>
-<?php elseif (!empty($element->signature)) : ?>
+
+<?php elseif ( $element->signature == $langs->trans("DocumentGenerated") ) :
+	print $element->getLibStatut(5);
+elseif (!empty($element->signature)) : ?>
 	<img class="wpeo-modal-event modal-signature-open modal-open" value="<?php echo $element->id ?>" src='<?php echo $element->signature ?>' width="100px" height="100px" style="border: #0b419b solid 2px">
 <?php endif; ?>
 
