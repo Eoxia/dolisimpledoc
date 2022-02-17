@@ -1096,7 +1096,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			$urlsource = $_SERVER["PHP_SELF"]."?id=".$object->id;
 			$genallowed = $user->rights->doliletter->envelope->read; // If you can read, you can build the PDF to read content
 			$delallowed = $user->rights->doliletter->envelope->write; // If you can create/edit, you can remove a file on card
-			print dolilettershowdocuments('doliletter:Envelope', $object->element.'/'.$objref, $filedir, $urlsource, $genallowed, $delallowed, $conf->global->DOLILETTER_ENVELOPE_ADDON_PDF, 1, 0, 0, '', 0, '', '', '', $langs->defaultlang, $object->status == 2 ? ( $generated_files > 0 ? 0 : 1) : 0, $generated_files > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
+			print dolilettershowdocuments('doliletter:Envelope', $object->element.'/'.$objref, $filedir, $urlsource, $genallowed, 0, $conf->global->DOLILETTER_ENVELOPE_ADDON_PDF, 1, 0, 0, '', 0, '', '', '', $langs->defaultlang, $object->status == 2 ? ( $generated_files > 0 ? 0 : 1) : 0, $generated_files > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
 		}
 		if ($object->status == 5) {
 			$acknowledgement_receipt_files = count(dol_dir_list($filedir.'/acknowledgementreceipt'));
@@ -1315,6 +1315,39 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 
 } else if ($action == 'letterpresend') {
+
+	// Build document if it not exists
+	$diroutput = $upload_dir . '/' . $object->element;
+	$outputlangs = $langs;
+
+	$fileparams = dol_most_recent_file($diroutput.'/'.$object->ref, '');
+	$file = $fileparams['fullname'];
+
+	$allspecimen = true;
+	$fileslist = dol_dir_list($fileparams['path']);
+	foreach($fileslist as $item) {
+		if (!preg_match('/specimen/', $item['name'])){
+			$allspecimen = false;
+		}
+	}
+
+	$needcreate = empty($file) || $allspecimen;
+
+	$forcebuilddoc = true;
+	if ($forcebuilddoc)    // If there is no default value for supplier invoice, we do not generate file, even if modelpdf was set by a manual generation
+	{
+		if (($needcreate || !is_readable($file)) && method_exists($object, 'generateDocument'))
+		{
+
+			$result = $object->generateDocument(GETPOST('model') ? GETPOST('model') : $object->model_pdf, $outputlangs, $hidedetails, $hidedesc, $hideref);
+			if ($result < 0) {
+				dol_print_error($db, $object->error, $object->errors);
+				exit();
+			}
+			$fileparams = dol_most_recent_file($diroutput.'/'.$ref, preg_quote($ref, '/').'[^\-]+');
+			$file = $fileparams['fullname'];
+		}
+	}
 
 	$res = $object->fetch_optionals();
 
