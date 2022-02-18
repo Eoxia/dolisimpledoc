@@ -99,6 +99,8 @@ ReceivedAndSigned = Reçu et signé
 AddAttendantMessage = Le destinataire a bien été enregistré :
 MustBeSentBeforeAcknowledgementReceipt = <b> Le courrier doit avoir été envoyé </b> avant de pouvoir utiliser cette fonctionnalité
 CantEditAlreadySigned = Le courrier a déjà été signé
+EditEnvelope = Modifier le courrier
+
 #
 # Signature - Signature
 #
