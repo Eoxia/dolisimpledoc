@@ -237,10 +237,9 @@ if (empty($reshook)) {
 	// Action to update record
 	if ($action == 'update' && $permissiontoadd) {
 		$society_id     = GETPOST('fk_soc');
-		$content        = GETPOST('content');
+		$content        = GETPOST('content', 'restricthtml');
 		$label          = GETPOST('label');
 		$contact_id     = GETPOST('fk_contact');
-
 
 		$object->label      = $label;
 		$object->fk_soc     = $society_id;
