@@ -172,7 +172,11 @@ function dolilettershowdocuments($modulepart, $modulesubdir, $filedir, $urlsourc
 	// Get list of files
 	$file_list = null;
 	if ( ! empty($filedir)) {
-		$file_list = dol_dir_list($filedir, 'files', 0, '(\.odt|\.zip|\.pdf)', '', 'date', SORT_DESC, 1);
+		$filter = '(\.odt|\.zip|\.pdf)';
+		if ($modulepart == 'doliletter:AcknowledgementReceipt') {
+			$filter = '(\.jpg|\.jpeg|\.png|\.odt|\.zip|\.pdf)';
+		}
+		$file_list = dol_dir_list($filedir, 'files', 0, $filter, '', 'date', SORT_DESC, 1);
 	}
 
 	if ($hideifempty && empty($file_list)) return '';
