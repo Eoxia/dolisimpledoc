@@ -120,3 +120,4 @@ AcknowledgementReceiptText = Je soussigné %s avoir reçu le document %s
 DocumentGenerated = Document généré
 DocumentHasAlreadyBeenGenerated = Le document a déjà été généré
 CompleteName = Nom et prénom
+ValidatePendingSignature = Validé (en attente de signature)
