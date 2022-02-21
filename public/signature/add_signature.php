@@ -156,7 +156,7 @@ $element = array_shift($element);
 			<br>
 			<div class="wpeo-table table-flex table-2">
 				<div class="table-row">
-					<div class="table-cell"><?php echo $langs->trans("Name"); ?></div>
+					<div class="table-cell"><?php echo $langs->trans("CompleteName"); ?></div>
 					<div class="table-cell table-end"><?php echo $signatory->firstname . ' ' . $signatory->lastname; ?></div>
 				</div>
 				<div class="table-row">
