@@ -210,6 +210,11 @@ class modDoliLetter extends DolibarrModules {
 		$this->rights[$r][1] = $langs->trans('DeleteEnvelope');
 		$this->rights[$r][4] = 'envelope';
 		$this->rights[$r][5] = 'delete';
+		$r++;
+		$this->rights[$r][0] = $this->numero . sprintf("%02d", $r + 1);
+		$this->rights[$r][1] = $langs->trans('ReadAdminPage');
+		$this->rights[$r][4] = 'adminpage';
+		$this->rights[$r][5] = 'read';
 
 		// Main menu entries to add
 		$this->menu = array();
@@ -275,6 +280,20 @@ class modDoliLetter extends DolibarrModules {
 			'perms'=>'1', // Use 'perms'=>'$user->rights->doliletter->level1->level2' if you want your menu with a permission rules
 			'target'=>'',
 			'user'=>0, // 0=Menu for internal users, 1=external users, 2=both
+		);
+		$this->menu[$r++] = array(
+			'fk_menu' => 'fk_mainmenu=doliletter',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'type' => 'left',			                // This is a Left menu entry
+			'titre' => '<i class="fas fa-cog"></i>  ' . $langs->trans('DoliletterConfig'),
+			'mainmenu' => 'doliletter',
+			'leftmenu' => '',
+			'url' => '/doliletter/admin/setup.php',
+			'langs' => 'doliletter@doliletter',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'position' => 48520 + $r,
+			'enabled' => '$conf->doliletter->enabled',  // Define condition to show or hide menu entry. Use '$conf->doliletter->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'perms' => '$user->rights->doliletter->adminpage->read',			                // Use 'perms'=>'$user->rights->doliletter->level1->level2' if you want your menu with a permission rules
+			'target' => '',
+			'user' => 0,				                // 0=Menu for internal users, 1=external users, 2=both
 		);
 	}
 

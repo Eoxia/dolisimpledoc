@@ -44,7 +44,7 @@ DoliLetterArea = Bienvenue dans le module DoliLetter
 DoliLetterIndex = DoliLetter
 DoliLetterCreate = Nouvelle enveloppe
 DoliLetterList = Liste
-
+DoliletterConfig = Configuration du module
 SelectUser = Sélectionner un utilisateur
 AddUser = Créer un utilisateur
 Create = Créer
