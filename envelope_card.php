@@ -848,8 +848,6 @@ if ($action == 'create') {
 	print '</div>';
 
 	print '</form>';
-
-	//dol_set_focus('input[name="ref"]');
 }
 
 // Part to edit record
@@ -989,8 +987,9 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	print $langs->trans("Content");
 	print '</td>';
 	print '<td>';
-
+	print '<div class="longmessagecut" style="min-height: 150px">';
 	print dol_htmlentitiesbr($object->content); //wrap -> middle?
+	print '</div>';
 	print '</td></tr>';
 
 	//unused display of information
