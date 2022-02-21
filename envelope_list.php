@@ -646,11 +646,11 @@ while ($i < ($limit ? min($num, $limit) : $num)) {
 			print '<td'.($cssforfield ? ' class="'.$cssforfield.'"' : '') .'>';
 			if ($key == 'fk_soc') {
 			$thirdparty->fetch($obj->fk_soc);
-			print $thirdparty->getNomUrl();
+			print $thirdparty->getNomUrl(1);
 			}
 			else if ($key == 'fk_contact') {
 				$contact->fetch($obj->fk_soc);
-				print $contact->getNomUrl();
+				print $contact->getNomUrl(1);
 			}
 			else if ($key == 'sender') {
 				$sender->fetch($obj->sender);
