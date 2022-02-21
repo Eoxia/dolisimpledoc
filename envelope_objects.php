@@ -114,14 +114,6 @@ $upload_dir = $conf->doliletter->multidir_output[$conf->entity];
 $thirdparty = new Societe($db);
 $thirdparty->fetch($object->fk_soc);
 $usertemp = new User($db);
-// Security check (enable the most restrictive one)
-//if ($user->socid > 0) accessforbidden();
-//if ($user->socid > 0) $socid = $user->socid;
-//$isdraft = (($object->status == $object::STATUS_DRAFT) ? 1 : 0);
-//restrictedArea($user, $object->element, $object->id, $object->table_element, '', 'fk_soc', 'rowid', $isdraft);
-//if (empty($conf->envelope->enabled)) accessforbidden();
-//if (!$permissiontoread) accessforbidden();
-
 
 /*
  * Actions

@@ -55,13 +55,14 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/order.lib.php';
 
 // load envelope libraries
 require_once './lib/doliletter_envelope.lib.php';
+require_once './lib/doliletter_function.lib.php';
 require_once __DIR__ . '/class/envelope.class.php';
 
 // for other modules
 //dol_include_once('/othermodule/class/otherobject.class.php');
 global $user, $db, $user, $langs;
 // Load translation files required by the page
-$langs->loadLangs(array("doliletter@doliletter", "other"));
+$langs->loadLangs(array("doliletter@doliletter", "other", "bills"));
 
 $action     = GETPOST('action', 'aZ09') ?GETPOST('action', 'aZ09') : 'view'; // The action 'add', 'create', 'edit', 'update', 'view', ...
 $massaction = GETPOST('massaction', 'alpha'); // The bulk action (combo box choice into lists)
@@ -113,6 +114,37 @@ if (!$sortfield) {
 }
 if (!$sortorder) {
 	$sortorder = "ASC";
+}
+
+if (!empty($fromtype)) {
+	switch ($fromtype) {
+		case 'facture' :
+			$objectLinked = new Facture($db);
+			$prehead = 'facture_prepare_head';
+			break;
+		case 'thirdparty' :
+			$objectLinked = new Societe($db);
+			$prehead = 'societe_prepare_head';
+			break;
+		case 'product' :
+			$objectLinked = new Product($db);
+			$prehead = 'product_prepare_head';
+			break;
+		case 'project' :
+			$objectLinked = new Project($db);
+			$prehead = 'project_prepare_head';
+			break;
+		case 'propal' :
+			$objectLinked = new Propal($db);
+			$prehead = 'propal_prepare_head';
+			break;
+		case 'order' :
+			$objectLinked = new Commande($db);
+			$prehead = 'commande_prepare_head';
+			break;
+	}
+	$objectLinked->fetch($fromid);
+	$head = $prehead($objectLinked);
 }
 
 // Initialize array of search criterias
@@ -222,8 +254,6 @@ if (empty($reshook)) {
 //	include DOL_DOCUMENT_ROOT.'/core/actions_massactions.inc.php';
 }
 
-
-
 /*
  * View
  */
@@ -234,7 +264,7 @@ $now = dol_now();
 
 //$help_url="EN:Module_Envelope|FR:Module_Envelope_FR|ES:Módulo_Envelope";
 $help_url = '';
-$title = $langs->trans('ListEnvelopes');
+$title = $langs->trans('EnvelopeList');
 $morejs = array();
 $morecss = array();
 
@@ -358,63 +388,8 @@ if ($num == 1 && !empty($conf->global->MAIN_SEARCH_DIRECT_OPEN_IF_ONLY_ONE) && $
 llxHeader('', $title, $help_url, '', 0, 0, $morejs, $morecss, '', '');
 
 if (!empty($fromtype)) {
-	switch ($fromtype) {
-		case 'invoice' :
-			$facture = new Facture($db);
-			$facture->fetch($fromid);
-			$prehead = 'facture_prepare_head';
-			$head = $prehead($facture);
-			break;
-		case 'thirdparty' :
-			$societe = new Societe($db);
-			$societe->fetch($fromid);
-			$prehead = 'societe_prepare_head';
-			$head = $prehead($societe);
-			break;
-		case 'product' :
-			$product = new Product($db);
-			$product->fetch($fromid);
-			$prehead = 'product_prepare_head';
-			$head = $prehead($product);
-			break;
-		case 'project' :
-			$project = new Project($db);
-			$project->fetch($fromid);
-			$prehead = 'project_prepare_head';
-			$head = $prehead($project);
-			break;
-		case 'propal' :
-			$propal = new Propal($db);
-			$propal->fetch($fromid);
-			$prehead = 'propal_prepare_head';
-			$head = $prehead($propal);
-			break;
-		case 'order' :
-			$order = new Commande($db);
-			$order->fetch($fromid);
-			$prehead = 'commande_prepare_head';
-			$head = $prehead($order);
-			break;
-
-	}
-	print dol_get_fiche_head($head, 'envelopeList', $langs->trans("Envelope"), -1, $object->picto);
+	print dol_get_fiche_head($head, 'envelopeList', $langs->trans("Envelope"), -1, $objectLinked->picto);
 }
-
-// Example : Adding jquery code
-// print '<script type="text/javascript" language="javascript">
-// jQuery(document).ready(function() {
-// 	function init_myfunc()
-// 	{
-// 		jQuery("#myid").removeAttr(\'disabled\');
-// 		jQuery("#myid").attr(\'disabled\',\'disabled\');
-// 	}
-// 	init_myfunc();
-// 	jQuery("#mybutton").click(function() {
-// 		init_myfunc();
-// 	});
-// });
-// </script>';
-
 $arrayofselected = is_array($toselect) ? $toselect : array();
 
 $param = '';
