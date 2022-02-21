@@ -332,7 +332,7 @@ window.eoxiaJS.signature.clearCanvas = function( event ) {
 
 window.eoxiaJS.signature.createSignature = function() {
 	let elementSignatory = $(this).attr('value');
-	let elementRedirect  = $(this).find('#redirect' + elementSignatory).attr('value');
+	let elementRedirect  = $(this).closest('.digirisk-signature-container').find('#redirectURL').attr('value');
 	let elementZone  = $(this).find('#zone' + elementSignatory).attr('value');
     let actionContainerSuccess = $('.noticeSignatureSuccess');
 	var signatoryIDPost = '';
@@ -363,10 +363,7 @@ window.eoxiaJS.signature.createSignature = function() {
 				actionContainerSuccess.removeClass('hidden');
 				$('.fiche').html($(resp).find('.fiche').children());
             } else {
-				actionContainerSuccess.load(document.URL + ' .noticeSignatureSuccess .all-notice-content')
-				actionContainerSuccess.removeClass('hidden');
-				$('.signatures-container').load( document.URL + ' .signatures-container');
-                //window.location.replace(elementRedirect);
+                window.location.replace(elementRedirect);
             }
 		},
 		error: function ( ) {
