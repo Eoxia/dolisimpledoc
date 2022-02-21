@@ -633,6 +633,8 @@ if (empty($reshook)) {
 								// End call triggers
 								if ($error) {
 									setEventMessages($object->error, $object->errors, 'errors');
+								} else {
+									$object->setStatusCommon($user, 4);
 								}
 							}
 							// End call of triggers
