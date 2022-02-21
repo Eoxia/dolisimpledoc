@@ -117,7 +117,7 @@ if ($action == 'addSignature') {
 
 $form = new Form($db);
 
-if (empty($conf->global->DIGIRISKDOLIBARR_SIGNATURE_ENABLE_PUBLIC_INTERFACE)) {
+if (empty($conf->global->DOLILETTER_SIGNATURE_ENABLE_PUBLIC_INTERFACE)) {
 	print $langs->trans('SignaturePublicInterfaceForbidden');
 	exit;
 }

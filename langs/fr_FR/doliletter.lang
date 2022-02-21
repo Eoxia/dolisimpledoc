@@ -49,6 +49,9 @@ SelectUser = Sélectionner un utilisateur
 AddUser = Créer un utilisateur
 Create = Créer
 GoBackToCard = Retour à la fiche
+PublicInterfaceConfig = Configuration de l'interface publique
+PublicInterface = Interface publique
+EnablePublicInterface = Activer l'interface publique
 
 #
 # Envelope - Enveloppe

@@ -63,10 +63,33 @@ llxHeader('', $langs->trans($page_name), $help_url);
 $linkback = '<a href="'.($backtopage ? $backtopage : DOL_URL_ROOT.'/admin/modules.php?restore_lastsearch_values=1').'">'.$langs->trans("BackToModuleList").'</a>';
 
 print load_fiche_titre($langs->trans($page_name), $linkback, 'object_doliletter@doliletter');
-
 // Configuration header
 $head = doliletterAdminPrepareHead();
 print dol_get_fiche_head($head, 'settings', $langs->trans($page_name), -1, "doliletter@doliletter");
+
+print load_fiche_titre('<i class="fas fa-exclamation-circle"></i> ' . $langs->trans('PublicInterfaceConfig'), '', '');
+
+print '<table class="noborder centpercent">';
+print '<tr class="liste_titre">';
+print '<td>' . $langs->trans("Name") . '</td>';
+print '<td>' . $langs->trans("Description") . '</td>';
+print '<td class="center">' . $langs->trans("Status") . '</td>';
+print '</tr>';
+
+print '<tr class="oddeven"><td>';
+print $langs->trans('PublicInterface');
+print "</td><td>";
+print $langs->trans('EnablePublicInterface');
+print '</td>';
+
+print '<td class="center">';
+print ajax_constantonoff('DOLILETTER_SIGNATURE_ENABLE_PUBLIC_INTERFACE');
+print '</td>';
+print '</tr>';
+
+print '</table>';
+print '<hr>';
+
 
 // Page end
 print dol_get_fiche_end();
