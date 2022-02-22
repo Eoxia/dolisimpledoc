@@ -43,6 +43,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/html.formother.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/doleditor.class.php';
 require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
 require_once DOL_DOCUMENT_ROOT.'/contact/class/contact.class.php';
+require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
 
 require_once './class/envelope.class.php';
 require_once './class/envelope_letter.class.php';
@@ -68,6 +69,7 @@ $backtopage  = GETPOST('backtopage', 'alpha');
 // Initialize technical objects
 $object         = new Envelope($db);
 $contact        = new Contact($db);
+$project        = new Project($db);
 $signatory      = new EnvelopeSignature($db);
 $refEnvelopeMod = new $conf->global->DOLILETTER_ENVELOPE_ADDON();
 $extrafields    = new ExtraFields($db);
@@ -183,6 +185,7 @@ if (empty($reshook)) {
 		$note_public        = GETPOST('note_public');
 		$label        = GETPOST('label');
 		$contact_id        = GETPOST('fk_contact');
+		$project_id        = GETPOST('fk_project');
 
 		// Initialize object
 		$now                   = dol_now();
@@ -197,6 +200,7 @@ if (empty($reshook)) {
 
 		$object->fk_soc        = $society_id;
 		$object->fk_contact    = $contact_id;
+		$object->fk_project    = $project_id;
 
 		$object->content       = $content;
 		$object->entity = $conf->entity ?: 1;
@@ -240,11 +244,13 @@ if (empty($reshook)) {
 		$content        = GETPOST('content', 'restricthtml');
 		$label          = GETPOST('label');
 		$contact_id     = GETPOST('fk_contact');
+		$project_id     = GETPOST('fk_project');
 
 		$object->label      = $label;
 		$object->fk_soc     = $society_id;
 		$object->content    = $content;
 		$object->fk_contact = $contact_id;
+		$object->fk_project = $project_id;
 
 		$object->fk_user_creat = $user->id ? $user->id : 1;
 		if (!$error) {
@@ -794,6 +800,7 @@ if ($action == 'create') {
 	unset($object->fields['note_private']);
 	unset($object->fields['fk_soc']);
 	unset($object->fields['fk_contact']);
+	unset($object->fields['fk_project']);
 
 	//Ref -- Ref
 	print '<tr><td class="fieldrequired">'.$langs->trans("Ref").'</td><td>';
@@ -815,6 +822,12 @@ if ($action == 'create') {
 	//Contact -- Contact
 	print '<tr><td class="fieldrequired">'.$langs->trans("Contact").'</td><td>';
 	print $form->selectcontacts(GETPOST('fk_soc', 'int'), '', 'fk_contact', 1, '', '', 0, 'quatrevingtpercent', false, 0, array(), false, '', 'fk_contact');
+	print '</td></tr>';
+
+	//Contact -- Contact
+	print '<tr class="oddeven"><td><label for="ACCProject">' . $langs->trans("ProjectLinked") . '</label></td><td>';
+	$numprojet = $formproject->select_projects(0,  '', 'fk_project', 0, 0, 1, 0, 0, 0, 0, '', 0, 0, 'minwidth300');
+	print ' <a href="' . DOL_URL_ROOT . '/projet/card.php?&action=create&status=1&backtopage=' . urlencode($_SERVER["PHP_SELF"] . '?action=create') . '"><span class="fa fa-plus-circle valignmiddle" title="' . $langs->trans("AddProject") . '"></span></a>';
 	print '</td></tr>';
 
 	//Content -- Contenu
@@ -882,6 +895,7 @@ if (($id || $ref) && $action == 'edit') {
 	unset($object->fields['note_private']);
 	unset($object->fields['fk_soc']);
 	unset($object->fields['fk_contact']);
+	unset($object->fields['fk_project']);
 
 	//Society -- Société
 	print '<tr><td class="fieldrequired">'.$langs->trans("Society").'</td><td>';
@@ -894,6 +908,12 @@ if (($id || $ref) && $action == 'edit') {
 	//Contact -- Contact
 	print '<tr><td class="fieldrequired">'.$langs->trans("Contact").'</td><td>';
 	print $form->selectcontacts(GETPOST('fk_soc', 'int'), $object->fk_contact, 'fk_contact', 1, '', '', 0, 'quatrevingtpercent', false, 0, array(), false, '', 'fk_contact');
+	print '</td></tr>';
+
+	//Contact -- Contact
+	print '<tr class="oddeven"><td><label for="ACCProject">' . $langs->trans("ProjectLinked") . '</label></td><td>';
+	$numprojet = $formproject->select_projects(0,  $object->fk_project, 'fk_project', 0, 0, 1, 0, 0, 0, 0, '', 0, 0, 'minwidth300');
+	print ' <a href="' . DOL_URL_ROOT . '/projet/card.php?&action=create&status=1&backtopage=' . urlencode($_SERVER["PHP_SELF"] . '?action=create') . '"><span class="fa fa-plus-circle valignmiddle" title="' . $langs->trans("AddProject") . '"></span></a>';
 	print '</td></tr>';
 
 	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_edit.tpl.php';
@@ -957,7 +977,8 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	// Object card
 	// ------------------------------------------------------------
 	$linkback = '<a href="'.dol_buildpath('/doliletter/envelope_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
-
+	// Project
+	$project->fetch($object->fk_project);
 	$morehtmlref = '<div class="refidno">';
 
 	$morehtmlref .=  '<tr><td class="titlefield">';
@@ -971,14 +992,15 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	$morehtmlref .=  $langs->trans("Contact");
 	$morehtmlref .= ' : ';
 	$morehtmlref .=  '</td>';
+
 	$morehtmlref .=  '<td>';
 	$morehtmlref .=  $contact->getNomUrl(1);
-	$morehtmlref .=  '</td></tr>';
+	$morehtmlref .=  '</td><br>';
+	$morehtmlref .= $langs->trans('Project') . ' : ' . $project->getNomUrl(1);
+	$morehtmlref .= '</tr>';
 	$morehtmlref .= '</div>';
 
-
 	dol_banner_tab($object, 'ref', $linkback, 0, 'ref', 'ref', $morehtmlref, '', 0, '' );
-
 
 	print '<div class="fichecenter">';
 	print '<div class="fichehalfleft">';
@@ -997,6 +1019,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	//unused display of information
 	unset($object->fields['fk_soc']);
 	unset($object->fields['fk_contact']);
+	unset($object->fields['fk_project']);
 	unset($object->fields['content']);
 
 	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_view.tpl.php';

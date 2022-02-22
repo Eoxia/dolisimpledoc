@@ -116,6 +116,7 @@ class Envelope extends CommonObject
 		'document_url'   => array('type'=>'varchar(255)', 'label'=>'DocumentUrl', 'enabled'=>'1', 'position'=>150, 'notnull'=>0, 'visible'=>0,),
 		'fk_soc'         => array('type'=>'integer', 'label'=>'ThirdParty', 'enabled'=>'1', 'position'=>160, 'notnull'=>1, 'visible'=>1,),
 		'fk_contact'     => array('type'=>'integer', 'label'=>'Contact', 'enabled'=>'1', 'position'=>170, 'notnull'=>1, 'visible'=>1,),
+		'fk_project'     => array('type'=>'integer', 'label'=>'Project', 'enabled'=>'1', 'position'=>175, 'notnull'=>1, 'visible'=>1,),
 		'fk_user_creat'  => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserAuthor', 'enabled'=>'1', 'position'=>180, 'notnull'=>1, 'visible'=>-2, 'foreignkey'=>'user.rowid',),
 		'fk_user_modif'  => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserModif', 'enabled'=>'1', 'position'=>190, 'notnull'=>-1, 'visible'=>0,),
 	);
@@ -136,6 +137,7 @@ class Envelope extends CommonObject
 	public $document_url;
 	public $fk_soc;
 	public $fk_contact;
+	public $fk_project;
 	public $fk_user_creat;
 	public $fk_user_modif;
 	public $label;

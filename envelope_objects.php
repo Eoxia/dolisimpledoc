@@ -386,35 +386,6 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	print '</div>';
 	print '</form>';
 
-	// Projets
-	print '</p><p>';
-	if (is_countable($object->linkedObjectsIds['project'])) {
-		$nbprojects = count($object->linkedObjectsIds['project']);
-	} else {
-		$nbprojects = 0;
-	}
-	print '<div class="titre inline-block">Projets<span class="opacitymedium colorblack paddingleft">' . $nbprojects . '</span></div><br>';
-	print '<table class="border tableforfield" width="100%">';
-	if (!empty($object->linkedObjectsIds['project'])) {
-		foreach ($object->linkedObjectsIds['project'] as $projectid) {
-			$projecttemp->fetch($projectid);
-			print $projecttemp->getNomUrl(1);
-			print '<br>';
-		}
-	}
-	print '<br></table>';
-	print '<div>';
-	print '<form method="POST" action="' . $_SERVER["PHP_SELF"] . '?id=' . $id . '">';
-	print '<input type="hidden" name="token" value="' . newToken() . '">';
-	print '<input type="hidden" name="action" value="addLink">';
-	print '<input type="hidden" name="element_types" value="project">';
-
-	print selectForm( $projecttemp, 'element_id[]', 'element_id', $object->linkedObjectsIds['project']);
-
-	print '<input type="submit" class="button" name="addLink" value="' . dol_escape_htmltag($langs->trans("Create")) . '">';
-	print '</div>';
-	print '</form>';
-
 	// Product
 	print '</p><p>';
 	if (is_countable($object->linkedObjectsIds['product'])) {
