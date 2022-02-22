@@ -310,7 +310,13 @@ class pdf_deimos extends ModelePDFAcknowledgementReceipt
 				$tab_top -= 2;
 
 				$pdf->SetFont('', '', $default_font_size - 1);
-				$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, $langs->trans('AcknowledgementReceiptText', $receiver->firstname . ' ' . $receiver->lastname, preg_replace('/AR_/', '', $filename)), 0, 1);
+
+				if ($object->status == 6) {
+					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, $langs->trans('AcknowledgementReceiptTextLetter', $receiver->firstname . ' ' . $receiver->lastname, preg_replace('/AR_/', '', $filename), 'courrier'), 0, 1);
+				} elseif ($object->status == 5) {
+					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, $langs->trans('AcknowledgementReceiptTextMail', $receiver->firstname . ' ' . $receiver->lastname, preg_replace('/AR_/', '', $filename), 'mail', $receiver->signature_date), 0, 1);
+				}
+
 				$nexY = $pdf->GetY();
 				$height_note = $nexY - $tab_top;
 
@@ -476,18 +482,20 @@ class pdf_deimos extends ModelePDFAcknowledgementReceipt
 						}
 					}
 				}
-
-				// Show square
-				if ($pagenb == 1)
-				{
-					$this->_tableau($pdf, $object, $tab_top, $this->page_hauteur - $tab_top - $heightforinfotot - $heightforfreetext - $heightforfooter, 0, $outputlangs, 0, 0);
-					$this->tabSignature($pdf, $tab_top, $this->page_hauteur - $tab_top - $heightforinfotot - $heightforfreetext - $heightforfooter, $outputlangs, $object);
-					$bottomlasttab = $this->page_hauteur - $heightforfooter - $heightforfooter + 1;
-				} else {
-					$this->_tableau($pdf, $object, $tab_top_newpage, $this->page_hauteur - $tab_top_newpage - $heightforinfotot - $heightforfreetext - $heightforfooter, 0, $outputlangs, 0, 0);
-					$this->tabSignature($pdf, $tab_top_newpage, $this->page_hauteur - $tab_top_newpage - $heightforinfotot - $heightforfreetext - $heightforfooter, $outputlangs, $object);
-					$bottomlasttab = $this->page_hauteur - $heightforfooter - $heightforfooter + 1;
+				if ($object->status == 5) {
+					// Show square
+					if ($pagenb == 1)
+					{
+						$this->_tableau($pdf, $object, $tab_top, $this->page_hauteur - $tab_top - $heightforinfotot - $heightforfreetext - $heightforfooter, 0, $outputlangs, 0, 0);
+						$this->tabSignature($pdf, $tab_top, $this->page_hauteur - $tab_top - $heightforinfotot - $heightforfreetext - $heightforfooter, $outputlangs, $object);
+						$bottomlasttab = $this->page_hauteur - $heightforfooter - $heightforfooter + 1;
+					} else {
+						$this->_tableau($pdf, $object, $tab_top_newpage, $this->page_hauteur - $tab_top_newpage - $heightforinfotot - $heightforfreetext - $heightforfooter, 0, $outputlangs, 0, 0);
+						$this->tabSignature($pdf, $tab_top_newpage, $this->page_hauteur - $tab_top_newpage - $heightforinfotot - $heightforfreetext - $heightforfooter, $outputlangs, $object);
+						$bottomlasttab = $this->page_hauteur - $heightforfooter - $heightforfooter + 1;
+					}
 				}
+
 
 				$this->_pagefoot($pdf, $object, $outputlangs);
 				if (method_exists($pdf, 'AliasNbPages')) $pdf->AliasNbPages();
@@ -772,7 +780,6 @@ class pdf_deimos extends ModelePDFAcknowledgementReceipt
 
 			$this->recipient = $object->thirdparty;
 
-
 			// Recipient name
 			if ($usecontact && ($object->contact->fk_soc != $object->thirdparty->id && (!isset($conf->global->MAIN_USE_COMPANY_NAME_OF_CONTACT) || !empty($conf->global->MAIN_USE_COMPANY_NAME_OF_CONTACT)))) {
 				$thirdparty = $object->contact;
@@ -814,6 +821,52 @@ class pdf_deimos extends ModelePDFAcknowledgementReceipt
 		}
 	}
 
+	/**
+	 *  Show joined files after expense report. Need this->emetteur object
+	 *
+	 *  @param  PDF			$pdf     			PDF
+	 *  @param  Object		$object				Object to show
+	 *  @param  Translate	$outputlangs		Object lang for output
+	 *  @param  int			$hidefreetext		1=Hide free text
+	 *  @return int								Return height of bottom margin including footer text
+	 */
+
+	protected function _joinedFiles(&$pdf, $object, $outputlangs, $hidefreetext = 0)
+	{
+		global $conf;
+		$showdetails = $conf->global->MAIN_GENERATE_DOCUMENTS_SHOW_FOOT_DETAILS;
+
+		require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
+
+		$upload_dir 	= DOL_DATA_ROOT . '/doliletter/envelope/' . $object->ref . '/acknowledgementreceipt/uploaded_file';
+
+		$arrayoffiles 	= dol_dir_list($upload_dir);
+		if ( !empty( $arrayoffiles ) ) {
+			foreach ($arrayoffiles as $file) {
+
+				$proofFilename 	= $file['name'];
+				$pdfname 		= $file['level1name'] . '.pdf';
+				$filename 		= $file['fullname'];
+
+				if (preg_match('/\.(pdf)$/', $file['name']) && $pdfname !== $file['name'] ) {
+					//Rajouter condition pour que si le pdf n'a pas de trailer il y ait une image par défaut
+					$pagesNbr = $pdf->setSourceFile($filename);
+					for ($p = 1; $p <= $pagesNbr; $p++)	{
+
+						$templateIdx 	= $pdf->ImportPage($p);
+						$size 			= $pdf->getTemplatesize($templateIdx);
+						$portrait 		= $size['h'] > $size['w'] ? true : false;
+
+						$pdf->AddPage($portrait ? 'P' : 'L');
+						$pagenb++;
+						$pdf->SetXY($this->marge_gauche-5, $this->marge_haute-5);
+						$pdf->Cell(100,0,$proofFilename,1,1,'C',$pdf->useTemplate($templateIdx));
+					}
+				}
+			}
+		}
+	}
+
 	// phpcs:disable PEAR.NamingConventions.ValidFunctionName.PublicUnderscore
 	/**
 	 *   	Show footer of page. Need this->emetteur object
@@ -827,6 +880,9 @@ class pdf_deimos extends ModelePDFAcknowledgementReceipt
 	protected function _pagefoot(&$pdf, $object, $outputlangs, $hidefreetext = 0)
 	{
 		global $conf;
+		if ($object->status == 6) {
+			$this->_joinedFiles($pdf, $object, $outputlangs);
+		}
 		$showdetails = empty($conf->global->MAIN_GENERATE_DOCUMENTS_SHOW_FOOT_DETAILS) ? 0 : $conf->global->MAIN_GENERATE_DOCUMENTS_SHOW_FOOT_DETAILS;
 		return pdf_pagefoot($pdf, $outputlangs, 'CONTRACT_FREE_TEXT', $this->emetteur, $this->marge_basse, $this->marge_gauche, $this->page_hauteur, $object, $showdetails, $hidefreetext);
 	}
