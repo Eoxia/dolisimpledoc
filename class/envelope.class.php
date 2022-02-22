@@ -67,7 +67,8 @@ class Envelope extends CommonObject
 	public const STATUS_LOCKED = 2;
 	public const STATUS_SENT_BY_LETTER = 3;
 	public const STATUS_SENT_BY_MAIL = 4;
-	public const STATUS_RECEIVED_AND_SIGNED = 5;
+	public const STATUS_RECEIVED_BY_MAIL_AND_SIGNED = 5;
+	public const STATUS_RECEIVED_BY_LETTER_AND_SIGNED = 6;
 
 	/**
 	 *  'type' field format ('integer', 'integer:ObjectClass:PathToClass[:AddCreateButtonOrNot[:Filter]]', 'sellist:TableName:LabelFieldName[:KeyFieldName[:KeyFieldParent[:Filter]]]', 'varchar(x)', 'double(24,8)', 'real', 'price', 'text', 'text:none', 'html', 'date', 'datetime', 'timestamp', 'duration', 'mail', 'phone', 'url', 'password')
@@ -445,15 +446,17 @@ class Envelope extends CommonObject
 			$this->labelStatus[self::STATUS_LOCKED]            = $langs->trans('Locked');
 			$this->labelStatus[self::STATUS_SENT_BY_LETTER]          = $langs->trans('SentByLetter');
 			$this->labelStatus[self::STATUS_SENT_BY_MAIL]          = $langs->trans('SentByMail');
-			$this->labelStatus[self::STATUS_RECEIVED_AND_SIGNED]          = $langs->trans('ReceivedAndSigned');
+			$this->labelStatus[self::STATUS_RECEIVED_BY_MAIL_AND_SIGNED]          = $langs->trans('ReceivedAndSignedByMail');
+			$this->labelStatus[self::STATUS_RECEIVED_BY_LETTER_AND_SIGNED]          = $langs->trans('ReceivedAndSigned');
 		}
 
-		$statusType                                                = 'status' . $status;
-		if ($status == self::STATUS_PENDING_SIGNATURE) $statusType = 'status3';
-		if ($status == self::STATUS_LOCKED) $statusType            = 'status8';
-		if ($status == self::STATUS_SENT_BY_LETTER) $statusType            = 'status7';
-		if ($status == self::STATUS_SENT_BY_MAIL) $statusType            = 'status7';
-		if ($status == self::STATUS_RECEIVED_AND_SIGNED) $statusType          = 'status6';
+		$statusType                                                            = 'status' . $status;
+		if ($status == self::STATUS_PENDING_SIGNATURE) $statusType             = 'status3';
+		if ($status == self::STATUS_LOCKED) $statusType                        = 'status8';
+		if ($status == self::STATUS_SENT_BY_LETTER) $statusType    			   = 'status7';
+		if ($status == self::STATUS_SENT_BY_MAIL) $statusType      		       = 'status7';
+		if ($status == self::STATUS_RECEIVED_BY_MAIL_AND_SIGNED) $statusType   = 'status6';
+		if ($status == self::STATUS_RECEIVED_BY_LETTER_AND_SIGNED) $statusType = 'status6';
 
 		return dolGetStatus($this->labelStatus[$status], $this->labelStatusShort[$status], '', $statusType, $mode);
 	}

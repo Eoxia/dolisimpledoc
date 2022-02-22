@@ -691,7 +691,6 @@ if (empty($reshook)) {
 		}
 	}
 
-
 	if ($action == 'lettersend') {
 		$error = 0;
 		$receiver = GETPOST('receiver');
@@ -720,8 +719,8 @@ if (empty($reshook)) {
 	}
 
 	if ($action == 'addAcknowledgementReceipt') {
-		// Submit file
 
+		// Submit file
 		if ( ! empty($conf->global->MAIN_UPLOAD_DOC)) {
 
 			if ( ! empty($_FILES)) {
@@ -746,9 +745,52 @@ if (empty($reshook)) {
 					if (!is_dir($ARdir)) {
 						dol_mkdir($ARdir);
 					}
-					$result = dol_add_file_process($ARdir, 0, 1, 'userfile', '', null, '', 0, $object);
+					$AR_sub_dir = $ARdir . '/uploaded_file';
+					if (!is_dir($AR_sub_dir)) {
+						dol_mkdir($AR_sub_dir);
+					}
+					$result = dol_add_file_process($AR_sub_dir, 0, 1, 'userfile', '', null, '', 0, $object);
 					if ($result > 0) {
-						$object->setStatusCommon($user, 5);
+						// Presend form
+						$modelmail = 'envelope';
+						$defaulttopic = 'InformationMessage';
+						$diroutput = $upload_dir . '/' . $object->element;
+						$trackid = 'envelope'.$object->id;
+
+
+						$ref = dol_sanitizeFileName($object->ref);
+						include_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
+						$fileparams = dol_most_recent_file($diroutput.'/'.$ref, '');
+						$file = $fileparams['fullname'];
+
+						// Build document if it not exists
+						$allspecimen = true;
+						$fileslist = dol_dir_list($fileparams['path']);
+						foreach($fileslist as $item) {
+							if (!preg_match('/specimen/', $item['name'])){
+								$allspecimen = false;
+							}
+						}
+
+						$needcreate = empty($file) || $allspecimen;
+
+						$forcebuilddoc = true;
+						$object->setStatusCommon($user, 6);
+
+						if ($forcebuilddoc)    // If there is no default value for supplier invoice, we do not generate file, even if modelpdf was set by a manual generation
+						{
+							if (method_exists($object, 'generateDocument'))
+							{
+								$result = $object->generateDocument('deimos', $langs, $hidedetails, $hidedesc, $hideref);
+
+								if ($result < 0) {
+									dol_print_error($db, $object->error, $object->errors);
+									exit();
+								}
+								$fileparams = dol_most_recent_file($diroutput.'/'.$ref, preg_quote($ref, '/').'[^\-]+');
+								$file = $fileparams['fullname'];
+							}
+						}
 					}
 				}
 			}
@@ -1127,7 +1169,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			$delallowed = $user->rights->doliletter->envelope->write; // If you can create/edit, you can remove a file on card
 			print dolilettershowdocuments('doliletter:Envelope', $object->element.'/'.$objref, $filedir, $urlsource, $genallowed, 0, $conf->global->DOLILETTER_ENVELOPE_ADDON_PDF, 1, 0, 0, '', 0, '', '', '', $langs->defaultlang, $object->status < 3 ? ( $document_generated > 0 ? 0 : 1) : 0, $document_generated > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
 		}
-		if ($object->status == 5) {
+		if ($object->status >= 5) {
 			$acknowledgement_receipt_files = count(dol_dir_list($filedir.'/acknowledgementreceipt'));
 			print dolilettershowdocuments('doliletter:AcknowledgementReceipt', $object->element.'/'.$objref.'/acknowledgementreceipt', $filedir.'/acknowledgementreceipt', $urlsource, $permissiontoadd, 0, $conf->global->DOLILETTER_ACKNOWLEDGEMENTRECEIPT_ADDON_PDF, 1, 0, 0, $langs->trans('AcknowledgementReceipt'), 0, '', '', '', $langs->defaultlang, $acknowledgement_receipt_files > 0 ? 0 : 1, $generated_files > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
 		}
