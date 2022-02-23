@@ -706,14 +706,37 @@ if (empty($reshook)) {
 
 		$contact->fetch($receiver);
 
-
 		$letter->recipient_address = $contact->address;
 		$letter->contact_fullname = $contact->firstname . ' ' . $contact->lastname;
 		$letter->letter_code = $lettercode;
 		$result = $letter->create($user);
-		if (!$error) {
+		if ($result > 0) {
 			$object->setStatusCommon($user, 3);
 			$object->call_trigger('ENVELOPE_LETTER', $user);
+			// Submit file
+			if ( ! empty($conf->global->MAIN_UPLOAD_DOC)) {
+				if ( ! empty($_FILES)) {
+					if (is_array($_FILES['userfile']['tmp_name'])) $userfiles = $_FILES['userfile']['tmp_name'];
+					else $userfiles                                           = array($_FILES['userfile']['tmp_name']);
+
+					foreach ($userfiles as $key => $userfile) {
+						if (empty($_FILES['userfile']['tmp_name'][$key])) {
+							$error++;
+							if ($_FILES['userfile']['error'][$key] == 1 || $_FILES['userfile']['error'][$key] == 2) {
+								setEventMessages($langs->trans('ErrorFileSizeTooLarge'), null, 'errors');
+							}
+						}
+					}
+
+					if ( ! $error) {
+						$filedir = $upload_dir . '/envelope/' . $object->ref . '/sendingproof/';
+						if (!is_dir($filedir)) {
+							dol_mkdir($filedir);
+						}
+						$result = dol_add_file_process($filedir, 0, 1, 'userfile', '', null, '', 1, $object);
+					}
+				}
+			}
 		}
 		unset($action);
 	}
@@ -1173,6 +1196,11 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			$acknowledgement_receipt_files = count(dol_dir_list($filedir.'/acknowledgementreceipt'));
 			print dolilettershowdocuments('doliletter:AcknowledgementReceipt', $object->element.'/'.$objref.'/acknowledgementreceipt', $filedir.'/acknowledgementreceipt', $urlsource, $permissiontoadd, 0, $conf->global->DOLILETTER_ACKNOWLEDGEMENTRECEIPT_ADDON_PDF, 1, 0, 0, $langs->trans('AcknowledgementReceipt'), 0, '', '', '', $langs->defaultlang, $acknowledgement_receipt_files > 0 ? 0 : 1, $generated_files > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
 		}
+		if ($object->status == 3 || $object->status == 6) {
+			print '<br>';
+			$acknowledgement_receipt_files = count(dol_dir_list($filedir.'/sendingproof'));
+			print dolilettershowdocuments('doliletter:AcknowledgementReceipt', $object->element.'/'.$objref.'/sendingproof', $filedir.'/sendingproof', $urlsource, 0, 0, $conf->global->DOLILETTER_ACKNOWLEDGEMENTRECEIPT_ADDON_PDF, 1, 0, 0, $langs->trans('SendingProof'), 0, '', '', '', $langs->defaultlang, $acknowledgement_receipt_files > 0 ? 0 : 1, $generated_files > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
+		}
 
 		print '</div><div class="fichehalfright"><div class="ficheaddleft">';
 
@@ -1430,7 +1458,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 	$contact_list= array();
 
-	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
+	print '<form method="POST" enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'">';
 	print '<input type="hidden" name="token" value="'.newToken().'">';
 	print '<input type="hidden" name="action" value="lettersend">';
 	print '<input type="hidden" name="id" value="'.$object->id.'">';
@@ -1444,6 +1472,14 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	print '<tr class="minwidth400"><td>'.$langs->trans("LetterCode").'</td><td class="minwidth400">';
 	print '<input name="lettercode">';
 	print '</td></tr>';
+
+	// Preuve de dépôt
+	print '<tr>';
+	print '<td class="titlefield">' . $form->editfieldkey($langs->trans("SendingProof"), 'SendingProof', '', $object, 0) . '</td>';
+	print '<td>';
+	print '<input class="flat" type="file" name="userfile[]" id="SendingProof" />';
+	print '</td></tr>';
+
 	print '</table>'."<br>";
 
 

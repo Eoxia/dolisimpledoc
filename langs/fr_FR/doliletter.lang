@@ -99,10 +99,13 @@ EnvelopeMustBeLockedToGenerateDocument = <b>Le courrier doit être verrouillé p
 UploadAcknowledgementReceipt = Accusé de réception
 AcknowledgementReceipt = Accusé de réception
 ReceivedAndSigned = Reçu et signé
+ReceivedAndSignedByMail = Reçu par mail et signé
+ReceivedAndSignedByLetter = Reçu par courrier et signé
 AddAttendantMessage = Le destinataire a bien été enregistré :
 MustBeSentBeforeAcknowledgementReceipt = <b> Le courrier doit avoir été envoyé </b> avant de pouvoir utiliser cette fonctionnalité
 CantEditAlreadySigned = Le courrier a déjà été signé
 EditEnvelope = Modifier le courrier
+SendingProof = Preuve de dépôt
 
 #
 # Signature - Signature
