@@ -314,7 +314,7 @@ class pdf_deimos extends ModelePDFAcknowledgementReceipt
 				if ($object->status == 6) {
 					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, $langs->trans('AcknowledgementReceiptTextLetter', $receiver->firstname . ' ' . $receiver->lastname, preg_replace('/AR_/', '', $filename), 'courrier'), 0, 1);
 				} elseif ($object->status == 5) {
-					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, $langs->trans('AcknowledgementReceiptTextMail', $receiver->firstname . ' ' . $receiver->lastname, preg_replace('/AR_/', '', $filename), 'mail', $receiver->signature_date), 0, 1);
+					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, $langs->trans('AcknowledgementReceiptTextMail', $receiver->firstname . ' ' . $receiver->lastname, preg_replace('/AR_/', '', $filename), 'mail', dol_print_date($receiver->signature_date)), 0, 1);
 				}
 
 				$nexY = $pdf->GetY();
