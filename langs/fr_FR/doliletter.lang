@@ -52,6 +52,7 @@ GoBackToCard = Retour à la fiche
 PublicInterfaceConfig = Configuration de l'interface publique
 PublicInterface = Interface publique
 EnablePublicInterface = Activer l'interface publique
+WithKindRegards = Cordialement,
 
 #
 # Envelope - Enveloppe
@@ -69,6 +70,8 @@ LetterCode = Code du courrier
 AdministrativeService = Service administratif
 EnvelopeContent = Veuillez trouver ci-joint les documents relatifs à votre projet. Pour attester de la réception de ces documents, signez numériquement en cliquant sur ce lien : __SIGNATURE_LINK__ <b> %s </b>
 
+Lock = Verrouiller
+ProjectLinked = Projet lié
 Society = Tiers
 Sender = Émetteur
 SenderService = Méthode d'envoi
@@ -111,6 +114,7 @@ SendingProof = Preuve de dépôt
 # Signature - Signature
 #
 
+Signed = Signé
 SignatureSender = Signature de l'envoyeur
 Role = Rôle
 SignatureLink = Lien de signature
@@ -118,6 +122,7 @@ SendMailDate = Date d'envoi du mail de signature
 SignatureDate = Date de signature
 ActionsSignature = Actions
 The = le
+SignatureSuccess = Document signé avec succès
 DocumentName = Nom du document
 AcknowledgementReceiptTextLetter = Je soussigné %s avoir reçu le document %s par %s
 AcknowledgementReceiptTextMail = Je soussigné %s avoir reçu le document %s par %s le %s
