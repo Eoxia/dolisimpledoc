@@ -98,6 +98,8 @@ $extrafields = new ExtraFields($db);
 $thirdparty = new Societe($db);
 $contact = new Contact($db);
 $sender = new User($db);
+$project = new Project($db);
+
 $diroutputmassaction = $conf->envelope->dir_output.'/temp/massgeneration/'.$user->id;
 $hookmanager->initHooks(array('documentlist')); // Note that conf->hooks_modules contains array
 
@@ -630,6 +632,10 @@ while ($i < ($limit ? min($num, $limit) : $num)) {
 			else if ($key == 'sender') {
 				$sender->fetch($obj->sender);
 				print $sender->getNomUrl();
+			}
+			else if ($key == 'fk_project') {
+				$project->fetch($obj->fk_project);
+				print $project->getNomUrl(1);
 			}
 			else if ($key == 'status') {
 				print $object->getLibStatut(5);
