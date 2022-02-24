@@ -17,7 +17,7 @@
 
 /**
  *       \file       public/signature/signature_success.php
- *       \ingroup    digiriskdolibarr
+ *       \ingroup    doliletter
  *       \brief      Public page to view success on signature
  */
 
@@ -48,7 +48,7 @@ if ( ! $res) die("Include of main fails");
 require_once '../../lib/doliletter_function.lib.php';
 
 // Load translation files required by the page
-$langs->loadLangs(array("digiriskdolibarr@digiriskdolibarr", "other", "errors"));
+$langs->loadLangs(array("doliletter@doliletter", "other", "errors"));
 
 /*
  * View
