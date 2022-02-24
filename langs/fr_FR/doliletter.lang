@@ -109,6 +109,8 @@ MustBeSentBeforeAcknowledgementReceipt = <b> Le courrier doit avoir été envoy�
 CantEditAlreadySigned = Le courrier a déjà été signé
 EditEnvelope = Modifier le courrier
 SendingProof = Preuve de dépôt
+Send = Envoyer
+Locked = Verrouillé
 
 #
 # Signature - Signature
