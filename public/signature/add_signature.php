@@ -132,7 +132,7 @@ $element = array_shift($element);
 
 ?>
 <div class="digirisk-signature-container">
-	<input hidden id="redirectURL" value="<?php echo DOL_URL_ROOT . '/custom/doliletter/public/signature/signature_success.php' ?>">
+	<input hidden id="redirectURL" value="<?php echo DOL_URL_ROOT . '/custom/doliletter/public/signature/signature_success.php?document_name=' .  $object->ref . ' ' . $object->label ?>">
 	<div class="wpeo-gridlayout grid-2">
 		<div class="informations">
 			<div class="wpeo-gridlayout grid-2 file-generation">

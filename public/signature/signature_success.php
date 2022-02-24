@@ -47,6 +47,8 @@ if ( ! $res) die("Include of main fails");
 
 require_once '../../lib/doliletter_function.lib.php';
 
+$documentName = GETPOST('document_name');
+
 // Load translation files required by the page
 $langs->loadLangs(array("doliletter@doliletter", "other", "errors"));
 
@@ -66,7 +68,7 @@ llxHeaderSignature($langs->trans("Signature"), "", 0, 0, $morejs, $morecss);
 
 ?>
 <div class="digirisk-signature-container">
-	<p class="center"><?php echo $langs->trans("SignatureSuccess"); ?> </p>
+	<p class="center"><?php echo $langs->trans("SignatureSuccess", $documentName); ?> </p>
 </div>
 <?php
 
