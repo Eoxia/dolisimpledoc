@@ -62,6 +62,7 @@ class Envelope extends CommonObject
 	 */
 	public $picto = 'doliletter88px@doliletter';
 
+	public const STATUS_DELETED = -1;
 	public const STATUS_PENDING_SIGNATURE = 0;
 	public const STATUS_SIGNED = 1;
 	public const STATUS_LOCKED = 2;
@@ -440,17 +441,18 @@ class Envelope extends CommonObject
 		if (empty($this->labelStatus) || empty($this->labelStatusShort)) {
 			global $langs;
 			$langs->load("doliletter@doliletter");
-
-			$this->labelStatus[self::STATUS_PENDING_SIGNATURE]       = $langs->trans('ValidatePendingSignature');
-			$this->labelStatus[self::STATUS_SIGNED] = $langs->trans('Signed');
-			$this->labelStatus[self::STATUS_LOCKED]            = $langs->trans('Locked');
-			$this->labelStatus[self::STATUS_SENT_BY_LETTER]          = $langs->trans('SentByLetter');
-			$this->labelStatus[self::STATUS_SENT_BY_MAIL]          = $langs->trans('SentByMail');
-			$this->labelStatus[self::STATUS_RECEIVED_BY_MAIL_AND_SIGNED]          = $langs->trans('ReceivedAndSignedByMail');
-			$this->labelStatus[self::STATUS_RECEIVED_BY_LETTER_AND_SIGNED]          = $langs->trans('ReceivedAndSignedByLetter');
+			$this->labelStatus[self::STATUS_DELETED]                       = $langs->trans('Deleted');
+			$this->labelStatus[self::STATUS_PENDING_SIGNATURE]             = $langs->trans('ValidatePendingSignature');
+			$this->labelStatus[self::STATUS_SIGNED]                        = $langs->trans('Signed');
+			$this->labelStatus[self::STATUS_LOCKED]                        = $langs->trans('Locked');
+			$this->labelStatus[self::STATUS_SENT_BY_LETTER]                = $langs->trans('SentByLetter');
+			$this->labelStatus[self::STATUS_SENT_BY_MAIL]                  = $langs->trans('SentByMail');
+			$this->labelStatus[self::STATUS_RECEIVED_BY_MAIL_AND_SIGNED]   = $langs->trans('ReceivedAndSignedByMail');
+			$this->labelStatus[self::STATUS_RECEIVED_BY_LETTER_AND_SIGNED] = $langs->trans('ReceivedAndSignedByLetter');
 		}
 
 		$statusType                                                            = 'status' . $status;
+		if ($status == self::STATUS_DELETED) $statusType                       = 'status0';
 		if ($status == self::STATUS_PENDING_SIGNATURE) $statusType             = 'status3';
 		if ($status == self::STATUS_LOCKED) $statusType                        = 'status8';
 		if ($status == self::STATUS_SENT_BY_LETTER) $statusType    			   = 'status7';

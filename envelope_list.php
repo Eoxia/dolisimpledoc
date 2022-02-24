@@ -302,7 +302,7 @@ $sql .= " WHERE 1 = 1 ";
 if ($object->ismultientitymanaged == 1) {
 	$sql .= " AND t.entity IN (".getEntity($object->element).")";
 }
-$sql .= " AND t.status > 0";
+$sql .= " AND t.status > -1";
 if (dol_strlen($fromtype) > 0) {
 	$sql .= " AND t.rowid = e.fk_target ";
 }

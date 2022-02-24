@@ -273,7 +273,7 @@ if (empty($reshook)) {
 
 	if ($action == 'confirm_delete' && GETPOST("confirm") == "yes")
 	{
-		$object->setStatusCommon($user, 0);
+		$object->setStatusCommon($user, -1);
 		$urltogo = DOL_URL_ROOT . '/custom/doliletter/envelope_list.php';
 		header("Location: " . $urltogo);
 		exit;
