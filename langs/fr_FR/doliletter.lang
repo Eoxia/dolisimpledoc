@@ -61,8 +61,8 @@ WithKindRegards = Cordialement,
 
 # Data - Donnée
 Envelope = Courrier
-Envelopes = Enveloppes
-NewEnvelope = Nouvelle enveloppe
+Envelopes = Courriers
+NewEnvelope = Nouveau courrier
 ModifyEnvelope = Modifier l'enveloppe
 ListEnvelopes = Liste d'enveloppes
 Receivers = Destinataires
