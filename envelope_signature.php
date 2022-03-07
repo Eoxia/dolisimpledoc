@@ -352,7 +352,11 @@ if ((empty($action) || ($action != 'create' && $action != 'edit'))) {
 	print '</tr>';
 
 	print '<tr class="oddeven"><td class="minwidth200">';
-	print $usertmp->getNomUrl(1);
+	if ($usertmp->id > 0) {
+		print $usertmp->getNomUrl(1);
+	} else {
+		print $user->getNomUrl(1);
+	}
 	print '</td><td class="role" value="E_SENDER">';
 	print $langs->trans("Sender");
 	print '</td><td class="center">';
