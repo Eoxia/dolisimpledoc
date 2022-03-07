@@ -610,15 +610,12 @@ class pdf_deimos extends ModelePDFAcknowledgementReceipt
 				file_put_contents($tempdir."signature.png", $decoded_image);
 				$test = $tempdir."signature.png";
 			}
-
-//			if (!empty($recipient) && $recipient > 0) {
-//				$encoded_image = explode(",",  $recipient->signature)[1];
-//				$decoded_image = base64_decode($encoded_image);
-//				file_put_contents($tempdir."signature2.png", $decoded_image);
-//				$test = $tempdir."signature2.png";
-//			}
 		}
-
+		
+		$file_list = dol_dir_list(DOL_DATA_ROOT . '/doliletter/' . $object->element . '/' . $object->ref, 'files');
+		if ( is_array($file_list[0]) ) {
+			$filename = $file_list[0]['relativename'];
+		}
 
 		$pdf->SetDrawColor(128, 128, 128);
 		$posmiddle = $this->marge_gauche + round(($this->page_largeur - $this->marge_gauche - $this->marge_droite) / 2);
@@ -628,7 +625,7 @@ class pdf_deimos extends ModelePDFAcknowledgementReceipt
 		$contact->fetch($object->fk_contact);
 
 		$pdf->SetXY($this->marge_gauche, $posy);
-		$pdf->MultiCell($posmiddle - $this->marge_gauche - 5, 5,  $outputlangs->trans('AcknowledgementReceiptTextMail', $receiver->firstname . ' ' . $receiver->lastname, preg_replace('/AR_/', '', $filename), 'mail', dol_print_date($receiver->signature_date)), 0, 'L', 0);
+		$pdf->MultiCell($posmiddle - $this->marge_gauche - 5, 5,  $outputlangs->transnoentities('AcknowledgementReceiptTextMail', $receiver->firstname . ' ' . $receiver->lastname, preg_replace('/AR_/', '', $filename), 'mail', dol_print_date($receiver->signature_date), $receiver->ip ), 0, 'L', 0);
 
 		$pdf->SetXY($this->marge_gauche, $posy + 5);
 		$pdf->Image($test, $this->marge_gauche, $posy - 5, 50, 50); // width=0 (auto)

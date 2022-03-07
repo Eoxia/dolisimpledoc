@@ -35,5 +35,6 @@ CREATE TABLE llx_doliletter_envelope_signature(
 	last_email_sent_date datetime DEFAULT NULL,
 	signature_url        varchar(255),
 	transaction_url      varchar(255),
-	fk_object            integer NOT NULL
+	fk_object            integer NOT NULL,
+	ip                   varchar(255)
 ) ENGINE=innodb;

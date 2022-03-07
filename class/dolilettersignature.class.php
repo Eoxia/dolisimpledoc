@@ -98,6 +98,7 @@ class DoliletterSignature extends CommonObject
 		'transaction_url'      => array('type'=>'varchar(50)', 'label'=>'TransactionUrl', 'enabled'=>'1', 'position'=>180, 'notnull'=>0, 'visible'=>1,'default'=>NULL,),
 		'last_email_sent_date' => array('type'=>'datetime', 'label'=>'LastEmailSentDate', 'enabled'=>'1', 'position'=>190, 'notnull'=>0, 'visible'=>3,),
 		'fk_object'            => array('type'=>'integer', 'label'=>'FKObject', 'enabled'=>'1', 'position'=>200, 'notnull'=>1, 'visible'=>0,),
+		'ip'                   => array('type'=>'varchar(255)', 'label'=>'IP', 'enabled'=>'1', 'position'=>210, 'notnull'=>0, 'visible'=>0,),
 	);
 
 	public $rowid;
@@ -122,6 +123,7 @@ class DoliletterSignature extends CommonObject
 	public $transaction_url;
 	public $last_email_sent_date;
 	public $fk_object;
+	public $ip;
 
 	/**
 	 * Constructor

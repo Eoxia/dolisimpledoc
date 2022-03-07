@@ -90,10 +90,13 @@ if ($reshook < 0) setEventMessages($hookmanager->error, $hookmanager->errors, 'e
 if ($action == 'addSignature') {
 	$signatoryID  = GETPOST('signatoryID');
 	$request_body = file_get_contents('php://input');
+	$client_ip = $_SERVER['REMOTE_ADDR'];
 
 	$signatory->fetch($signatoryID);
 	$signatory->signature      = $request_body;
 	$signatory->signature_date = dol_now();
+	$signatory->ip = $client_ip;
+
 	$object->fetch($signatory->fk_object);
 
 	if ( ! $error) {
