@@ -611,7 +611,7 @@ class pdf_deimos extends ModelePDFAcknowledgementReceipt
 				$test = $tempdir."signature.png";
 			}
 		}
-		
+
 		$file_list = dol_dir_list(DOL_DATA_ROOT . '/doliletter/' . $object->element . '/' . $object->ref, 'files');
 		if ( is_array($file_list[0]) ) {
 			$filename = $file_list[0]['relativename'];
@@ -627,7 +627,7 @@ class pdf_deimos extends ModelePDFAcknowledgementReceipt
 		$pdf->SetXY($this->marge_gauche, $posy);
 		$pdf->MultiCell($posmiddle - $this->marge_gauche - 5, 5,  $outputlangs->transnoentities('AcknowledgementReceiptTextMail', $receiver->firstname . ' ' . $receiver->lastname, preg_replace('/AR_/', '', $filename), 'mail', dol_print_date($receiver->signature_date), $receiver->ip ), 0, 'L', 0);
 
-		$pdf->SetXY($this->marge_gauche, $posy + 5);
+		$pdf->SetXY($this->marge_gauche, $posy + 10);
 		$pdf->Image($test, $this->marge_gauche, $posy - 5, 50, 50); // width=0 (auto)
 		$pdf->MultiCell($posmiddle - $this->marge_gauche - 5, 30, '', 1);
 
