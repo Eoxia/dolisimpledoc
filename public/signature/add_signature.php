@@ -139,22 +139,19 @@ $element = array_shift($element);
 	<div class="wpeo-gridlayout grid-2">
 		<div class="informations">
 			<div class="wpeo-gridlayout grid-2 file-generation">
+				<?php if ($type == 'envelope') : ?>
+				<?php $filelist = dol_dir_list($upload_dir . '/' . $object->element . '/' . $object->ref);
+				if (!empty($filelist)) {
+					$file = array_shift($filelist);
+					$fileurl = $file['fullname'];
+					$filename = $file['name'];
+				}
+				?>
 				<strong class="grid-align-middle"><?php echo $langs->trans("AcknowledgementReceipt"); ?></strong>
-<!--				--><?php //if ($type == 'envelope') : ?>
-<!--				--><?php
-//					$filelist = dol_dir_list($upload_dir . '/' . $object->element . '/' . $object->ref);
-//					if (!empty($filelist)) {
-//						$file = array_shift($filelist);
-//						$fileurl = $file['fullname'];
-//						$filename = $file['name'];
-//						dol_copy($fileurl, DOL_DOCUMENT_ROOT . '/custom/doliletter/documents/temp');
-//					}
-//
-//					?>
-<!--				<a href="--><?php //echo $fileurl ?><!--">-->
-<!--					<span class="wpeo-button button-primary button-radius-2 grid-align-right"><i class="button-icon fas fa-file-pdf"></i>--><?php //echo '  ' . $langs->trans('ShowDocument'); ?><!--</span>-->
-<!--				</a>-->
-<!--				--><?php //endif; ?>
+				<a href="<?php echo '/dolibarr/htdocs/document.php?modulepart=doliletter&file=envelope/' . $object->ref . '/' . $filename . '&entity=' . $conf->entity ?>">
+					<span class="wpeo-button button-primary button-radius-2 grid-align-right"><i class="button-icon fas fa-file-pdf"></i><?php echo '  ' . $langs->trans('ShowDocument'); ?></span>
+				</a>
+				<?php endif; ?>
 			</div>
 			<br>
 			<div class="wpeo-table table-flex table-2">
