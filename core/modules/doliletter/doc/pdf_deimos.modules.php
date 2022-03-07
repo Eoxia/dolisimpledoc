@@ -835,30 +835,73 @@ class pdf_deimos extends ModelePDFAcknowledgementReceipt
 		$showdetails = $conf->global->MAIN_GENERATE_DOCUMENTS_SHOW_FOOT_DETAILS;
 
 		require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
+		require_once DOL_DOCUMENT_ROOT.'/core/lib/images.lib.php';
+
+		$DPI 		= 96;
+		$MM_IN_INCH = 25.4;
+		$A4_HEIGHT 	= 297;
+		$A4_WIDTH 	= 210;
+		$MAX_WIDTH 	= 800;
+		$MAX_HEIGHT = 500;
 
 		$upload_dir 	= DOL_DATA_ROOT . '/doliletter/envelope/' . $object->ref . '/acknowledgementreceipt/uploaded_file';
-
 		$arrayoffiles 	= dol_dir_list($upload_dir);
 		if ( !empty( $arrayoffiles ) ) {
 			foreach ($arrayoffiles as $file) {
 
-				$proofFilename 	= $file['name'];
-				$pdfname 		= $file['level1name'] . '.pdf';
-				$filename 		= $file['fullname'];
+				$proofFilename = $file['name'];
+				$pdfname = $file['level1name'] . '.pdf';
+				$filename = $file['fullname'];
 
-				if (preg_match('/\.(pdf)$/', $file['name']) && $pdfname !== $file['name'] ) {
+				if (preg_match('/\.(jpg|png|jpeg)$/', $file['name'])) {
+
+					list($width, $height, $type) = getimagesize($filename);
+
+					$ratio = $width / $height;
+					$portrait = $height > $width ? true : false;
+					$widthScale = $MAX_WIDTH / $width;
+					$heightScale = $MAX_HEIGHT / $height;
+
+					$scale = min($widthScale, $heightScale);
+
+					$width = round($scale * $width * $MM_IN_INCH / $DPI);
+					$height = round($scale * $height * $MM_IN_INCH / $DPI);
+
+					$pdf->AddPage($portrait ? 'P' : 'L');
+					$pagenb++;
+					$pdf->SetXY($this->marge_gauche, $this->marge_haute);
+
+					if (!$portrait) {
+						$pdf->Cell(100, 0, $proofFilename, 1, 1, 'C', $pdf->Image(
+							$filename, ($A4_HEIGHT - $width) / 2,
+							($A4_WIDTH - $height) / 2,
+							$width,
+							$height
+						));
+					} else {
+						$pdf->Cell(100, 0, $proofFilename, 1, 1, 'C', $pdf->Image(
+							$filename, ($A4_WIDTH - $width) / 2,
+							($A4_HEIGHT - $height) / 2,
+							$width,
+							$height
+						));
+					}
+
+				} else if (preg_match('/\.(pdf)$/', $file['name']) && $pdfname !== $file['name']) {
 					//Rajouter condition pour que si le pdf n'a pas de trailer il y ait une image par défaut
-					$pagesNbr = $pdf->setSourceFile($filename);
-					for ($p = 1; $p <= $pagesNbr; $p++)	{
 
-						$templateIdx 	= $pdf->ImportPage($p);
-						$size 			= $pdf->getTemplatesize($templateIdx);
-						$portrait 		= $size['h'] > $size['w'] ? true : false;
+					$pagesNbr = $pdf->setSourceFile($filename);
+
+					for ($p = 1; $p <= $pagesNbr; $p++) {
+
+						$templateIdx = $pdf->ImportPage($p);
+						$size = $pdf->getTemplatesize($templateIdx);
+						$portrait = $size['h'] > $size['w'] ? true : false;
 
 						$pdf->AddPage($portrait ? 'P' : 'L');
 						$pagenb++;
-						$pdf->SetXY($this->marge_gauche-5, $this->marge_haute-5);
-						$pdf->Cell(100,0,$proofFilename,1,1,'C',$pdf->useTemplate($templateIdx));
+						$pdf->SetXY($this->marge_gauche - 5, $this->marge_haute - 5);
+						$pdf->Cell(100, 0, $proofFilename, 1, 1, 'C', $pdf->useTemplate($templateIdx));
 					}
 				}
 			}
