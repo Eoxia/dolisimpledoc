@@ -77,6 +77,10 @@ $usertmp        = new User($db);
 $letter         = new LetterSending($db);
 
 $object->fetch($id);
+if ($object->fk_contact > 0) {
+	$linked_contact = $contact;
+	$linked_contact->fetch($object->fk_contact);
+}
 
 $hookmanager->initHooks(array('lettercard', 'globalcard')); // Note that conf->hooks_modules contains array
 
@@ -1467,7 +1471,8 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 	print '<table>';
 	print '<tr class="minwidth400"><td>'.$langs->trans("Receivers").'</td><td class="minwidth400">';
-	print $form->selectcontacts($object->fk_soc, $object->fk_contact, 'receiver[]', 0, '', '', 0, 'quatrevingtpercent', false, 0, array(), false, 'multiple', 'receiver');
+	print $linked_contact->getNomUrl(1);
+//	print $form->selectcontacts($object->fk_soc, $object->fk_contact, 'receiver[]', 0, '', '', 0, 'quatrevingtpercent', false, 0, array(), false, 'multiple', 'receiver');
 	print '</td></tr>';
 	print '<tr class="minwidth400"><td>'.$langs->trans("LetterCode").'</td><td class="minwidth400">';
 	print '<input name="lettercode">';

@@ -356,7 +356,7 @@ function dolilettershowdocuments($modulepart, $modulesubdir, $filedir, $urlsourc
 				$out                                  .= img_mime($file["name"], $langs->trans("File") . ': ' . $file["name"]);
 				$out                                  .= dol_trunc($file["name"], 150);
 				$out                                  .= '</a>' . "\n";
-				
+
 				// Preview
 				if (!empty($conf->use_javascript_ajax) && ($conf->browser->layout != 'phone')) {
 					$tmparray = getAdvancedPreviewUrl($modulepart, $relativepath, 1, '&entity='.$entity);
