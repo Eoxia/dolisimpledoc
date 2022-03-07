@@ -91,11 +91,11 @@ function envelopePrepareHead($object)
 //	$head[$h][2] = 'envelopeContact';
 //	$h++;
 
-	//Sending archive selection
-	$head[$h][0] = dol_buildpath("/doliletter/envelope_sending.php", 1).'?id='.$object->id;
-	$head[$h][1] = $langs->trans("Sending");
-	$head[$h][2] = 'sending';
-	$h++;
+//	//Sending archive selection
+//	$head[$h][0] = dol_buildpath("/doliletter/envelope_sending.php", 1).'?id='.$object->id;
+//	$head[$h][1] = $langs->trans("Sending");
+//	$head[$h][2] = 'sending';
+//	$h++;
 
 	//Linked objects selection
 	$head[$h][0] = dol_buildpath("/doliletter/envelope_objects.php", 1).'?id='.$object->id;
