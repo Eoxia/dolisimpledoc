@@ -141,8 +141,7 @@ if ($object->id) {
 	 */
 	$head = envelopePrepareHead($object);
 
-	print dol_get_fiche_head($head, 'document', '', -1, $object->picto);
-
+	print dol_get_fiche_head($head, 'document', $langs->trans('Document'), -1, $object->picto);
 
 	// Build file list
 	$filearray = dol_dir_list($upload_dir, "files", 0, '', '(\.meta|_preview.*\.png)$', $sortfield, (strtolower($sortorder) == 'desc' ?SORT_DESC:SORT_ASC), 1);

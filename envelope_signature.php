@@ -304,7 +304,6 @@ $head = envelopePrepareHead($object);
 print dol_get_fiche_head($head, 'envelopeSign', $langs->trans("Sign"), -1, "doliletter@doliletter");
 dol_strlen($object->label) ? $morehtmlref = ' - ' . $object->label : '';
 
-
 dol_banner_tab($object, 'ref', '', 0, 'ref', 'ref', $morehtmlref, '', 0, $morehtmlleft);
 
 print dol_get_fiche_end(); ?>

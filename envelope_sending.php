@@ -183,8 +183,6 @@ if ($reshook < 0) {
 	setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
 }
 
-
-
 if (empty($reshook)) {
 	// Selection of new fields
 	include DOL_DOCUMENT_ROOT.'/core/actions_changeselectedfields.inc.php';
@@ -212,8 +210,6 @@ if (empty($reshook)) {
 	$uploaddir = $conf->envelope->dir_output;
 //	include DOL_DOCUMENT_ROOT.'/core/actions_massactions.inc.php';
 }
-
-
 
 /*
  * View
@@ -351,17 +347,13 @@ if ($num == 1 && !empty($conf->global->MAIN_SEARCH_DIRECT_OPEN_IF_ONLY_ONE) && $
 llxHeader('', $title, $help_url);
 $linkback = '<a href="'.dol_buildpath('/doliletter/envelope_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
 
-dol_banner_tab($object, 'ref', $linkback, 0, 'ref', 'ref', $morehtmlref);
-
-
 if ($object->id > 0) {
 	$res = $lettertemp->fetch_optionals();
 
 	$head = envelopePrepareHead($object);
 	print dol_get_fiche_head($head, 'sending', $langs->trans("Envelope"), -1, "doliletter@doliletter");
 
-
-
+	dol_banner_tab($object, 'ref', $linkback, 0, 'ref', 'ref', $morehtmlref);
 
 	$arrayofselected = is_array($toselect) ? $toselect : array();
 
