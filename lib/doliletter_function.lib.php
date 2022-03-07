@@ -356,7 +356,21 @@ function dolilettershowdocuments($modulepart, $modulesubdir, $filedir, $urlsourc
 				$out                                  .= img_mime($file["name"], $langs->trans("File") . ': ' . $file["name"]);
 				$out                                  .= dol_trunc($file["name"], 150);
 				$out                                  .= '</a>' . "\n";
-				$out                                  .= '</td>';
+				
+				// Preview
+				if (!empty($conf->use_javascript_ajax) && ($conf->browser->layout != 'phone')) {
+					$tmparray = getAdvancedPreviewUrl($modulepart, $relativepath, 1, '&entity='.$entity);
+					if ($tmparray && $tmparray['url']) {
+						$out .= '<a href="'.$tmparray['url'].'"'.($tmparray['css'] ? ' class="'.$tmparray['css'].'"' : '').($tmparray['mime'] ? ' mime="'.$tmparray['mime'].'"' : '').($tmparray['target'] ? ' target="'.$tmparray['target'].'"' : '').'>';
+						//$out.= img_picto('','detail');
+						$out .= '<i class="fa fa-search-plus paddingright" style="color: gray"></i>';
+						$out .= '</a>';
+					}
+				}
+
+				$out .= '</td>';
+
+
 
 				// Show file size
 				$size = ( ! empty($file['size']) ? $file['size'] : dol_filesize($filedir . "/" . $file["name"]));
