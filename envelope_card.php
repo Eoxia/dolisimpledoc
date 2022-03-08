@@ -645,6 +645,8 @@ if (empty($reshook)) {
 									setEventMessages($object->error, $object->errors, 'errors');
 								} else {
 									$object->setStatusCommon($user, 4);
+									$object->last_email_sent_date = dol_now();
+									$object->update($user);
 								}
 							}
 							// End call of triggers
