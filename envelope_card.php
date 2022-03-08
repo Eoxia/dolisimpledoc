@@ -714,6 +714,7 @@ if (empty($reshook)) {
 		$letter->contact_fullname = $contact->firstname . ' ' . $contact->lastname;
 		$letter->letter_code = $lettercode;
 		$result = $letter->create($user);
+
 		if ($result > 0) {
 			$object->setStatusCommon($user, 3);
 			$object->call_trigger('ENVELOPE_LETTER', $user);
@@ -1471,6 +1472,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 	print '<table>';
 	print '<tr class="minwidth400"><td>'.$langs->trans("Receivers").'</td><td class="minwidth400">';
+	print '<input hidden name="receiver[]" id="receiver[]" value="' . $linked_contact->id .'">';
 	print $linked_contact->getNomUrl(1);
 //	print $form->selectcontacts($object->fk_soc, $object->fk_contact, 'receiver[]', 0, '', '', 0, 'quatrevingtpercent', false, 0, array(), false, 'multiple', 'receiver');
 	print '</td></tr>';

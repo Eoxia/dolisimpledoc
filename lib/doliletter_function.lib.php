@@ -173,7 +173,7 @@ function dolilettershowdocuments($modulepart, $modulesubdir, $filedir, $urlsourc
 	$file_list = null;
 	if ( ! empty($filedir)) {
 		$filter = '(\.odt|\.zip|\.pdf)';
-		if ($modulepart == 'doliletter:AcknowledgementReceipt' || $modulepart == 'doliletter:SendingProof') {
+		if ($modulepart == 'doliletter:AcknowledgementReceipt' || $modulepart == 'doliletter') {
 			$filter = '(\.jpg|\.jpeg|\.png|\.odt|\.zip|\.pdf)';
 		}
 		$file_list = dol_dir_list($filedir, 'files', 0, $filter, '', 'date', SORT_DESC, 1);
