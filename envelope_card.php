@@ -184,12 +184,12 @@ if (empty($reshook)) {
 	if ($action == 'add' && $permissiontoadd) {
 		// Get parameters
 		$society_id     = GETPOST('fk_soc');
-		$content        = GETPOST('content');
-		$note_private     = GETPOST('note_private');
-		$note_public        = GETPOST('note_public');
-		$label        = GETPOST('label');
-		$contact_id        = GETPOST('fk_contact');
-		$project_id        = GETPOST('fk_project');
+		$content        = GETPOST('content', 'restricthtml');
+		$note_private   = GETPOST('note_private');
+		$note_public    = GETPOST('note_public');
+		$label          = GETPOST('label');
+		$contact_id     = GETPOST('fk_contact');
+		$project_id     = GETPOST('fk_project');
 
 		// Initialize object
 		$now                   = dol_now();
@@ -918,7 +918,6 @@ if ($action == 'create') {
 	$doleditor->Create();
 	print '</td></tr>';
 
-
 	// Other attributes
 	include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_add.tpl.php';
 
@@ -988,14 +987,11 @@ if (($id || $ref) && $action == 'edit') {
 
 	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_edit.tpl.php';
 
-
 	//Content -- Contenu
 	print '<tr class="content_field"><td><label for="content">'.$langs->trans("Content").'</label></td><td>';
 	$doleditor = new DolEditor('content', $object->content, '', 90, 'dolibarr_details', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
 	$doleditor->Create();
 	print '</td></tr>';
-
-
 
 	print '</table>';
 
