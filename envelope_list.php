@@ -62,7 +62,7 @@ require_once __DIR__ . '/class/envelope.class.php';
 //dol_include_once('/othermodule/class/otherobject.class.php');
 global $user, $db, $user, $langs;
 // Load translation files required by the page
-$langs->loadLangs(array("doliletter@doliletter", "other", "bills"));
+$langs->loadLangs(array("doliletter@doliletter", "other", "bills", "projects", "orders", "companies"));
 
 $action     = GETPOST('action', 'aZ09') ?GETPOST('action', 'aZ09') : 'view'; // The action 'add', 'create', 'edit', 'update', 'view', ...
 $massaction = GETPOST('massaction', 'alpha'); // The bulk action (combo box choice into lists)
