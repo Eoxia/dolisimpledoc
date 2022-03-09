@@ -212,7 +212,6 @@ if ($object->id > 0) {
 	}*/
 	$morehtmlref .= '</div>';
 
-
 	dol_banner_tab($object, 'ref', $linkback, 1, 'ref', 'ref', $morehtmlref);
 
 	print '<div class="fichecenter">';
@@ -224,8 +223,6 @@ if ($object->id > 0) {
 	print '</div>';
 
 	print dol_get_fiche_end();
-
-
 
 	// Actions buttons
 

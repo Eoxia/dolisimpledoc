@@ -60,7 +60,7 @@ class Envelope extends CommonObject
 	/**
 	 * @var string String with name of icon for document. Must be the part after the 'object_' into object_document.png
 	 */
-	public $picto = 'doliletter88px@doliletter';
+	public $picto = 'doliletter32px@doliletter';
 
 	public const STATUS_DELETED = -1;
 	public const STATUS_PENDING_SIGNATURE = 0;
