@@ -834,10 +834,16 @@ if (empty($reshook)) {
  * Put here all code to build page
  */
 
-$form = new Form($db);
-$formother = new FormOther($db);
-$formfile = new FormFile($db);
-$formproject = new FormProjets($db);
+$form          = new Form($db);
+$formother     = new FormOther($db);
+$formfile      = new FormFile($db);
+$formproject   = new FormProjets($db);
+$lettersending = $letter->fetchAll('', '', 0, 0, array('customsql' => ' fk_envelope =' . $object->id));
+if (is_array($lettersending)) {
+	$lettersending = array_shift($lettersending);
+} else {
+	$lettersending = new LetterSending($db);
+}
 
 $title        = $langs->trans("Envelope");
 $title_create = $langs->trans("NewEnvelope");
@@ -1056,15 +1062,18 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	$morehtmlref .=  '<td>';
 	$morehtmlref .=  $thirdparty->getNomUrl(1);
 	$morehtmlref .=  '</td></tr><br>';
+
 	$morehtmlref .=  '<tr><td class="titlefield">';
 	$morehtmlref .=  $langs->trans("Contact");
 	$morehtmlref .= ' : ';
-	$morehtmlref .=  '</td>';
-
-	$morehtmlref .=  '<td>';
+	$morehtmlref .=  '</td></tr>';
+	$morehtmlref .=  '<tr><td>';
 	$morehtmlref .=  $contact->getNomUrl(1);
 	$morehtmlref .=  '</td><br>';
 	$morehtmlref .= $langs->trans('Project') . ' : ' . $project->getNomUrl(1);
+	$morehtmlref .= '</tr>';
+	$morehtmlref .=  '</td><br>';
+	$morehtmlref .= $langs->trans('RegisteredMailCode') . ' : ' . $lettersending->letter_code;
 	$morehtmlref .= '</tr>';
 	$morehtmlref .= '</div>';
 

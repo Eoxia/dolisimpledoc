@@ -113,6 +113,8 @@ Send = Envoyer
 Locked = Verrouillé
 EnvelopeLabel = Envoi de courrier
 EnvelopeSubject = Envoi de courrier
+RegisteredMail = Courrier recommandé
+RegisteredMailCode = Code du courrier recommandé
 
 #
 # Signature - Signature
