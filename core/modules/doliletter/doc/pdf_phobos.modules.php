@@ -216,7 +216,7 @@ class pdf_phobos extends ModelePDFEnvelope
 						$filename = dol_sanitizeFileName($filename);
 						$file = $dir.'/'.$filename;
 						if ($object->status < 2)
-							$file = $dir.'/specimen-'.$filename;
+							$file = $dir.'/specimen-non-signé'.$filename;
 						$docnum++;
 					} while(file_exists($file));
 			}
