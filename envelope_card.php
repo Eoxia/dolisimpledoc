@@ -904,9 +904,9 @@ if ($action == 'create') {
 	print $form->selectcontacts(GETPOST('fk_soc', 'int'), '', 'fk_contact', 1, '', '', 0, 'quatrevingtpercent', false, 0, array(), false, '', 'fk_contact');
 	print '</td></tr>';
 
-	//Contact -- Contact
-	print '<tr class="oddeven"><td><label for="ACCProject">' . $langs->trans("ProjectLinked") . '</label></td><td>';
-	$numprojet = $formproject->select_projects(0,  '', 'fk_project', 0, 0, 1, 0, 0, 0, 0, '', 0, 0, 'minwidth300');
+	//Project -- Projet
+	print '<tr class="oddeven"><td><label for="Project">' . $langs->trans("ProjectLinked") . '</label></td><td>';
+	$numprojet = $formproject->select_projects(0,  GETPOST('fk_project'), 'fk_project', 0, 0, 1, 0, 0, 0, 0, '', 0, 0, 'minwidth300');
 	print ' <a href="' . DOL_URL_ROOT . '/projet/card.php?&action=create&status=1&backtopage=' . urlencode($_SERVER["PHP_SELF"] . '?action=create') . '"><span class="fa fa-plus-circle valignmiddle" title="' . $langs->trans("AddProject") . '"></span></a>';
 	print '</td></tr>';
 
