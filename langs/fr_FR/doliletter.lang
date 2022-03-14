@@ -139,3 +139,4 @@ ValidatePendingSignature = Validé (en attente de signature)
 ShowDocument = Voir le document
 Receiver = Destinataire
 SignatureReceiver = Signature du destinataire
+Erase = Effacer
