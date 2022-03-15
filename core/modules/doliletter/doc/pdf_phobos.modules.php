@@ -211,12 +211,13 @@ class pdf_phobos extends ModelePDFEnvelope
 				$docnum = 0;
 					do {
 						$date = dol_print_date(dol_now(),'dayxcard');
-						$filename = $date.'_'.$objectref.'_'.$docnum.'.pdf';
+						$filename = $date . '_' . $objectref . '_' . $docnum . '.pdf';
 						$filename = str_replace(' ', '_', $filename);
 						$filename = dol_sanitizeFileName($filename);
+						if ($object->status < 2) {
+							$filename = $date . '_' . $objectref . '_' . $docnum. '_specimen_unsigned' . '.pdf';
+						}
 						$file = $dir.'/'.$filename;
-						if ($object->status < 2)
-							$file = $dir.'/specimen-non-signé'.$filename;
 						$docnum++;
 					} while(file_exists($file));
 			}
