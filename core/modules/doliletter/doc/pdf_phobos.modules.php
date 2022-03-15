@@ -646,11 +646,20 @@ class pdf_phobos extends ModelePDFEnvelope
 
 		pdf_pagehead($pdf, $outputlangs, $this->page_hauteur);
 
-		//Affiche le filigrane brouillon - Print Draft Watermark
-		if ($object->statut == 0 && (!empty($conf->global->CONTRACT_DRAFT_WATERMARK)))
-		{
-			pdf_watermark($pdf, $outputlangs, $this->page_hauteur, $this->page_largeur, 'mm', $conf->global->CONTRACT_DRAFT_WATERMARK);
+		//Affiche le filigrane specimen - Print Draft Watermark
+		if ($object->status < 2) {
+			// Disable auto-page-break
+			$pdf->SetAutoPageBreak(false, 0);
+
+			// Set watermark
+			$img_file = DOL_DOCUMENT_ROOT . '/custom/doliletter/img/specimen-big.png';
+			$pdf->Image($img_file, 0, 0, 223, 280, '', '', '', false, 300, '', false, false, 0);
 		}
+
+//		if ($object->statut == 0 && (!empty($conf->global->CONTRACT_DRAFT_WATERMARK)))
+//		{
+//			pdf_watermark($pdf, $outputlangs, $this->page_hauteur, $this->page_largeur, 'mm', $conf->global->CONTRACT_DRAFT_WATERMARK);
+//		}
 
 		//Prepare next
 		$pdf->SetTextColor(0, 0, 60);
