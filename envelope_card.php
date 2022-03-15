@@ -220,7 +220,7 @@ if (empty($reshook)) {
 			setEventMessages($langs->trans('ErrorFieldRequired', $langs->transnoentitiesnoconv('Label')), null, 'errors');
 			$error++;
 		}
-		if (empty($fk_contact)) {
+		if (empty($contact_id)) {
 			setEventMessages($langs->trans('ErrorFieldRequired', $langs->transnoentitiesnoconv('Contact')), null, 'errors');
 			$error++;
 		}
@@ -901,7 +901,7 @@ if ($action == 'create') {
 
 	//Contact -- Contact
 	print '<tr><td class="fieldrequired">'.$langs->trans("Contact").'</td><td>';
-	print $form->selectcontacts(GETPOST('fk_soc', 'int'), '', 'fk_contact', 1, '', '', 0, 'quatrevingtpercent', false, 0, array(), false, '', 'fk_contact');
+	print $form->selectcontacts(GETPOST('fk_soc', 'int'), GETPOST('fk_contact'), 'fk_contact', 1, '', '', 0, 'quatrevingtpercent', false, 0, array(), false, '', 'fk_contact');
 	print '</td></tr>';
 
 	//Project -- Projet
