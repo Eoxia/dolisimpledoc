@@ -1075,8 +1075,13 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	$morehtmlref .= $langs->trans('Project') . ' : ' . $project->getNomUrl(1);
 	$morehtmlref .= '</tr>';
 	$morehtmlref .=  '</td><br>';
-	$morehtmlref .= $langs->trans('RegisteredMailCode') . ' : ' . $lettersending->letter_code;
-	$morehtmlref .= '</tr>';
+	
+	if ($object->status == 3 || $object->status == 6) {
+		$morehtmlref .=  '<tr><td>';
+		$morehtmlref .= $langs->trans('RegisteredMailCode') . ' : ' . $lettersending->letter_code;
+		$morehtmlref .= '</td></tr>';
+	}
+
 	$morehtmlref .= '</div>';
 
 	dol_banner_tab($object, 'ref', $linkback, 0, 'ref', 'ref', $morehtmlref, '', 0, '' );
