@@ -314,6 +314,8 @@ class pdf_deimos extends ModelePDFAcknowledgementReceipt
 
 				if ($object->status == 6) {
 					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, $langs->trans('AcknowledgementReceiptTextLetter', $receiver->firstname . ' ' . $receiver->lastname, preg_replace('/AR_/', '', $filename), 'courrier'), 0, 1);
+				} elseif ($object->status == 5) {
+					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, $langs->trans('AcknowledgementReceiptTextMail', $receiver->firstname . ' ' . $receiver->lastname, preg_replace('/AR_/', '', $filename), 'mail'), 0, 1);
 				}
 
 				$nexY = $pdf->GetY();
@@ -481,6 +483,7 @@ class pdf_deimos extends ModelePDFAcknowledgementReceipt
 						}
 					}
 				}
+
 				if ($object->status == 5) {
 					// Show square
 					if ($pagenb == 1)
@@ -626,7 +629,7 @@ class pdf_deimos extends ModelePDFAcknowledgementReceipt
 		$contact->fetch($object->fk_contact);
 
 		$pdf->SetXY($this->marge_gauche, $posy);
-		$pdf->MultiCell($posmiddle - $this->marge_gauche - 5, 5,  $outputlangs->transnoentities('AcknowledgementReceiptTextMail', $receiver->firstname . ' ' . $receiver->lastname, preg_replace('/AR_/', '', $filename), 'mail', dol_print_date($receiver->signature_date), $receiver->ip ), 0, 'L', 0);
+//		$pdf->MultiCell($posmiddle - $this->marge_gauche - 5, 5,  $outputlangs->transnoentities('AcknowledgementReceiptTextMail', $receiver->firstname . ' ' . $receiver->lastname, preg_replace('/AR_/', '', $filename), 'mail', dol_print_date($receiver->signature_date), $receiver->ip ), 0, 'L', 0);
 
 		$pdf->SetXY($this->marge_gauche, $posy + 10);
 		$pdf->Image($test, $this->marge_gauche, $posy - 5, 50, 50); // width=0 (auto)
