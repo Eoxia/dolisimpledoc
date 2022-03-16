@@ -535,7 +535,7 @@ class DoliletterSignature extends CommonObject
 	 * @param $fk_object
 	 * @return int
 	 */
-	public function deleteSignatoriesSignatures($fk_object) {
+	public function deleteSignatoriesSignatures($fk_object, $document_generated = 1) {
 		global $langs, $user;
 
 		$signatories = $this->fetchSignatories($fk_object);
@@ -543,7 +543,7 @@ class DoliletterSignature extends CommonObject
 		if (!empty($signatories) && $signatories > 0) {
 			foreach ($signatories as $signatory) {
 				if (dol_strlen($signatory->signature)) {
-					$signatory->signature = $langs->trans('DocumentGenerated');
+					$document_generated ? $signatory->signature = $langs->trans('DocumentGenerated') : $signatory->signature = '';
 					$signatory->update($user);
 				}
 			}
@@ -560,7 +560,7 @@ class DoliletterSignature extends CommonObject
 	function deletePreviousSignatories($role = "", $fk_object)
 	{
 		global $user;
-		$filter = array('customsql' => ' role="' . $role . '" AND fk_object=' . $fk_object . ' AND status=1');
+		$filter = array('customsql' => ' role="' . $role . '" AND fk_object=' . $fk_object);
 		$signatoriesToDelete = $this->fetchAll('', '', 0, 0, $filter, 'AND');
 
 		if ( ! empty($signatoriesToDelete) && $signatoriesToDelete > 0) {

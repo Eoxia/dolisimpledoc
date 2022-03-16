@@ -115,6 +115,8 @@ EnvelopeLabel = Envoi de courrier
 EnvelopeSubject = Envoi de courrier
 RegisteredMail = Courrier recommandé
 RegisteredMailCode = Code du courrier recommandé
+ReOpenEnvelope = Rouvrir le courrier
+ConfirmReOpenEnvelope = Êtes-vous sûr de vouloir rouvrir le courrier ? <br> La réouverture permet la modification du courrier mais <b>la signature du document sera perdue</b>.
 
 #
 # Signature - Signature
