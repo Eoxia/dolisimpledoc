@@ -133,6 +133,11 @@ llxHeaderSignature($langs->trans("Signature"), "", 0, 0, $morejs, $morecss);
 $element = $signatory->fetchSignatory($signatory->role, $signatory->fk_object, $type);
 $element = array_shift($element);
 
+if (dol_strlen($element->signature)) {
+	$url = DOL_URL_ROOT . '/custom/doliletter/public/signature/signature_success.php?document_name=' .  $object->ref . ' ' . $object->label;
+	header("Location: ".$url);
+	exit;
+}
 ?>
 <div class="digirisk-signature-container">
 	<input hidden id="redirectURL" value="<?php echo DOL_URL_ROOT . '/custom/doliletter/public/signature/signature_success.php?document_name=' .  $object->ref . ' ' . $object->label ?>">
