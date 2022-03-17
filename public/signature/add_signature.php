@@ -132,15 +132,15 @@ llxHeaderSignature($langs->trans("Signature"), "", 0, 0, $morejs, $morecss);
 
 $element = $signatory->fetchSignatory($signatory->role, $signatory->fk_object, $type);
 $element = array_shift($element);
+$url = DOL_URL_ROOT . '/custom/doliletter/public/signature/signature_success.php?document_name=' .  $object->ref . '-' . $object->label . '&id=' . $object->id . '&type=' . $type;
 
 if (dol_strlen($element->signature)) {
-	$url = DOL_URL_ROOT . '/custom/doliletter/public/signature/signature_success.php?document_name=' .  $object->ref . ' ' . $object->label;
 	header("Location: ".$url);
 	exit;
 }
 ?>
 <div class="digirisk-signature-container">
-	<input hidden id="redirectURL" value="<?php echo DOL_URL_ROOT . '/custom/doliletter/public/signature/signature_success.php?document_name=' .  $object->ref . ' ' . $object->label ?>">
+	<input hidden id="redirectURL" value="<?php echo $url ?>">
 	<div class="wpeo-gridlayout grid-2">
 		<div class="informations">
 			<div class="wpeo-gridlayout grid-2 file-generation">
@@ -152,7 +152,7 @@ if (dol_strlen($element->signature)) {
 					$filename = $file['name'];
 				}
 				?>
-				<strong class="grid-align-middle"><?php echo $langs->trans("AcknowledgementReceipt"); ?></strong>
+				<strong class="grid-align-middle"><?php echo $langs->trans("LinkedDocument"); ?></strong>
 				<a href="<?php echo '/dolibarr/htdocs/document.php?modulepart=doliletter&file=envelope/' . $object->ref . '/' . $filename . '&entity=' . $conf->entity ?>">
 					<span class="wpeo-button button-primary button-radius-2 grid-align-right"><i class="button-icon fas fa-file-pdf"></i><?php echo '  ' . $langs->trans('ShowDocument'); ?></span>
 				</a>

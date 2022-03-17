@@ -45,12 +45,32 @@ if ( ! $res && file_exists("../../../main.inc.php")) $res    = @include "../../.
 if ( ! $res && file_exists("../../../../main.inc.php")) $res = @include "../../../../main.inc.php";
 if ( ! $res) die("Include of main fails");
 
+require_once DOL_DOCUMENT_ROOT . '/core/class/html.form.class.php';
+require_once DOL_DOCUMENT_ROOT . '/user/class/user.class.php';
+require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
+
 require_once '../../lib/doliletter_function.lib.php';
+require_once '../../class/envelope.class.php';
+
+global $conf, $langs, $db, $user;
 
 $documentName = GETPOST('document_name');
+$id           = GETPOST('id');
+$type         = GETPOST('type');
+
+$upload_dir = $conf->doliletter->multidir_output[isset($object->entity) ? $object->entity : 1];
 
 // Load translation files required by the page
 $langs->loadLangs(array("doliletter@doliletter", "other", "errors"));
+
+switch ($type) {
+	case 'envelope':
+		$object         = new Envelope($db);
+		$signatory      = new EnvelopeSignature($db);
+		break;
+}
+
+$object->fetch($id);
 
 /*
  * View
@@ -69,7 +89,24 @@ llxHeaderSignature($langs->trans("Signature"), "", 0, 0, $morejs, $morecss);
 ?>
 <div class="digirisk-signature-container">
 	<p class="center"><?php echo $langs->trans("SignatureSuccess", $documentName); ?> </p>
+	<div class="wpeo-gridlayout grid-2 file-generation">
+		<?php if ($type == 'envelope') : ?>
+			<?php $filelist = dol_dir_list($upload_dir . '/' . $object->element . '/' . $object->ref);
+			if (!empty($filelist)) {
+				$file = array_shift($filelist);
+				$fileurl = $file['fullname'];
+				$filename = $file['name'];
+			}
+			?>
+			<strong class="grid-align-middle"><?php echo $langs->trans("LinkedDocument"); ?></strong>
+			<a href="<?php echo '/dolibarr/htdocs/document.php?modulepart=doliletter&file=envelope/' . $object->ref . '/' . $filename . '&entity=' . $conf->entity ?>">
+				<span class="wpeo-button button-primary button-radius-2 grid-align-right"><i class="button-icon fas fa-file-pdf"></i><?php echo '  ' . $langs->trans('ShowDocument'); ?></span>
+			</a>
+		<?php endif; ?>
+	</div>
 </div>
+
+<br>
 <?php
 
 
