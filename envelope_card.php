@@ -1160,16 +1160,16 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 			$button_edit_disabled = '<a class="butActionRefused classfortooltip"  title="'. $langs->trans('CantEditAlreadySigned').'"'.'>' . $langs->trans("Modify") . '</a>' . "\n";
 			print ($object->status == 0 ?  $button_edit : ($object->status == 1 ? $button_edit_with_confirm : $button_edit_disabled));
 			print '<a class="'. ($object->status == 0 ? 'butAction" id="actionButtonSign" href="' . DOL_URL_ROOT . '/custom/doliletter/envelope_signature.php'.'?id='.$object->id.'&mode=init&token='.newToken().'"' : 'butActionRefused classfortooltip" title="'. $langs->trans('AlreadySigned').'"')  .' >' . $langs->trans("Sign") . '</a>' . "\n";
+			print '<span class="' . ($object->status == 1 ? 'butAction"  id="actionButtonLock"' : 'butActionRefused classfortooltip" title="' . dol_escape_htmltag($langs->trans("EnvelopeMustBeSigned")) . '"') . '>' . $langs->trans("Lock") . '</span>';
 			print '<a class="'. ($object->status == 2 ? 'butAction" id="actionButtonSendMail" href="' . $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=presend&mode=init&model='.$modelselected.'&token='.newToken().'"'  : 'butActionRefused classfortooltip" title="'. $langs->trans('MustBeSignedBeforeSending').'"') . ' >' . $langs->trans("SendMail") . '</a>' . "\n";
 			print '<a class="'. ($object->status == 2 ? 'butAction" id="actionButtonSendLetter" href="' . $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=letterpresend&mode=init&model='.$modelselected.'&token='.newToken().'"' : 'butActionRefused classfortooltip" title="'. $langs->trans('MustBeSignedBeforeSending').'"').' >' . $langs->trans("SendLetter") . '</a>' . "\n";
-			print '<span class="' . ($object->status == 1 ? 'butAction"  id="actionButtonLock"' : 'butActionRefused classfortooltip" title="' . dol_escape_htmltag($langs->trans("EnvelopeMustBeSigned")) . '"') . '>' . $langs->trans("Lock") . '</span>';
 			print '<a class="'. ($object->status == 3 ? 'butAction" id="actionButtonUploadReceiptAcknowledgement" href="' . $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=uploadAcknowledgementReceipt&token='.newToken() : 'butActionRefused classfortooltip" title="'. $langs->trans('MustBeSentBeforeAcknowledgementReceipt').'"').'">' . $langs->trans("UploadAcknowledgementReceipt") . '</a>' . "\n";
 		} else {
 			print '<a class="butActionRefused classfortooltip" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans('Modify') . '</a>' . "\n";
 			print '<a class="butActionRefused classfortooltip" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans('Sign') . '</a>' . "\n";
+			print '<a class="butActionRefused classfortooltip" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans('Lock') . '</a>' . "\n";
 			print '<a class="butActionRefused classfortooltip" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans('SendMail') . '</a>' . "\n";
 			print '<a class="butActionRefused classfortooltip" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans('SendLetter') . '</a>' . "\n";
-			print '<a class="butActionRefused classfortooltip" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans('Lock') . '</a>' . "\n";
 		}
 		if ($permissiontodelete) {
 			print '<a class="butActionDelete" id="actionButtonSendMail" href="' . $_SERVER['PHP_SELF'].'?id='.$object->id.'&action=delete&token='.newToken().'">' . $langs->trans("Delete") . '</a>' . "\n";
