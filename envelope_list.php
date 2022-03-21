@@ -395,6 +395,10 @@ llxHeader('', $title, $help_url, '', 0, 0, $morejs, $morecss, '', '');
 if (!empty($fromtype)) {
 	print dol_get_fiche_head($head, 'envelopeList', $langs->trans("Envelope"), -1, $objectLinked->picto);
 }
+dol_banner_tab($objectLinked, 'ref', $linkback, 1, 'ref', 'ref', $morehtmlref);
+
+print '<div class="underbanner clearboth"></div>';
+
 $arrayofselected = is_array($toselect) ? $toselect : array();
 
 $param = '';
