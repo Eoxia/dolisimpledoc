@@ -151,6 +151,7 @@ class InterfaceDoliLetterTriggers extends DolibarrTriggers
 				$actioncomm = new ActionComm($this->db);
 				$contact = new Contact($this->db);
 				$signatory = new EnvelopeSignature($this->db);
+				$letter = new LetterSending($this->db);
 
 				$contact->fetch($object->fk_contact);
 				$signatory = $signatory->fetchSignatory('E_SENDER', $object->id);
@@ -158,12 +159,16 @@ class InterfaceDoliLetterTriggers extends DolibarrTriggers
 				if (is_array($signatory)) {
 					$signatory = array_shift($signatory);
 				}
+				$lettersending = $letter->fetchAll('', '', 0, 0, array('customsql' => ' fk_envelope =' . $object->id));
+				if (is_array($lettersending)) {
+					$lettersending = end($lettersending);
+				}
 
 				$actioncomm->elementtype = 'envelope@doliletter';
 				$actioncomm->code        = 'AC_ENVELOPE_LETTER';
 				$actioncomm->type_code   = 'AC_OTH_AUTO';
 				$actioncomm->label       = $langs->trans('EnvelopeSendbyLetterTrigger');
-				$actioncomm->note        = $langs->trans('EnvelopeSendbyLetterTriggerContent', $contact->firstname . ' ' . $contact->lastname, dol_print_date(dol_now()), $signatory->firstname . ' ' . $signatory->lastname);
+				$actioncomm->note        = $langs->trans('EnvelopeSendbyLetterTriggerContent', $contact->firstname . ' ' . $contact->lastname, dol_print_date(dol_now()), $signatory->firstname . ' ' . $signatory->lastname) . '<br>' . $langs->trans('LetterCode:', $lettersending->letter_code);
 				$actioncomm->datep       = $now;
 				$actioncomm->socid       = $object->fk_soc;
 				$actioncomm->contactid   = $object->fk_contact;

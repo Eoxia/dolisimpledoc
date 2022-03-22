@@ -120,6 +120,7 @@ ReOpenEnvelope = Rouvrir le courrier
 ConfirmReOpenEnvelope = Êtes-vous sûr de vouloir rouvrir le courrier ? <br> La réouverture permet la modification du courrier mais <b>la signature du document sera perdue</b>.
 EnvelopeSendbyMailTriggerContent = Le courrier a été envoyé par mail à %s le %s par %s
 EnvelopeSendbyLetterTriggerContent = Le courrier a été envoyé par voie postale à %s le %s par %s
+LetterCode: = Code du courrier recommandé : %s
 
 #
 # Signature - Signature
