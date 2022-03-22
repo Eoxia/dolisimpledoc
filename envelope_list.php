@@ -52,6 +52,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/invoice.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/project.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/propal.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/order.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/core/lib/contact.lib.php';
 
 // load envelope libraries
 require_once './lib/doliletter_envelope.lib.php';
@@ -144,9 +145,14 @@ if (!empty($fromtype)) {
 			$objectLinked = new Commande($db);
 			$prehead = 'commande_prepare_head';
 			break;
+		case 'contact' :
+			$objectLinked = new Contact($db);
+			$prehead = 'contact_prepare_head';
+			break;
 	}
 	$objectLinked->fetch($fromid);
 	$head = $prehead($objectLinked);
+	$linkedObjectsArray = array('thirdparty', 'contact','project');
 }
 
 // Initialize array of search criterias
@@ -167,6 +173,13 @@ if(!empty($fromtype)) {
 	switch ($fromtype) {
 		case 'thirdparty':
 			$search['fk_soc'] = $fromid;
+			break;
+		case 'contact':
+			$search['fk_contact'] = $fromid;
+			break;
+		case 'project':
+			$search['fk_project'] = $fromid;
+			break;
 	}
 }
 
@@ -292,7 +305,7 @@ $sql .= " FROM ".MAIN_DB_PREFIX.$object->table_element." as t";
 if (isset($extrafields->attributes[$object->table_element]['label']) && is_array($extrafields->attributes[$object->table_element]['label']) && count($extrafields->attributes[$object->table_element]['label'])) {
 	$sql .= " LEFT JOIN ".MAIN_DB_PREFIX.$object->table_element."_extrafields as ef on (t.rowid = ef.fk_object)";
 }
-if (dol_strlen($fromtype) > 0 && $fromtype != 'thirdparty') {
+if (dol_strlen($fromtype) > 0 && !in_array($fromtype, $linkedObjectsArray)) {
 	$sql .= ' LEFT JOIN ' . MAIN_DB_PREFIX . 'element_element as e on (e.fk_source = ' .$fromid. ' AND e.sourcetype="' . $fromtype . '" AND e.targettype = "envelope")';
 }
 // Add table from hooks
@@ -305,11 +318,13 @@ if ($object->ismultientitymanaged == 1) {
 	$sql .= " AND t.entity IN (".getEntity($object->element).")";
 }
 $sql .= " AND t.status > -1";
-if (dol_strlen($fromtype) > 0 && $fromtype != 'thirdparty') {
+if (dol_strlen($fromtype) > 0 && !in_array($fromtype, $linkedObjectsArray)) {
 	$sql .= " AND t.rowid = e.fk_target ";
 }
 
 foreach ($search as $key => $val) {
+
+
 	if (array_key_exists($key, $object->fields)) {
 		if ($key == 'status' && $search[$key] == -1) {
 			continue;
@@ -322,6 +337,7 @@ foreach ($search as $key => $val) {
 			$mode_search = 2;
 		}
 		if ($search[$key] != '') {
+
 			$sql .= natural_search($key, $search[$key], (($key == 'status') ? 2 : $mode_search));
 		}
 	} else {
@@ -361,6 +377,7 @@ if (empty($conf->global->MAIN_DISABLE_FULL_SCANLIST)) {
 		$offset = 0;
 	}
 }
+
 // if total of record found is smaller than limit, no need to do paging and to restart another select with limits set.
 if (is_numeric($nbtotalofrecords) && ($limit > $nbtotalofrecords || empty($limit))) {
 	$num = $nbtotalofrecords;
@@ -394,8 +411,8 @@ llxHeader('', $title, $help_url, '', 0, 0, $morejs, $morecss, '', '');
 
 if (!empty($fromtype)) {
 	print dol_get_fiche_head($head, 'envelopeList', $langs->trans("Envelope"), -1, $objectLinked->picto);
+	dol_banner_tab($objectLinked, 'ref', $linkback, 1, 'ref', 'ref', $morehtmlref);
 }
-dol_banner_tab($objectLinked, 'ref', $linkback, 1, 'ref', 'ref', $morehtmlref);
 
 print '<div class="underbanner clearboth"></div>';
 
@@ -525,7 +542,7 @@ foreach ($object->fields as $key => $val) {
 		} elseif ($key == 'fk_soc') {
 			$thirdparty->fetch(0, $search['fk_soc']);
 			print '<div class="nowrap">';
-			print $form->select_company((!empty(GETPOST('fk_soc')) ? GETPOST('fk_soc') : GETPOST('fromid')), 'fk_soc', '', 'SelectThirdParty', 1, 0, array(), 0, 'maxwidth200');
+			print $form->select_company((!empty(GETPOST('fk_soc')) ? GETPOST('fk_soc') : (GETPOST('fromtype') == 'thirdparty' ? GETPOST('fromid') : '')), 'fk_soc', '', 'SelectThirdParty', 1, 0, array(), 0, 'maxwidth200');
 			print '</div>';
 		} elseif ((strpos($val['type'], 'integer:') === 0) || (strpos($val['type'], 'sellist:') === 0)) {
 			print $object->showInputField($val, $key, (isset($search[$key]) ? $search[$key] : ''), '', '', 'search_', 'maxwidth125', 1);
@@ -639,7 +656,7 @@ while ($i < ($limit ? min($num, $limit) : $num)) {
 			print $thirdparty->getNomUrl(1);
 			}
 			else if ($key == 'fk_contact') {
-				$contact->fetch($obj->fk_soc);
+				$contact->fetch($obj->fk_contact);
 				print $contact->getNomUrl(1);
 			}
 			else if ($key == 'sender') {

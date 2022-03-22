@@ -133,6 +133,7 @@ class modDoliLetter extends DolibarrModules {
 			$this->tabs[] = array('data'=>'propal:+envelopeList:Envelope:@doliletter:1:/custom/doliletter/envelope_list.php?fromid=__ID__&fromtype=propal');
 			$this->tabs[] = array('data'=>'order:+envelopeList:Envelope:@doliletter:1:/custom/doliletter/envelope_list.php?fromid=__ID__&fromtype=order');
 			$this->tabs[] = array('data'=>'invoice:+envelopeList:Envelope:@doliletter:1:/custom/doliletter/envelope_list.php?fromid=__ID__&fromtype=facture');  	  	// To add a new tab identified by code tabname1
+			$this->tabs[] = array('data'=>'contact:+envelopeList:Envelope:@doliletter:1:/custom/doliletter/envelope_list.php?fromid=__ID__&fromtype=contact');  	  	// To add a new tab identified by code tabname1
 		// To add a new tab identified by code tabname1
 		// Example:
 		// $this->tabs[] = array('data'=>'objecttype:+tabname1:Title1:mylangfile@doliletter:$user->rights->doliletter->read:/doliletter/mynewtab1.php?id=__ID__');  					// To add a new tab identified by code tabname1
