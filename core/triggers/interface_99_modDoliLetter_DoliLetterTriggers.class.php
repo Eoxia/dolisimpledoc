@@ -118,12 +118,26 @@ class InterfaceDoliLetterTriggers extends DolibarrTriggers
 				require_once DOL_DOCUMENT_ROOT.'/comm/action/class/actioncomm.class.php';
 				$now = dol_now();
 				$actioncomm = new ActionComm($this->db);
+				$contact = new Contact($this->db);
+				$signatory = new EnvelopeSignature($this->db);
+
+				$contact->fetch($object->fk_contact);
+				$signatory = $signatory->fetchSignatory('E_SENDER', $object->id);
+
+				if (is_array($signatory)) {
+					$signatory = array_shift($signatory);
+				}
 
 				$actioncomm->elementtype = 'envelope@doliletter';
 				$actioncomm->code        = 'AC_DOLILETTER_ENVELOPE_SENTBYMAIL';
 				$actioncomm->type_code   = 'AC_OTH_AUTO';
 				$actioncomm->label       = $langs->trans('EnvelopeSendbyMailTrigger');
+				$actioncomm->note        = $langs->trans('EnvelopeSendbyMailTriggerContent', $contact->firstname . ' ' . $contact->lastname, dol_print_date(dol_now()), $signatory->firstname . ' ' . $signatory->lastname);
 				$actioncomm->datep       = $now;
+				$actioncomm->socid       = $object->fk_soc;
+				$actioncomm->contactid   = $object->fk_contact;
+				$actioncomm->contact_id  = $object->fk_contact;
+				$actioncomm->socpeopleassigned = array($object->fk_contact => $object->fk_contact);
 				$actioncomm->fk_element  = $object->id;
 				$actioncomm->userownerid = $user->id;
 				$actioncomm->percentage  = -1;
@@ -135,12 +149,26 @@ class InterfaceDoliLetterTriggers extends DolibarrTriggers
 				require_once DOL_DOCUMENT_ROOT.'/comm/action/class/actioncomm.class.php';
 				$now = dol_now();
 				$actioncomm = new ActionComm($this->db);
+				$contact = new Contact($this->db);
+				$signatory = new EnvelopeSignature($this->db);
+
+				$contact->fetch($object->fk_contact);
+				$signatory = $signatory->fetchSignatory('E_SENDER', $object->id);
+
+				if (is_array($signatory)) {
+					$signatory = array_shift($signatory);
+				}
 
 				$actioncomm->elementtype = 'envelope@doliletter';
 				$actioncomm->code        = 'AC_ENVELOPE_LETTER';
 				$actioncomm->type_code   = 'AC_OTH_AUTO';
 				$actioncomm->label       = $langs->trans('EnvelopeSendbyLetterTrigger');
+				$actioncomm->note        = $langs->trans('EnvelopeSendbyLetterTriggerContent', $contact->firstname . ' ' . $contact->lastname, dol_print_date(dol_now()), $signatory->firstname . ' ' . $signatory->lastname);
 				$actioncomm->datep       = $now;
+				$actioncomm->socid       = $object->fk_soc;
+				$actioncomm->contactid   = $object->fk_contact;
+				$actioncomm->contact_id  = $object->fk_contact;
+				$actioncomm->socpeopleassigned = array($object->fk_contact => $object->fk_contact);
 				$actioncomm->fk_element  = $object->id;
 				$actioncomm->userownerid = $user->id;
 				$actioncomm->percentage  = -1;
