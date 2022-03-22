@@ -121,7 +121,7 @@ ConfirmReOpenEnvelope = Êtes-vous sûr de vouloir rouvrir le courrier ? <br> La
 EnvelopeSendbyMailTriggerContent = Le courrier a été envoyé par mail à %s le %s par %s
 EnvelopeSendbyLetterTriggerContent = Le courrier a été envoyé par voie postale à %s le %s par %s
 LetterCode: = Code du courrier recommandé : %s
-
+SendingProofTextLetter = Ce courrier a été envoyé par voie postale le %s par %s
 #
 # Signature - Signature
 #

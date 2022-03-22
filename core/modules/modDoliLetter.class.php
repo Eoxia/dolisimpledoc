@@ -118,6 +118,7 @@ class modDoliLetter extends DolibarrModules {
 			1 => array('DOLILETTER_ENVELOPE_ADDON','chaine', 'mod_envelope_standard','', $conf->entity),
 			2 => array('DOLILETTER_ENVELOPE_ADDON_PDF','chaine', 'phobos' ,'', $conf->entity),
 			3 => array('DOLILETTER_ACKNOWLEDGEMENTRECEIPT_ADDON_PDF','chaine', 'deimos' ,'', $conf->entity),
+			4 => array('DOLILETTER_SENDINGPROOF_ADDON_PDF','chaine', 'ares' ,'', $conf->entity),
 		);
 
 		if (!isset($conf->doliletter) || !isset($conf->doliletter->enabled)) {
@@ -314,6 +315,9 @@ class modDoliLetter extends DolibarrModules {
 
 		delDocumentModel('deimos', 'acknowledgementreceipt');
 		addDocumentModel('deimos','acknowledgementreceipt','','');
+
+		delDocumentModel('ares', 'sendingproof');
+		addDocumentModel('ares','sendingproof','','');
 
 		$sql = array();
 

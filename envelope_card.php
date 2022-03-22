@@ -725,7 +725,9 @@ if (empty($reshook)) {
 			$object->setStatusCommon($user, 3);
 			$object->call_trigger('ENVELOPE_LETTER', $user);
 			// Submit file
+			// Submit file
 			if ( ! empty($conf->global->MAIN_UPLOAD_DOC)) {
+
 				if ( ! empty($_FILES)) {
 					if (is_array($_FILES['userfile']['tmp_name'])) $userfiles = $_FILES['userfile']['tmp_name'];
 					else $userfiles                                           = array($_FILES['userfile']['tmp_name']);
@@ -740,11 +742,61 @@ if (empty($reshook)) {
 					}
 
 					if ( ! $error) {
-						$filedir = $upload_dir . '/envelope/' . $object->ref . '/sendingproof/';
+						$filedir = $upload_dir . '/' . $object->element . '/' . $object->ref;
 						if (!is_dir($filedir)) {
 							dol_mkdir($filedir);
 						}
-						$result = dol_add_file_process($filedir, 0, 1, 'userfile', '', null, '', 1, $object);
+						$ARdir = $filedir . '/sendingproof';
+						if (!is_dir($ARdir)) {
+							dol_mkdir($ARdir);
+						}
+						$AR_sub_dir = $ARdir . '/uploaded_file';
+						if (!is_dir($AR_sub_dir)) {
+							dol_mkdir($AR_sub_dir);
+						}
+						$result = dol_add_file_process($AR_sub_dir, 0, 1, 'userfile', '', null, '', 0, $object);
+						if ($result > 0) {
+							// Presend form
+							$modelmail = 'envelope';
+							$defaulttopic = 'InformationMessage';
+							$diroutput = $upload_dir . '/' . $object->element;
+							$trackid = 'envelope'.$object->id;
+
+
+							$ref = dol_sanitizeFileName($object->ref);
+							include_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
+							$fileparams = dol_most_recent_file($diroutput.'/'.$ref, '');
+							$file = $fileparams['fullname'];
+
+							// Build document if it not exists
+							$allspecimen = true;
+							$fileslist = dol_dir_list($fileparams['path']);
+							foreach($fileslist as $item) {
+								if (!preg_match('/specimen/', $item['name'])){
+									$allspecimen = false;
+								}
+							}
+
+							$needcreate = empty($file) || $allspecimen;
+
+							$forcebuilddoc = true;
+
+							if ($forcebuilddoc)    // If there is no default value for supplier invoice, we do not generate file, even if modelpdf was set by a manual generation
+							{
+
+								if (method_exists($object, 'generateDocument'))
+								{
+									$result = $object->generateDocument('ares', $langs, $hidedetails, $hidedesc, $hideref);
+
+									if ($result < 0) {
+										dol_print_error($db, $object->error, $object->errors);
+										exit();
+									}
+									$fileparams = dol_most_recent_file($diroutput.'/'.$ref, preg_quote($ref, '/').'[^\-]+');
+									$file = $fileparams['fullname'];
+								}
+							}
+						}
 					}
 				}
 			}
@@ -1223,10 +1275,10 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 			$delallowed = $user->rights->doliletter->envelope->write; // If you can create/edit, you can remove a file on card
 			print dolilettershowdocuments('doliletter:Envelope', $object->element.'/'.$objref, $filedir, $urlsource, $genallowed, 0, $conf->global->DOLILETTER_ENVELOPE_ADDON_PDF, 1, 0, 0, '', 0, '', '', '', $langs->defaultlang, $object->status < 3 ? ( $document_generated > 0 ? 0 : 1) : 0, $document_generated > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
 		}
-		if ($object->status == 3 || $object->status == 6) {
+		if ($object->status == 3 || $object->status == 5 || $object->status == 6) {
 			print '<br>';
-			$acknowledgement_receipt_files = count(dol_dir_list($filedir.'/sendingproof'));
-			print dolilettershowdocuments('doliletter', $object->element.'/'.$objref.'/sendingproof', $filedir.'/sendingproof', $urlsource, 0, 0, $conf->global->DOLILETTER_ACKNOWLEDGEMENTRECEIPT_ADDON_PDF, 1, 0, 0, $langs->trans('SendingProof'), 0, '', '', '', $langs->defaultlang, $acknowledgement_receipt_files > 0 ? 0 : 1, $generated_files > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
+			$sending_proof_files = count(dol_dir_list($filedir.'/sendingproof'));
+			print dolilettershowdocuments('doliletter', $object->element.'/'.$objref.'/sendingproof', $filedir.'/sendingproof', $urlsource, 0, 0, $conf->global->DOLILETTER_ACKNOWLEDGEMENTRECEIPT_ADDON_PDF, 1, 0, 0, $langs->trans('SendingProof'), 0, '', '', '', $langs->defaultlang, $sending_proof_files > 0 ? 0 : 1, $generated_files > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
 		}
 		if ($object->status >= 5) {
 			$acknowledgement_receipt_files = count(dol_dir_list($filedir.'/acknowledgementreceipt'));
