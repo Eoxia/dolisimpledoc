@@ -38,6 +38,7 @@ if (!$res) die("Include of main fails");
 
 
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formcompany.class.php';
+require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
 
 require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
@@ -100,6 +101,7 @@ $thirdparty = new Societe($db);
 $contact = new Contact($db);
 $sender = new User($db);
 $project = new Project($db);
+$formproject = new FormProjets($db);
 
 $diroutputmassaction = $conf->envelope->dir_output.'/temp/massgeneration/'.$user->id;
 $hookmanager->initHooks(array('documentlist')); // Note that conf->hooks_modules contains array
@@ -324,9 +326,11 @@ if (dol_strlen($fromtype) > 0 && !in_array($fromtype, $linkedObjectsArray)) {
 
 foreach ($search as $key => $val) {
 
-
 	if (array_key_exists($key, $object->fields)) {
 		if ($key == 'status' && $search[$key] == -1) {
+			continue;
+		}
+		if ($search[$key] < 1) {
 			continue;
 		}
 		$mode_search = (($object->isInt($object->fields[$key]) || $object->isFloat($object->fields[$key])) ? 1 : 0);
@@ -544,6 +548,14 @@ foreach ($object->fields as $key => $val) {
 			print '<div class="nowrap">';
 			print $form->select_company((!empty(GETPOST('fk_soc')) ? GETPOST('fk_soc') : (GETPOST('fromtype') == 'thirdparty' ? GETPOST('fromid') : '')), 'fk_soc', '', 'SelectThirdParty', 1, 0, array(), 0, 'maxwidth200');
 			print '</div>';
+		} elseif ($key == 'fk_project') {
+			$project->fetch(0, $search['fk_project']);
+			print $formproject->select_projects(0, ( ! empty(GETPOST('fk_project')) ? GETPOST('fk_project') :  (GETPOST('fromtype') == 'project' ? GETPOST('fromid') : '')), 'fk_project', 0, 0, 1, 0, 1, 0, 0, '', 1, 0, 'maxwidth200');
+			print '<input class="input-hidden-fk_project" type="hidden" name="search_fk_project" value=""/>';
+		} elseif ($key == 'fk_contact') {
+			$contact->fetch(0, $search['fk_contact']);
+			print $form->selectcontacts(0, !empty(GETPOST('fk_contact')) ? GETPOST('fk_contact') : (GETPOST('fromtype') == 'contact' ? GETPOST('fromid') : ''), 'fk_contact', 1);
+			print '<input class="input-hidden-fk_project" type="hidden" name="search_fk_contact" value=""/>';
 		} elseif ((strpos($val['type'], 'integer:') === 0) || (strpos($val['type'], 'sellist:') === 0)) {
 			print $object->showInputField($val, $key, (isset($search[$key]) ? $search[$key] : ''), '', '', 'search_', 'maxwidth125', 1);
 		} elseif (!preg_match('/^(date|timestamp|datetime)/', $val['type'])) {
