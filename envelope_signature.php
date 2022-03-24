@@ -331,10 +331,12 @@ if ((empty($action) || ($action != 'create' && $action != 'edit'))) {
 
 	//Master builder -- Maitre Oeuvre
 	$element = $signatory->fetchSignatory('E_SENDER', $id);
+
 	if ($element > 0) {
 		$element = array_shift($element);
 		$usertmp->fetch($element->element_id);
 	}
+
 
 	print load_fiche_titre($langs->trans("SignatureSender"), '', '');
 
@@ -390,6 +392,7 @@ if ((empty($action) || ($action != 'create' && $action != 'edit'))) {
 		print '<td>' . $langs->trans("Role") . '</td>';
 		print '<td class="center">' . $langs->trans("SendMailDate") . '</td>';
 		print '<td class="center">' . $langs->trans("SignatureDate") . '</td>';
+		print '<td class="center">' . $langs->trans("SignatureLink") . '</td>';
 		//print '<td class="center">' . $langs->trans("Status") . '</td>';
 		print '<td class="center">' . $langs->trans("Signature") . '</td>';
 		print '</tr>';
@@ -406,7 +409,10 @@ if ((empty($action) || ($action != 'create' && $action != 'edit'))) {
 		//print '</td><td class="center">';
 		//print $element->getLibStatut(5);
 		print '</td>';
-
+		$signature_url = dol_buildpath('/custom/doliletter/public/signature/add_signature.php?track_id='.$element->signature_url.'&type=envelope', 1);
+		print '<td class="center"><a href="'. $signature_url .'">';
+		print $signature_url;
+		print '</a></td>';
 		if ($permissiontoadd) {
 			$modal_id = 'contact-' . $contact->id;
 			print '<td class="center">';
