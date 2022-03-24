@@ -885,6 +885,20 @@ if (empty($reshook)) {
 			}
 		}
 	}
+
+	// Action clone object
+	if ($action == 'confirm_clone' && $confirm == 'yes') {
+		if ($object->status > 0) {
+			$object->status = 0;
+		}
+		$object->ref = $refEnvelopeMod->getNextValue($object);
+		$result = $object->create($user);
+
+		if ($result > 0) {
+			header("Location: " . $_SERVER["PHP_SELF"] . '?id=' . $result);
+			exit;
+		}
+	}
 }
 
 /*
@@ -1101,6 +1115,17 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 		$formconfirm .= $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('ReOpenEnvelope'), $langs->trans('ConfirmReOpenEnvelope', $object->ref), 'confirm_setInProgress', '', 'yes', 'actionButtonInProgress', 350, 600);
 	}
 
+	// Clone confirmation
+	if (($action == 'clone' && (empty($conf->use_javascript_ajax) || ! empty($conf->dol_use_jmobile)))		// Output when action = clone if jmobile or no js
+		|| ( ! empty($conf->use_javascript_ajax) && empty($conf->dol_use_jmobile))) {							// Always output when not jmobile nor js
+		// Define confirmation messages
+		$formquestionclone = array(
+			'text' => $langs->trans("CloneEnvelope", $object->ref),
+		);
+
+		$formconfirm .= $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('ToClone'), $langs->trans('ConfirmCloneEnvelope', $object->ref), 'confirm_clone', $formquestionclone, 'yes', 'actionButtonClone', 350, 600);
+	}
+
 	// Call Hook formConfirm
 	$parameters = array('formConfirm' => $formconfirm, 'lineid' => $lineid);
 	$reshook = $hookmanager->executeHooks('formConfirm', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
@@ -1230,6 +1255,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 			print '<a class="'. ($object->status == 2 || $object->status == 3 ? 'butAction" id="actionButtonSendLetter" href="' . $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=letterpresend&mode=init&model='.$modelselected.'&token='.newToken().'"' : 'butActionRefused classfortooltip" title="'. $langs->trans('MustBeSignedBeforeSending').'"').' >' . $langs->trans("SendLetter") . '</a>' . "\n";
 			print '<a class="'. ($object->status == 3 ? 'butAction" id="actionSendingProof" href="' . $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=uploadSendingProof&token='.newToken() : 'butActionRefused classfortooltip" title="'. $langs->trans('MustBeSentBeforeSendingProof').'"').'">' . $langs->trans("UploadSendingProof") . '</a>' . "\n";
 			print '<a class="'. ($object->status == 3 ? 'butAction" id="actionButtonUploadReceiptAcknowledgement" href="' . $_SERVER["PHP_SELF"].'?id='.$object->id.'&action=uploadAcknowledgementReceipt&token='.newToken() : 'butActionRefused classfortooltip" title="'. $langs->trans('MustBeSentBeforeAcknowledgementReceipt').'"').'">' . $langs->trans("UploadAcknowledgementReceipt") . '</a>' . "\n";
+			print '<span class="butAction" id="actionButtonClone" title="" href="' . $_SERVER["PHP_SELF"] . '?id=' . $object->id . '&action=clone' . '">' . $langs->trans("ToClone") . '</span>';
 		} else {
 			print '<a class="butActionRefused classfortooltip" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans('Modify') . '</a>' . "\n";
 			print '<a class="butActionRefused classfortooltip" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans('Sign') . '</a>' . "\n";

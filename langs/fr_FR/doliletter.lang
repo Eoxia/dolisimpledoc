@@ -123,6 +123,8 @@ EnvelopeSendbyLetterTriggerContent = Le courrier a été envoyé par voie postal
 LetterCode: = Numéro de suivi : %s
 SendingProofTextLetter = Ce courrier a été envoyé par voie postale le %s par %s
 UploadSendingProof = Preuve de dépôt
+ConfirmCloneEnvelope = Êtes-vous sûr(e) de vouloir cloner le courrier <b> %s </b> ?
+CloneEnvelope = Cloner le courrier
 
 #
 # Signature - Signature
