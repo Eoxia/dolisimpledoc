@@ -1143,6 +1143,16 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 		$morehtmlref .= '</td></tr>';
 	}
 
+	$signatory = $signatory->fetchSignatory('E_SENDER', $id);
+	$signatory = array_shift($signatory);
+	$signature_url = dol_buildpath('/custom/doliletter/public/signature/add_signature?track_id=' . $signatory->signature_url . '&type=envelope', 1);
+	if ($object->status == 4 || $object->status == 5) {
+		$morehtmlref .=  '<tr><td>';
+		$morehtmlref .=  $langs->trans('SignatureLink') . ' : ' . '<a href="'.$signature_url.'">' . $signature_url . '</a>';
+		$morehtmlref .= '</td></tr>';
+	}
+
+
 	$morehtmlref .= '</div>';
 
 	dol_banner_tab($object, 'ref', $linkback, 0, 'ref', 'ref', $morehtmlref, '', 0, '' );
