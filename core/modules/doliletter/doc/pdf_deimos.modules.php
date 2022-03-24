@@ -211,7 +211,7 @@ class pdf_deimos extends ModelePDFAcknowledgementReceipt
 				$docnum = 0;
 					do {
 						$date = dol_print_date(dol_now(),'dayxcard');
-						$filename = $date . '_' . $objectref . '_' . $docnum . '_AR' . '.pdf';
+						$filename = $date . '_' . $objectref . '_AR' . '_' . $docnum . '.pdf';
 						$filename = str_replace(' ', '_', $filename);
 						$filename = dol_sanitizeFileName($filename);
 						if ($object->status < 2) {
