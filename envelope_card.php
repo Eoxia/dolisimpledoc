@@ -1047,6 +1047,9 @@ if (($id || $ref) && $action == 'edit' ||$action == 'confirm_setInProgress') {
 	unset($object->fields['fk_soc']);
 	unset($object->fields['fk_contact']);
 	unset($object->fields['fk_project']);
+	
+	// Common attributes
+	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_add.tpl.php';
 
 	//Society -- Société
 	print '<tr><td class="fieldrequired">'.$langs->trans("Society").'</td><td>';
@@ -1066,8 +1069,6 @@ if (($id || $ref) && $action == 'edit' ||$action == 'confirm_setInProgress') {
 	$numprojet = $formproject->select_projects(0,  $object->fk_project, 'fk_project', 0, 0, 1, 0, 0, 0, 0, '', 0, 0, 'minwidth300');
 	print ' <a href="' . DOL_URL_ROOT . '/projet/card.php?&action=create&status=1&backtopage=' . urlencode($_SERVER["PHP_SELF"] . '?action=create') . '"><span class="fa fa-plus-circle valignmiddle" title="' . $langs->trans("AddProject") . '"></span></a>';
 	print '</td></tr>';
-
-	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_edit.tpl.php';
 
 	//Content -- Contenu
 	print '<tr class="content_field"><td><label for="content">'.$langs->trans("Content").'</label></td><td>';
