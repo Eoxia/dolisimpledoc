@@ -156,6 +156,8 @@ if ($action == 'addSignature') {
 			header("Location: " . $urltogo);
 			if ($role == 'E_SENDER') {
 				$object->setStatusCommon($user, 1);
+			} else if ($role == 'E_RECEIVER') {
+				$object->setStatusCommon($user, 5);
 			}
 			$object->call_trigger('ENVELOPE_SIGN', $user);
 			exit;
