@@ -67,7 +67,7 @@ NewEnvelope = Nouveau courrier
 ModifyEnvelope = Modifier l'enveloppe
 ListEnvelopes = Liste d'enveloppes
 Receivers = Destinataires
-LetterCode = Code du courrier
+LetterCode = Numéro de suivi
 AdministrativeService = Service administratif
 EnvelopeContent = Veuillez trouver ci-joint les documents relatifs à votre projet. Pour attester de la réception de ces documents, signez numériquement en cliquant sur ce lien : __SIGNATURE_LINK__ <b> %s </b>
 
@@ -115,12 +115,12 @@ Locked = Verrouillé
 EnvelopeLabel = Envoi de courrier
 EnvelopeSubject = Envoi de courrier
 RegisteredMail = Courrier recommandé
-RegisteredMailCode = Code du courrier recommandé
+RegisteredMailCode = Numéro de suivi
 ReOpenEnvelope = Rouvrir le courrier
 ConfirmReOpenEnvelope = Êtes-vous sûr de vouloir rouvrir le courrier ? <br> La réouverture permet la modification du courrier mais <b>la signature du document sera perdue</b>.
 EnvelopeSendbyMailTriggerContent = Le courrier a été envoyé par mail à %s le %s par %s
 EnvelopeSendbyLetterTriggerContent = Le courrier a été envoyé par voie postale à %s le %s par %s
-LetterCode: = Code du courrier recommandé : %s
+LetterCode: = Numéro de suivi : %s
 SendingProofTextLetter = Ce courrier a été envoyé par voie postale le %s par %s
 #
 # Signature - Signature
