@@ -122,6 +122,8 @@ EnvelopeSendbyMailTriggerContent = Le courrier a été envoyé par mail à %s le
 EnvelopeSendbyLetterTriggerContent = Le courrier a été envoyé par voie postale à %s le %s par %s
 LetterCode: = Numéro de suivi : %s
 SendingProofTextLetter = Ce courrier a été envoyé par voie postale le %s par %s
+UploadSendingProof = Preuve de dépôt
+
 #
 # Signature - Signature
 #
