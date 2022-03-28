@@ -127,6 +127,8 @@ ConfirmCloneEnvelope = Êtes-vous sûr(e) de vouloir cloner le courrier <b> %s <
 CloneEnvelope = Cloner le courrier
 ConfirmUploadAcknowledgementReceipt = Êtes-vous sûr(e) de vouloir envoyer cet accusé de réception ? Le statut du courrier passera à <b> "Reçu par courrier et signé" </b>
 ConfirmUploadSendingProof = Êtes-vous sûr(e) de vouloir envoyer cette preuve de dépôt ?
+LinkedFiles = Fichiers joints
+
 #
 # Signature - Signature
 #

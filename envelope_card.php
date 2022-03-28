@@ -725,6 +725,36 @@ if (empty($reshook)) {
 			$object->setStatusCommon($user, 3);
 			$object->call_trigger('ENVELOPE_LETTER', $user);
 
+			// Submit file
+			if ( ! empty($conf->global->MAIN_UPLOAD_DOC)) {
+
+				if ( ! empty($_FILES)) {
+					if (is_array($_FILES['userfile']['tmp_name'])) $userfiles = $_FILES['userfile']['tmp_name'];
+					else $userfiles                                           = array($_FILES['userfile']['tmp_name']);
+
+					foreach ($userfiles as $key => $userfile) {
+						if (empty($_FILES['userfile']['tmp_name'][$key])) {
+							$error++;
+							if ($_FILES['userfile']['error'][$key] == 1 || $_FILES['userfile']['error'][$key] == 2) {
+								setEventMessages($langs->trans('ErrorFileSizeTooLarge'), null, 'errors');
+							}
+						}
+					}
+
+					if ( ! $error) {
+						$filedir = $upload_dir . '/' . $object->element . '/' . $object->ref;
+						if (!is_dir($filedir)) {
+							dol_mkdir($filedir);
+						}
+						$LFdir = $filedir . '/linked_files';
+						if (!is_dir($LFdir)) {
+							dol_mkdir($LFdir);
+						}
+
+						$result = dol_add_file_process($LFdir, 0, 1, 'userfile', '', null, '', 0, $object);
+					}
+				}
+			}
 		}
 		unset($action);
 	}
@@ -1630,6 +1660,12 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 	print '</td></tr>';
 	print '<tr class="minwidth400"><td>'.$langs->trans("LetterCode").'</td><td class="minwidth400">';
 	print '<input name="lettercode">';
+	print '</td></tr>';
+	// Preuve de dépôt
+	print '<tr>';
+	print '<td class="titlefield">' . $form->editfieldkey($langs->trans("LinkedFiles"), 'linkedFiles', '', $object, 0) . '</td>';
+	print '<td>';
+	print '<input class="flat" type="file" name="userfile[]" id="SendingProof" />';
 	print '</td></tr>';
 
 	print '</table>'."<br>";
