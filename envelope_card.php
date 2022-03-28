@@ -917,7 +917,8 @@ if (is_array($lettersending)) {
 } else {
 	$lettersending = new LetterSending($db);
 }
-
+$signatory = $signatory->fetchSignatory('E_SENDER', $id);
+if (is_array($signatory)) $signatory = array_shift($signatory);
 $title        = $langs->trans("Envelope");
 $title_create = $langs->trans("NewEnvelope");
 $title_edit   = $langs->trans("ModifyEnvelope");
@@ -1107,7 +1108,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 	// SetLocked confirmation
 	if (($action == 'setLocked' && (empty($conf->use_javascript_ajax) || ! empty($conf->dol_use_jmobile)))		// Output when action = clone if jmobile or no js
 		|| ( ! empty($conf->use_javascript_ajax) && empty($conf->dol_use_jmobile))) {							// Always output when not jmobile nor js
-		$formconfirm .= $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('LockEnvelope'), $langs->trans('ConfirmLockEnvelope', $object->ref), 'confirm_setLocked', '', 'yes', 'actionButtonLock', 350, 600);
+		$formconfirm .= $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('LockEnvelope'), $langs->trans('ConfirmLockEnvelope', $object->ref, dol_print_date($signatory->signature_date), $signatory->firstname . ' ' . $signatory->lastname), 'confirm_setLocked', '', 'yes', 'actionButtonLock', 350, 600);
 	}
 
 	// Upload sending proof
