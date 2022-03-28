@@ -125,7 +125,8 @@ SendingProofTextLetter = Ce courrier a été envoyé par voie postale le %s par 
 UploadSendingProof = Preuve de dépôt
 ConfirmCloneEnvelope = Êtes-vous sûr(e) de vouloir cloner le courrier <b> %s </b> ?
 CloneEnvelope = Cloner le courrier
-
+ConfirmUploadAcknowledgementReceipt = Êtes-vous sûr(e) de vouloir envoyer cet accusé de réception ? Le statut du courrier passera à <b> "Reçu par courrier et signé" </b>
+ConfirmUploadSendingProof = Êtes-vous sûr(e) de vouloir envoyer cette preuve de dépôt ?
 #
 # Signature - Signature
 #

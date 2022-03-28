@@ -1047,7 +1047,7 @@ if (($id || $ref) && $action == 'edit' ||$action == 'confirm_setInProgress') {
 	unset($object->fields['fk_soc']);
 	unset($object->fields['fk_contact']);
 	unset($object->fields['fk_project']);
-	
+
 	// Common attributes
 	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_add.tpl.php';
 
@@ -1108,6 +1108,18 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 	if (($action == 'setLocked' && (empty($conf->use_javascript_ajax) || ! empty($conf->dol_use_jmobile)))		// Output when action = clone if jmobile or no js
 		|| ( ! empty($conf->use_javascript_ajax) && empty($conf->dol_use_jmobile))) {							// Always output when not jmobile nor js
 		$formconfirm .= $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('LockEnvelope'), $langs->trans('ConfirmLockEnvelope', $object->ref), 'confirm_setLocked', '', 'yes', 'actionButtonLock', 350, 600);
+	}
+
+	// Upload sending proof
+	if (($action == 'uploadSendingProof' && (empty($conf->use_javascript_ajax) || ! empty($conf->dol_use_jmobile)))		// Output when action = clone if jmobile or no js
+		|| ( ! empty($conf->use_javascript_ajax) && empty($conf->dol_use_jmobile))) {							// Always output when not jmobile nor js
+		$formconfirm .= $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('UploadSendingProof'), $langs->trans('ConfirmUploadSendingProof', $object->ref), 'addSendingProof', '', 'yes', 'actionButtonSendingProof', 350, 600);
+	}
+
+	// Upload acknowledgement receipt
+	if (($action == 'uploadAcknowledgementReceipt' && (empty($conf->use_javascript_ajax) || ! empty($conf->dol_use_jmobile)))		// Output when action = clone if jmobile or no js
+		|| ( ! empty($conf->use_javascript_ajax) && empty($conf->dol_use_jmobile))) {							// Always output when not jmobile nor js
+		$formconfirm .= $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('UploadAcknowledgementReceipt'), $langs->trans('ConfirmUploadAcknowledgementReceipt', $object->ref), 'addAcknowledgementReceipt', '', 'yes', 'actionButtonAcknowledgementReceipt', 350, 600);
 	}
 
 	// setInProgress confirmation
@@ -1286,9 +1298,9 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 		print '<td class="titlefield">' . $form->editfieldkey($langs->trans("AddFile"), 'acknowledgementReceipt', '', $object, 0) . '</td>';
 		print '<td>';
 		print '<input class="flat" type="file" name="userfile[]" id="acknowledgementReceipt" />';
-		print '<input class="butAction" type="submit" name="addAcknowledgementReceipt" id="addAcknowledgementReceipt" value="'. $langs->trans('Send').'"/>';
 
 		print '</td></tr>';
+		print '<span class="butAction" id="actionButtonAcknowledgementReceipt">' . $langs->trans("Send") . '</span>';
 
 		print '</form>';
 	}
@@ -1306,7 +1318,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 		print '<td>';
 		print '<input class="flat" type="file" name="userfile[]" id="SendingProof" />';
 		print '</td></tr>';
-		print '<input class="butAction" type="submit" name="addSendingProof" id="addSendingProof" value="'. $langs->trans('Send').'"/>';
+		print '<span class="butAction" id="actionButtonSendingProof">' . $langs->trans("Send") . '</span>';
 
 		print '</td></tr>';
 
@@ -1626,6 +1638,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 	print '<input type="submit" class="button" name="lettersend" value="'.dol_escape_htmltag($langs->trans("Send")).'">';
 	print '&nbsp; ';
 	print '<input type="'.($backtopage ? "submit" : "button").'" class="button button-cancel" name="cancel" value="'.dol_escape_htmltag($langs->trans("Cancel")).'"'.($backtopage ? '' : ' onclick="javascript:history.go(-1)"').'>'; // Cancel for create does not post form if we don't know the backtopage
+
 	print '</div>';
 
 	print '</form>';
