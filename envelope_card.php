@@ -46,7 +46,8 @@ require_once DOL_DOCUMENT_ROOT.'/contact/class/contact.class.php';
 require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
 
 require_once './class/envelope.class.php';
-require_once './class/envelope_letter.class.php';
+require_once './class/letter_sending.class.php';
+require_once './class/email_sending.class.php';
 require_once './core/modules/doliletter/mod_envelope_standard.php';
 require_once './lib/doliletter_envelope.lib.php';
 require_once './lib/doliletter.lib.php';
@@ -1209,15 +1210,18 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 	$morehtmlref .= '</tr>';
 	$morehtmlref .=  '</td><br>';
 
+	if ($object->status > 1) {
+		$signatory = $signatory->fetchSignatory('E_SENDER', $id);
+		$signatory = array_shift($signatory);
+		$signature_url = dol_buildpath('/custom/doliletter/public/signature/add_signature?track_id=' . $signatory->signature_url . '&type=envelope', 1);
+	}
+
 	if ($object->status == 3 || $object->status == 6) {
 		$morehtmlref .=  '<tr><td>';
 		$morehtmlref .= $langs->trans('RegisteredMailCode') . ' : ' . $lettersending->letter_code;
 		$morehtmlref .= '</td></tr>';
 	}
 
-	$signatory = $signatory->fetchSignatory('E_SENDER', $id);
-	$signatory = array_shift($signatory);
-	$signature_url = dol_buildpath('/custom/doliletter/public/signature/add_signature?track_id=' . $signatory->signature_url . '&type=envelope', 1);
 	if ($object->status == 4 || $object->status == 5) {
 		$morehtmlref .=  '<tr><td>';
 		$morehtmlref .=  $langs->trans('SignatureLink') . ' : ' . '<a href="'.$signature_url.'">' . $signature_url . '</a>';
