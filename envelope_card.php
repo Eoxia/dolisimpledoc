@@ -870,6 +870,7 @@ if (empty($reshook)) {
 						dol_mkdir($AR_sub_dir);
 					}
 					$result = dol_add_file_process($AR_sub_dir, 0, 1, 'userfile', '', null, '', 0, $object);
+
 					if ($result > 0) {
 						// Presend form
 						$modelmail = 'envelope';
@@ -1340,7 +1341,9 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 		print '<input class="flat" type="file" name="userfile[]" id="acknowledgementReceipt" />';
 
 		print '</td></tr>';
-		print '<span class="butAction" id="actionButtonAcknowledgementReceipt">' . $langs->trans("Send") . '</span>';
+		print '<input class="butAction" type="submit" name="addAcknowledgementReceipt" id="addAcknowledgementReceipt" value="'. $langs->trans('Send').'"/>';
+		//avec cbox de validation mais ça perd le $_FILES
+//		print '<span class="butAction" id="actionButtonAcknowledgementReceipt">' . $langs->trans("Send") . '</span>';
 
 		print '</form>';
 	}
@@ -1358,7 +1361,9 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 		print '<td>';
 		print '<input class="flat" type="file" name="userfile[]" id="SendingProof" />';
 		print '</td></tr>';
-		print '<span class="butAction" id="actionButtonSendingProof">' . $langs->trans("Send") . '</span>';
+		print '<input class="butAction" type="submit" name="actionButtonSendingProof" id="addSendingProof" value="'. $langs->trans('Send').'"/>';
+		//avec cbox de validation mais ça perd le $_FILES
+//		print '<span class="butAction" id="actionButtonSendingProof">' . $langs->trans("Send") . '</span>';
 
 		print '</td></tr>';
 
@@ -1388,11 +1393,19 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 			$delallowed = $user->rights->doliletter->envelope->write; // If you can create/edit, you can remove a file on card
 			print dolilettershowdocuments('doliletter:Envelope', $object->element.'/'.$objref, $filedir, $urlsource, $genallowed, 0, $conf->global->DOLILETTER_ENVELOPE_ADDON_PDF, 1, 0, 0, '', 0, '', '', '', $langs->defaultlang, $object->status < 3 ? ( $document_generated > 0 ? 0 : 1) : 0, $document_generated > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
 		}
+
+		if ($object->status == 3 || $object->status == 6) {
+			print '<br>';
+			$linked_files_files = count(dol_dir_list($filedir.'/linked_files'));
+			print dolilettershowdocuments('doliletter', $object->element.'/'.$objref.'/linked_files', $filedir.'/linked_files', $urlsource, 0, 0, $conf->global->DOLILETTER_ACKNOWLEDGEMENTRECEIPT_ADDON_PDF, 1, 0, 0, $langs->trans('SendingLinkedFiles'), 0, '', '', '', $langs->defaultlang, $linked_files_files > 0 ? 0 : 1, $generated_files > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
+		}
+
 		if ($object->status == 3 || $object->status == 5 || $object->status == 6) {
 			print '<br>';
 			$sending_proof_files = count(dol_dir_list($filedir.'/sendingproof'));
 			print dolilettershowdocuments('doliletter', $object->element.'/'.$objref.'/sendingproof', $filedir.'/sendingproof', $urlsource, 0, 0, $conf->global->DOLILETTER_ACKNOWLEDGEMENTRECEIPT_ADDON_PDF, 1, 0, 0, $langs->trans('SendingProof'), 0, '', '', '', $langs->defaultlang, $sending_proof_files > 0 ? 0 : 1, $generated_files > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
 		}
+
 		if ($object->status >= 5) {
 			$acknowledgement_receipt_files = count(dol_dir_list($filedir.'/acknowledgementreceipt'));
 			print dolilettershowdocuments('doliletter:AcknowledgementReceipt', $object->element.'/'.$objref.'/acknowledgementreceipt', $filedir.'/acknowledgementreceipt', $urlsource, $permissiontoadd, 0, $conf->global->DOLILETTER_ACKNOWLEDGEMENTRECEIPT_ADDON_PDF, 1, 0, 0, $langs->trans('AcknowledgementReceipt'), 0, '', '', '', $langs->defaultlang, $acknowledgement_receipt_files > 0 ? 0 : 1, $generated_files > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
@@ -1674,7 +1687,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 	print '<tr>';
 	print '<td class="titlefield">' . $form->editfieldkey($langs->trans("LinkedFiles"), 'linkedFiles', '', $object, 0) . '</td>';
 	print '<td>';
-	print '<input class="flat" type="file" name="userfile[]" id="SendingProof" />';
+	print '<input class="flat" type="file" name="userfile[]" id="LinkedFiles" />';
 	print '</td></tr>';
 
 	print '</table>'."<br>";
