@@ -1081,7 +1081,12 @@ if (($id || $ref) && $action == 'edit' ||$action == 'confirm_setInProgress') {
 	unset($object->fields['fk_project']);
 
 	// Common attributes
-	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_add.tpl.php';
+//	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_add.tpl.php';
+
+	//Label - Libellé
+	print '<tr><td class="fieldrequired">'.$langs->trans("Label").'</td><td>';
+	print '<input name="label" id="label" value="'. $object->label .'" >';
+	print '</td></tr>';
 
 	//Society -- Société
 	print '<tr><td class="fieldrequired">'.$langs->trans("Society").'</td><td>';
