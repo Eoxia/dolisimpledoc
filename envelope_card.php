@@ -1143,21 +1143,46 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id.'&lineid='.$lineid, $langs->trans('DeleteLine'), $langs->trans('ConfirmDeleteLine'), 'confirm_deleteline', '', 0, 1);
 	}
 
+
 	// SetLocked confirmation
 	if (($action == 'setLocked' && (empty($conf->use_javascript_ajax) || ! empty($conf->dol_use_jmobile)))		// Output when action = clone if jmobile or no js
-		|| ( ! empty($conf->use_javascript_ajax) && empty($conf->dol_use_jmobile))) {							// Always output when not jmobile nor js
-		$formconfirm .= $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('LockEnvelope'), $langs->trans('ConfirmLockEnvelope', $object->ref, dol_print_date($signatory->signature_date), $signatory->firstname . ' ' . $signatory->lastname), 'confirm_setLocked', '', 'yes', 'actionButtonLock', 350, 600);
+		|| ( ! empty($conf->use_javascript_ajax) && empty($conf->dol_use_jmobile))) {
+
+		$img = '<img alt="" src="/dolibarr/htdocs/custom/doliletter/img/lock_envelope.svg" />';
+
+		$formquestion = array(
+			array('type' => 'other', 'name' => 'lock_validation', 'label' => '<span class="">' . $langs->trans("ConfirmLockEnvelope", $object->ref, dol_print_date($signatory->signature_date), $signatory->firstname . ' ' . $signatory->lastname) . '</span>'),
+			array('type' => 'other', 'name' => 'OK', 'label' => '', 'value' => $img, 'moreattr' => 'readonly'),
+		);
+
+		$formconfirm .= $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('LockEnvelope'),'', 'confirm_setLocked', $formquestion, 'yes', 'actionButtonLock', 400, 700);
 	}
 
 	// Upload sending proof
 	if (($action == 'uploadSendingProof' && (empty($conf->use_javascript_ajax) || ! empty($conf->dol_use_jmobile)))		// Output when action = clone if jmobile or no js
 		|| ( ! empty($conf->use_javascript_ajax) && empty($conf->dol_use_jmobile))) {							// Always output when not jmobile nor js
+
+		$img = '<img alt="" src="/dolibarr/htdocs/custom/doliletter/img/sending_proof_confirmation.svg" />';
+
+		$formquestion = array(
+			array('type' => 'other', 'name' => 'lock_validation', 'label' => '<span class="">' .  $langs->trans('UploadSendingProof'), $langs->trans('ConfirmUploadSendingProof', $object->ref) . '</span>'),
+			array('type' => 'other', 'name' => 'OK', 'label' => '', 'value' => $img, 'moreattr' => 'readonly'),
+		);
+
 		$formconfirm .= $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('UploadSendingProof'), $langs->trans('ConfirmUploadSendingProof', $object->ref), 'addSendingProof', '', 'yes', 'actionButtonSendingProof', 350, 600);
 	}
 
 	// Upload acknowledgement receipt
 	if (($action == 'uploadAcknowledgementReceipt' && (empty($conf->use_javascript_ajax) || ! empty($conf->dol_use_jmobile)))		// Output when action = clone if jmobile or no js
 		|| ( ! empty($conf->use_javascript_ajax) && empty($conf->dol_use_jmobile))) {							// Always output when not jmobile nor js
+
+		$img = '<img alt="" src="/dolibarr/htdocs/custom/doliletter/img/acknowledgement_receipt_confirmation.svg" />';
+
+		$formquestion = array(
+			array('type' => 'other', 'name' => 'lock_validation', 'label' => '<span class="">' .  $langs->trans('UploadSendingProof'), $langs->trans('ConfirmUploadSendingProof', $object->ref) . '</span>'),
+			array('type' => 'other', 'name' => 'OK', 'label' => '', 'value' => $img, 'moreattr' => 'readonly'),
+		);
+
 		$formconfirm .= $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('UploadAcknowledgementReceipt'), $langs->trans('ConfirmUploadAcknowledgementReceipt', $object->ref), 'addAcknowledgementReceipt', '', 'yes', 'actionButtonAcknowledgementReceipt', 350, 600);
 	}
 
