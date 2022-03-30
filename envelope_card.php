@@ -305,6 +305,7 @@ if (empty($reshook)) {
 			if ($result > 0) {
 				$contact->fetch($extintervenant_id);
 				setEventMessages($langs->trans('AddAttendantMessage') . ' ' . $contact->firstname . ' ' . $contact->lastname, array());
+				$object->call_trigger('ENVELOPE_LOCK', $user);
 				// Creation attendant OK
 				$object->setStatusCommon($user, 2);
 				$urltogo = str_replace('__ID__', $result, $backtopage);
@@ -319,9 +320,8 @@ if (empty($reshook)) {
 				else  setEventMessages($object->error, null, 'errors');
 			}
 		}
-
-
 	}
+
 	// Actions when linking object each other
 	include DOL_DOCUMENT_ROOT.'/core/actions_dellink.inc.php';
 
@@ -333,7 +333,6 @@ if (empty($reshook)) {
 
 	// Action to build doc
 	include DOL_DOCUMENT_ROOT.'/core/actions_builddoc.inc.php';
-
 
 	// Actions to send emails
 	$triggersendname = 'DOLILETTER_ENVELOPE_SENTBYMAIL';
@@ -818,6 +817,7 @@ if (empty($reshook)) {
 
 						$forcebuilddoc = true;
 						$object->setStatusCommon($user, 6);
+						$object->call_trigger('ENVELOPE_ACKNOWLEDGEMENT_RECEIPT', $user);
 
 						if ($forcebuilddoc)    // If there is no default value for supplier invoice, we do not generate file, even if modelpdf was set by a manual generation
 						{
@@ -896,6 +896,7 @@ if (empty($reshook)) {
 						$needcreate = empty($file) || $allspecimen;
 
 						$forcebuilddoc = true;
+						$object->call_trigger('ENVELOPE_SENDING_PROOF', $user);
 
 						if ($forcebuilddoc)    // If there is no default value for supplier invoice, we do not generate file, even if modelpdf was set by a manual generation
 						{
