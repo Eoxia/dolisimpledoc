@@ -418,7 +418,9 @@ if (!empty($fromtype)) {
 	dol_banner_tab($objectLinked, 'ref', $linkback, 1, 'ref', 'ref', $morehtmlref);
 }
 
-print '<div class="underbanner clearboth"></div>';
+if ($fromid) {
+	print '<div class="underbanner clearboth"></div>';
+}
 
 $arrayofselected = is_array($toselect) ? $toselect : array();
 

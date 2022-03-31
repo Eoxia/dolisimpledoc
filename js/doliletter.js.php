@@ -407,3 +407,54 @@ window.eoxiaJS.signature.autoDownloadSpecimen = function( event ) {
         }
     });
 };
+
+
+/**
+ * Initialise l'objet "signature" ainsi que la méthode "init" obligatoire pour la bibliothèque EoxiaJS.
+ *
+ * @since   1.1.0
+ * @version 1.1.0
+ */
+window.eoxiaJS.envelope = {};
+
+/**
+ * La méthode appelée automatiquement par la bibliothèque EoxiaJS.
+ *
+ * @since   1.1.0
+ * @version 1.1.0
+ *
+ * @return {void}
+ */
+window.eoxiaJS.envelope.init = function() {
+	window.eoxiaJS.envelope.event();
+};
+
+window.eoxiaJS.envelope.event = function() {
+	//jQuery( document ).on( 'click', '.ui-button.ui-corner-all.ui-widget', window.eoxiaJS.envelope.formConfirm );
+	jQuery( document ).on( 'click', '#actionButtonSendingProof', window.eoxiaJS.envelope.formConfirm );
+	jQuery( document ).on( 'click', '#actionButtonAcknowledgementReceipt', window.eoxiaJS.envelope.formConfirm );
+};
+
+window.eoxiaJS.envelope.formConfirm = function(  event ) {
+	event.preventDefault()
+
+	let fromType = $(this).parent().find('.from-type').val()
+	let files = $(this).parent().find('#'+fromType).prop('files')
+	$.each(files, function(index, file) {
+		let formdata = new FormData();
+		formdata.append("userfile[]", file);
+		$.ajax({
+			url: document.URL + "&action=stockTmpFile&type="+fromType,
+			type: "POST",
+			data: formdata,
+			processData: false,
+			contentType: false
+		})
+	})
+
+};
+
+window.eoxiaJS.signature.clearCanvas = function( event ) {
+	var canvas = jQuery( this ).closest( '.modal-signature' ).find( 'canvas' );
+	canvas[0].signaturePad.clear();
+};

@@ -759,9 +759,10 @@ if (empty($reshook)) {
 		unset($action);
 	}
 
-	if ($action == 'addAcknowledgementReceipt') {
+	if ($action == 'stockTmpFile') {
 
-		// Submit file
+		$type = GETPOST('type');
+
 		if ( ! empty($conf->global->MAIN_UPLOAD_DOC)) {
 
 			if ( ! empty($_FILES)) {
@@ -782,56 +783,82 @@ if (empty($reshook)) {
 					if (!is_dir($filedir)) {
 						dol_mkdir($filedir);
 					}
-					$ARdir = $filedir . '/acknowledgementreceipt';
-					if (!is_dir($ARdir)) {
-						dol_mkdir($ARdir);
+					$SPDir = $filedir . '/' . strtolower($type);
+					if (!is_dir($SPDir)) {
+						dol_mkdir($SPDir);
 					}
-					$AR_sub_dir = $ARdir . '/uploaded_file';
-					if (!is_dir($AR_sub_dir)) {
-						dol_mkdir($AR_sub_dir);
+					$SP_sub_dir = $SPDir . '/uploaded_file';
+					if (!is_dir($SP_sub_dir)) {
+						dol_mkdir($SP_sub_dir);
 					}
-					$result = dol_add_file_process($AR_sub_dir, 0, 1, 'userfile', '', null, '', 0, $object);
-					if ($result > 0) {
-						// Presend form
-						$modelmail = 'envelope';
-						$defaulttopic = 'InformationMessage';
-						$diroutput = $upload_dir . '/' . $object->element;
-						$trackid = 'envelope'.$object->id;
-
-
-						$ref = dol_sanitizeFileName($object->ref);
-						include_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
-						$fileparams = dol_most_recent_file($diroutput.'/'.$ref, '');
-						$file = $fileparams['fullname'];
-
-						// Build document if it not exists
-						$allspecimen = true;
-						$fileslist = dol_dir_list($fileparams['path']);
-						foreach($fileslist as $item) {
-							if (!preg_match('/specimen/', $item['name'])){
-								$allspecimen = false;
-							}
+					$SP_tmp_dir = $SP_sub_dir . '/tmp';
+					if (!is_dir($SP_tmp_dir)) {
+						dol_mkdir($SP_tmp_dir);
+					}
+					$tmp_files = dol_dir_list($SP_tmp_dir);
+					if (!empty($tmp_files)) {
+						foreach ($tmp_files as $tmp_file) {
+							unlink($tmp_file['fullname']);
 						}
+					}
+					$result = dol_add_file_process($SP_tmp_dir, 0, 1, 'userfile', '', null, '', 0, $object);
+				}
+			}
+		}
+	}
 
-						$needcreate = empty($file) || $allspecimen;
+	if ($action == 'addAcknowledgementReceipt') {
 
-						$forcebuilddoc = true;
-						$object->setStatusCommon($user, 6);
-						$object->call_trigger('ENVELOPE_ACKNOWLEDGEMENT_RECEIPT', $user);
+		$filedir = $upload_dir . '/' . $object->element . '/' . $object->ref . '/acknowledgementreceipt/uploaded_file';
+		$tmp_filedir = $filedir . '/tmp';
+		$tmp_files = dol_dir_list($tmp_filedir);
 
-						if ($forcebuilddoc)    // If there is no default value for supplier invoice, we do not generate file, even if modelpdf was set by a manual generation
+		if (!empty($tmp_files)) {
+			foreach ($tmp_files as $tmp_file) {
+				$result = rename($tmp_file['fullname'], $filedir.'/'. $tmp_file['name']);
+
+				// Submit file
+				if ($result > 0) {
+					// Presend form
+					$modelmail = 'envelope';
+					$defaulttopic = 'InformationMessage';
+					$diroutput = $upload_dir . '/' . $object->element;
+					$trackid = 'envelope'.$object->id;
+
+
+					$ref = dol_sanitizeFileName($object->ref);
+					include_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
+					$fileparams = dol_most_recent_file($diroutput.'/'.$ref, '');
+					$file = $fileparams['fullname'];
+
+					// Build document if it not exists
+					$allspecimen = true;
+					$fileslist = dol_dir_list($fileparams['path']);
+					foreach($fileslist as $item) {
+						if (!preg_match('/specimen/', $item['name'])){
+							$allspecimen = false;
+						}
+					}
+
+					$needcreate = empty($file) || $allspecimen;
+
+					$forcebuilddoc = true;
+					$object->call_trigger('ENVELOPE_ACKNOWLEDGEMENT_RECEIPT', $user);
+					$object->setStatusCommon($user, 6);
+
+					if ($forcebuilddoc)    // If there is no default value for supplier invoice, we do not generate file, even if modelpdf was set by a manual generation
+					{
+
+						if (method_exists($object, 'generateDocument'))
 						{
-							if (method_exists($object, 'generateDocument'))
-							{
-								$result = $object->generateDocument('deimos', $langs, $hidedetails, $hidedesc, $hideref);
+							$result = $object->generateDocument('deimos', $langs, $hidedetails, $hidedesc, $hideref);
 
-								if ($result < 0) {
-									dol_print_error($db, $object->error, $object->errors);
-									exit();
-								}
-								$fileparams = dol_most_recent_file($diroutput.'/'.$ref, preg_quote($ref, '/').'[^\-]+');
-								$file = $fileparams['fullname'];
+							if ($result < 0) {
+								dol_print_error($db, $object->error, $object->errors);
+								exit();
 							}
+							$fileparams = dol_most_recent_file($diroutput.'/'.$ref, preg_quote($ref, '/').'[^\-]+');
+							$file = $fileparams['fullname'];
 						}
 					}
 				}
@@ -840,78 +867,56 @@ if (empty($reshook)) {
 	}
 
 	if ($action == 'addSendingProof') {
-		// Submit file
-		if ( ! empty($conf->global->MAIN_UPLOAD_DOC)) {
 
-			if ( ! empty($_FILES)) {
-				if (is_array($_FILES['userfile']['tmp_name'])) $userfiles = $_FILES['userfile']['tmp_name'];
-				else $userfiles                                           = array($_FILES['userfile']['tmp_name']);
+		$filedir = $upload_dir . '/' . $object->element . '/' . $object->ref . '/sendingproof/uploaded_file';
+		$tmp_filedir = $filedir . '/tmp';
+		$tmp_files = dol_dir_list($tmp_filedir);
 
-				foreach ($userfiles as $key => $userfile) {
-					if (empty($_FILES['userfile']['tmp_name'][$key])) {
-						$error++;
-						if ($_FILES['userfile']['error'][$key] == 1 || $_FILES['userfile']['error'][$key] == 2) {
-							setEventMessages($langs->trans('ErrorFileSizeTooLarge'), null, 'errors');
+		if (!empty($tmp_files)) {
+			foreach ($tmp_files as $tmp_file) {
+				$result = rename($tmp_file['fullname'], $filedir.'/'. $tmp_file['name']);
+
+				// Submit file
+				if ($result > 0) {
+					// Presend form
+					$modelmail = 'envelope';
+					$defaulttopic = 'InformationMessage';
+					$diroutput = $upload_dir . '/' . $object->element;
+					$trackid = 'envelope'.$object->id;
+
+
+					$ref = dol_sanitizeFileName($object->ref);
+					include_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
+					$fileparams = dol_most_recent_file($diroutput.'/'.$ref, '');
+					$file = $fileparams['fullname'];
+
+					// Build document if it not exists
+					$allspecimen = true;
+					$fileslist = dol_dir_list($fileparams['path']);
+					foreach($fileslist as $item) {
+						if (!preg_match('/specimen/', $item['name'])){
+							$allspecimen = false;
 						}
 					}
-				}
 
-				if ( ! $error) {
-					$filedir = $upload_dir . '/' . $object->element . '/' . $object->ref;
-					if (!is_dir($filedir)) {
-						dol_mkdir($filedir);
-					}
-					$ARdir = $filedir . '/sendingproof';
-					if (!is_dir($ARdir)) {
-						dol_mkdir($ARdir);
-					}
-					$AR_sub_dir = $ARdir . '/uploaded_file';
-					if (!is_dir($AR_sub_dir)) {
-						dol_mkdir($AR_sub_dir);
-					}
-					$result = dol_add_file_process($AR_sub_dir, 0, 1, 'userfile', '', null, '', 0, $object);
+					$needcreate = empty($file) || $allspecimen;
 
-					if ($result > 0) {
-						// Presend form
-						$modelmail = 'envelope';
-						$defaulttopic = 'InformationMessage';
-						$diroutput = $upload_dir . '/' . $object->element;
-						$trackid = 'envelope'.$object->id;
+					$forcebuilddoc = true;
+					$object->call_trigger('ENVELOPE_SENDING_PROOF', $user);
 
+					if ($forcebuilddoc)    // If there is no default value for supplier invoice, we do not generate file, even if modelpdf was set by a manual generation
+					{
 
-						$ref = dol_sanitizeFileName($object->ref);
-						include_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
-						$fileparams = dol_most_recent_file($diroutput.'/'.$ref, '');
-						$file = $fileparams['fullname'];
-
-						// Build document if it not exists
-						$allspecimen = true;
-						$fileslist = dol_dir_list($fileparams['path']);
-						foreach($fileslist as $item) {
-							if (!preg_match('/specimen/', $item['name'])){
-								$allspecimen = false;
-							}
-						}
-
-						$needcreate = empty($file) || $allspecimen;
-
-						$forcebuilddoc = true;
-						$object->call_trigger('ENVELOPE_SENDING_PROOF', $user);
-
-						if ($forcebuilddoc)    // If there is no default value for supplier invoice, we do not generate file, even if modelpdf was set by a manual generation
+						if (method_exists($object, 'generateDocument'))
 						{
+							$result = $object->generateDocument('ares', $langs, $hidedetails, $hidedesc, $hideref);
 
-							if (method_exists($object, 'generateDocument'))
-							{
-								$result = $object->generateDocument('ares', $langs, $hidedetails, $hidedesc, $hideref);
-
-								if ($result < 0) {
-									dol_print_error($db, $object->error, $object->errors);
-									exit();
-								}
-								$fileparams = dol_most_recent_file($diroutput.'/'.$ref, preg_quote($ref, '/').'[^\-]+');
-								$file = $fileparams['fullname'];
+							if ($result < 0) {
+								dol_print_error($db, $object->error, $object->errors);
+								exit();
 							}
+							$fileparams = dol_most_recent_file($diroutput.'/'.$ref, preg_quote($ref, '/').'[^\-]+');
+							$file = $fileparams['fullname'];
 						}
 					}
 				}
@@ -956,8 +961,10 @@ $title        = $langs->trans("Envelope");
 $title_create = $langs->trans("NewEnvelope");
 $title_edit   = $langs->trans("ModifyEnvelope");
 $help_url     = '';
+$morejs   = array("/doliletter/js/signature-pad.min.js", "/doliletter/js/doliletter.js.php");
+$morecss  = array("/doliletter/css/doliletter.css");
 
-llxHeader('', $title, $help_url);
+llxHeader('', $title, $help_url, '', '', '', $morejs, $morecss);
 
 // Part to create
 if ($action == 'create') {
@@ -1165,11 +1172,11 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 		$img = '<img alt="" src="/dolibarr/htdocs/custom/doliletter/img/sending_proof_confirmation.svg" />';
 
 		$formquestion = array(
-			array('type' => 'other', 'name' => 'lock_validation', 'label' => '<span class="">' .  $langs->trans('UploadSendingProof'), $langs->trans('ConfirmUploadSendingProof', $object->ref) . '</span>'),
+			array('type' => 'other', 'name' => 'lock_validation', 'label' => '<span class="">' .   $langs->trans('ConfirmUploadSendingProof', $object->ref) . '</span>'),
 			array('type' => 'other', 'name' => 'OK', 'label' => '', 'value' => $img, 'moreattr' => 'readonly'),
 		);
 
-		$formconfirm .= $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('UploadSendingProof'), $langs->trans('ConfirmUploadSendingProof', $object->ref), 'addSendingProof', '', 'yes', 'actionButtonSendingProof', 350, 600);
+		$formconfirm .= $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('UploadSendingProof'),'', 'addSendingProof', $formquestion, 'yes', 'actionButtonSendingProof', 450, 600, 1);
 	}
 
 	// Upload acknowledgement receipt
@@ -1183,7 +1190,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 			array('type' => 'other', 'name' => 'OK', 'label' => '', 'value' => $img, 'moreattr' => 'readonly'),
 		);
 
-		$formconfirm .= $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('UploadAcknowledgementReceipt'), $langs->trans('ConfirmUploadAcknowledgementReceipt', $object->ref), 'addAcknowledgementReceipt', '', 'yes', 'actionButtonAcknowledgementReceipt', 350, 600);
+		$formconfirm .= $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('UploadAcknowledgementReceipt'), $langs->trans('ConfirmUploadAcknowledgementReceipt', $object->ref), 'addAcknowledgementReceipt', '', 'yes', 'actionButtonAcknowledgementReceipt', 350, 600,1);
 	}
 
 	// setInProgress confirmation
@@ -1364,12 +1371,13 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 		print '<tr>';
 		print '<td class="titlefield">' . $form->editfieldkey($langs->trans("AddFile"), 'acknowledgementReceipt', '', $object, 0) . '</td>';
 		print '<td>';
+		print '<input hidden class="from-type" value="acknowledgementReceipt" />';
 		print '<input class="flat" type="file" name="userfile[]" id="acknowledgementReceipt" />';
 
 		print '</td></tr>';
-		print '<input class="butAction" type="submit" name="addAcknowledgementReceipt" id="addAcknowledgementReceipt" value="'. $langs->trans('Send').'"/>';
+//		print '<input class="butAction" type="submit" name="addAcknowledgementReceipt" id="addAcknowledgementReceipt" value="'. $langs->trans('Send').'"/>';
 		//avec cbox de validation mais ça perd le $_FILES
-//		print '<span class="butAction" id="actionButtonAcknowledgementReceipt">' . $langs->trans("Send") . '</span>';
+		print '<span class="butAction" id="actionButtonAcknowledgementReceipt">' . $langs->trans("Send") . '</span>';
 
 		print '</form>';
 	}
@@ -1385,11 +1393,12 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 		print '<tr>';
 		print '<td class="titlefield">' . $form->editfieldkey($langs->trans("SendingProof"), 'SendingProof', '', $object, 0) . '</td>';
 		print '<td>';
-		print '<input class="flat" type="file" name="userfile[]" id="SendingProof" />';
+		print '<input hidden class="from-type" value="sendingProof" />';
+		print '<input class="flat" type="file" name="userfile[]" id="sendingProof" />';
 		print '</td></tr>';
-		print '<input class="butAction" type="submit" name="actionButtonSendingProof" id="addSendingProof" value="'. $langs->trans('Send').'"/>';
+//		print '<input class="butAction" type="" name="actionButtonSendingProof" id="actionButtonSendingProof" value="'. $langs->trans('Send').'"/>';
 		//avec cbox de validation mais ça perd le $_FILES
-//		print '<span class="butAction" id="actionButtonSendingProof">' . $langs->trans("Send") . '</span>';
+		print '<span class="butAction" id="actionButtonSendingProof">' . $langs->trans("Send") . '</span>';
 
 		print '</td></tr>';
 
