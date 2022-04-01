@@ -1172,7 +1172,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 		$img = '<img alt="" src="/dolibarr/htdocs/custom/doliletter/img/sending_proof_confirmation.svg" />';
 
 		$formquestion = array(
-			array('type' => 'other', 'name' => 'lock_validation', 'label' => '<span class="">' .   $langs->trans('ConfirmUploadSendingProof', $object->ref) . '</span>'),
+			array('type' => 'other', 'name' => 'sending_proof_confirmation', 'label' => '<span class="">' .   $langs->trans('ConfirmUploadSendingProof', $object->ref) . '</span>'),
 			array('type' => 'other', 'name' => 'OK', 'label' => '', 'value' => $img, 'moreattr' => 'readonly'),
 		);
 
@@ -1186,11 +1186,11 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 		$img = '<img alt="" src="/dolibarr/htdocs/custom/doliletter/img/acknowledgement_receipt_confirmation.svg" />';
 
 		$formquestion = array(
-			array('type' => 'other', 'name' => 'lock_validation', 'label' => '<span class="">' .  $langs->trans('UploadSendingProof'), $langs->trans('ConfirmUploadSendingProof', $object->ref) . '</span>'),
+			array('type' => 'other', 'name' => 'acknowledgement_receipt_confirmation', 'label' => '<span class="">' .   $langs->trans('ConfirmUploadAcknowledgementReceipt', $object->ref) . '</span>'),
 			array('type' => 'other', 'name' => 'OK', 'label' => '', 'value' => $img, 'moreattr' => 'readonly'),
 		);
 
-		$formconfirm .= $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('UploadAcknowledgementReceipt'), $langs->trans('ConfirmUploadAcknowledgementReceipt', $object->ref), 'addAcknowledgementReceipt', '', 'yes', 'actionButtonAcknowledgementReceipt', 350, 600,1);
+		$formconfirm .= $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('UploadAcknowledgementReceipt'),'', 'addAcknowledgementReceipt', $formquestion, 'yes', 'actionButtonAcknowledgementReceipt', 450, 600, 1);
 	}
 
 	// setInProgress confirmation
