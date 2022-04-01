@@ -863,6 +863,8 @@ if (empty($reshook)) {
 					}
 				}
 			}
+		} else {
+			setEventMessages($langs->trans('NoFileLinked', $langs->transnoentitiesnoconv('NoFileLinked')), null, 'errors');
 		}
 	}
 
@@ -921,6 +923,8 @@ if (empty($reshook)) {
 					}
 				}
 			}
+		} else {
+			setEventMessages($langs->trans('NoFileLinked', $langs->transnoentitiesnoconv('NoFileLinked')), null, 'errors');
 		}
 	}
 
@@ -1155,42 +1159,42 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 	if (($action == 'setLocked' && (empty($conf->use_javascript_ajax) || ! empty($conf->dol_use_jmobile)))		// Output when action = clone if jmobile or no js
 		|| ( ! empty($conf->use_javascript_ajax) && empty($conf->dol_use_jmobile))) {
 
-		$img = '<img alt="" src="/dolibarr/htdocs/custom/doliletter/img/lock_envelope.png" />';
+		$img = '<img alt="" src="./../../custom/doliletter/img/lock_envelope.png" />';
 
 		$formquestion = array(
 			array('type' => 'other', 'name' => 'lock_validation', 'label' => '<span class="">' . $langs->trans("ConfirmLockEnvelope", $object->ref, dol_print_date($signatory->signature_date), $signatory->firstname . ' ' . $signatory->lastname) . '</span>'),
 			array('type' => 'other', 'name' => 'OK', 'label' => '', 'value' => $img, 'moreattr' => 'readonly'),
 		);
 
-		$formconfirm .= $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('LockEnvelope'),'', 'confirm_setLocked', $formquestion, 'yes', 'actionButtonLock', 400, 700);
+		$formconfirm .= $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('LockEnvelope'),'', 'confirm_setLocked', $formquestion, 'yes', 'actionButtonLock', 400, 550);
 	}
 
 	// Upload sending proof
 	if (($action == 'uploadSendingProof' && (empty($conf->use_javascript_ajax) || ! empty($conf->dol_use_jmobile)))		// Output when action = clone if jmobile or no js
 		|| ( ! empty($conf->use_javascript_ajax) && empty($conf->dol_use_jmobile))) {							// Always output when not jmobile nor js
 
-		$img = '<img alt="" src="/dolibarr/htdocs/custom/doliletter/img/sending_proof_confirmation.png" />';
+		$img = '<img alt="" src="./../../custom/doliletter/img/sending_proof_confirmation.png" />';
 
 		$formquestion = array(
 			array('type' => 'other', 'name' => 'sending_proof_confirmation', 'label' => '<span class="">' .   $langs->trans('ConfirmUploadSendingProof', $object->ref) . '</span>'),
 			array('type' => 'other', 'name' => 'OK', 'label' => '', 'value' => $img, 'moreattr' => 'readonly'),
 		);
 
-		$formconfirm .= $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('UploadSendingProof'),'', 'addSendingProof', $formquestion, 'yes', 'actionButtonSendingProof', 450, 600, 1);
+		$formconfirm .= $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('UploadSendingProof'),'', 'addSendingProof', $formquestion, 'yes', 'actionButtonSendingProof', 370, 450, 1);
 	}
 
 	// Upload acknowledgement receipt
 	if (($action == 'uploadAcknowledgementReceipt' && (empty($conf->use_javascript_ajax) || ! empty($conf->dol_use_jmobile)))		// Output when action = clone if jmobile or no js
 		|| ( ! empty($conf->use_javascript_ajax) && empty($conf->dol_use_jmobile))) {							// Always output when not jmobile nor js
 
-		$img = '<img alt="" src="/dolibarr/htdocs/custom/doliletter/img/acknowledgement_receipt_confirmation.png" />';
+		$img = '<img alt="" src="./../../custom/doliletter/img/acknowledgement_receipt_confirmation.png" />';
 
 		$formquestion = array(
 			array('type' => 'other', 'name' => 'acknowledgement_receipt_confirmation', 'label' => '<span class="">' .   $langs->trans('ConfirmUploadAcknowledgementReceipt', $object->ref) . '</span>'),
 			array('type' => 'other', 'name' => 'OK', 'label' => '', 'value' => $img, 'moreattr' => 'readonly'),
 		);
 
-		$formconfirm .= $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('UploadAcknowledgementReceipt'),'', 'addAcknowledgementReceipt', $formquestion, 'yes', 'actionButtonAcknowledgementReceipt', 450, 600, 1);
+		$formconfirm .= $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('UploadAcknowledgementReceipt'),'', 'addAcknowledgementReceipt', $formquestion, 'yes', 'actionButtonAcknowledgementReceipt', 385, 470, 1);
 	}
 
 	// setInProgress confirmation

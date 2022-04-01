@@ -131,6 +131,7 @@ ConfirmUploadAcknowledgementReceipt = Êtes-vous sûr(e) de vouloir envoyer cet 
 ConfirmUploadSendingProof = Êtes-vous sûr(e) de vouloir envoyer cette preuve de dépôt ?
 LinkedFiles = Fichiers joints
 SendingLinkedFiles = Fichiers joints à l'envoi
+NoFileLinked = Pas de fichier lié, veuillez joindre un fichier
 
 #
 # Signature - Signature
