@@ -1155,7 +1155,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 	if (($action == 'setLocked' && (empty($conf->use_javascript_ajax) || ! empty($conf->dol_use_jmobile)))		// Output when action = clone if jmobile or no js
 		|| ( ! empty($conf->use_javascript_ajax) && empty($conf->dol_use_jmobile))) {
 
-		$img = '<img alt="" src="/dolibarr/htdocs/custom/doliletter/img/lock_envelope.svg" />';
+		$img = '<img alt="" src="/dolibarr/htdocs/custom/doliletter/img/lock_envelope.png" />';
 
 		$formquestion = array(
 			array('type' => 'other', 'name' => 'lock_validation', 'label' => '<span class="">' . $langs->trans("ConfirmLockEnvelope", $object->ref, dol_print_date($signatory->signature_date), $signatory->firstname . ' ' . $signatory->lastname) . '</span>'),
@@ -1169,7 +1169,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 	if (($action == 'uploadSendingProof' && (empty($conf->use_javascript_ajax) || ! empty($conf->dol_use_jmobile)))		// Output when action = clone if jmobile or no js
 		|| ( ! empty($conf->use_javascript_ajax) && empty($conf->dol_use_jmobile))) {							// Always output when not jmobile nor js
 
-		$img = '<img alt="" src="/dolibarr/htdocs/custom/doliletter/img/sending_proof_confirmation.svg" />';
+		$img = '<img alt="" src="/dolibarr/htdocs/custom/doliletter/img/sending_proof_confirmation.png" />';
 
 		$formquestion = array(
 			array('type' => 'other', 'name' => 'sending_proof_confirmation', 'label' => '<span class="">' .   $langs->trans('ConfirmUploadSendingProof', $object->ref) . '</span>'),
@@ -1183,7 +1183,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 	if (($action == 'uploadAcknowledgementReceipt' && (empty($conf->use_javascript_ajax) || ! empty($conf->dol_use_jmobile)))		// Output when action = clone if jmobile or no js
 		|| ( ! empty($conf->use_javascript_ajax) && empty($conf->dol_use_jmobile))) {							// Always output when not jmobile nor js
 
-		$img = '<img alt="" src="/dolibarr/htdocs/custom/doliletter/img/acknowledgement_receipt_confirmation.svg" />';
+		$img = '<img alt="" src="/dolibarr/htdocs/custom/doliletter/img/acknowledgement_receipt_confirmation.png" />';
 
 		$formquestion = array(
 			array('type' => 'other', 'name' => 'acknowledgement_receipt_confirmation', 'label' => '<span class="">' .   $langs->trans('ConfirmUploadAcknowledgementReceipt', $object->ref) . '</span>'),
