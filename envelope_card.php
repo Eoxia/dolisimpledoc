@@ -1024,7 +1024,7 @@ if ($action == 'create') {
 
 	//Content -- Contenu
 	print '<tr class=""><td><label for="content">'.$langs->trans("Content").'</label></td><td>';
-	$doleditor = new DolEditor('content', GETPOST('content'), '', 90, 'dolibarr_details', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
+	$doleditor = new DolEditor('content', GETPOST('content'), '', 150, 'dolibarr_details', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
 	$doleditor->Create();
 	print '</td></tr>';
 
