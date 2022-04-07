@@ -1430,7 +1430,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 			$urlsource = $_SERVER["PHP_SELF"]."?id=".$object->id;
 			$genallowed = $user->rights->doliletter->envelope->read; // If you can read, you can build the PDF to read content
 			$delallowed = $user->rights->doliletter->envelope->write; // If you can create/edit, you can remove a file on card
-			print dolilettershowdocuments('doliletter:Envelope', $object->element.'/'.$objref, $filedir, $urlsource, $genallowed, 0, $conf->global->DOLILETTER_ENVELOPE_ADDON_PDF, 1, 0, 0, '', 0, '', '', '', $langs->defaultlang, $object->status < 3 ? ( $document_generated > 0 ? 0 : 1) : 0, $document_generated > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
+			print dolilettershowdocuments('doliletter:Envelope', $object->element.'/'.$objref, $filedir, $urlsource, $object->status >= 5 ? 0 : $genallowed, 0, $conf->global->DOLILETTER_ENVELOPE_ADDON_PDF, 1, 0, 0, $langs->trans('Envelope'), 0, '', '', '', $langs->defaultlang, $object->status < 3 ? ( $document_generated > 0 ? 0 : 1) : 0, $document_generated > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
 		}
 
 		if ($object->status == 3 || $object->status == 6) {
@@ -1447,7 +1447,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 
 		if ($object->status >= 5) {
 			$acknowledgement_receipt_files = count(dol_dir_list($filedir.'/acknowledgementreceipt'));
-			print dolilettershowdocuments('doliletter:AcknowledgementReceipt', $object->element.'/'.$objref.'/acknowledgementreceipt', $filedir.'/acknowledgementreceipt', $urlsource, $permissiontoadd, 0, $conf->global->DOLILETTER_ACKNOWLEDGEMENTRECEIPT_ADDON_PDF, 1, 0, 0, $langs->trans('AcknowledgementReceipt'), 0, '', '', '', $langs->defaultlang, $acknowledgement_receipt_files > 0 ? 0 : 1, $generated_files > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
+			print dolilettershowdocuments('doliletter:AcknowledgementReceipt', $object->element.'/'.$objref.'/acknowledgementreceipt', $filedir.'/acknowledgementreceipt', $urlsource, 0, 0, $conf->global->DOLILETTER_ACKNOWLEDGEMENTRECEIPT_ADDON_PDF, 1, 0, 0, $langs->trans('AcknowledgementReceipt'), 0, '', '', '', $langs->defaultlang, $acknowledgement_receipt_files > 0 ? 0 : 1, $generated_files > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
 		}
 
 		print '</div><div class="fichehalfright"><div class="ficheaddleft">';
