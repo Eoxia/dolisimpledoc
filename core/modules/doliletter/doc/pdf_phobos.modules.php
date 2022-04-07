@@ -474,6 +474,14 @@ class pdf_phobos extends ModelePDFEnvelope
 						$this->tabSignature($pdf, $tab_top_newpage, $this->page_hauteur - $tab_top_newpage - $heightforinfotot - $heightforfreetext - $heightforfooter, $outputlangs, $object);
 						$bottomlasttab = $this->page_hauteur - $heightforfooter - $heightforfooter + 1;
 					}
+				} else {
+					if ($pagenb == 1) {
+						$this->_tableau($pdf, $object, $tab_top, $this->page_hauteur - $tab_top - $heightforinfotot - $heightforfreetext - $heightforfooter, 0, $outputlangs, 0, 0);
+						$bottomlasttab = $this->page_hauteur - $heightforfooter - $heightforfooter + 1;
+					} else {
+						$this->_tableau($pdf, $object, $tab_top_newpage, $this->page_hauteur - $tab_top_newpage - $heightforinfotot - $heightforfreetext - $heightforfooter, 0, $outputlangs, 0, 0);
+						$bottomlasttab = $this->page_hauteur - $heightforfooter - $heightforfooter + 1;
+					}
 				}
 
 				$this->_pagefoot($pdf, $object, $outputlangs);
