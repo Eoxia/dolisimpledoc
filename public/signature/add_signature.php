@@ -153,7 +153,7 @@ if (dol_strlen($element->signature)) {
 				}
 				?>
 				<strong class="grid-align-middle"><?php echo $langs->trans("LinkedDocument"); ?></strong>
-				<a href="<?php echo DOL_DOCUMENT_ROOT . '/htdocs/document.php?modulepart=doliletter&file=envelope/' . $object->ref . '/' . $filename . '&entity=' . $conf->entity ?>">
+				<a href="<?php echo './../../../../document.php?modulepart=doliletter&file=envelope/' . $object->ref . '/' . $filename . '&entity=' . $conf->entity ?>">
 					<span class="wpeo-button button-primary button-radius-2 grid-align-right"><i class="button-icon fas fa-file-pdf"></i><?php echo '  ' . $langs->trans('ShowDocument'); ?></span>
 				</a>
 				<?php endif; ?>
