@@ -104,6 +104,15 @@ if ($action == 'addSignature') {
 		if ($result > 0) {
 			$signatory->setSigned($user, false);
 			$object->setStatusCommon($user, 5);
+			if (method_exists($object, 'generateDocument'))
+			{
+				$result = $object->generateDocument('deimos', $langs, $hidedetails, $hidedesc, $hideref);
+
+				if ($result < 0) {
+					dol_print_error($db, $object->error, $object->errors);
+					exit();
+				}
+			}
 			// Creation signature OK
 			exit;
 		} else {
