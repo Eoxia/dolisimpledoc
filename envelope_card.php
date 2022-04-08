@@ -1162,7 +1162,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 		$img = '<img alt="" src="./../../custom/doliletter/img/lock_envelope.png" />';
 
 		$formquestion = array(
-			array('type' => 'other', 'name' => 'lock_validation', 'label' => '<span class="">' . $langs->trans("ConfirmLockEnvelope", $object->ref, dol_print_date($signatory->signature_date), $signatory->firstname . ' ' . $signatory->lastname) . '</span>'),
+			array('type' => 'other', 'name' => 'lock_validation', 'label' => '<span class="">' . $langs->trans("ConfirmLockEnvelope") . '</span>'),
 			array('type' => 'other', 'name' => 'OK', 'label' => '', 'value' => $img, 'moreattr' => 'readonly'),
 			array('type' => 'other', 'name' => 'lock_validation', 'label' => '<span class="">' . $langs->trans("LockDescription", dol_print_date($object->date_creation), dol_print_date($signatory->signature_date)) . '</span>'),
 		);
