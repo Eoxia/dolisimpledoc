@@ -148,7 +148,7 @@ The = le
 SignatureSuccess = Le document %s a été signé avec succès
 DocumentName = Nom du document
 AcknowledgementReceiptTextLetter = Veuillez trouver ci-après l'accusé de réception du courrier %s reçu par voie postale le %s
-AcknowledgementReceiptTextMail = AcknowledgementReceiptTextMail = Je soussigné %s avoir reçu le document %s par mail le %s. IP : %s
+AcknowledgementReceiptTextMail = Je soussigné %s avoir reçu le document %s par mail le %s.
 DocumentGenerated = Document généré
 DocumentHasAlreadyBeenGenerated = Le document a déjà été généré
 CompleteName = Nom et prénom
