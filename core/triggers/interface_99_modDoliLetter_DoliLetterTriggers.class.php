@@ -95,7 +95,6 @@ class InterfaceDoliLetterTriggers extends DolibarrTriggers
 				//echo '<pre>'; print_r( $object ); echo '</pre>'; exit;
 				require_once DOL_DOCUMENT_ROOT.'/contact/class/contact.class.php';
 				$contact_temp = new Contact($this->db);
-				require_once __DIR__ . "/../../class/envelope_email.class.php";
 				$now = dol_now();
 				$mail = new EmailSending($this->db);
 				$mail->fk_envelope = $object->id;
