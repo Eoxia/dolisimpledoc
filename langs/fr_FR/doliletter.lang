@@ -132,7 +132,7 @@ ConfirmUploadSendingProof = Êtes-vous sûr(e) de vouloir envoyer cette preuve d
 LinkedFiles = Fichiers joints
 SendingLinkedFiles = Fichiers joints à l'envoi
 NoFileLinked = Pas de fichier lié, veuillez joindre un fichier
-
+LockDescription = Ecrit le : %s, signé le : %s, verrouillé si vous cliquez
 #
 # Signature - Signature
 #
