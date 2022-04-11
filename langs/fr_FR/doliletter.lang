@@ -133,6 +133,10 @@ LinkedFiles = Fichiers joints
 SendingLinkedFiles = Fichiers joints à l'envoi
 NoFileLinked = Pas de fichier lié, veuillez joindre un fichier
 LockDescription = Ecrit le : %s - Signé le : %s - <b> Cliquez pour verrouiller </b>
+ValidateSendingProof = Valider la preuve de dépôt
+YouMustHaveUploadedASendingProof = Vous devez d'abord joindre une preuve de dépôt pour l'envoyer
+SendingProofGenerated = La preuve de dépôt a été générée
+
 #
 # Signature - Signature
 #
@@ -147,7 +151,7 @@ ActionsSignature = Actions
 The = le
 SignatureSuccess = Le document %s a été signé avec succès
 DocumentName = Nom du document
-AcknowledgementReceiptTextLetter = Veuillez trouver ci-après l'accusé de réception du courrier %s reçu par voie postale le %s
+AcknowledgementReceiptTextLetter = Veuillez trouver ci-après l'accusé de réception du courrier %s reçu par voie postale.
 AcknowledgementReceiptTextMail = Je soussigné %s avoir reçu le document %s par mail le %s.
 DocumentGenerated = Document généré
 DocumentHasAlreadyBeenGenerated = Le document a déjà été généré

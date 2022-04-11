@@ -921,6 +921,8 @@ if (empty($reshook)) {
 							$file = $fileparams['fullname'];
 						}
 					}
+					setEventMessages($langs->trans('SendingProofGenerated'), array());
+
 				}
 			}
 		} else {
@@ -1387,30 +1389,58 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 		print '</form>';
 	}
 
-	if ($action == 'uploadSendingProof')
+	if ($action == 'uploadSendingProof' || ($action == 'stockTmpFile' && GETPOST('type') == 'sendingproof'))
 	{
 		print '<form method="POST" action="'.$_SERVER["PHP_SELF"] . '?id=' . $id .'" enctype="multipart/form-data">';
 		print '<input type="hidden" name="token" value="'.newToken().'">';
-		print '<input type="hidden" name="action" value="addSendingProof">';
+		print '<input type="hidden" name="action" value="stockTmpFile">';
+		print '<input type="hidden" name="type" value="sendingproof">';
 
 		print load_fiche_titre($langs->trans('UploadSendingProof'), null, null);
 
-		print '<tr>';
+		print '<table><tr>';
 		print '<td class="titlefield">' . $form->editfieldkey($langs->trans("SendingProof"), 'SendingProof', '', $object, 0) . '</td>';
 		print '<td>';
 		print '<input hidden class="from-type" value="sendingProof" />';
 		print '<input class="flat" type="file" name="userfile[]" id="sendingProof" />';
-		print '</td></tr>';
-//		print '<input class="butAction" type="" name="actionButtonSendingProof" id="actionButtonSendingProof" value="'. $langs->trans('Send').'"/>';
+		print '</td>';
+
 		//avec cbox de validation mais ça perd le $_FILES
-		print '<span class="butAction" id="actionButtonSendingProof">' . $langs->trans("Send") . '</span>';
+		$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$object->ref;
+		$sending_proof_files = dol_dir_list($filedir.'/sendingproof/uploaded_file/tmp');
+		$sending_proof_files_counter = count($sending_proof_files);
 
-		print '</td></tr>';
+		print '<td>';
+		print '<input class="butAction" type="submit" name="uploadSendingProof" id="uploadSendingProof" value="'. $langs->trans('Send').'"/>';
+		print '</td>';
 
+		if ($sending_proof_files_counter == 0) {
+			print '<td class="titlefield">';
+			print '<img width="150" alt="" src="./../../custom/doliletter/img/sending_proof_confirmation.png" />';
+			print '</td>';
+		} else {
+			$sending_proof_path = array_shift($sending_proof_files);
+			$sending_proof_path = $sending_proof_path['name'];
+			print '<td class="titlefield">';
+			print '<img width="150" alt="" src="'.DOL_URL_ROOT.'/viewimage.php?modulepart=doliletter&entity='.$object->entity.'&file=envelope/'. $object->ref . '/sendingproof/uploaded_file/tmp/' . $sending_proof_path .'">';
+			print '</td>';
+		}
 		print '</form>';
+
+		print '<form method="POST" action="'.$_SERVER["PHP_SELF"] . '?id=' . $id .'" enctype="multipart/form-data">';
+		print '<input type="hidden" name="token" value="'.newToken().'">';
+		print '<input type="hidden" name="action" value="addSendingProof">';
+
+		print '<td>';
+		print '<input type="submit" class="' . ($sending_proof_files_counter > 0 ? 'butAction' : 'butActionRefused" title="' . dol_escape_htmltag($langs->trans("YouMustHaveUploadedASendingProof")) . '"') . ' id="addSendingProof" value="'. $langs->trans("ValidateSendingProof") .'">';
+		print '</td></form>';
+
+		print '</tr>';
+
+		print '</table>';
 	}
 
-	if ($action != 'presend' && $action != 'letterpresend' && $action != 'uploadAcknowledgementReceipt' && $action != 'uploadSendingProof') {
+	if ($action != 'presend' && $action != 'letterpresend' && $action != 'uploadAcknowledgementReceipt' && $action != 'uploadSendingProof' && $action != 'stockTmpFile') {
 		print '<div class="fichecenter"><div class="fichehalfleft">';
 		print '<a name="builddoc"></a>'; // ancre
 
