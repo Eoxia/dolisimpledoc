@@ -314,7 +314,7 @@ class pdf_ares extends ModelePDFSendingProof
 				$pdf->SetFont('', '', $default_font_size - 1);
 
 				if ($object->status == 3) {
-					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, $langs->trans('SendingProofTextLetter', $receiver->firstname . ' ' . $receiver->lastname, preg_replace('/SD_/', '', $filename), 'courrier'), 0, 1);
+					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, $langs->trans('SendingProofTextLetter', $object->ref), 0, 1);
 				}
 
 				$nexY = $pdf->GetY();
