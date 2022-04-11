@@ -136,6 +136,8 @@ LockDescription = Ecrit le : %s - Signé le : %s - <b> Cliquez pour verrouiller 
 ValidateSendingProof = Valider la preuve de dépôt
 YouMustHaveUploadedASendingProof = Vous devez d'abord joindre une preuve de dépôt pour l'envoyer
 SendingProofGenerated = La preuve de dépôt a été générée
+YouMustHaveUploadedAnAcknowledgementReceipt = Vous devez d'abord joindre un accusé de réception pour l'envoyer
+AcknowledgementReceiptGenerated = L'accusé de réception a été généré
 
 #
 # Signature - Signature

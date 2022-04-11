@@ -861,6 +861,7 @@ if (empty($reshook)) {
 							$file = $fileparams['fullname'];
 						}
 					}
+					setEventMessages($langs->trans('AcknowledgementReceiptGenerated'), array());
 				}
 			}
 		} else {
@@ -922,7 +923,6 @@ if (empty($reshook)) {
 						}
 					}
 					setEventMessages($langs->trans('SendingProofGenerated'), array());
-
 				}
 			}
 		} else {
@@ -1172,34 +1172,6 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 		$formconfirm .= $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('LockEnvelope'),'', 'confirm_setLocked', $formquestion, 'yes', 'actionButtonLock', 400, 550);
 	}
 
-	// Upload sending proof
-	if (($action == 'uploadSendingProof' && (empty($conf->use_javascript_ajax) || ! empty($conf->dol_use_jmobile)))		// Output when action = clone if jmobile or no js
-		|| ( ! empty($conf->use_javascript_ajax) && empty($conf->dol_use_jmobile))) {							// Always output when not jmobile nor js
-
-		$img = '<img alt="" src="./../../custom/doliletter/img/sending_proof_confirmation.png" />';
-
-		$formquestion = array(
-			array('type' => 'other', 'name' => 'sending_proof_confirmation', 'label' => '<span class="">' .   $langs->trans('ConfirmUploadSendingProof', $object->ref) . '</span>'),
-			array('type' => 'other', 'name' => 'OK', 'label' => '', 'value' => $img, 'moreattr' => 'readonly'),
-		);
-
-		$formconfirm .= $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('UploadSendingProof'),'', 'addSendingProof', $formquestion, 'yes', 'actionButtonSendingProof', 370, 450, 1);
-	}
-
-	// Upload acknowledgement receipt
-	if (($action == 'uploadAcknowledgementReceipt' && (empty($conf->use_javascript_ajax) || ! empty($conf->dol_use_jmobile)))		// Output when action = clone if jmobile or no js
-		|| ( ! empty($conf->use_javascript_ajax) && empty($conf->dol_use_jmobile))) {							// Always output when not jmobile nor js
-
-		$img = '<img alt="" src="./../../custom/doliletter/img/acknowledgement_receipt_confirmation.png" />';
-
-		$formquestion = array(
-			array('type' => 'other', 'name' => 'acknowledgement_receipt_confirmation', 'label' => '<span class="">' .   $langs->trans('ConfirmUploadAcknowledgementReceipt', $object->ref) . '</span>'),
-			array('type' => 'other', 'name' => 'OK', 'label' => '', 'value' => $img, 'moreattr' => 'readonly'),
-		);
-
-		$formconfirm .= $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('UploadAcknowledgementReceipt'),'', 'addAcknowledgementReceipt', $formquestion, 'yes', 'actionButtonAcknowledgementReceipt', 385, 470, 1);
-	}
-
 	// setInProgress confirmation
 	if (($action == 'setInProgress' && (empty($conf->use_javascript_ajax) || ! empty($conf->dol_use_jmobile)))		// Output when action = clone if jmobile or no js
 		|| ( ! empty($conf->use_javascript_ajax) && empty($conf->dol_use_jmobile))) {							// Always output when not jmobile nor js
@@ -1366,27 +1338,55 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 	print '</div>'."\n";
 
 
-	if ($action == 'uploadAcknowledgementReceipt')
+	if ($action == 'uploadAcknowledgementReceipt' || ($action == 'stockTmpFile' && GETPOST('type') == 'acknowledgementreceipt'))
 	{
+		print '<form method="POST" action="'.$_SERVER["PHP_SELF"] . '?id=' . $id .'" enctype="multipart/form-data">';
+		print '<input type="hidden" name="token" value="'.newToken().'">';
+		print '<input type="hidden" name="action" value="stockTmpFile">';
+		print '<input type="hidden" name="type" value="acknowledgementreceipt">';
+
+		print load_fiche_titre($langs->trans('UploadAcknowledgementReceipt'), null, null);
+
+		print '<table><tr>';
+		print '<td class="titlefield">' . $form->editfieldkey($langs->trans("AcknowledgementReceipt"), 'AcknowledgementReceipt', '', $object, 0) . '</td>';
+		print '<td>';
+		print '<input hidden class="from-type" value="acknowledgementReceipt" />';
+		print '<input class="flat" type="file" name="userfile[]" id="acknowledgementReceipt" />';
+		print '</td>';
+
+		//avec cbox de validation mais ça perd le $_FILES
+		$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$object->ref;
+		$acknowledgement_receipt_files = dol_dir_list($filedir.'/acknowledgementreceipt/uploaded_file/tmp');
+		$acknowledgement_receipt_files_counter = count($acknowledgement_receipt_files);
+
+		print '<td>';
+		print '<input class="butAction" type="submit" name="uploadAcknowledgementReceipt" id="uploadAcknowledgementReceipt" value="'. $langs->trans('Send').'"/>';
+		print '</td>';
+
+		if ($acknowledgement_receipt_files_counter == 0) {
+			print '<td class="titlefield">';
+			print '<img width="150" alt="" src="./../../custom/doliletter/img/acknowledgement_receipt_confirmation.png" />';
+			print '</td>';
+		} else {
+			$acknowledgement_receipt_path = array_shift($acknowledgement_receipt_files);
+			$acknowledgement_receipt_path = $acknowledgement_receipt_path['name'];
+			print '<td class="titlefield">';
+			print '<img width="150" alt="" src="'.DOL_URL_ROOT.'/viewimage.php?modulepart=doliletter&entity='.$object->entity.'&file=envelope/'. $object->ref . '/acknowledgementreceipt/uploaded_file/tmp/' . $acknowledgement_receipt_path .'">';
+			print '</td>';
+		}
+		print '</form>';
+
 		print '<form method="POST" action="'.$_SERVER["PHP_SELF"] . '?id=' . $id .'" enctype="multipart/form-data">';
 		print '<input type="hidden" name="token" value="'.newToken().'">';
 		print '<input type="hidden" name="action" value="addAcknowledgementReceipt">';
 
-		print load_fiche_titre($langs->trans('UploadAcknowledgementReceipt'), null, null);
-
-		// Disponibilité des plans
-		print '<tr>';
-		print '<td class="titlefield">' . $form->editfieldkey($langs->trans("AddFile"), 'acknowledgementReceipt', '', $object, 0) . '</td>';
 		print '<td>';
-		print '<input hidden class="from-type" value="acknowledgementReceipt" />';
-		print '<input class="flat" type="file" name="userfile[]" id="acknowledgementReceipt" />';
+		print '<input type="submit" class="' . ($acknowledgement_receipt_files_counter > 0 ? 'butAction' : 'butActionRefused" title="' . dol_escape_htmltag($langs->trans("YouMustHaveUploadedAnAcknowledgementReceipt")) . '"') . ' id="addAcknowledgementReceipt" value="'. $langs->trans("ValidateAcknowledgementReceipt") .'">';
+		print '</td></form>';
 
-		print '</td></tr>';
-//		print '<input class="butAction" type="submit" name="addAcknowledgementReceipt" id="addAcknowledgementReceipt" value="'. $langs->trans('Send').'"/>';
-		//avec cbox de validation mais ça perd le $_FILES
-		print '<span class="butAction" id="actionButtonAcknowledgementReceipt">' . $langs->trans("Send") . '</span>';
+		print '</tr>';
 
-		print '</form>';
+		print '</table>';
 	}
 
 	if ($action == 'uploadSendingProof' || ($action == 'stockTmpFile' && GETPOST('type') == 'sendingproof'))
