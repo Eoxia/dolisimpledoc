@@ -140,6 +140,7 @@ SendingProofGenerated = La preuve de dépôt a été générée
 YouMustHaveUploadedAnAcknowledgementReceipt = Vous devez d'abord joindre un accusé de réception pour l'envoyer
 AcknowledgementReceiptGenerated = L'accusé de réception a été généré
 ValidateAcknowledgementReceipt = Valider l'accusé de réception
+ClickHere = Cliquez ici
 
 #
 # Signature - Signature

@@ -1228,9 +1228,9 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 	$morehtmlref .=  '</td><br>';
 
 	if ($object->status > 1) {
-		$signatory = $signatory->fetchSignatory('E_SENDER', $id);
+		$signatory = $signatory->fetchSignatory('E_RECEIVER', $id);
 		$signatory = array_shift($signatory);
-		$signature_url = dol_buildpath('/custom/doliletter/public/signature/add_signature?track_id=' . $signatory->signature_url . '&type=envelope', 1);
+		$signature_url = dol_buildpath('/custom/doliletter/public/signature/add_signature.php?track_id=' . $signatory->signature_url . '&type=envelope', 1);
 	}
 
 	if ($object->status == 3 || $object->status == 6) {
@@ -1243,7 +1243,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 		$signature_link = DOL_DOCUMENT_ROOT . $signature_url;
 		$morehtmlref .=  '<tr><td>';
 		$morehtmlref .=  '<input hidden class="signature-link" value="'. $signature_link .'">';
-		$morehtmlref .=  $langs->trans('SignatureLink') . ' : ' . '<a href="'.$signature_link.'">' . $signature_link . '</a>';
+		$morehtmlref .=  $langs->trans('SignatureLink') . ' : ' . '<a href="'.$signature_link.'">' . $langs->trans('ClickHere') . '</a>';
 		$morehtmlref .= '<i class="fas fa-file clipboard-copy"></i>';
 		$morehtmlref .= '</td></tr>';
 	}
