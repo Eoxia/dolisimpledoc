@@ -437,8 +437,15 @@ window.eoxiaJS.envelope.copyToClipboard = function(  event ) {
 	console.log('oui')
 	let copyText = $(".signature-link").attr('value')
 
-	copyText.select();
-	document.execCommand("copy");
+	navigator.clipboard.writeText(copyText).then(() => {
+			$('.copy-to-clipboard-button').animate({
+				backgroundColor: "#59ed9c"
+			}, 200, () => {
+				$('.copy-to-clipboard-button').find('i').attr('class', 'fas fa-check  clipboard-copy')
+				$('.copied-to-clipboard').attr('style', '')
+			})
+		}
+	)
 };
 
 window.eoxiaJS.signature.clearCanvas = function( event ) {

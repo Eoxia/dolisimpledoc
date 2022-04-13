@@ -1216,7 +1216,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 	$morehtmlref .=  $thirdparty->getNomUrl(1);
 	$morehtmlref .=  '</td></tr><br>';
 
-	$morehtmlref .=  '<tr><td class="titlefield">';
+	$morehtmlref .=  '<tr><td style="pointer-events: auto class="titlefield">';
 	$morehtmlref .=  $langs->trans("Contact");
 	$morehtmlref .= ' : ';
 	$morehtmlref .=  '</td></tr>';
@@ -1243,7 +1243,8 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 		$morehtmlref .=  '<tr><td>';
 		$morehtmlref .=  '<input hidden class="signature-link" value="'. $signature_url .'">';
 		$morehtmlref .=  $langs->trans('SignatureLink') . ' : ' . '<a href="'.$signature_url.'">' . $langs->trans('ClickHereDoliLetter') . '</a>';
-		$morehtmlref .= '<i class="fas fa-file clipboard-copy"></i>';
+		$morehtmlref .= '<button class="copy-to-clipboard-button"><i class="fas fa-clipboard clipboard-copy"></i></button>';
+		$morehtmlref .= '<span class="copied-to-clipboard" style="display:none">'. '  ' . $langs->trans('CopiedToClipboard').'</span>';
 		$morehtmlref .= '</td></tr>';
 	}
 
