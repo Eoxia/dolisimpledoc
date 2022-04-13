@@ -1156,7 +1156,6 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id.'&lineid='.$lineid, $langs->trans('DeleteLine'), $langs->trans('ConfirmDeleteLine'), 'confirm_deleteline', '', 0, 1);
 	}
 
-
 	// SetLocked confirmation
 	if (($action == 'setLocked' && (empty($conf->use_javascript_ajax) || ! empty($conf->dol_use_jmobile)))		// Output when action = clone if jmobile or no js
 		|| ( ! empty($conf->use_javascript_ajax) && empty($conf->dol_use_jmobile))) {
@@ -1242,7 +1241,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 
 	if ($object->status == 4 || $object->status == 5) {
 		$morehtmlref .=  '<tr><td>';
-		$morehtmlref .=  $langs->trans('SignatureLink') . ' : ' . '<a href="'.$signature_url.'">' . $signature_url . '</a>';
+		$morehtmlref .=  $langs->trans('SignatureLink') . ' : ' . '<a href="'.DOL_DOCUMENT_ROOT . $signature_url.'">' . DOL_DOCUMENT_ROOT . $signature_url . '</a>';
 		$morehtmlref .= '</td></tr>';
 	}
 
