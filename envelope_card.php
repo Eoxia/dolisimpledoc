@@ -1242,7 +1242,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 	if ($object->status == 4 || $object->status == 5) {
 		$morehtmlref .=  '<tr><td>';
 		$morehtmlref .=  '<input hidden class="signature-link" value="'. $signature_url .'">';
-		$morehtmlref .=  $langs->trans('SignatureLink') . ' : ' . '<a href="'.$signature_url.'">' . $langs->trans('ClickHere') . '</a>';
+		$morehtmlref .=  $langs->trans('SignatureLink') . ' : ' . '<a href="'.$signature_url.'">' . $langs->trans('ClickHereDoliLetter') . '</a>';
 		$morehtmlref .= '<i class="fas fa-file clipboard-copy"></i>';
 		$morehtmlref .= '</td></tr>';
 	}
