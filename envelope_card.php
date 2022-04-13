@@ -1240,10 +1240,9 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 	}
 
 	if ($object->status == 4 || $object->status == 5) {
-		$signature_link = DOL_DOCUMENT_ROOT . $signature_url;
 		$morehtmlref .=  '<tr><td>';
-		$morehtmlref .=  '<input hidden class="signature-link" value="'. $signature_link .'">';
-		$morehtmlref .=  $langs->trans('SignatureLink') . ' : ' . '<a href="'.$signature_link.'">' . $langs->trans('ClickHere') . '</a>';
+		$morehtmlref .=  '<input hidden class="signature-link" value="'. $signature_url .'">';
+		$morehtmlref .=  $langs->trans('SignatureLink') . ' : ' . '<a href="'.$signature_url.'">' . $langs->trans('ClickHere') . '</a>';
 		$morehtmlref .= '<i class="fas fa-file clipboard-copy"></i>';
 		$morehtmlref .= '</td></tr>';
 	}
