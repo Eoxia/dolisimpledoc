@@ -1243,7 +1243,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 
 		$morehtmlref .=  '<tr><td>';
 		$morehtmlref .=  '<input hidden class="signature-link" value="'. $_SERVER['HTTP_HOST'] . $signature_url .'">';
-		$morehtmlref .=  $langs->trans('SignatureLink') . ' : ' . '<a href="'.$signature_url.'">' . $langs->trans('ClickHereDoliLetter') . '</a>';
+		$morehtmlref .=  $langs->trans('SignatureLink') . ' : ' . '<a href="'.$signature_url.'">' . $langs->trans('GoToSignaturePage') . '</a>';
 		$morehtmlref .= '   ' . '<button class="copy-to-clipboard-button"><i class="fas fa-clipboard clipboard-copy"></i></button>';
 		$morehtmlref .= '<span class="copied-to-clipboard" style="display:none">'. '  ' . $langs->trans('CopiedToClipboard').'</span>';
 		$morehtmlref .= '</td></tr>';
