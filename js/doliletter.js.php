@@ -431,6 +431,8 @@ window.eoxiaJS.envelope.init = function() {
 
 window.eoxiaJS.envelope.event = function() {
 	jQuery( document ).on( 'click', '.clipboard-copy', window.eoxiaJS.envelope.copyToClipboard );
+	jQuery( document ).on( 'change', '#sendingProof', window.eoxiaJS.envelope.enableSendButton );
+	jQuery( document ).on( 'change', '#acknowledgementReceipt', window.eoxiaJS.envelope.enableSendButton );
 };
 
 window.eoxiaJS.envelope.copyToClipboard = function(  event ) {
@@ -448,5 +450,7 @@ window.eoxiaJS.envelope.copyToClipboard = function(  event ) {
 	)
 };
 
-window.eoxiaJS.signature.clearCanvas = function( event ) {
+window.eoxiaJS.envelope.enableSendButton = function( event ) {
+	$('.send-file').attr('class', 'butAction')
+	$('.send-file').attr('title', '')
 };

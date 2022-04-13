@@ -1363,7 +1363,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 		$acknowledgement_receipt_files_counter = count($acknowledgement_receipt_files);
 
 		print '<td>';
-		print '<input class="butAction" type="submit" name="uploadAcknowledgementReceipt" id="uploadAcknowledgementReceipt" value="'. $langs->trans('Send').'"/>';
+		print '<input class="send-file butActionRefused" title="'. $langs->trans('UploadAFileFirst') .'" type="submit" name="uploadAcknowledgementReceipt" id="uploadAcknowledgementReceipt" value="'. $langs->trans('Send').'"/>';
 		print '</td>';
 
 		if ($acknowledgement_receipt_files_counter == 0) {
@@ -1414,7 +1414,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 		$sending_proof_files_counter = count($sending_proof_files);
 
 		print '<td>';
-		print '<input class="butAction" type="submit" name="uploadSendingProof" id="uploadSendingProof" value="'. $langs->trans('Send').'"/>';
+		print '<input class="send-file butActionRefused" title="'. $langs->trans('UploadAFileFirst') .'" type="submit" name="uploadSendingProof" id="uploadSendingProof" value="'. $langs->trans('Send').'"/>';
 		print '</td>';
 
 		if ($sending_proof_files_counter == 0) {
