@@ -1240,11 +1240,9 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 	}
 
 	if ($object->status == 4 || $object->status == 5) {
-		$path = parse_url($_SERVER['PHP_SELF'], PHP_URL_PATH);
-		$parts = explode('/', $path);
-		$base_url = $parts[0];
+
 		$morehtmlref .=  '<tr><td>';
-		$morehtmlref .=  '<input hidden class="signature-link" value="'. $base_url . $signature_url .'">';
+		$morehtmlref .=  '<input hidden class="signature-link" value="'. $_SERVER['HTTP_HOST'] . $signature_url .'">';
 		$morehtmlref .=  $langs->trans('SignatureLink') . ' : ' . '<a href="'.$signature_url.'">' . $langs->trans('ClickHereDoliLetter') . '</a>';
 		$morehtmlref .= '   ' . '<button class="copy-to-clipboard-button"><i class="fas fa-clipboard clipboard-copy"></i></button>';
 		$morehtmlref .= '<span class="copied-to-clipboard" style="display:none">'. '  ' . $langs->trans('CopiedToClipboard').'</span>';
