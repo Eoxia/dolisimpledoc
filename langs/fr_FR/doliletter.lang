@@ -90,6 +90,7 @@ EnvelopeSendbyMailTrigger = Envoi par Email
 EnvelopeSignTrigger = Signature du courrier
 EnvelopeLockTrigger = Verrouillage du courrier
 EnvelopeSendingProofTrigger = Preuve de dépôt ajoutée
+EnvelopeAcknowledgementReceiptTrigger = Accusé de réception ajouté
 Sending = Envoi
 Sign = Signer
 Signatursender = Signataire
@@ -138,6 +139,7 @@ YouMustHaveUploadedASendingProof = Vous devez d'abord joindre une preuve de dép
 SendingProofGenerated = La preuve de dépôt a été générée
 YouMustHaveUploadedAnAcknowledgementReceipt = Vous devez d'abord joindre un accusé de réception pour l'envoyer
 AcknowledgementReceiptGenerated = L'accusé de réception a été généré
+ValidateAcknowledgementReceipt = Valider l'accusé de réception
 
 #
 # Signature - Signature
