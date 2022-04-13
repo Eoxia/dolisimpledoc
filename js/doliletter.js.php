@@ -227,7 +227,7 @@ window.eoxiaJS.modal.openModal = function ( event ) {
 	// Open modal signature.
 	if ($(this).hasClass('modal-signature-open')) {
 		$('#modal-signature' + idSelected).addClass('modal-active');
-		window.eoxiaJS.signature.modalSignatureOpened( $(this) );
+		window.eoxiaJS.signature.openSignatureModal( $(this) );
 	}
 
 	$('.notice').addClass('hidden');
@@ -305,7 +305,7 @@ window.eoxiaJS.signature.event = function() {
 	jQuery( document ).on( 'click', '.download-file', window.eoxiaJS.signature.download );
 };
 
-window.eoxiaJS.signature.modalSignatureOpened = function( triggeredElement ) {
+window.eoxiaJS.signature.openSignatureModal = function( triggeredElement ) {
 	window.eoxiaJS.signature.buttonSignature = triggeredElement;
 
 	var ratio =  Math.max( window.devicePixelRatio || 1, 1 );
@@ -431,30 +431,11 @@ window.eoxiaJS.envelope.init = function() {
 
 window.eoxiaJS.envelope.event = function() {
 	//jQuery( document ).on( 'click', '.ui-button.ui-corner-all.ui-widget', window.eoxiaJS.envelope.formConfirm );
-	jQuery( document ).on( 'click', '#actionButtonSendingProof', window.eoxiaJS.envelope.formConfirm );
-	jQuery( document ).on( 'click', '#actionButtonAcknowledgementReceipt', window.eoxiaJS.envelope.formConfirm );
 };
 
 window.eoxiaJS.envelope.formConfirm = function(  event ) {
-	event.preventDefault()
-
-	let fromType = $(this).parent().find('.from-type').val()
-	let files = $(this).parent().find('#'+fromType).prop('files')
-	$.each(files, function(index, file) {
-		let formdata = new FormData();
-		formdata.append("userfile[]", file);
-		$.ajax({
-			url: document.URL + "&action=stockTmpFile&type="+fromType,
-			type: "POST",
-			data: formdata,
-			processData: false,
-			contentType: false
-		})
-	})
 
 };
 
 window.eoxiaJS.signature.clearCanvas = function( event ) {
-	var canvas = jQuery( this ).closest( '.modal-signature' ).find( 'canvas' );
-	canvas[0].signaturePad.clear();
 };
