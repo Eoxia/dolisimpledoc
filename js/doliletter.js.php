@@ -430,11 +430,15 @@ window.eoxiaJS.envelope.init = function() {
 };
 
 window.eoxiaJS.envelope.event = function() {
-	//jQuery( document ).on( 'click', '.ui-button.ui-corner-all.ui-widget', window.eoxiaJS.envelope.formConfirm );
+	jQuery( document ).on( 'click', '.clipboard-copy', window.eoxiaJS.envelope.copyToClipboard );
 };
 
-window.eoxiaJS.envelope.formConfirm = function(  event ) {
+window.eoxiaJS.envelope.copyToClipboard = function(  event ) {
+	console.log('oui')
+	let copyText = $(".signature-link").attr('value')
 
+	copyText.select();
+	document.execCommand("copy");
 };
 
 window.eoxiaJS.signature.clearCanvas = function( event ) {
