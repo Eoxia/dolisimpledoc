@@ -99,7 +99,7 @@ llxHeaderSignature($langs->trans("Signature"), "", 0, 0, $morejs, $morecss);
 			}
 			?>
 			<strong class="grid-align-middle"><?php echo $langs->trans("LinkedDocument"); ?></strong>
-			<a href="<?php echo '/dolibarr/htdocs/document.php?modulepart=doliletter&file=envelope/' . $object->ref . '/' . $filename . '&entity=' . $conf->entity ?>">
+			<a href="<?php echo './../../../../document.php?modulepart=doliletter&file=envelope/' . $object->ref . '/' . $filename . '&entity=' . $conf->entity ?>">
 				<span class="wpeo-button button-primary button-radius-2 grid-align-right"><i class="button-icon fas fa-file-pdf"></i><?php echo '  ' . $langs->trans('ShowDocument'); ?></span>
 			</a>
 		<?php endif; ?>
