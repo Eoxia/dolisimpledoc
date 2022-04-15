@@ -445,7 +445,7 @@ window.eoxiaJS.envelope.copyToClipboard = function(  event ) {
 			}, 200, () => {
 				$('.copy-to-clipboard-button').find('i').attr('class', 'fas fa-check  clipboard-copy')
 				$('.copied-to-clipboard').attr('style', '')
-				setTimeout($('.copied-to-clipboard').fadeOut(250), 2000);
+				setTimeout($('.copied-to-clipboard').fadeOut(2000), 2000);
 			})
 
 
