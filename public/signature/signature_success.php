@@ -93,48 +93,50 @@ llxHeaderSignature($langs->trans("Signature"), "", 0, 0, $morejs, $morecss);
 ?>
 <div class="digirisk-signature-container">
 	<p class="center"><?php echo $langs->trans("AcknowledgementReceiptSigned", $documentName); ?> </p>
-	<table class="wpeo-gridlayout grid-2 file-generation">
-		<?php if ($type == 'envelope') : ?>
-			<?php
-			$envelope_filelist = dol_dir_list($upload_dir . '/' . $object->element . '/' . $object->ref);
-			if (!empty($envelope_filelist)) {
-				$file = array_shift($envelope_filelist);
-				$fileurl = $file['fullname'];
-				$envelope_filename = $file['name'];
-				$envelope_file = $ecmfile;
-				$envelope_file->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/'.$envelope_filename, '', '', 'doliletter_envelope', $object->id);
-			}
-			$acknowledgementreceipt_filelist = dol_dir_list($upload_dir . '/' . $object->element . '/' . $object->ref . '/acknowledgementreceipt');
-			if (!empty($acknowledgementreceipt_filelist)) {
-				$file = array_shift($acknowledgementreceipt_filelist);
-				$fileurl = $file['fullname'];
-				$acknowledgementreceipt_filename = $file['name'];
-				$acknowledgementreceipt_file = $ecmfile;
-				$acknowledgementreceipt_file->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/'.$acknowledgementreceipt_filename, '', '', 'doliletter_envelope', $object->id);
-			}
-			?>
-			<tr>
-				<td>
-					<strong class="grid-align-middle"><?php echo $langs->trans("YourEnvelope"); ?></strong>
-				</td>
-				<td>
-					<a href="<?php echo './../../../../document.php?hashp=' . $envelope_file->share ?>">
-						<span class="wpeo-button button-primary button-radius-2 grid-align-right"><i class="button-icon fas fa-file-pdf"></i><?php echo '  ' . $langs->trans('ShowDocument'); ?></span>
-					</a>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<strong class="grid-align-middle"><?php echo $langs->trans("YourAcknowledgementReceipt"); ?></strong>
-				</td>
-				<td>
-					<a href="<?php echo './../../../../document.php?hashp=' . $acknowledgementreceipt_file->share ?>">
-						<span class="wpeo-button button-primary button-radius-2 grid-align-right"><i class="button-icon fas fa-file-pdf"></i><?php echo '  ' . $langs->trans('ShowDocument'); ?></span>
-					</a>
-				</td>
-			</tr>
-		<?php endif; ?>
-	</table>
+	<?php if ($conf->global->DOLILETTER_SHOW_DOCUMENTS_ON_PUBLIC_INTERFACE) : ?>
+		<table class="wpeo-gridlayout grid-2 file-generation">
+			<?php if ($type == 'envelope') : ?>
+				<?php
+				$envelope_filelist = dol_dir_list($upload_dir . '/' . $object->element . '/' . $object->ref);
+				if (!empty($envelope_filelist)) {
+					$file = array_shift($envelope_filelist);
+					$fileurl = $file['fullname'];
+					$envelope_filename = $file['name'];
+					$envelope_file = $ecmfile;
+					$envelope_file->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/'.$envelope_filename, '', '', 'doliletter_envelope', $object->id);
+				}
+				$acknowledgementreceipt_filelist = dol_dir_list($upload_dir . '/' . $object->element . '/' . $object->ref . '/acknowledgementreceipt');
+				if (!empty($acknowledgementreceipt_filelist)) {
+					$file = array_shift($acknowledgementreceipt_filelist);
+					$fileurl = $file['fullname'];
+					$acknowledgementreceipt_filename = $file['name'];
+					$acknowledgementreceipt_file = $ecmfile;
+					$acknowledgementreceipt_file->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/'.$acknowledgementreceipt_filename, '', '', 'doliletter_envelope', $object->id);
+				}
+				?>
+				<tr>
+					<td>
+						<strong class="grid-align-middle"><?php echo $langs->trans("YourEnvelope"); ?></strong>
+					</td>
+					<td>
+						<a href="<?php echo './../../../../document.php?hashp=' . $envelope_file->share ?>">
+							<span class="wpeo-button button-primary button-radius-2 grid-align-right"><i class="button-icon fas fa-file-pdf"></i><?php echo '  ' . $langs->trans('ShowDocument'); ?></span>
+						</a>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<strong class="grid-align-middle"><?php echo $langs->trans("YourAcknowledgementReceipt"); ?></strong>
+					</td>
+					<td>
+						<a href="<?php echo './../../../../document.php?hashp=' . $acknowledgementreceipt_file->share ?>">
+							<span class="wpeo-button button-primary button-radius-2 grid-align-right"><i class="button-icon fas fa-file-pdf"></i><?php echo '  ' . $langs->trans('ShowDocument'); ?></span>
+						</a>
+					</td>
+				</tr>
+			<?php endif; ?>
+		</table>
+	<?php endif; ?>
 </div>
 
 <br>

@@ -155,23 +155,25 @@ if (dol_strlen($element->signature)) {
 	<input hidden id="redirectURL" value="<?php echo $url ?>">
 	<div class="wpeo-gridlayout grid-2">
 		<div class="informations">
-			<div class="wpeo-gridlayout grid-2 file-generation">
-				<?php if ($type == 'envelope') : ?>
-				<?php $filelist = dol_dir_list($upload_dir . '/' . $object->element . '/' . $object->ref);
-				if (!empty($filelist)) {
-					$file = array_shift($filelist);
-					$fileurl = $file['fullname'];
-					$filename = $file['name'];
-					$envelope_file = $ecmfile;
-					$envelope_file->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/'.$filename, '', '', 'doliletter_envelope', $object->id);
-				}
-				?>
-				<strong class="grid-align-middle"><?php echo $langs->trans("LinkedDocument"); ?></strong>
-				<a href="<?php echo './../../../../document.php?hashp=' . $envelope_file->share ?>">
-					<span class="wpeo-button button-primary button-radius-2 grid-align-right"><i class="button-icon fas fa-file-pdf"></i><?php echo '  ' . $langs->trans('ShowDocument'); ?></span>
-				</a>
-				<?php endif; ?>
-			</div>
+			<?php if ($conf->global->DOLILETTER_SHOW_DOCUMENTS_ON_PUBLIC_INTERFACE) : ?>
+				<div class="wpeo-gridlayout grid-2 file-generation">
+					<?php if ($type == 'envelope') : ?>
+					<?php $filelist = dol_dir_list($upload_dir . '/' . $object->element . '/' . $object->ref);
+					if (!empty($filelist)) {
+						$file = array_shift($filelist);
+						$fileurl = $file['fullname'];
+						$filename = $file['name'];
+						$envelope_file = $ecmfile;
+						$envelope_file->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/'.$filename, '', '', 'doliletter_envelope', $object->id);
+					}
+					?>
+					<strong class="grid-align-middle"><?php echo $langs->trans("LinkedDocument"); ?></strong>
+					<a href="<?php echo './../../../../document.php?hashp=' . $envelope_file->share ?>">
+						<span class="wpeo-button button-primary button-radius-2 grid-align-right"><i class="button-icon fas fa-file-pdf"></i><?php echo '  ' . $langs->trans('ShowDocument'); ?></span>
+					</a>
+					<?php endif; ?>
+				</div>
+			<?php endif; ?>
 			<br>
 			<div class="wpeo-table table-flex table-2">
 				<div class="table-row">
