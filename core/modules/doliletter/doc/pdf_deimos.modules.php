@@ -313,10 +313,19 @@ class pdf_deimos extends ModelePDFAcknowledgementReceipt
 
 				$pdf->SetFont('', '', $default_font_size - 1);
 
+				require_once DOL_DOCUMENT_ROOT.'/ecm/class/ecmdirectory.class.php';
+				require_once DOL_DOCUMENT_ROOT.'/ecm/class/ecmfiles.class.php';
+				$ecmfile = new EcmFiles($this->db);
+				$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$object->ref . '/';
+				$filelist = dol_dir_list($filedir, 'files');
+				$filename = $filelist[0]['name'];
+
+				$ecmfile->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/'.$filename, '', '', 'doliletter_envelope', $id);
+
 				if ($object->status == 6) {
-					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, $langs->trans('AcknowledgementReceiptTextLetter', $object->ref), 0, 1);
+					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, $langs->trans('AcknowledgementReceiptTextLetter', $object->ref) . '<br>' . $langs->trans('DocumentSignedSha', $ecmfile->label), 0, 1);
 				} elseif ($object->status == 5) {
-					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, $langs->trans('AcknowledgementReceiptTextMail', $receiver->firstname . ' ' . $receiver->lastname, preg_replace('/AR_/', '', $filename), dol_print_date($receiver->signature_date)) . ' ' . 'IP : ' . $receiver->ip, 0, 1);
+					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, $langs->trans('AcknowledgementReceiptTextMail', $receiver->firstname . ' ' . $receiver->lastname, preg_replace('/AR_/', '', $filename), dol_print_date($receiver->signature_date)) . ' ' . 'IP : ' . $receiver->ip . '<br>' . $langs->trans('DocumentSignedSha', $ecmfile->label), 0, 1);
 				}
 
 				$nexY = $pdf->GetY();
