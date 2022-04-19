@@ -155,7 +155,7 @@ if ($object->id) {
 	$linkback = '<a href="'.dol_buildpath('/envelope/envelope_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
 
 	$morehtmlref = '<div class="refidno">';
-	
+
 	$morehtmlref .= '</div>';
 
 	dol_banner_tab($object, 'ref', $linkback, 1, 'ref', 'ref', $morehtmlref);
@@ -177,7 +177,7 @@ if ($object->id) {
 
 	print dol_get_fiche_end();
 
-	$modulepart = 'envelope';
+	$modulepart = 'doliletter';
 	//todo:perms
 	//$permissiontoadd = $user->rights->envelope->doliletter->write;
 	$permissiontoadd = 1;
@@ -186,7 +186,7 @@ if ($object->id) {
 	$param = '&id='.$object->id;
 
 	//$relativepathwithnofile='doliletter/' . dol_sanitizeFileName($object->id).'/';
-	$relativepathwithnofile = 'doliletter/envelope/'.dol_sanitizeFileName($object->ref).'/';
+	$relativepathwithnofile = 'envelope/'.dol_sanitizeFileName($object->ref).'/';
 
 	include DOL_DOCUMENT_ROOT.'/core/tpl/document_actions_post_headers.tpl.php';
 } else {
