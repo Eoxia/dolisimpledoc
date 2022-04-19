@@ -115,6 +115,16 @@ if ($action == 'addSignature') {
 					dol_print_error($db, $object->error, $object->errors);
 					exit();
 				}
+				if ($conf->global->DOLILETTER_SHOW_DOCUMENTS_ON_PUBLIC_INTERFACE) {
+					$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$object->ref . '/acknowledgementreceipt';
+					$filelist = dol_dir_list($filedir, 'files');
+					$filename = $filelist[0]['name'];
+
+					$ecmfile->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/acknowledgementreceipt/'.$filename, '', '', 'doliletter_envelope', $id);
+					require_once DOL_DOCUMENT_ROOT.'/core/lib/security2.lib.php';
+					$ecmfile->share = getRandomPassword(true);
+					$ecmfile->update($user);
+				}
 			}
 			// Creation signature OK
 			exit;

@@ -98,23 +98,32 @@ llxHeaderSignature($langs->trans("Signature"), "", 0, 0, $morejs, $morecss);
 			<?php if ($type == 'envelope') : ?>
 				<?php
 				$envelope_filelist = dol_dir_list($upload_dir . '/' . $object->element . '/' . $object->ref);
+
 				if (!empty($envelope_filelist)) {
 					$file = array_shift($envelope_filelist);
 					$fileurl = $file['fullname'];
 					$envelope_filename = $file['name'];
-					$envelope_file = $ecmfile;
+					$envelope_file = new EcmFiles($db);
 					$envelope_file->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/'.$envelope_filename, '', '', 'doliletter_envelope', $object->id);
 				}
+
 				$acknowledgementreceipt_filelist = dol_dir_list($upload_dir . '/' . $object->element . '/' . $object->ref . '/acknowledgementreceipt');
+
 				if (!empty($acknowledgementreceipt_filelist)) {
 					$file = array_shift($acknowledgementreceipt_filelist);
 					$fileurl = $file['fullname'];
 					$acknowledgementreceipt_filename = $file['name'];
-					$acknowledgementreceipt_file = $ecmfile;
+					$acknowledgementreceipt_file = new EcmFiles($db);
+
 					$acknowledgementreceipt_file->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/acknowledgementreceipt/'.$acknowledgementreceipt_filename, '', '', 'doliletter_envelope', $object->id);
+
 				}
 				?>
-				<?php if (dol_strlen($envelope_file->share)) : ?>
+				<?php
+
+				?>
+				<?php if (dol_strlen($envelope_file->share) > 0) : ?>
+
 					<tr>
 						<td>
 							<strong class="grid-align-middle"><?php echo $langs->trans("YourEnvelope"); ?></strong>
