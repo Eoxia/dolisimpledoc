@@ -48,6 +48,8 @@ if ( ! $res) die("Include of main fails");
 require_once DOL_DOCUMENT_ROOT . '/core/class/html.form.class.php';
 require_once DOL_DOCUMENT_ROOT . '/user/class/user.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/ecm/class/ecmdirectory.class.php';
+require_once DOL_DOCUMENT_ROOT.'/ecm/class/ecmfiles.class.php';
 
 require_once '../../lib/doliletter_function.lib.php';
 require_once '../../class/envelope.class.php';
@@ -57,6 +59,8 @@ global $conf, $langs, $db, $user;
 $documentName = GETPOST('document_name');
 $id           = GETPOST('id');
 $type         = GETPOST('type');
+
+$ecmfile = new EcmFiles($db);
 
 $upload_dir = $conf->doliletter->multidir_output[isset($object->entity) ? $object->entity : 1];
 
@@ -97,12 +101,16 @@ llxHeaderSignature($langs->trans("Signature"), "", 0, 0, $morejs, $morecss);
 				$file = array_shift($envelope_filelist);
 				$fileurl = $file['fullname'];
 				$envelope_filename = $file['name'];
+				$envelope_file = $ecmfile;
+				$envelope_file->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/'.$envelope_filename, '', '', 'doliletter_envelope', $object->id);
 			}
 			$acknowledgementreceipt_filelist = dol_dir_list($upload_dir . '/' . $object->element . '/' . $object->ref . '/acknowledgementreceipt');
 			if (!empty($acknowledgementreceipt_filelist)) {
 				$file = array_shift($acknowledgementreceipt_filelist);
 				$fileurl = $file['fullname'];
-				$acknowledgementreceipt_filelist = $file['name'];
+				$acknowledgementreceipt_filename = $file['name'];
+				$acknowledgementreceipt_file = $ecmfile;
+				$acknowledgementreceipt_file->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/'.$acknowledgementreceipt_filename, '', '', 'doliletter_envelope', $object->id);
 			}
 			?>
 			<tr>
@@ -110,7 +118,7 @@ llxHeaderSignature($langs->trans("Signature"), "", 0, 0, $morejs, $morecss);
 					<strong class="grid-align-middle"><?php echo $langs->trans("YourEnvelope"); ?></strong>
 				</td>
 				<td>
-				<a href="<?php echo './../../../../document.php?modulepart=doliletter&file=envelope/' . $object->ref . '/' . $envelope_filename . '&entity=' . $conf->entity ?>">
+					<a href="<?php echo './../../../../document.php?hashp=' . $envelope_file->share ?>">
 						<span class="wpeo-button button-primary button-radius-2 grid-align-right"><i class="button-icon fas fa-file-pdf"></i><?php echo '  ' . $langs->trans('ShowDocument'); ?></span>
 					</a>
 				</td>
@@ -120,7 +128,7 @@ llxHeaderSignature($langs->trans("Signature"), "", 0, 0, $morejs, $morecss);
 					<strong class="grid-align-middle"><?php echo $langs->trans("YourAcknowledgementReceipt"); ?></strong>
 				</td>
 				<td>
-					<a href="<?php echo './../../../../document.php?modulepart=doliletter&file=envelope/' . $object->ref . '/acknowledgementreceipt/' . $acknowledgementreceipt_filelist . '&entity=' . $conf->entity ?>">
+					<a href="<?php echo './../../../../document.php?hashp=' . $acknowledgementreceipt_file->share ?>">
 						<span class="wpeo-button button-primary button-radius-2 grid-align-right"><i class="button-icon fas fa-file-pdf"></i><?php echo '  ' . $langs->trans('ShowDocument'); ?></span>
 					</a>
 				</td>

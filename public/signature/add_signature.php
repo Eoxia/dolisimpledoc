@@ -48,6 +48,8 @@ if ( ! $res) die("Include of main fails");
 require_once DOL_DOCUMENT_ROOT . '/core/class/html.form.class.php';
 require_once DOL_DOCUMENT_ROOT . '/user/class/user.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/ecm/class/ecmdirectory.class.php';
+require_once DOL_DOCUMENT_ROOT.'/ecm/class/ecmfiles.class.php';
 
 require_once '../../class/envelope.class.php';
 require_once '../../lib/doliletter_function.lib.php';
@@ -65,6 +67,7 @@ $type     = GETPOST('type', 'aZ09');
 
 // Initialize technical objects
 $user = new User($db);
+$ecmfile = new EcmFiles($db);
 
 switch ($type) {
 	case 'envelope':
@@ -159,10 +162,12 @@ if (dol_strlen($element->signature)) {
 					$file = array_shift($filelist);
 					$fileurl = $file['fullname'];
 					$filename = $file['name'];
+					$envelope_file = $ecmfile;
+					$envelope_file->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/'.$filename, '', '', 'doliletter_envelope', $object->id);
 				}
 				?>
 				<strong class="grid-align-middle"><?php echo $langs->trans("LinkedDocument"); ?></strong>
-				<a href="<?php echo './../../../../document.php?modulepart=doliletter&file=envelope/' . $object->ref . '/' . $filename . '&entity=' . $conf->entity ?>">
+				<a href="<?php echo './../../../../document.php?hashp=' . $envelope_file->share ?>">
 					<span class="wpeo-button button-primary button-radius-2 grid-align-right"><i class="button-icon fas fa-file-pdf"></i><?php echo '  ' . $langs->trans('ShowDocument'); ?></span>
 				</a>
 				<?php endif; ?>
