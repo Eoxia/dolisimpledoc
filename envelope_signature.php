@@ -348,7 +348,7 @@ if ((empty($action) || ($action != 'create' && $action != 'edit'))) {
 	print '<tr class="liste_titre">';
 	print '<td>' . $langs->trans("Name") . '</td>';
 	print '<td>' . $langs->trans("Role") . '</td>';
-	print '<td class="center">' . $langs->trans("SendMailDate") . '</td>';
+	print '<td class="center">' . $langs->trans("SignatureLink") . '</td>';
 	print '<td class="center">' . $langs->trans("SignatureDate") . '</td>';
 	//print '<td class="center">' . $langs->trans("Status") . '</td>';
 	print '<td class="center">' . $langs->trans("Signature") . '</td>';
@@ -363,7 +363,10 @@ if ((empty($action) || ($action != 'create' && $action != 'edit'))) {
 	print '</td><td class="role" value="E_SENDER">';
 	print $langs->trans("Sender");
 	print '</td><td class="center">';
-	print dol_print_date($element->last_email_sent_date, 'dayhour');
+	print $_SERVER['HTTP_REFERER'];
+	print  '<input hidden class="signature-link" value="'. $_SERVER['HTTP_REFERER'] .'">';
+	print '   ' . '<button class="copy-to-clipboard-button"><i class="fas fa-clipboard clipboard-copy"></i></button>';
+	print '<span class="copied-to-clipboard" style="display:none">'. '  ' . $langs->trans('CopiedToClipboard').'</span>';
 	print '</td><td class="center">';
 	print dol_print_date($element->signature_date, 'dayhour');
 	//print '</td><td class="center">';
