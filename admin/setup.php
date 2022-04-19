@@ -87,6 +87,17 @@ print ajax_constantonoff('DOLILETTER_SIGNATURE_ENABLE_PUBLIC_INTERFACE');
 print '</td>';
 print '</tr>';
 
+print '<tr class="oddeven"><td>';
+print $langs->trans('PublicInterfaceDocuments');
+print "</td><td>";
+print $langs->trans('ShowDocumentsOnPublicInterface');
+print '</td>';
+
+print '<td class="center">';
+print ajax_constantonoff('DOLILETTER_SHOW_DOCUMENTS_ON_PUBLIC_INTERFACE');
+print '</td>';
+print '</tr>';
+
 print '</table>';
 print '<hr>';
 

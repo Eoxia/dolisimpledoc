@@ -41,6 +41,8 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formother.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/doleditor.class.php';
+require_once DOL_DOCUMENT_ROOT.'/ecm/class/ecmdirectory.class.php';
+require_once DOL_DOCUMENT_ROOT.'/ecm/class/ecmfiles.class.php';
 require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
 require_once DOL_DOCUMENT_ROOT.'/contact/class/contact.class.php';
 require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
@@ -76,6 +78,8 @@ $refEnvelopeMod = new $conf->global->DOLILETTER_ENVELOPE_ADDON();
 $extrafields    = new ExtraFields($db);
 $usertmp        = new User($db);
 $letter         = new LetterSending($db);
+$ecmfile        = new EcmFiles($db);
+$thirdparty     = new Societe($db);
 
 $object->fetch($id);
 if ($object->fk_contact > 0) {
@@ -112,7 +116,6 @@ $permissiontodelete = $user->rights->doliletter->envelope->delete || ($permissio
 $permissionnote = $user->rights->doliletter->envelope->write; // Used by the include of actions_setnotes.inc.php
 $permissiondellink = $user->rights->envelope->letter->write; // Used by the include of actions_dellink.inc.php
 $upload_dir = $conf->doliletter->multidir_output[$conf->entity];
-$thirdparty = new Societe($db);
 $thirdparty->fetch($object->fk_soc);
 
 // Security check (enable the most restrictive one)
@@ -332,7 +335,97 @@ if (empty($reshook)) {
 	//include DOL_DOCUMENT_ROOT.'/core/actions_lineupdown.inc.php';
 
 	// Action to build doc
-	include DOL_DOCUMENT_ROOT.'/core/actions_builddoc.inc.php';
+//	include DOL_DOCUMENT_ROOT.'/core/actions_builddoc.inc.php';
+
+	if ($action == 'builddoc' && $permissiontoadd) {
+		if (is_numeric(GETPOST('model', 'alpha'))) {
+			$error = $langs->trans("ErrorFieldRequired", $langs->transnoentities("Model"));
+		} else {
+			// Reload to get all modified line records and be ready for hooks
+			$ret = $object->fetch($id);
+			$ret = $object->fetch_thirdparty();
+			/*if (empty($object->id) || ! $object->id > 0)
+			{
+				dol_print_error('Object must have been loaded by a fetch');
+				exit;
+			}*/
+
+			// Save last template used to generate document
+			if (GETPOST('model', 'alpha')) {
+				$object->setDocModel($user, GETPOST('model', 'alpha'));
+			}
+
+			// Special case to force bank account
+			//if (property_exists($object, 'fk_bank'))
+			//{
+			if (GETPOST('fk_bank', 'int')) {
+				// this field may come from an external module
+				$object->fk_bank = GETPOST('fk_bank', 'int');
+			} elseif (!empty($object->fk_account)) {
+				$object->fk_bank = $object->fk_account;
+			}
+			//}
+
+			$outputlangs = $langs;
+			$newlang = '';
+
+			if ($conf->global->MAIN_MULTILANGS && empty($newlang) && GETPOST('lang_id', 'aZ09')) {
+				$newlang = GETPOST('lang_id', 'aZ09');
+			}
+			if ($conf->global->MAIN_MULTILANGS && empty($newlang) && isset($object->thirdparty->default_lang)) {
+				$newlang = $object->thirdparty->default_lang; // for proposal, order, invoice, ...
+			}
+			if ($conf->global->MAIN_MULTILANGS && empty($newlang) && isset($object->default_lang)) {
+				$newlang = $object->default_lang; // for thirdparty
+			}
+			if (!empty($newlang)) {
+				$outputlangs = new Translate("", $conf);
+				$outputlangs->setDefaultLang($newlang);
+			}
+
+			// To be sure vars is defined
+			if (empty($hidedetails)) {
+				$hidedetails = 0;
+			}
+			if (empty($hidedesc)) {
+				$hidedesc = 0;
+			}
+			if (empty($hideref)) {
+				$hideref = 0;
+			}
+			if (empty($moreparams)) {
+				$moreparams = null;
+			}
+
+			$result = $object->generateDocument($object->model_pdf, $outputlangs, $hidedetails, $hidedesc, $hideref, $moreparams);
+			if ($result <= 0) {
+				setEventMessages($object->error, $object->errors, 'errors');
+				$action = '';
+			} else {
+				if ($conf->global->DOLILETTER_SHOW_DOCUMENTS_ON_PUBLIC_INTERFACE) {
+					$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$object->ref;
+					$filelist = dol_dir_list($filedir, 'files');
+					$filename = $filelist[0]['name'];
+
+					$ecmfile->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/'.$filename, '', '', 'doliletter_envelope', $id);
+					require_once DOL_DOCUMENT_ROOT.'/core/lib/security2.lib.php';
+					$ecmfile->share = getRandomPassword(true);
+					$ecmfile->update($user);
+				}
+				if (empty($donotredirect)) {	// This is set when include is done by bulk action "Bill Orders"
+					setEventMessages($langs->trans("FileGenerated"), null);
+
+					$urltoredirect = $_SERVER['REQUEST_URI'];
+					$urltoredirect = preg_replace('/#builddoc$/', '', $urltoredirect);
+					$urltoredirect = preg_replace('/action=builddoc&?/', '', $urltoredirect); // To avoid infinite loop
+
+					header('Location: '.$urltoredirect.'#builddoc');
+					exit;
+				}
+			}
+		}
+	}
+
 
 	// Actions to send emails
 	$triggersendname = 'DOLILETTER_ENVELOPE_SENTBYMAIL';
@@ -857,8 +950,16 @@ if (empty($reshook)) {
 								dol_print_error($db, $object->error, $object->errors);
 								exit();
 							}
-							$fileparams = dol_most_recent_file($diroutput.'/'.$ref, preg_quote($ref, '/').'[^\-]+');
-							$file = $fileparams['fullname'];
+							if ($conf->global->DOLILETTER_SHOW_DOCUMENTS_ON_PUBLIC_INTERFACE) {
+								$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$object->ref . '/acknowledgementreceipt';
+								$filelist = dol_dir_list($filedir, 'files');
+								$filename = $filelist[0]['name'];
+
+								$ecmfile->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/'.$filename, '', '', 'doliletter_envelope', $id);
+								require_once DOL_DOCUMENT_ROOT.'/core/lib/security2.lib.php';
+								$ecmfile->share = getRandomPassword(true);
+								$ecmfile->update($user);
+							}
 						}
 					}
 					setEventMessages($langs->trans('AcknowledgementReceiptGenerated'), array());
@@ -913,13 +1014,20 @@ if (empty($reshook)) {
 						if (method_exists($object, 'generateDocument'))
 						{
 							$result = $object->generateDocument('ares', $langs, $hidedetails, $hidedesc, $hideref);
-
 							if ($result < 0) {
 								dol_print_error($db, $object->error, $object->errors);
 								exit();
 							}
-							$fileparams = dol_most_recent_file($diroutput.'/'.$ref, preg_quote($ref, '/').'[^\-]+');
-							$file = $fileparams['fullname'];
+							if ($conf->global->DOLILETTER_SHOW_DOCUMENTS_ON_PUBLIC_INTERFACE) {
+								$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$object->ref . '/sendingproof';
+								$filelist = dol_dir_list($filedir, 'files');
+								$filename = $filelist[0]['name'];
+
+								$ecmfile->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/'.$filename, '', '', 'doliletter_envelope', $id);
+								require_once DOL_DOCUMENT_ROOT.'/core/lib/security2.lib.php';
+								$ecmfile->share = getRandomPassword(true);
+								$ecmfile->update($user);
+							}
 						}
 					}
 					setEventMessages($langs->trans('SendingProofGenerated'), array());

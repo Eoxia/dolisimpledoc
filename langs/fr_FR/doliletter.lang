@@ -169,3 +169,5 @@ ShowDocument = Voir le document
 Receiver = Destinataire
 SignatureReceiver = Signature du destinataire
 Erase = Effacer
+PublicInterfaceDocuments = Documents sur l'interface publique
+ShowDocumentsOnPublicInterface = Autoriser le téléchargement des documents depuis l'interface publique
