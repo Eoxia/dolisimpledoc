@@ -179,7 +179,7 @@ if (dol_strlen($element->signature)) {
 						?>
 						<?php if(dol_strlen($envelope_file->share)) : ?>
 							<strong class="grid-align-middle"><?php echo $langs->trans("LinkedDocument"); ?></strong>
-							<a href="<?php echo './../../../../document.php?hashp=' . $envelope_file->share ?>">
+							<a href="<?php echo './../../../../document.php?hashp=' . $envelope_file->share ?>" target="_blank">
 								<span class="wpeo-button button-primary button-radius-2 grid-align-right"><i class="button-icon fas fa-file-pdf"></i><?php echo '  ' . $langs->trans('ShowDocument'); ?></span>
 							</a>
 						<?php endif; ?>

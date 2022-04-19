@@ -129,7 +129,7 @@ llxHeaderSignature($langs->trans("Signature"), "", 0, 0, $morejs, $morecss);
 							<strong class="grid-align-middle"><?php echo $langs->trans("YourEnvelope"); ?></strong>
 						</td>
 						<td>
-							<a href="<?php echo './../../../../document.php?hashp=' . $envelope_file->share ?>">
+							<a href="<?php echo './../../../../document.php?hashp=' . $envelope_file->share ?>" target="_blank">
 								<span class="wpeo-button button-primary button-radius-2 grid-align-right"><i class="button-icon fas fa-file-pdf"></i><?php echo '  ' . $langs->trans('ShowDocument'); ?></span>
 							</a>
 						</td>
@@ -141,7 +141,7 @@ llxHeaderSignature($langs->trans("Signature"), "", 0, 0, $morejs, $morecss);
 							<strong class="grid-align-middle"><?php echo $langs->trans("YourAcknowledgementReceipt"); ?></strong>
 						</td>
 						<td>
-							<a href="<?php echo './../../../../document.php?hashp=' . $acknowledgementreceipt_file->share ?>">
+							<a href="<?php echo './../../../../document.php?hashp=' . $acknowledgementreceipt_file->share ?>" target="_blank">
 								<span class="wpeo-button button-primary button-radius-2 grid-align-right"><i class="button-icon fas fa-file-pdf"></i><?php echo '  ' . $langs->trans('ShowDocument'); ?></span>
 							</a>
 						</td>
