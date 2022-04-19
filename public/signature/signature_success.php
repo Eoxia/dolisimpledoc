@@ -111,7 +111,7 @@ llxHeaderSignature($langs->trans("Signature"), "", 0, 0, $morejs, $morecss);
 					$fileurl = $file['fullname'];
 					$acknowledgementreceipt_filename = $file['name'];
 					$acknowledgementreceipt_file = $ecmfile;
-					$acknowledgementreceipt_file->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/'.$acknowledgementreceipt_filename, '', '', 'doliletter_envelope', $object->id);
+					$acknowledgementreceipt_file->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/acknowledgementreceipt/'.$acknowledgementreceipt_filename, '', '', 'doliletter_envelope', $object->id);
 				}
 				?>
 				<?php if (dol_strlen($envelope_file->share)) : ?>
