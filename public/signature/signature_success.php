@@ -114,26 +114,30 @@ llxHeaderSignature($langs->trans("Signature"), "", 0, 0, $morejs, $morecss);
 					$acknowledgementreceipt_file->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/'.$acknowledgementreceipt_filename, '', '', 'doliletter_envelope', $object->id);
 				}
 				?>
-				<tr>
-					<td>
-						<strong class="grid-align-middle"><?php echo $langs->trans("YourEnvelope"); ?></strong>
-					</td>
-					<td>
-						<a href="<?php echo './../../../../document.php?hashp=' . $envelope_file->share ?>">
-							<span class="wpeo-button button-primary button-radius-2 grid-align-right"><i class="button-icon fas fa-file-pdf"></i><?php echo '  ' . $langs->trans('ShowDocument'); ?></span>
-						</a>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<strong class="grid-align-middle"><?php echo $langs->trans("YourAcknowledgementReceipt"); ?></strong>
-					</td>
-					<td>
-						<a href="<?php echo './../../../../document.php?hashp=' . $acknowledgementreceipt_file->share ?>">
-							<span class="wpeo-button button-primary button-radius-2 grid-align-right"><i class="button-icon fas fa-file-pdf"></i><?php echo '  ' . $langs->trans('ShowDocument'); ?></span>
-						</a>
-					</td>
-				</tr>
+				<?php if (dol_strlen($envelope_file->share)) : ?>
+					<tr>
+						<td>
+							<strong class="grid-align-middle"><?php echo $langs->trans("YourEnvelope"); ?></strong>
+						</td>
+						<td>
+							<a href="<?php echo './../../../../document.php?hashp=' . $envelope_file->share ?>">
+								<span class="wpeo-button button-primary button-radius-2 grid-align-right"><i class="button-icon fas fa-file-pdf"></i><?php echo '  ' . $langs->trans('ShowDocument'); ?></span>
+							</a>
+						</td>
+					</tr>
+				<?php endif; ?>
+				<?php if (dol_strlen($acknowledgementreceipt_file->share)) : ?>
+					<tr>
+						<td>
+							<strong class="grid-align-middle"><?php echo $langs->trans("YourAcknowledgementReceipt"); ?></strong>
+						</td>
+						<td>
+							<a href="<?php echo './../../../../document.php?hashp=' . $acknowledgementreceipt_file->share ?>">
+								<span class="wpeo-button button-primary button-radius-2 grid-align-right"><i class="button-icon fas fa-file-pdf"></i><?php echo '  ' . $langs->trans('ShowDocument'); ?></span>
+							</a>
+						</td>
+					</tr>
+				<?php endif; ?>
 			<?php endif; ?>
 		</table>
 	<?php endif; ?>

@@ -171,3 +171,5 @@ SignatureReceiver = Signature du destinataire
 Erase = Effacer
 PublicInterfaceDocuments = Documents sur l'interface publique
 ShowDocumentsOnPublicInterface = Autoriser le téléchargement des documents depuis l'interface publique
+DeleteSignatureAfterReception = Supprimer le téléchargement public après réception
+DeleteSignatureAfterReceptionText = Désactive le téléchargement des documents depuis l'interface publique après génération de l'accusé de réception

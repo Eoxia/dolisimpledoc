@@ -98,6 +98,18 @@ print ajax_constantonoff('DOLILETTER_SHOW_DOCUMENTS_ON_PUBLIC_INTERFACE');
 print '</td>';
 print '</tr>';
 
+print '<tr class="oddeven"><td>';
+print $langs->trans('DeleteSignatureAfterReception');
+print "</td><td>";
+print $langs->trans('DeleteSignatureAfterReceptionText');
+print '</td>';
+
+print '<td class="center">';
+print ajax_constantonoff('DOLILETTER_DELETE_PUBLIC_DOWNLOAD_LINKS_AFTER_SIGNATURE');
+print '</td>';
+print '</tr>';
+
+
 print '</table>';
 print '<hr>';
 

@@ -498,7 +498,39 @@ class pdf_deimos extends ModelePDFAcknowledgementReceipt
 						$bottomlasttab = $this->page_hauteur - $heightforfooter - $heightforfooter + 1;
 					}
 				}
+				if ($conf->global->DOLILETTER_DELETE_PUBLIC_DOWNLOAD_LINKS_AFTER_SIGNATURE) {
+					global $db;
+					require_once DOL_DOCUMENT_ROOT.'/ecm/class/ecmdirectory.class.php';
+					require_once DOL_DOCUMENT_ROOT.'/ecm/class/ecmfiles.class.php';
+					$ecmfile = new EcmFiles($db);
 
+					//Delete envelope shared link
+					$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$object->ref . '/';
+					$filelist = dol_dir_list($filedir, 'files');
+					$filename = $filelist[0]['name'];
+
+					$ecmfile->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/'.$filename, '', '', 'doliletter_envelope', $object->id);
+					$ecmfile->share = '';
+					$ecmfile->update($user);
+
+					//Delete sending proof shared link
+					$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$object->ref . '/sendingproof/';
+					$filelist = dol_dir_list($filedir, 'files');
+					$filename = $filelist[0]['name'];
+
+					$ecmfile->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/sendingproof/'.$filename, '', '', 'doliletter_envelope', $object->id);
+					$ecmfile->share = '';
+					$ecmfile->update($user);
+
+					//Delete acknowledgement receipt shared link
+					$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$object->ref . '/acknowledgementreceipt/';
+					$filelist = dol_dir_list($filedir, 'files');
+					$filename = $filelist[0]['name'];
+
+					$ecmfile->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/acknowledgementreceipt/'.$filename, '', '', 'doliletter_envelope', $object->id);
+					$ecmfile->share = '';
+					$ecmfile->update($user);
+				}
 
 				$this->_pagefoot($pdf, $object, $outputlangs);
 				if (method_exists($pdf, 'AliasNbPages')) $pdf->AliasNbPages();
