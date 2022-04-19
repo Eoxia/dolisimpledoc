@@ -363,8 +363,9 @@ if ((empty($action) || ($action != 'create' && $action != 'edit'))) {
 	print '</td><td class="role" value="E_SENDER">';
 	print $langs->trans("Sender");
 	print '</td><td class="center">';
-	print $_SERVER['HTTP_REFERER'];
-	print  '<input hidden class="signature-link" value="'. $_SERVER['HTTP_REFERER'] .'">';
+	$current_url =  (preg_match('/&/', $_SERVER['HTTP_REFERER']) ? preg_split('/&/', $_SERVER['HTTP_REFERER'])[0] :  $_SERVER['HTTP_REFERER']);
+	print$current_url;
+	print  '<input hidden class="signature-link" value="'. $current_url .'">';
 	print '   ' . '<button class="copy-to-clipboard-button"><i class="fas fa-clipboard clipboard-copy"></i></button>';
 	print '<span class="copied-to-clipboard" style="display:none">'. '  ' . $langs->trans('CopiedToClipboard').'</span>';
 	print '</td><td class="center">';
