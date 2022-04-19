@@ -173,3 +173,5 @@ PublicInterfaceDocuments = Documents sur l'interface publique
 ShowDocumentsOnPublicInterface = Autoriser le téléchargement des documents depuis l'interface publique
 DeleteSignatureAfterReception = Supprimer le téléchargement public après réception
 DeleteSignatureAfterReceptionText = Désactive le téléchargement des documents depuis l'interface publique après génération de l'accusé de réception
+EnvelopeRecipientSignTrigger = Accusé de réception du courrier
+DocumentHasBeenSignedBy = Le document a été signé par %s

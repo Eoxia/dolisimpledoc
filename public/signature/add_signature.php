@@ -107,6 +107,7 @@ if ($action == 'addSignature') {
 		if ($result > 0) {
 			$signatory->setSigned($user, false);
 			$object->setStatusCommon($user, 5);
+			$object->call_trigger('ENVELOPE_RECIPIENT_SIGN', $user);
 			if (method_exists($object, 'generateDocument'))
 			{
 				$result = $object->generateDocument('deimos', $langs, $hidedetails, $hidedesc, $hideref);

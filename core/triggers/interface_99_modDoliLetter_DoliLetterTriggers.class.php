@@ -144,6 +144,7 @@ class InterfaceDoliLetterTriggers extends DolibarrTriggers
 
 				$actioncomm->create($user);
 				break;
+
 			case 'ENVELOPE_LETTER' :
 				dol_syslog("Trigger '".$this->name."' for action '$action' launched by ".__FILE__.". id=".$object->id);
 				require_once DOL_DOCUMENT_ROOT.'/comm/action/class/actioncomm.class.php';
@@ -199,6 +200,7 @@ class InterfaceDoliLetterTriggers extends DolibarrTriggers
 
 				$result = $actioncomm->create($user);
 				break;
+
 			case 'ENVELOPE_MODIFY' :
 
 				dol_syslog("Trigger '".$this->name."' for action '$action' launched by ".__FILE__.". id=".$object->id);
@@ -217,6 +219,7 @@ class InterfaceDoliLetterTriggers extends DolibarrTriggers
 
 				$actioncomm->create($user);
 				break;
+
 			case 'ENVELOPE_DELETE' :
 
 				dol_syslog("Trigger '".$this->name."' for action '$action' launched by ".__FILE__.". id=".$object->id);
@@ -235,6 +238,7 @@ class InterfaceDoliLetterTriggers extends DolibarrTriggers
 
 				$actioncomm->create($user);
 				break;
+
 			case 'ENVELOPE_SIGN' :
 
 				dol_syslog("Trigger '".$this->name."' for action '$action' launched by ".__FILE__.". id=".$object->id);
@@ -250,6 +254,29 @@ class InterfaceDoliLetterTriggers extends DolibarrTriggers
 				$actioncomm->fk_element  = $object->id;
 				$actioncomm->userownerid = $user->id;
 				$actioncomm->percentage  = -1;
+
+				$actioncomm->create($user);
+				break;
+
+			case 'ENVELOPE_RECIPIENT_SIGN' :
+
+				dol_syslog("Trigger '".$this->name."' for action '$action' launched by ".__FILE__.". id=".$object->id);
+				require_once DOL_DOCUMENT_ROOT.'/comm/action/class/actioncomm.class.php';
+				$now = dol_now();
+				$actioncomm = new ActionComm($this->db);
+				$signatory = new EnvelopeSignature($this->db);
+				$actioncomm->elementtype = 'envelope@doliletter';
+				$actioncomm->code        = 'AC_ENVELOPE_RECIPIENT_SIGN';
+				$actioncomm->type_code   = 'AC_OTH_AUTO';
+				$actioncomm->label       = $langs->trans('EnvelopeRecipientSignTrigger');
+				$actioncomm->datep       = $now;
+				$actioncomm->fk_element  = $object->id;
+				$actioncomm->userownerid = $user->id;
+				$actioncomm->percentage  = -1;
+				$signatory = $signatory->fetchSignatory('E_RECEIVER', $object->id);
+				$signatory = array_shift($signatory);
+
+				$actioncomm->note  = $langs->trans('DocumentHasBeenSignedBy', $signatory->firstname . ' ' . $signatory->lastname);
 
 				$actioncomm->create($user);
 				break;
