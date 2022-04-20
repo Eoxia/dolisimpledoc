@@ -194,8 +194,8 @@ if (empty($reshook)) {
 
 
 if ($action == 'addLink') {
-	$element_types  =GETPOST('element_types');
-	$element_id  =GETPOST('element_id');
+	$element_types  = GETPOST('element_types');
+	$element_id  = GETPOST('element_id');
 	if (!is_array($element_id)) {
 		$element_id = array($element_id);
 	}
@@ -295,7 +295,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 
 	//to do: trans file for titles
-	$object->fetchObjectLinked();
+	$object->fetchObjectLinked(null, '', null, 'doliletter_envelope');
 
 	// Contracts
 	print '<p>';
