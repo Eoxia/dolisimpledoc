@@ -1573,7 +1573,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 			$urlsource = $_SERVER["PHP_SELF"]."?id=".$object->id;
 			$genallowed = $user->rights->doliletter->envelope->read; // If you can read, you can build the PDF to read content
 			$delallowed = $user->rights->doliletter->envelope->write; // If you can create/edit, you can remove a file on card
-			print dolilettershowdocuments('doliletter:Envelope', $object->element.'/'.$objref, $filedir, $urlsource, $object->status >= 5 ? 0 : $genallowed, 0, $conf->global->DOLILETTER_ENVELOPE_ADDON_PDF, 1, 0, 0, $langs->trans('Envelope'), 0, '', '', '', $langs->defaultlang, $object->status < 3 ? ( $document_generated > 0 ? 0 : 1) : 0, $document_generated > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
+			print dolilettershowdocuments('doliletter', $object->element.'/'.$objref, $filedir, $urlsource, $object->status >= 5 ? 0 : $genallowed, 0, $conf->global->DOLILETTER_ENVELOPE_ADDON_PDF, 1, 0, 0, $langs->trans('Envelope'), 0, '', '', '', $langs->defaultlang, $object->status < 3 ? ( $document_generated > 0 ? 0 : 1) : 0, $document_generated > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
 		}
 
 		if ($object->status == 3 || $object->status == 6) {
