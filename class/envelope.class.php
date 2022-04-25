@@ -60,7 +60,16 @@ class Envelope extends CommonObject
 	/**
 	 * @var string String with name of icon for document. Must be the part after the 'object_' into object_document.png
 	 */
-	public $picto = 'doliletter88px@doliletter';
+	public $picto = 'doliletter32px@doliletter';
+
+	public const STATUS_DELETED = -1;
+	public const STATUS_PENDING_SIGNATURE = 0;
+	public const STATUS_SIGNED = 1;
+	public const STATUS_LOCKED = 2;
+	public const STATUS_SENT_BY_LETTER = 3;
+	public const STATUS_SENT_BY_MAIL = 4;
+	public const STATUS_RECEIVED_BY_MAIL_AND_SIGNED = 5;
+	public const STATUS_RECEIVED_BY_LETTER_AND_SIGNED = 6;
 
 	/**
 	 *  'type' field format ('integer', 'integer:ObjectClass:PathToClass[:AddCreateButtonOrNot[:Filter]]', 'sellist:TableName:LabelFieldName[:KeyFieldName[:KeyFieldParent[:Filter]]]', 'varchar(x)', 'double(24,8)', 'real', 'price', 'text', 'text:none', 'html', 'date', 'datetime', 'timestamp', 'duration', 'mail', 'phone', 'url', 'password')
@@ -88,20 +97,19 @@ class Envelope extends CommonObject
 	 *  Note: To have value dynamic, you can set value to 0 in definition and edit the value on the fly into the constructor.
 	 */
 
-	// BEGIN MODULEBUILDER PROPERTIES
 	/**
 	 * @var array  Array with all fields and their property. Do not use it as a static var. It may be modified by constructor.
 	 */
 	public $fields=array(
 		'rowid'          => array('type'=>'integer', 'label'=>'TechnicalID', 'enabled'=>'1', 'position'=>1, 'notnull'=>1, 'visible'=>0, 'noteditable'=>'1', 'index'=>1, 'comment'=>"Id"),
 		'ref'            => array('type'=>'varchar(128)', 'label'=>'Ref', 'enabled'=>'1', 'position'=>10, 'notnull'=>1, 'visible'=>1, 'noteditable'=>'1', 'default'=>'(PROV)', 'index'=>1, 'searchall'=>1, 'showoncombobox'=>'1', 'comment'=>"Reference of object"),
-		'label'          => array('type'=>'varchar(128)', 'label'=>'Label', 'enabled'=>'1', 'position'=>10, 'notnull'=>1, 'visible'=>1, 'index'=>1, 'searchall'=>1, 'comment'=>"label of object"),
 		'ref_ext'        => array('type'=>'varchar(128)', 'label'=>'RefExt', 'enabled'=>'1', 'position'=>20, 'notnull'=>0, 'visible'=>0,),
+		'label'          => array('type'=>'varchar(255)', 'label'=>'Label', 'enabled'=>'1', 'position'=>10, 'notnull'=>1, 'visible'=>1, 'searchall'=>1, 'comment'=>"label of object"),
 		'entity'         => array('type'=>'integer', 'label'=>'Entity', 'enabled'=>'1', 'position'=>30, 'notnull'=>1, 'visible'=>0,),
 		'date_creation'  => array('type'=>'datetime', 'label'=>'DateCreation', 'enabled'=>'1', 'position'=>40, 'notnull'=>1, 'visible'=>2,),
 		'tms'            => array('type'=>'timestamp', 'label'=>'DateModification', 'enabled'=>'1', 'position'=>50, 'notnull'=>0, 'visible'=>0,),
 		'import_key'     => array('type'=>'integer', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>60, 'notnull'=>1, 'visible'=>0,),
-		'status'         => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>70, 'notnull'=>1, 'default' => 1, 'visible'=>0, 'index'=>1,),
+		'status'         => array('type'=>'smallint', 'label'=>'Status', 'enabled'=>'1', 'position'=>70, 'notnull'=>1, 'default' => 0, 'visible'=>2, 'index'=>1,),
 		'note_public'    => array('type'=>'textarea', 'label'=>'PublicNote', 'enabled'=>'1', 'position'=>80, 'notnull'=>0, 'visible'=>0,),
 		'note_private'   => array('type'=>'textarea', 'label'=>'PrivateNote', 'enabled'=>'1', 'position'=>90, 'notnull'=>0, 'visible'=>0,),
 		'model_pdf'      => array('type'=>'varchar(255)', 'label'=>'PdfModel', 'enabled'=>'1', 'position'=>100, 'notnull'=>0, 'visible'=>0,),
@@ -109,6 +117,8 @@ class Envelope extends CommonObject
 		'content'        => array('type'=>'textarea', 'label'=>'Content', 'enabled'=>'1', 'position'=>120, 'notnull'=>1, 'visible'=>3,),
 		'document_url'   => array('type'=>'varchar(255)', 'label'=>'DocumentUrl', 'enabled'=>'1', 'position'=>150, 'notnull'=>0, 'visible'=>0,),
 		'fk_soc'         => array('type'=>'integer', 'label'=>'ThirdParty', 'enabled'=>'1', 'position'=>160, 'notnull'=>1, 'visible'=>1,),
+		'fk_contact'     => array('type'=>'integer', 'label'=>'Contact', 'enabled'=>'1', 'position'=>170, 'notnull'=>1, 'visible'=>1,),
+		'fk_project'     => array('type'=>'integer', 'label'=>'Project', 'enabled'=>'1', 'position'=>175, 'notnull'=>1, 'visible'=>1,),
 		'fk_user_creat'  => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserAuthor', 'enabled'=>'1', 'position'=>180, 'notnull'=>1, 'visible'=>-2, 'foreignkey'=>'user.rowid',),
 		'fk_user_modif'  => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserModif', 'enabled'=>'1', 'position'=>190, 'notnull'=>-1, 'visible'=>0,),
 	);
@@ -128,6 +138,8 @@ class Envelope extends CommonObject
 	public $content;
 	public $document_url;
 	public $fk_soc;
+	public $fk_contact;
+	public $fk_project;
 	public $fk_user_creat;
 	public $fk_user_modif;
 	public $label;
@@ -176,9 +188,7 @@ class Envelope extends CommonObject
 	 * @return int             <0 if KO, Id of created object if OK
 	 */
 	public function create(User $user, $notrigger = false) {
-		$resultcreate = $this->createCommon($user, $notrigger);
-
-		return $resultcreate;
+		return $this->createCommon($user, $notrigger);
 	}
 
 	/**
@@ -349,7 +359,7 @@ class Envelope extends CommonObject
 		if ($option == 'nolink') {
 			$linkstart = '<span';
 		} else {
-			$linkstart = '<a href="'.$url.'"';
+			$linkstart = '<a href="'.$url.'" target="_blank"';
 		}
 		$linkstart .= $linkclose.'>';
 		if ($option == 'nolink') {
@@ -428,6 +438,29 @@ class Envelope extends CommonObject
 	 *  @return string 			       Label of status
 	 */
 	public function LibStatut($status, $mode = 0) {
+		if (empty($this->labelStatus) || empty($this->labelStatusShort)) {
+			global $langs;
+			$langs->load("doliletter@doliletter");
+			$this->labelStatus[self::STATUS_DELETED]                       = $langs->trans('Deleted');
+			$this->labelStatus[self::STATUS_PENDING_SIGNATURE]             = $langs->trans('ValidatePendingSignature');
+			$this->labelStatus[self::STATUS_SIGNED]                        = $langs->trans('Signed');
+			$this->labelStatus[self::STATUS_LOCKED]                        = $langs->trans('Locked');
+			$this->labelStatus[self::STATUS_SENT_BY_LETTER]                = $langs->trans('SentByLetter');
+			$this->labelStatus[self::STATUS_SENT_BY_MAIL]                  = $langs->trans('SentByMail');
+			$this->labelStatus[self::STATUS_RECEIVED_BY_MAIL_AND_SIGNED]   = $langs->trans('ReceivedAndSignedByMail');
+			$this->labelStatus[self::STATUS_RECEIVED_BY_LETTER_AND_SIGNED] = $langs->trans('ReceivedAndSignedByLetter');
+		}
+
+		$statusType                                                            = 'status' . $status;
+		if ($status == self::STATUS_DELETED) $statusType                       = 'status0';
+		if ($status == self::STATUS_PENDING_SIGNATURE) $statusType             = 'status3';
+		if ($status == self::STATUS_LOCKED) $statusType                        = 'status8';
+		if ($status == self::STATUS_SENT_BY_LETTER) $statusType    			   = 'status7';
+		if ($status == self::STATUS_SENT_BY_MAIL) $statusType      		       = 'status7';
+		if ($status == self::STATUS_RECEIVED_BY_MAIL_AND_SIGNED) $statusType   = 'status6';
+		if ($status == self::STATUS_RECEIVED_BY_LETTER_AND_SIGNED) $statusType = 'status6';
+
+		return dolGetStatus($this->labelStatus[$status], $this->labelStatusShort[$status], '', $statusType, $mode);
 	}
 
 	/**

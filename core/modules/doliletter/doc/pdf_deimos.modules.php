@@ -33,13 +33,14 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/pdf.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
+require_once DOL_DOCUMENT_ROOT.'/contact/class/contact.class.php';
 
-require_once __DIR__ . '/../modules_envelope.php';
+require_once __DIR__ . '/../modules_acknowledgementreceipt.php';
 
 /**
  *	Class to build contracts documents with model Strato
  */
-class pdf_phobos extends ModelePDFEnvelope
+class pdf_deimos extends ModelePDFAcknowledgementReceipt
 {
 	/**
 	 * @var DoliDb Database handler
@@ -130,7 +131,7 @@ class pdf_phobos extends ModelePDFEnvelope
 		global $conf, $langs, $mysoc;
 
 		$this->db = $db;
-		$this->name = 'phobos';
+		$this->name = 'deimos';
 		$this->description = $langs->trans("StandardContractsTemplate");
 
 		// Page size for A4 format
@@ -196,7 +197,7 @@ class pdf_phobos extends ModelePDFEnvelope
 				$file = $dir."/SPECIMEN.pdf";
 			} else {
 				$objectref = dol_sanitizeFileName($object->ref);
-				$dir = $conf->doliletter->multidir_output[$conf->entity]."/envelope/".$objectref;
+				$dir = $conf->doliletter->multidir_output[$conf->entity]."/envelope/".$objectref .'/acknowledgementreceipt';
 			}
 			if (!file_exists($dir))
 			{
@@ -211,11 +212,11 @@ class pdf_phobos extends ModelePDFEnvelope
 				$docnum = 0;
 					do {
 						$date = dol_print_date(dol_now(),'dayxcard');
-						$filename = $date . '_' . $objectref . '_signed_' . $docnum . '.pdf';
+						$filename = $date . '_' . $objectref . '_AR' . '_' . $docnum . '.pdf';
 						$filename = str_replace(' ', '_', $filename);
 						$filename = dol_sanitizeFileName($filename);
 						if ($object->status < 2) {
-							$filename = $date . '_' . $objectref . '_' . $docnum. '_specimen_unsigned' . '.pdf';
+							$filename = $date . '_' . $objectref . '_' . $docnum. '_AR_specimen_unsigned' . '.pdf';
 						}
 						$file = $dir.'/'.$filename;
 						$docnum++;
@@ -223,6 +224,9 @@ class pdf_phobos extends ModelePDFEnvelope
 			}
 			if (file_exists($dir))
 			{
+				$signatory = new EnvelopeSignature($this->db);
+				$receiver    = array_shift($signatory->fetchSignatory('E_RECEIVER', $object->id));
+
 				// Add pdfgeneration hook
 				if (!is_object($hookmanager))
 				{
@@ -280,22 +284,22 @@ class pdf_phobos extends ModelePDFEnvelope
 				$tab_top = 90;
 				$tab_top_newpage = (empty($conf->global->MAIN_PDF_DONOTREPEAT_HEAD) ? 42 : 10);
 
-				// Display notes
-				if (!empty($object->note_public))
-				{
-					$tab_top -= 2;
-
-					$pdf->SetFont('', '', $default_font_size - 1);
-					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, dol_htmlentitiesbr($object->note_public), 0, 1);
-					$nexY = $pdf->GetY();
-					$height_note = $nexY - $tab_top;
-
-					// Rect takes a length in 3rd parameter
-					$pdf->SetDrawColor(192, 192, 192);
-					$pdf->Rect($this->marge_gauche, $tab_top - 1, $this->page_largeur - $this->marge_gauche - $this->marge_droite, $height_note + 1);
-
-					$tab_top = $nexY + 6;
-				}
+//				// Display notes
+//				if (!empty($object->note_public))
+//				{
+//					$tab_top -= 2;
+//
+//					$pdf->SetFont('', '', $default_font_size - 1);
+//					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, dol_htmlentitiesbr($object->note_public), 0, 1);
+//					$nexY = $pdf->GetY();
+//					$height_note = $nexY - $tab_top;
+//
+//					// Rect takes a length in 3rd parameter
+//					$pdf->SetDrawColor(192, 192, 192);
+//					$pdf->Rect($this->marge_gauche, $tab_top - 1, $this->page_largeur - $this->marge_gauche - $this->marge_droite, $height_note + 1);
+//
+//					$tab_top = $nexY + 6;
+//				}
 
 				$iniY = $tab_top + 7;
 				$curY = $tab_top + 7;
@@ -305,6 +309,33 @@ class pdf_phobos extends ModelePDFEnvelope
 
 				$pdf->MultiCell(0, 2, ''); // Set interline to 3. Then writeMultiCell must use 3 also.
 
+				$tab_top -= 2;
+
+				$pdf->SetFont('', '', $default_font_size - 1);
+
+				require_once DOL_DOCUMENT_ROOT.'/ecm/class/ecmdirectory.class.php';
+				require_once DOL_DOCUMENT_ROOT.'/ecm/class/ecmfiles.class.php';
+				$ecmfile = new EcmFiles($this->db);
+				$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$object->ref . '/';
+				$filelist = dol_dir_list($filedir, 'files');
+				$filename = $filelist[0]['name'];
+
+				$ecmfile->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/'.$filename, '', '', 'doliletter_envelope', $id);
+
+				if ($object->status == 6) {
+					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, $langs->trans('AcknowledgementReceiptTextLetter', $object->ref) . '<br>' . $langs->trans('DocumentSignedSha', $ecmfile->label), 0, 1);
+				} elseif ($object->status == 5) {
+					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, $langs->trans('AcknowledgementReceiptTextMail', $receiver->firstname . ' ' . $receiver->lastname, preg_replace('/AR_/', '', $filename), dol_print_date($receiver->signature_date)) . ' ' . 'IP : ' . $receiver->ip . '<br>' . $langs->trans('DocumentSignedSha', $ecmfile->label), 0, 1);
+				}
+
+				$nexY = $pdf->GetY();
+				$height_note = $nexY - $tab_top;
+
+				// Rect takes a length in 3rd parameter
+				$pdf->SetDrawColor(192, 192, 192);
+				$pdf->Rect($this->marge_gauche, $tab_top - 1, $this->page_largeur - $this->marge_gauche - $this->marge_droite, $height_note + 1);
+
+				$tab_top = $nexY + 6;
 
 				if (is_countable($object->lines)) {
 					$nblines = count($object->lines);
@@ -463,25 +494,51 @@ class pdf_phobos extends ModelePDFEnvelope
 					}
 				}
 
-				// Show square
-				if ($object->status > 1) {
-					if ($pagenb == 1) {
-						$this->_tableau($pdf, $object, $tab_top, $this->page_hauteur - $tab_top - $heightforinfotot - $heightforfreetext - $heightforfooter, 0, $outputlangs, 0, 0);
+				if ($object->status == 5) {
+					// Show square
+					if ($pagenb == 1)
+					{
+//						$this->_tableau($pdf, $object, $tab_top, $this->page_hauteur - $tab_top - $heightforinfotot - $heightforfreetext - $heightforfooter, 0, $outputlangs, 0, 0);
 						$this->tabSignature($pdf, $tab_top, $this->page_hauteur - $tab_top - $heightforinfotot - $heightforfreetext - $heightforfooter, $outputlangs, $object);
 						$bottomlasttab = $this->page_hauteur - $heightforfooter - $heightforfooter + 1;
 					} else {
-						$this->_tableau($pdf, $object, $tab_top_newpage, $this->page_hauteur - $tab_top_newpage - $heightforinfotot - $heightforfreetext - $heightforfooter, 0, $outputlangs, 0, 0);
+//						$this->_tableau($pdf, $object, $tab_top_newpage, $this->page_hauteur - $tab_top_newpage - $heightforinfotot - $heightforfreetext - $heightforfooter, 0, $outputlangs, 0, 0);
 						$this->tabSignature($pdf, $tab_top_newpage, $this->page_hauteur - $tab_top_newpage - $heightforinfotot - $heightforfreetext - $heightforfooter, $outputlangs, $object);
 						$bottomlasttab = $this->page_hauteur - $heightforfooter - $heightforfooter + 1;
 					}
-				} else {
-					if ($pagenb == 1) {
-						$this->_tableau($pdf, $object, $tab_top, $this->page_hauteur - $tab_top - $heightforinfotot - $heightforfreetext - $heightforfooter, 0, $outputlangs, 0, 0);
-						$bottomlasttab = $this->page_hauteur - $heightforfooter - $heightforfooter + 1;
-					} else {
-						$this->_tableau($pdf, $object, $tab_top_newpage, $this->page_hauteur - $tab_top_newpage - $heightforinfotot - $heightforfreetext - $heightforfooter, 0, $outputlangs, 0, 0);
-						$bottomlasttab = $this->page_hauteur - $heightforfooter - $heightforfooter + 1;
-					}
+				}
+				if ($conf->global->DOLILETTER_DELETE_PUBLIC_DOWNLOAD_LINKS_AFTER_SIGNATURE) {
+					global $db;
+					require_once DOL_DOCUMENT_ROOT.'/ecm/class/ecmdirectory.class.php';
+					require_once DOL_DOCUMENT_ROOT.'/ecm/class/ecmfiles.class.php';
+					$ecmfile = new EcmFiles($db);
+
+					//Delete envelope shared link
+					$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$object->ref . '/';
+					$filelist = dol_dir_list($filedir, 'files');
+					$filename = $filelist[0]['name'];
+
+					$ecmfile->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/'.$filename, '', '', 'doliletter_envelope', $object->id);
+					$ecmfile->share = '';
+					$ecmfile->update($user);
+
+					//Delete sending proof shared link
+					$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$object->ref . '/sendingproof/';
+					$filelist = dol_dir_list($filedir, 'files');
+					$filename = $filelist[0]['name'];
+
+					$ecmfile->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/sendingproof/'.$filename, '', '', 'doliletter_envelope', $object->id);
+					$ecmfile->share = '';
+					$ecmfile->update($user);
+
+					//Delete acknowledgement receipt shared link
+					$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$object->ref . '/acknowledgementreceipt/';
+					$filelist = dol_dir_list($filedir, 'files');
+					$filename = $filelist[0]['name'];
+
+					$ecmfile->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/acknowledgementreceipt/'.$filename, '', '', 'doliletter_envelope', $object->id);
+					$ecmfile->share = '';
+					$ecmfile->update($user);
 				}
 
 				$this->_pagefoot($pdf, $object, $outputlangs);
@@ -511,10 +568,8 @@ class pdf_phobos extends ModelePDFEnvelope
 					@chmod($file, octdec($conf->global->MAIN_UMASK));
 
 				$this->result = array('fullpath'=>$file);
-				if ($object->status > 1) {
-					$signatory = new EnvelopeSignature($this->db);
-					$signatory->deleteSignatoriesSignatures($object->id);
-				}
+				$signatory = new EnvelopeSignature($this->db);
+				$signatory->deleteSignatoriesSignatures($object->id);
 
 				return 1;
 			} else {
@@ -588,28 +643,25 @@ class pdf_phobos extends ModelePDFEnvelope
 		global $conf;
 
 		$signatory = new EnvelopeSignature($this->db);
-		$sender    = array_shift($signatory->fetchSignatory('E_SENDER', $object->id));
+		$receiver    = array_shift($signatory->fetchSignatory('E_RECEIVER', $object->id));
 
 //		$recipient = array_shift($signatory->fetchSignatory('E_SOCIETY', $object->id));
-		if (dol_strlen($sender->signature) > 0) {
+		if (dol_strlen($receiver->signature) > 0) {
 			$tempdir = $conf->doliletter->multidir_output[isset($object->entity) ? $object->entity : 1] . '/temp/';
 
 			//Signatures
-			if (!empty($sender) && $sender > 0) {
-				$encoded_image = explode(",",  $sender->signature)[1];
+			if (!empty($receiver) && $receiver > 0) {
+				$encoded_image = explode(",",  $receiver->signature)[1];
 				$decoded_image = base64_decode($encoded_image);
 				file_put_contents($tempdir."signature.png", $decoded_image);
 				$test = $tempdir."signature.png";
 			}
-
-//			if (!empty($recipient) && $recipient > 0) {
-//				$encoded_image = explode(",",  $recipient->signature)[1];
-//				$decoded_image = base64_decode($encoded_image);
-//				file_put_contents($tempdir."signature2.png", $decoded_image);
-//				$test = $tempdir."signature2.png";
-//			}
 		}
 
+		$file_list = dol_dir_list(DOL_DATA_ROOT . '/doliletter/' . $object->element . '/' . $object->ref, 'files');
+		if ( is_array($file_list[0]) ) {
+			$filename = $file_list[0]['relativename'];
+		}
 
 		$pdf->SetDrawColor(128, 128, 128);
 		$posmiddle = $this->marge_gauche + round(($this->page_largeur - $this->marge_gauche - $this->marge_droite) / 2);
@@ -619,9 +671,9 @@ class pdf_phobos extends ModelePDFEnvelope
 		$contact->fetch($object->fk_contact);
 
 		$pdf->SetXY($this->marge_gauche, $posy);
-		$pdf->MultiCell($posmiddle - $this->marge_gauche - 5, 5,  $sender->firstname . ' ' . $sender->lastname . ' ' . $outputlangs->trans('The') . ' ' . dol_print_date($sender->signature_date), 0, 'L', 0);
+//		$pdf->MultiCell($posmiddle - $this->marge_gauche - 5, 5,  $outputlangs->transnoentities('AcknowledgementReceiptTextMail', $receiver->firstname . ' ' . $receiver->lastname, preg_replace('/AR_/', '', $filename), 'mail', dol_print_date($receiver->signature_date), $receiver->ip ), 0, 'L', 0);
 
-		$pdf->SetXY($this->marge_gauche, $posy + 5);
+		$pdf->SetXY($this->marge_gauche, $posy + 10);
 		$pdf->Image($test, $this->marge_gauche, $posy - 5, 50, 50); // width=0 (auto)
 		$pdf->MultiCell($posmiddle - $this->marge_gauche - 5, 30, '', 1);
 
@@ -654,20 +706,11 @@ class pdf_phobos extends ModelePDFEnvelope
 
 		pdf_pagehead($pdf, $outputlangs, $this->page_hauteur);
 
-		//Affiche le filigrane specimen - Print Draft Watermark
-		if ($object->status < 2) {
-			// Disable auto-page-break
-			$pdf->SetAutoPageBreak(false, 0);
-
-			// Set watermark
-			$img_file = DOL_DOCUMENT_ROOT . '/custom/doliletter/img/specimen-big.png';
-			$pdf->Image($img_file, 0, 0, 223, 280, '', '', '', false, 300, '', false, false, 0);
+		//Affiche le filigrane brouillon - Print Draft Watermark
+		if ($object->statut == 0 && (!empty($conf->global->CONTRACT_DRAFT_WATERMARK)))
+		{
+			pdf_watermark($pdf, $outputlangs, $this->page_hauteur, $this->page_largeur, 'mm', $conf->global->CONTRACT_DRAFT_WATERMARK);
 		}
-
-//		if ($object->statut == 0 && (!empty($conf->global->CONTRACT_DRAFT_WATERMARK)))
-//		{
-//			pdf_watermark($pdf, $outputlangs, $this->page_hauteur, $this->page_largeur, 'mm', $conf->global->CONTRACT_DRAFT_WATERMARK);
-//		}
 
 		//Prepare next
 		$pdf->SetTextColor(0, 0, 60);
@@ -700,7 +743,7 @@ class pdf_phobos extends ModelePDFEnvelope
 		$pdf->SetFont('', 'B', $default_font_size + 3);
 		$pdf->SetXY($posx, $posy);
 		$pdf->SetTextColor(0, 0, 60);
-		$title = $outputlangs->transnoentities("Envelope");
+		$title = $outputlangs->transnoentities("AcknowledgementReceipt");
 		$pdf->MultiCell(100, 4, $title, '', 'R');
 
 		$pdf->SetFont('', 'B', $default_font_size + 2);
@@ -778,7 +821,6 @@ class pdf_phobos extends ModelePDFEnvelope
 
 			$this->recipient = $object->thirdparty;
 
-
 			// Recipient name
 			if ($usecontact && ($object->contact->fk_soc != $object->thirdparty->id && (!isset($conf->global->MAIN_USE_COMPANY_NAME_OF_CONTACT) || !empty($conf->global->MAIN_USE_COMPANY_NAME_OF_CONTACT)))) {
 				$thirdparty = $object->contact;
@@ -820,6 +862,95 @@ class pdf_phobos extends ModelePDFEnvelope
 		}
 	}
 
+	/**
+	 *  Show joined files after expense report. Need this->emetteur object
+	 *
+	 *  @param  PDF			$pdf     			PDF
+	 *  @param  Object		$object				Object to show
+	 *  @param  Translate	$outputlangs		Object lang for output
+	 *  @param  int			$hidefreetext		1=Hide free text
+	 *  @return int								Return height of bottom margin including footer text
+	 */
+
+	protected function _joinedFiles(&$pdf, $object, $outputlangs, $hidefreetext = 0)
+	{
+		global $conf;
+		$showdetails = $conf->global->MAIN_GENERATE_DOCUMENTS_SHOW_FOOT_DETAILS;
+
+		require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
+		require_once DOL_DOCUMENT_ROOT.'/core/lib/images.lib.php';
+
+		$DPI 		= 96;
+		$MM_IN_INCH = 25.4;
+		$A4_HEIGHT 	= 297;
+		$A4_WIDTH 	= 210;
+		$MAX_WIDTH 	= 800;
+		$MAX_HEIGHT = 500;
+
+		$upload_dir 	= DOL_DATA_ROOT . '/doliletter/envelope/' . $object->ref . '/acknowledgementreceipt/uploaded_file';
+		$arrayoffiles 	= dol_dir_list($upload_dir);
+		if ( !empty( $arrayoffiles ) ) {
+			foreach ($arrayoffiles as $file) {
+
+				$proofFilename = $file['name'];
+				$pdfname = $file['level1name'] . '.pdf';
+				$filename = $file['fullname'];
+
+				if (preg_match('/\.(jpg|png|jpeg)$/', $file['name'])) {
+
+					list($width, $height, $type) = getimagesize($filename);
+
+					$ratio = $width / $height;
+					$portrait = $height > $width ? true : false;
+					$widthScale = $MAX_WIDTH / $width;
+					$heightScale = $MAX_HEIGHT / $height;
+
+					$scale = min($widthScale, $heightScale);
+
+					$width = round($scale * $width * $MM_IN_INCH / $DPI);
+					$height = round($scale * $height * $MM_IN_INCH / $DPI);
+
+					$pdf->AddPage($portrait ? 'P' : 'L');
+					$pagenb++;
+					$pdf->SetXY($this->marge_gauche, $this->marge_haute);
+
+					if (!$portrait) {
+						$pdf->Cell(100, 0, $proofFilename, 1, 1, 'C', $pdf->Image(
+							$filename, ($A4_HEIGHT - $width) / 2,
+							($A4_WIDTH - $height) / 2,
+							$width,
+							$height
+						));
+					} else {
+						$pdf->Cell(100, 0, $proofFilename, 1, 1, 'C', $pdf->Image(
+							$filename, ($A4_WIDTH - $width) / 2,
+							($A4_HEIGHT - $height) / 2,
+							$width,
+							$height
+						));
+					}
+
+				} else if (preg_match('/\.(pdf)$/', $file['name']) && $pdfname !== $file['name']) {
+					//Rajouter condition pour que si le pdf n'a pas de trailer il y ait une image par défaut
+
+					$pagesNbr = $pdf->setSourceFile($filename);
+
+					for ($p = 1; $p <= $pagesNbr; $p++) {
+
+						$templateIdx = $pdf->ImportPage($p);
+						$size = $pdf->getTemplatesize($templateIdx);
+						$portrait = $size['h'] > $size['w'] ? true : false;
+
+						$pdf->AddPage($portrait ? 'P' : 'L');
+						$pagenb++;
+						$pdf->SetXY($this->marge_gauche - 5, $this->marge_haute - 5);
+						$pdf->Cell(100, 0, $proofFilename, 1, 1, 'C', $pdf->useTemplate($templateIdx));
+					}
+				}
+			}
+		}
+	}
+
 	// phpcs:disable PEAR.NamingConventions.ValidFunctionName.PublicUnderscore
 	/**
 	 *   	Show footer of page. Need this->emetteur object
@@ -833,6 +964,9 @@ class pdf_phobos extends ModelePDFEnvelope
 	protected function _pagefoot(&$pdf, $object, $outputlangs, $hidefreetext = 0)
 	{
 		global $conf;
+		if ($object->status == 6) {
+			$this->_joinedFiles($pdf, $object, $outputlangs);
+		}
 		$showdetails = empty($conf->global->MAIN_GENERATE_DOCUMENTS_SHOW_FOOT_DETAILS) ? 0 : $conf->global->MAIN_GENERATE_DOCUMENTS_SHOW_FOOT_DETAILS;
 		return pdf_pagefoot($pdf, $outputlangs, 'CONTRACT_FREE_TEXT', $this->emetteur, $this->marge_basse, $this->marge_gauche, $this->page_hauteur, $object, $showdetails, $hidefreetext);
 	}

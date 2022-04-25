@@ -36,11 +36,12 @@ if (!$res && file_exists("../../../main.inc.php")) $res = @include "../../../mai
 if (!$res) die("Include of main fails");
 
 require_once DOL_DOCUMENT_ROOT.'/core/lib/images.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/contact/class/contact.class.php';
 
 require_once __DIR__ . '/class/envelope.class.php';
 require_once __DIR__ . '/lib/doliletter_envelope.lib.php';
 
-global $db, $langs;
+global $db, $langs, $user, $conf;
 
 // Load translation files required by the page
 $langs->loadLangs(array("doliletter@doliletter", "other"));
@@ -55,17 +56,24 @@ $backtopage          = GETPOST('backtopage', 'alpha');
 $object    = new Envelope($db);
 $signatory = new EnvelopeSignature($db);
 $usertmp   = new User($db);
-//$contact   = new Contact($db);
+$contact   = new Contact($db);
 $form      = new Form($db);
 
 $object->fetch($id);
 
 $hookmanager->initHooks(array('envelopesignature', 'globalcard')); // Note that conf->hooks_modules contains array
 
-//Security check
-$permissiontoread   = $user->rights->doliletter->envelope->read;
-$permissiontoadd    = $user->rights->doliletter->envelope->write;
-$permissiontodelete = $user->rights->doliletter->envelope->delete;
+$permissiontoread = $user->rights->doliletter->envelope->read;
+$permissiontoadd = $user->rights->doliletter->envelope->write; // Used by the include of actions_addupdatedelete.inc.php and actions_lineupdown.inc.php
+$permissiontodelete = $user->rights->doliletter->envelope->delete || ($permissiontoadd && isset($object->status));
+$permissionnote = $user->rights->doliletter->envelope->write; // Used by the include of actions_setnotes.inc.php
+$permissiondellink = $user->rights->envelope->letter->write; // Used by the include of actions_dellink.inc.php
+$upload_dir = $conf->doliletter->multidir_output[$conf->entity];
+
+// Security check (enable the most restrictive one)
+if ($user->socid > 0) accessforbidden();
+if ($user->socid > 0) $socid = $user->socid;
+if (empty($conf->doliletter->enabled)) accessforbidden();
 if (!$permissiontoread) accessforbidden();
 
 $upload_dir = $conf->doliletter->multidir_output[$conf->entity ? $conf->entity : $conf->entity]."/envelope/".get_exdir(0, 0, 0, 1, $object);
@@ -129,7 +137,8 @@ if ($action == 'addSignature') {
 
 	$request_body = file_get_contents('php://input');
 
-	$signatory->setSignatory($object->id,'user', array($user->id), 'E_SENDER');
+	$role = GETPOST('role');
+	$signatory->setSignatory($object->id,'user', array($user->id), $role);
 
 	$signatory->fetch($signatory->id);
 	$signatory->signature = $request_body;
@@ -145,7 +154,11 @@ if ($action == 'addSignature') {
 			$urltogo = str_replace('__ID__', $result, $backtopage);
 			$urltogo = preg_replace('/--IDFORBACKTOPAGE--/', $id, $urltogo); // New method to autoselect project after a New on another form object creation
 			header("Location: " . $urltogo);
-			$object->setStatusCommon($user, 2);
+			if ($role == 'E_SENDER') {
+				$object->setStatusCommon($user, 1);
+			} else if ($role == 'E_RECEIVER') {
+				$object->setStatusCommon($user, 5);
+			}
 			$object->call_trigger('ENVELOPE_SIGN', $user);
 			exit;
 		}
@@ -293,8 +306,7 @@ $head = envelopePrepareHead($object);
 print dol_get_fiche_head($head, 'envelopeSign', $langs->trans("Sign"), -1, "doliletter@doliletter");
 dol_strlen($object->label) ? $morehtmlref = ' - ' . $object->label : '';
 
-
-dol_banner_tab($object, 'ref', '', 0, 'ref', 'ref', $morehtmlref, '', 0, $morehtmlleft, $object->getLibStatut(5));
+dol_banner_tab($object, 'ref', '', 0, 'ref', 'ref', $morehtmlref, '', 0, $morehtmlleft);
 
 print dol_get_fiche_end(); ?>
 
@@ -321,59 +333,106 @@ if ((empty($action) || ($action != 'create' && $action != 'edit'))) {
 
 	//Master builder -- Maitre Oeuvre
 	$element = $signatory->fetchSignatory('E_SENDER', $id);
+
 	if ($element > 0) {
 		$element = array_shift($element);
 		$usertmp->fetch($element->element_id);
 	}
 
+
 	print load_fiche_titre($langs->trans("SignatureSender"), '', '');
 
-	print '<div class="signatures-container">';
+	print '<div class="signatures-container sender-signature">';
 
 	print '<table class="border centpercent tableforfield">';
 	print '<tr class="liste_titre">';
 	print '<td>' . $langs->trans("Name") . '</td>';
 	print '<td>' . $langs->trans("Role") . '</td>';
 	print '<td class="center">' . $langs->trans("SignatureLink") . '</td>';
-	print '<td class="center">' . $langs->trans("SendMailDate") . '</td>';
 	print '<td class="center">' . $langs->trans("SignatureDate") . '</td>';
 	//print '<td class="center">' . $langs->trans("Status") . '</td>';
-	print '<td class="center">' . $langs->trans("ActionsSignature") . '</td>';
 	print '<td class="center">' . $langs->trans("Signature") . '</td>';
 	print '</tr>';
 
 	print '<tr class="oddeven"><td class="minwidth200">';
-	print $usertmp->getNomUrl(1);
-	print '</td><td>';
+	if ($usertmp->id > 0) {
+		print $usertmp->getNomUrl(1);
+	} else {
+		print $user->getNomUrl(1);
+	}
+	print '</td><td class="role" value="E_SENDER">';
 	print $langs->trans("Sender");
 	print '</td><td class="center">';
-	if ($object->status == 2) {
-		$signatureUrl = dol_buildpath('/custom/doliletter/public/signature/add_signature.php?track_id='.$element->signature_url, 3);
-		print '<a href='.$signatureUrl.' target="_blank"><i class="fas fa-external-link-alt"></i></a>';
-	} else {
-		print '-';
-	}
-	print '</td><td class="center">';
-	print dol_print_date($element->last_email_sent_date, 'dayhour');
+	$current_url =  (preg_match('/&/', $_SERVER['HTTP_REFERER']) ? preg_split('/&/', $_SERVER['HTTP_REFERER'])[0] :  $_SERVER['HTTP_REFERER']);
+	print$current_url;
+	print  '<input hidden class="signature-link" value="'. $current_url .'">';
+	print '   ' . '<button class="copy-to-clipboard-button"><i class="fas fa-clipboard clipboard-copy"></i></button>';
+	print '<span class="copied-to-clipboard" style="display:none">'. '  ' . $langs->trans('CopiedToClipboard').'</span>';
 	print '</td><td class="center">';
 	print dol_print_date($element->signature_date, 'dayhour');
 	//print '</td><td class="center">';
 	//print $element->getLibStatut(5);
 	print '</td>';
 
-	print '<td class="center">';
-	if ($permissiontoadd) {
-		require __DIR__ . "/core/tpl/doliletter_signature_action_view.tpl.php";
-	}
-	print '</td>';
 	if ($permissiontoadd) {
 		print '<td class="center">';
 		require __DIR__ . "/core/tpl/doliletter_signature_view.tpl.php";
 		print '</td>';
 	}
 	print '</tr>';
-	print '</table>';
+	print '</table></div>';
 	print '<br>';
+	if ($object->status == 4) {
+		//uniquement si le courrier a été envoyé par mail
+		print load_fiche_titre($langs->trans("SignatureReceiver"), '', '');
+		$element = $signatory->fetchSignatory('E_RECEIVER', $id);
+		if ($element > 0) {
+			$element = array_shift($element);
+			$usertmp->fetch($element->element_id);
+		}
+		print '<div class="signatures-container receiver-signature">';
+
+		print '<table class="border centpercent tableforfield">';
+		print '<tr class="liste_titre">';
+		print '<td>' . $langs->trans("Name") . '</td>';
+		print '<td>' . $langs->trans("Role") . '</td>';
+		print '<td class="center">' . $langs->trans("SendMailDate") . '</td>';
+		print '<td class="center">' . $langs->trans("SignatureDate") . '</td>';
+		print '<td class="center">' . $langs->trans("SignatureLink") . '</td>';
+		//print '<td class="center">' . $langs->trans("Status") . '</td>';
+		print '<td class="center">' . $langs->trans("Signature") . '</td>';
+		print '</tr>';
+
+		$contact->fetch($object->fk_contact);
+		print '<tr class="oddeven"><td class="minwidth200">';
+		print $contact->getNomUrl(1);
+		print '</td><td class="role" value="E_RECEIVER">';
+		print $langs->trans("Receiver");
+		print '</td><td class="center">';
+		print dol_print_date($object->last_email_sent_date, 'dayhour');
+		print '</td><td class="center">';
+		print dol_print_date($element->signature_date, 'dayhour');
+		//print '</td><td class="center">';
+		//print $element->getLibStatut(5);
+		print '</td>';
+		$signature_url = dol_buildpath('/custom/doliletter/public/signature/add_signature.php?track_id='.$element->signature_url.'&type=envelope', 1);
+		print '<td class="center"><a href="'. $signature_url .'">';
+		print $signature_url;
+		print '</a></td>';
+		if ($permissiontoadd) {
+			$modal_id = 'contact-' . $contact->id;
+			print '<td class="center">';
+			require __DIR__ . "/core/tpl/doliletter_signature_view.tpl.php";
+			print '</td>';
+		}
+		print '</tr>';
+
+		print '</table>';
+		print '<br>';
+	}
+	print '<tr><td>';
+	print '<a href="envelope_card.php?id='. $object->id .'" class="butAction">' . $langs->trans('GoBackToCard') . '</a>';
+	print '</td></tr>';
 }
 
 // End of page

@@ -38,7 +38,6 @@ if (!$res) die("Include of main fails");
 
 
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formcompany.class.php';
-require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
 
 require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
@@ -53,18 +52,16 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/invoice.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/project.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/propal.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/order.lib.php';
-require_once DOL_DOCUMENT_ROOT.'/core/lib/contact.lib.php';
 
 // load envelope libraries
 require_once './lib/doliletter_envelope.lib.php';
-require_once './lib/doliletter_function.lib.php';
 require_once __DIR__ . '/class/envelope.class.php';
 
 // for other modules
 //dol_include_once('/othermodule/class/otherobject.class.php');
 global $user, $db, $user, $langs;
 // Load translation files required by the page
-$langs->loadLangs(array("doliletter@doliletter", "other", "bills", "projects", "orders", "companies"));
+$langs->loadLangs(array("doliletter@doliletter", "other"));
 
 $action     = GETPOST('action', 'aZ09') ?GETPOST('action', 'aZ09') : 'view'; // The action 'add', 'create', 'edit', 'update', 'view', ...
 $massaction = GETPOST('massaction', 'alpha'); // The bulk action (combo box choice into lists)
@@ -100,9 +97,6 @@ $extrafields = new ExtraFields($db);
 $thirdparty = new Societe($db);
 $contact = new Contact($db);
 $sender = new User($db);
-$project = new Project($db);
-$formproject = new FormProjets($db);
-
 $diroutputmassaction = $conf->envelope->dir_output.'/temp/massgeneration/'.$user->id;
 $hookmanager->initHooks(array('documentlist')); // Note that conf->hooks_modules contains array
 
@@ -121,67 +115,22 @@ if (!$sortorder) {
 	$sortorder = "ASC";
 }
 
-if (!empty($fromtype)) {
-	switch ($fromtype) {
-		case 'facture' :
-			$objectLinked = new Facture($db);
-			$prehead = 'facture_prepare_head';
-			break;
-		case 'thirdparty' :
-			$objectLinked = new Societe($db);
-			$prehead = 'societe_prepare_head';
-			break;
-		case 'product' :
-			$objectLinked = new Product($db);
-			$prehead = 'product_prepare_head';
-			break;
-		case 'project' :
-			$objectLinked = new Project($db);
-			$prehead = 'project_prepare_head';
-			break;
-		case 'propal' :
-			$objectLinked = new Propal($db);
-			$prehead = 'propal_prepare_head';
-			break;
-		case 'order' :
-			$objectLinked = new Commande($db);
-			$prehead = 'commande_prepare_head';
-			break;
-		case 'contact' :
-			$objectLinked = new Contact($db);
-			$prehead = 'contact_prepare_head';
-			break;
-	}
-	$objectLinked->fetch($fromid);
-	$head = $prehead($objectLinked);
-	$linkedObjectsArray = array('thirdparty', 'contact','project');
-}
-
 // Initialize array of search criterias
 $search_all = GETPOST('search_all', 'alphanohtml') ? GETPOST('search_all', 'alphanohtml') : GETPOST('sall', 'alphanohtml');
 $search = array();
-
 foreach ($object->fields as $key => $val) {
-	if (GETPOST($key, 'alpha') !== '') {
-		$search[$key] = GETPOST($key, 'alpha');
+	if (GETPOST('search_'.$key, 'alpha') !== '') {
+		$search[$key] = GETPOST('search_'.$key, 'alpha');
 	}
 	if (preg_match('/^(date|timestamp|datetime)/', $val['type'])) {
 		$search[$key.'_dtstart'] = dol_mktime(0, 0, 0, GETPOST('search_'.$key.'_dtstartmonth', 'int'), GETPOST('search_'.$key.'_dtstartday', 'int'), GETPOST('search_'.$key.'_dtstartyear', 'int'));
 		$search[$key.'_dtend'] = dol_mktime(23, 59, 59, GETPOST('search_'.$key.'_dtendmonth', 'int'), GETPOST('search_'.$key.'_dtendday', 'int'), GETPOST('search_'.$key.'_dtendyear', 'int'));
 	}
 }
-
 if(!empty($fromtype)) {
 	switch ($fromtype) {
 		case 'thirdparty':
 			$search['fk_soc'] = $fromid;
-			break;
-		case 'contact':
-			$search['fk_contact'] = $fromid;
-			break;
-		case 'project':
-			$search['fk_project'] = $fromid;
-			break;
 	}
 }
 
@@ -273,6 +222,8 @@ if (empty($reshook)) {
 //	include DOL_DOCUMENT_ROOT.'/core/actions_massactions.inc.php';
 }
 
+
+
 /*
  * View
  */
@@ -283,7 +234,7 @@ $now = dol_now();
 
 //$help_url="EN:Module_Envelope|FR:Module_Envelope_FR|ES:Módulo_Envelope";
 $help_url = '';
-$title = $langs->trans('EnvelopeList');
+$title = $langs->trans('ListEnvelopes');
 $morejs = array();
 $morecss = array();
 
@@ -307,7 +258,7 @@ $sql .= " FROM ".MAIN_DB_PREFIX.$object->table_element." as t";
 if (isset($extrafields->attributes[$object->table_element]['label']) && is_array($extrafields->attributes[$object->table_element]['label']) && count($extrafields->attributes[$object->table_element]['label'])) {
 	$sql .= " LEFT JOIN ".MAIN_DB_PREFIX.$object->table_element."_extrafields as ef on (t.rowid = ef.fk_object)";
 }
-if (dol_strlen($fromtype) > 0 && !in_array($fromtype, $linkedObjectsArray)) {
+if (dol_strlen($fromtype) > 0) {
 	$sql .= ' LEFT JOIN ' . MAIN_DB_PREFIX . 'element_element as e on (e.fk_source = ' .$fromid. ' AND e.sourcetype="' . $fromtype . '" AND e.targettype = "envelope")';
 }
 // Add table from hooks
@@ -319,18 +270,14 @@ $sql .= " WHERE 1 = 1 ";
 if ($object->ismultientitymanaged == 1) {
 	$sql .= " AND t.entity IN (".getEntity($object->element).")";
 }
-$sql .= " AND t.status > -1";
-if (dol_strlen($fromtype) > 0 && !in_array($fromtype, $linkedObjectsArray)) {
+$sql .= " AND t.status > 0";
+if (dol_strlen($fromtype) > 0) {
 	$sql .= " AND t.rowid = e.fk_target ";
 }
 
 foreach ($search as $key => $val) {
-
 	if (array_key_exists($key, $object->fields)) {
 		if ($key == 'status' && $search[$key] == -1) {
-			continue;
-		}
-		if ($search[$key] < 1) {
 			continue;
 		}
 		$mode_search = (($object->isInt($object->fields[$key]) || $object->isFloat($object->fields[$key])) ? 1 : 0);
@@ -341,7 +288,6 @@ foreach ($search as $key => $val) {
 			$mode_search = 2;
 		}
 		if ($search[$key] != '') {
-
 			$sql .= natural_search($key, $search[$key], (($key == 'status') ? 2 : $mode_search));
 		}
 	} else {
@@ -358,7 +304,6 @@ foreach ($search as $key => $val) {
 		}
 	}
 }
-
 if ($search_all) {
 	$sql .= natural_search(array_keys($fieldstosearchall), $search_all);
 }
@@ -381,7 +326,6 @@ if (empty($conf->global->MAIN_DISABLE_FULL_SCANLIST)) {
 		$offset = 0;
 	}
 }
-
 // if total of record found is smaller than limit, no need to do paging and to restart another select with limits set.
 if (is_numeric($nbtotalofrecords) && ($limit > $nbtotalofrecords || empty($limit))) {
 	$num = $nbtotalofrecords;
@@ -414,13 +358,62 @@ if ($num == 1 && !empty($conf->global->MAIN_SEARCH_DIRECT_OPEN_IF_ONLY_ONE) && $
 llxHeader('', $title, $help_url, '', 0, 0, $morejs, $morecss, '', '');
 
 if (!empty($fromtype)) {
-	print dol_get_fiche_head($head, 'envelopeList', $langs->trans("Envelope"), -1, $objectLinked->picto);
-	dol_banner_tab($objectLinked, 'ref', $linkback, 1, 'ref', 'ref', $morehtmlref);
+	switch ($fromtype) {
+		case 'invoice' :
+			$facture = new Facture($db);
+			$facture->fetch($fromid);
+			$prehead = 'facture_prepare_head';
+			$head = $prehead($facture);
+			break;
+		case 'thirdparty' :
+			$societe = new Societe($db);
+			$societe->fetch($fromid);
+			$prehead = 'societe_prepare_head';
+			$head = $prehead($societe);
+			break;
+		case 'product' :
+			$product = new Product($db);
+			$product->fetch($fromid);
+			$prehead = 'product_prepare_head';
+			$head = $prehead($product);
+			break;
+		case 'project' :
+			$project = new Project($db);
+			$project->fetch($fromid);
+			$prehead = 'project_prepare_head';
+			$head = $prehead($project);
+			break;
+		case 'propal' :
+			$propal = new Propal($db);
+			$propal->fetch($fromid);
+			$prehead = 'propal_prepare_head';
+			$head = $prehead($propal);
+			break;
+		case 'order' :
+			$order = new Commande($db);
+			$order->fetch($fromid);
+			$prehead = 'commande_prepare_head';
+			$head = $prehead($order);
+			break;
+
+	}
+	print dol_get_fiche_head($head, 'envelopeList', $langs->trans("Envelope"), -1, $object->picto);
 }
 
-if ($fromid) {
-	print '<div class="underbanner clearboth"></div>';
-}
+// Example : Adding jquery code
+// print '<script type="text/javascript" language="javascript">
+// jQuery(document).ready(function() {
+// 	function init_myfunc()
+// 	{
+// 		jQuery("#myid").removeAttr(\'disabled\');
+// 		jQuery("#myid").attr(\'disabled\',\'disabled\');
+// 	}
+// 	init_myfunc();
+// 	jQuery("#mybutton").click(function() {
+// 		init_myfunc();
+// 	});
+// });
+// </script>';
 
 $arrayofselected = is_array($toselect) ? $toselect : array();
 
@@ -540,24 +533,10 @@ foreach ($object->fields as $key => $val) {
 	} elseif (in_array($val['type'], array('double(24,8)', 'double(6,3)', 'integer', 'real', 'price')) && $val['label'] != 'TechnicalID' && empty($val['arrayofkeyval'])) {
 		$cssforfield .= ($cssforfield ? ' ' : '').'right';
 	}
-
 	if (!empty($arrayfields['t.'.$key]['checked'])) {
 		print '<td class="liste_titre'.($cssforfield ? ' '.$cssforfield : '').'">';
 		if (!empty($val['arrayofkeyval']) && is_array($val['arrayofkeyval'])) {
 			print $form->selectarray('search_'.$key, $val['arrayofkeyval'], (isset($search[$key]) ? $search[$key] : ''), $val['notnull'], 0, 0, '', 1, 0, 0, '', 'maxwidth100', 1);
-		} elseif ($key == 'fk_soc') {
-			$thirdparty->fetch(0, $search['fk_soc']);
-			print '<div class="nowrap">';
-			print $form->select_company((!empty(GETPOST('fk_soc')) ? GETPOST('fk_soc') : (GETPOST('fromtype') == 'thirdparty' ? GETPOST('fromid') : '')), 'fk_soc', '', 'SelectThirdParty', 1, 0, array(), 0, 'maxwidth200');
-			print '</div>';
-		} elseif ($key == 'fk_project') {
-			$project->fetch(0, $search['fk_project']);
-			print $formproject->select_projects(0, ( ! empty(GETPOST('fk_project')) ? GETPOST('fk_project') :  (GETPOST('fromtype') == 'project' ? GETPOST('fromid') : '')), 'fk_project', 0, 0, 1, 0, 1, 0, 0, '', 1, 0, 'maxwidth200');
-			print '<input class="input-hidden-fk_project" type="hidden" name="search_fk_project" value=""/>';
-		} elseif ($key == 'fk_contact') {
-			$contact->fetch(0, $search['fk_contact']);
-			print $form->selectcontacts(0, !empty(GETPOST('fk_contact')) ? GETPOST('fk_contact') : (GETPOST('fromtype') == 'contact' ? GETPOST('fromid') : ''), 'fk_contact', 1);
-			print '<input class="input-hidden-fk_project" type="hidden" name="search_fk_contact" value=""/>';
 		} elseif ((strpos($val['type'], 'integer:') === 0) || (strpos($val['type'], 'sellist:') === 0)) {
 			print $object->showInputField($val, $key, (isset($search[$key]) ? $search[$key] : ''), '', '', 'search_', 'maxwidth125', 1);
 		} elseif (!preg_match('/^(date|timestamp|datetime)/', $val['type'])) {
@@ -666,20 +645,16 @@ while ($i < ($limit ? min($num, $limit) : $num)) {
 		if (!empty($arrayfields['t.'.$key]['checked'])) {
 			print '<td'.($cssforfield ? ' class="'.$cssforfield.'"' : '') .'>';
 			if ($key == 'fk_soc') {
-			$thirdparty->fetch($obj->fk_soc);
-			print $thirdparty->getNomUrl(1);
+				$thirdparty->fetch($obj->fk_soc);
+				print $thirdparty->getNomUrl();
 			}
 			else if ($key == 'fk_contact') {
-				$contact->fetch($obj->fk_contact);
-				print $contact->getNomUrl(1);
+				$contact->fetch($obj->fk_soc);
+				print $contact->getNomUrl();
 			}
 			else if ($key == 'sender') {
 				$sender->fetch($obj->sender);
 				print $sender->getNomUrl();
-			}
-			else if ($key == 'fk_project') {
-				$project->fetch($obj->fk_project);
-				print $project->getNomUrl(1);
 			}
 			else if ($key == 'status') {
 				print $object->getLibStatut(5);

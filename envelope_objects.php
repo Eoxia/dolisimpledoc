@@ -108,20 +108,12 @@ include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be includ
 $permissiontoread = $user->rights->doliletter->envelope->read;
 $permissiontoadd = $user->rights->doliletter->envelope->write; // Used by the include of actions_addupdatedelete.inc.php and actions_lineupdown.inc.php
 $permissiontodelete = $user->rights->doliletter->envelope->delete || ($permissiontoadd && isset($object->status));
-$permissionnote = $user->rights->envelope->envelope->write; // Used by the include of actions_setnotes.inc.php
+$permissionnote = $user->rights->doliletter->envelope->write; // Used by the include of actions_setnotes.inc.php
 $permissiondellink = $user->rights->envelope->letter->write; // Used by the include of actions_dellink.inc.php
 $upload_dir = $conf->doliletter->multidir_output[$conf->entity];
 $thirdparty = new Societe($db);
 $thirdparty->fetch($object->fk_soc);
 $usertemp = new User($db);
-// Security check (enable the most restrictive one)
-//if ($user->socid > 0) accessforbidden();
-//if ($user->socid > 0) $socid = $user->socid;
-//$isdraft = (($object->status == $object::STATUS_DRAFT) ? 1 : 0);
-//restrictedArea($user, $object->element, $object->id, $object->table_element, '', 'fk_soc', 'rowid', $isdraft);
-//if (empty($conf->envelope->enabled)) accessforbidden();
-//if (!$permissiontoread) accessforbidden();
-
 
 /*
  * Actions
@@ -202,8 +194,8 @@ if (empty($reshook)) {
 
 
 if ($action == 'addLink') {
-	$element_types  =GETPOST('element_types');
-	$element_id  =GETPOST('element_id');
+	$element_types  = GETPOST('element_types');
+	$element_id  = GETPOST('element_id');
 	if (!is_array($element_id)) {
 		$element_id = array($element_id);
 	}
@@ -228,91 +220,6 @@ $formproject = new FormProjets($db);
 $title = $langs->trans("Envelope");
 $help_url = '';
 llxHeader('', $title, $help_url);
-
-// Part to create
-if ($action == 'create') {
-	print load_fiche_titre($langs->trans("NewObject", $langs->transnoentitiesnoconv("Envelope")), '', 'object_'.$object->picto);
-
-	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
-	print '<input type="hidden" name="token" value="'.newToken().'">';
-	print '<input type="hidden" name="action" value="add">';
-	if ($backtopage) {
-		print '<input type="hidden" name="backtopage" value="'.$backtopage.'">';
-	}
-	if ($backtopageforcancel) {
-		print '<input type="hidden" name="backtopageforcancel" value="'.$backtopageforcancel.'">';
-	}
-
-	print dol_get_fiche_head(array(), '');
-
-	print '<table class="border centpercent tableforfieldcreate">'."\n";
-
-	unset($object->fields['ref']);
-	unset($object->fields['model_pdf']);
-	unset($object->fields['last_main_doc']);
-	unset($object->fields['content']);
-	unset($object->fields['fk_soc']);
-	unset($object->fields['sender_service']);
-	unset($object->fields['sender']);
-
-
-	//Ref -- Ref
-	print '<tr><td class="fieldrequired">'.$langs->trans("Ref").'</td><td>';
-	print '<input hidden class="flat" type="text" size="36" name="ref" id="ref" value="'.$refEnvelopeMod->getNextValue($object).'">';
-	print $refEnvelopeMod->getNextValue($object);
-	print '</td></tr>';
-
-	//Society -- Société
-	print '<tr><td class="fieldrequired">'.$langs->trans("Society").'</td><td>';
-	$events = array();
-	$events[1] = array('method' => 'getContacts', 'url' => dol_buildpath('/core/ajax/contacts.php?showempty=1', 1), 'htmlname' => 'contact', 'params' => array('add-customer-contact' => 'disabled'));
-	print $form->select_company(GETPOST('fk_soc'), 'fk_soc', '', 'SelectThirdParty', 1, 0, $events, 0, 'minwidth300');
-	print ' <a href="'.DOL_URL_ROOT.'/societe/card.php?action=create&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create').'" target="_blank"><span class="fa fa-plus-circle valignmiddle paddingleft" title="'.$langs->trans("AddThirdParty").'"></span></a>';
-	print '</td></tr>';
-
-	//Sender
-	$userlist = $form->select_dolusers(GETPOST('sender'), '', 0, null, 0, '', '', 0, 0, 0, 'AND u.statut = 1', 0, '', 'minwidth300', 0, 1);
-	print '<tr>';
-	print '<td class="fieldrequired" style="width:10%">'.$form->editfieldkey('Sender', 'Sender_id', '', $object, 0).'</td>';
-	print '<td>';
-	print $form->selectarray('sender', $userlist, GETPOST('sender'), $langs->trans('SelectUser'), null, null, null, "40%", 0,0,'','minwidth300',1);
-	print ' <a href="'.DOL_URL_ROOT.'/user/card.php?action=create&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create').'" target="_blank"><span class="fa fa-plus-circle valignmiddle paddingleft" title="'.$langs->trans("AddUser").'"></span></a>';
-	print '</td></tr>';
-
-
-	//SenderService -- Moyen d'envoi
-	print '<tr><td class="fieldrequired">'.$langs->trans("SenderService").'</td><td>';
-	print $formother->select_dictionary('sender_service','c_sender_service', 'ref', 'label', '', 0);
-	print '</td></tr>';
-
-	//Content -- Contenue
-	print '<tr class="content_field"><td><label for="content">'.$langs->trans("Content").'</label></td><td>';
-	$doleditor = new DolEditor('content', GETPOST('content'), '', 90, 'dolibarr_notes', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_3, '90%');
-	$doleditor->Create();
-	print '</td></tr>';
-
-	// Common attributes
-	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_add.tpl.php';
-
-	// Other attributes
-	include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_add.tpl.php';
-
-	print '</table>'."\n";
-
-	print dol_get_fiche_end();
-
-	print '<div class="center">';
-	print '<input type="submit" class="button" name="add" value="'.dol_escape_htmltag($langs->trans("Create")).'">';
-	print '&nbsp; ';
-	print '<input type="'.($backtopage ? "submit" : "button").'" class="button button-cancel" name="cancel" value="'.dol_escape_htmltag($langs->trans("Cancel")).'"'.($backtopage ? '' : ' onclick="javascript:history.go(-1)"').'>'; // Cancel for create does not post form if we don't know the backtopage
-	print '</div>';
-
-	print '</form>';
-
-	//dol_set_focus('input[name="ref"]');
-}
-
-// Part to edit record
 
 // Part to show record
 if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'create'))) {
@@ -342,40 +249,6 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	$linkback = '<a href="'.dol_buildpath('/doliletter/envelope_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
 
 	$morehtmlref = '<div class="refidno">';
-	/*
-	 // Ref customer
-	 $morehtmlref.=$form->editfieldkey("RefCustomer", 'ref_client', $object->ref_client, $object, 0, 'string', '', 0, 1);
-	 $morehtmlref.=$form->editfieldval("RefCustomer", 'ref_client', $object->ref_client, $object, 0, 'string', '', null, null, '', 1);
-	 // Thirdparty
-	 $morehtmlref.='<br>'.$langs->trans('ThirdParty') . ' : ' . (is_object($object->thirdparty) ? $object->thirdparty->getNomUrl(1) : '');
-	 // Project
-	 if (! empty($conf->projet->enabled)) {
-	 $langs->load("projects");
-	 $morehtmlref .= '<br>'.$langs->trans('Project') . ' ';
-	 if ($permissiontoadd) {
-	 //if ($action != 'classify') $morehtmlref.='<a class="editfielda" href="' . $_SERVER['PHP_SELF'] . '?action=classify&amp;id=' . $object->id . '">' . img_edit($langs->transnoentitiesnoconv('SetProject')) . '</a> ';
-	 $morehtmlref .= ' : ';
-	 if ($action == 'classify') {
-	 //$morehtmlref .= $form->form_project($_SERVER['PHP_SELF'] . '?id=' . $object->id, $object->socid, $object->fk_project, 'projectid', 0, 0, 1, 1);
-	 $morehtmlref .= '<form method="post" action="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'">';
-	 $morehtmlref .= '<input type="hidden" name="action" value="classin">';
-	 $morehtmlref .= '<input type="hidden" name="token" value="'.newToken().'">';
-	 $morehtmlref .= $formproject->select_projects($object->socid, $object->fk_project, 'projectid', $maxlength, 0, 1, 0, 1, 0, 0, '', 1);
-	 $morehtmlref .= '<input type="submit" class="button valignmiddle" value="'.$langs->trans("Modify").'">';
-	 $morehtmlref .= '</form>';
-	 } else {
-	 $morehtmlref.=$form->form_project($_SERVER['PHP_SELF'] . '?id=' . $object->id, $object->socid, $object->fk_project, 'none', 0, 0, 0, 1);
-	 }
-	 } else {
-	 if (! empty($object->fk_project)) {
-	 $proj = new Project($db);
-	 $proj->fetch($object->fk_project);
-	 $morehtmlref .= ': '.$proj->getNomUrl();
-	 } else {
-	 $morehtmlref .= '';
-	 }
-	 }
-	 }*/
 	$morehtmlref .= '</div>';
 
 
@@ -422,7 +295,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 
 	//to do: trans file for titles
-	$object->fetchObjectLinked();
+	$object->fetchObjectLinked(null, '', null, 'doliletter_envelope');
 
 	// Contracts
 	print '<p>';
@@ -472,7 +345,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	}
 
 	print '<br></table>';
-print '<div>';
+	print '<div>';
 	print '<form method="POST" action="' . $_SERVER["PHP_SELF"] . '?id=' . $id . '">';
 	print '<input type="hidden" name="token" value="' . newToken() . '">';
 	print '<input type="hidden" name="action" value="addLink">';
@@ -508,35 +381,6 @@ print '<div>';
 	print '<input type="hidden" name="element_types" value="order">';
 
 	print selectForm( $commandetemp, 'element_id[]', 'element_id', $object->linkedObjectsIds['order']);
-
-	print '<input type="submit" class="button" name="addLink" value="' . dol_escape_htmltag($langs->trans("Create")) . '">';
-	print '</div>';
-	print '</form>';
-
-	// Projets
-	print '</p><p>';
-	if (is_countable($object->linkedObjectsIds['project'])) {
-		$nbprojects = count($object->linkedObjectsIds['project']);
-	} else {
-		$nbprojects = 0;
-	}
-	print '<div class="titre inline-block">Projets<span class="opacitymedium colorblack paddingleft">' . $nbprojects . '</span></div><br>';
-	print '<table class="border tableforfield" width="100%">';
-	if (!empty($object->linkedObjectsIds['project'])) {
-		foreach ($object->linkedObjectsIds['project'] as $projectid) {
-			$projecttemp->fetch($projectid);
-			print $projecttemp->getNomUrl(1);
-			print '<br>';
-		}
-	}
-	print '<br></table>';
-	print '<div>';
-	print '<form method="POST" action="' . $_SERVER["PHP_SELF"] . '?id=' . $id . '">';
-	print '<input type="hidden" name="token" value="' . newToken() . '">';
-	print '<input type="hidden" name="action" value="addLink">';
-	print '<input type="hidden" name="element_types" value="project">';
-
-	print selectForm( $projecttemp, 'element_id[]', 'element_id', $object->linkedObjectsIds['project']);
 
 	print '<input type="submit" class="button" name="addLink" value="' . dol_escape_htmltag($langs->trans("Create")) . '">';
 	print '</div>';

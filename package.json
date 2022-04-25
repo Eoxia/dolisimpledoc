@@ -1,4 +1,4 @@
-npm {
+{
   "main": "index.js",
   "scripts": {
     "update": "npm install",

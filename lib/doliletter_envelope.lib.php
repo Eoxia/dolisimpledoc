@@ -50,6 +50,17 @@ function envelopePrepareHead($object)
 	$head[$h][2] = 'card';
 	$h++;
 
+	//Linked objects selection
+	$head[$h][0] = dol_buildpath("/doliletter/envelope_objects.php", 1).'?id='.$object->id;
+	$head[$h][1] = $langs->trans("Objects");
+	$head[$h][2] = 'objects';
+	$h++;
+
+	$head[$h][0] = dol_buildpath("/doliletter/envelope_signature.php", 1) . '?id=' . $object->id;
+	$head[$h][1] = '<i class="fas fa-file-signature"></i> ' . $langs->trans("Sign");
+	$head[$h][2] = 'envelopeSign';
+	$h++;
+
 	if (isset($object->fields['note_public']) || isset($object->fields['note_private'])) {
 		$nbNote = 0;
 		if (!empty($object->note_private)) {
@@ -91,22 +102,12 @@ function envelopePrepareHead($object)
 //	$head[$h][2] = 'envelopeContact';
 //	$h++;
 
-	//Sending archive selection
-	$head[$h][0] = dol_buildpath("/doliletter/envelope_sending.php", 1).'?id='.$object->id;
-	$head[$h][1] = $langs->trans("Sending");
-	$head[$h][2] = 'sending';
-	$h++;
+//	//Sending archive selection
+//	$head[$h][0] = dol_buildpath("/doliletter/envelope_sending.php", 1).'?id='.$object->id;
+//	$head[$h][1] = $langs->trans("Sending");
+//	$head[$h][2] = 'sending';
+//	$h++;
 
-	//Linked objects selection
-	$head[$h][0] = dol_buildpath("/doliletter/envelope_objects.php", 1).'?id='.$object->id;
-	$head[$h][1] = $langs->trans("Objects");
-	$head[$h][2] = 'objects';
-	$h++;
-
-	$head[$h][0] = dol_buildpath("/doliletter/envelope_signature.php", 1) . '?id=' . $object->id;
-	$head[$h][1] = '<i class="fas fa-file-signature"></i> ' . $langs->trans("Sign");
-	$head[$h][2] = 'envelopeSign';
-	$h++;
 
 	// Show more tabs from modules
 	// Entries must be declared in modules descriptor with line

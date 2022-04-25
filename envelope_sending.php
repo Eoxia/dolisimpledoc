@@ -65,12 +65,13 @@ $backtopage  = GETPOST('backtopage', 'alpha');
 
 // Initialize technical objects
 $object         = new Envelope($db);
-$lettertemp       = new LetterSending($db);
+$lettertemp     = new LetterSending($db);
 $mailtemp       = new EmailSending($db);
-$thirdparty = new Societe($db);
+$thirdparty     = new Societe($db);
 $refEnvelopeMod = new $conf->global->DOLILETTER_ENVELOPE_ADDON();
 $extrafields    = new ExtraFields($db);
 $usertmp        = new User($db);
+$sender         = new User($db);
 
 $object->fetch($id);
 
@@ -80,12 +81,23 @@ $hookmanager->initHooks(array('lettercard', 'globalcard')); // Note that conf->h
 $extrafields->fetch_name_optionals_label($mailtemp->table_element);
 $extrafields->fetch_name_optionals_label($lettertemp->table_element);
 
+$permissiontoread = $user->rights->doliletter->envelope->read;
+$permissiontoadd = $user->rights->doliletter->envelope->write; // Used by the include of actions_addupdatedelete.inc.php and actions_lineupdown.inc.php
+$permissiontodelete = $user->rights->doliletter->envelope->delete || ($permissiontoadd && isset($object->status));
+$permissionnote = $user->rights->doliletter->envelope->write; // Used by the include of actions_setnotes.inc.php
+$permissiondellink = $user->rights->envelope->letter->write; // Used by the include of actions_dellink.inc.php
+$upload_dir = $conf->doliletter->multidir_output[$conf->entity];
 
+// Security check (enable the most restrictive one)
+if ($user->socid > 0) accessforbidden();
+if ($user->socid > 0) $socid = $user->socid;
+if (empty($conf->doliletter->enabled)) accessforbidden();
+if (!$permissiontoread) accessforbidden();
 
 // Default sort order (if not yet defined by previous GETPOST)
 if (!$sortfield) {
-	reset($object->fields);					// Reset is required to avoid key() to return null.
-	$sortfield = "t.".key($object->fields); // Set here default search field. By default 1st field in definition.
+	reset($lettertemp->fields);					// Reset is required to avoid key() to return null.
+	$sortfield = "t.".key($lettertemp->fields); // Set here default search field. By default 1st field in definition.
 }
 if (!$sortorder) {
 	$sortorder = "ASC";
@@ -94,7 +106,7 @@ if (!$sortorder) {
 // Initialize array of search criterias
 $search_all = GETPOST('search_all', 'alphanohtml') ? GETPOST('search_all', 'alphanohtml') : GETPOST('sall', 'alphanohtml');
 $search = array();
-foreach ($object->fields as $key => $val) {
+foreach ($lettertemp->fields as $key => $val) {
 	if (GETPOST('search_'.$key, 'alpha') !== '') {
 		$search[$key] = GETPOST('search_'.$key, 'alpha');
 	}
@@ -112,7 +124,7 @@ if(!empty($fromtype)) {
 
 // List of fields to search into when doing a "search in all"
 $fieldstosearchall = array();
-foreach ($object->fields as $key => $val) {
+foreach ($lettertemp->fields as $key => $val) {
 	if (!empty($val['searchall'])) {
 		$fieldstosearchall['t.'.$key] = $val['label'];
 	}
@@ -120,7 +132,7 @@ foreach ($object->fields as $key => $val) {
 
 // Definition of array of fields for columns
 $arrayfields = array();
-foreach ($object->fields as $key => $val) {
+foreach ($lettertemp->fields as $key => $val) {
 	// If $val['visible']==0, then we never show the field
 	if (!empty($val['visible'])) {
 		$visible = (int) dol_eval($val['visible'], 1);
@@ -134,10 +146,11 @@ foreach ($object->fields as $key => $val) {
 	}
 }
 
+
 // Extra fields
 include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_list_array_fields.tpl.php';
 
-$object->fields = dol_sort_array($object->fields, 'position');
+$lettertemp->fields = dol_sort_array($lettertemp->fields, 'position');
 $arrayfields = dol_sort_array($arrayfields, 'position');
 
 $permissiontoread = $user->rights->doliletter->envelope->read;
@@ -170,8 +183,6 @@ if ($reshook < 0) {
 	setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
 }
 
-
-
 if (empty($reshook)) {
 	// Selection of new fields
 	include DOL_DOCUMENT_ROOT.'/core/actions_changeselectedfields.inc.php';
@@ -200,44 +211,39 @@ if (empty($reshook)) {
 //	include DOL_DOCUMENT_ROOT.'/core/actions_massactions.inc.php';
 }
 
-
-
 /*
  * View
  *
  * Put here all code to build page
  */
-$lettertemp       = new LetterSending($db);
-$letterlist = $lettertemp->fetchAll();
-
 
 // Build and execute select
 // --------------------------------------------------------------------
 $sql = 'SELECT ';
 $sql .= $lettertemp->getFieldList('t');
 // Add fields from extrafields
-if (!empty($extrafields->attributes[$object->table_element]['label'])) {
-	foreach ($extrafields->attributes[$object->table_element]['label'] as $key => $val) {
-		$sql .= ($extrafields->attributes[$object->table_element]['type'][$key] != 'separate' ? ", ef.".$key.' as options_'.$key.', ' : '');
+if (!empty($extrafields->attributes[$lettertemp->table_element]['label'])) {
+	foreach ($extrafields->attributes[$lettertemp->table_element]['label'] as $key => $val) {
+		$sql .= ($extrafields->attributes[$lettertemp->table_element]['type'][$key] != 'separate' ? ", ef.".$key.' as options_'.$key.', ' : '');
 	}
 }
 // Add fields from hooks
 $parameters = array();
-$reshook = $hookmanager->executeHooks('printFieldListSelect', $parameters, $object); // Note that $action and $object may have been modified by hook
+$reshook = $hookmanager->executeHooks('printFieldListSelect', $parameters, $lettertemp); // Note that $action and $lettertemp may have been modified by hook
 $sql .= preg_replace('/^,/', '', $hookmanager->resPrint);
 $sql = preg_replace('/,\s*$/', '', $sql);
 $sql .= " FROM ".MAIN_DB_PREFIX.$lettertemp->table_element." as t";
-if (isset($extrafields->attributes[$object->table_element]['label']) && is_array($extrafields->attributes[$object->table_element]['label']) && count($extrafields->attributes[$object->table_element]['label'])) {
+if (isset($extrafields->attributes[$lettertemp->table_element]['label']) && is_array($extrafields->attributes[$lettertemp->table_element]['label']) && count($extrafields->attributes[$lettertemp->table_element]['label'])) {
 	$sql .= " LEFT JOIN ".MAIN_DB_PREFIX.$lettertemp->table_element."_extrafields as ef on (t.rowid = ef.fk_object)";
 }
 // Add table from hooks
 $parameters = array();
-$reshook = $hookmanager->executeHooks('printFieldListFrom', $parameters, $object); // Note that $action and $object may have been modified by hook
+$reshook = $hookmanager->executeHooks('printFieldListFrom', $parameters, $lettertemp); // Note that $action and $object may have been modified by hook
 $sql .= $hookmanager->resPrint;
 $sql .= " WHERE fk_envelope = ".$object->id." ";
 
 if ($object->ismultientitymanaged == 1) {
-	$sql .= " AND t.entity IN (".getEntity($object->element).")";
+	$sql .= " AND t.entity IN (".getEntity($lettertemp->element).")";
 }
 $sql .= " AND t.status > 0";
 
@@ -341,17 +347,13 @@ if ($num == 1 && !empty($conf->global->MAIN_SEARCH_DIRECT_OPEN_IF_ONLY_ONE) && $
 llxHeader('', $title, $help_url);
 $linkback = '<a href="'.dol_buildpath('/doliletter/envelope_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
 
-dol_banner_tab($object, 'ref', $linkback, 0, 'ref', 'ref', $morehtmlref);
-
-
 if ($object->id > 0) {
 	$res = $lettertemp->fetch_optionals();
 
 	$head = envelopePrepareHead($object);
 	print dol_get_fiche_head($head, 'sending', $langs->trans("Envelope"), -1, "doliletter@doliletter");
 
-
-
+	dol_banner_tab($object, 'ref', $linkback, 0, 'ref', 'ref', $morehtmlref);
 
 	$arrayofselected = is_array($toselect) ? $toselect : array();
 
@@ -450,9 +452,10 @@ if ($object->id > 0) {
 
 	$varpage = empty($contextpage) ? $_SERVER["PHP_SELF"] : $contextpage;
 	$selectedfields = $form->multiSelectArrayWithCheckbox('selectedfields', $arrayfields, $varpage); // This also change content of $arrayfields
+
 	$selectedfields .= (count($arrayofmassactions) ? $form->showCheckAddButtons('checkforselect', 1) : '');
 
-	print '<div class="div-table-responsive">'; // You can use div-table-responsive-no-min if you dont need reserved height for your table
+	print '<div class="div-table-responsive fichehalfleft">'; // You can use div-table-responsive-no-min if you dont need reserved height for your table
 	print '<table class="tagtable nobottomiftotal liste'.($moreforfilter ? " listwithfilterbefore" : "").'">'."\n";
 
 
@@ -507,7 +510,7 @@ if ($object->id > 0) {
 // Fields title label
 // --------------------------------------------------------------------
 	print '<tr class="liste_titre">';
-	foreach ($object->fields as $key => $val) {
+	foreach ($lettertemp->fields as $key => $val) {
 		$cssforfield = (empty($val['csslist']) ? (empty($val['css']) ? '' : $val['css']) : $val['csslist']);
 		if ($key == 'status') {
 			$cssforfield .= ($cssforfield ? ' ' : '').'center';
@@ -529,8 +532,9 @@ if ($object->id > 0) {
 	$reshook = $hookmanager->executeHooks('printFieldListTitle', $parameters, $object); // Note that $action and $object may have been modified by hook
 	print $hookmanager->resPrint;
 // Action column
-	print getTitleFieldOfList($selectedfields, 0, $_SERVER["PHP_SELF"], '', '', '', '', $sortfield, $sortorder, 'center maxwidthsearch ')."\n";
+	print getTitleFieldOfList($selectedfields, 0, $_SERVER["PHP_SELF"], '', '', '', '', $sortfield, $sortorder, 'center maxwidthsearch ') . "\n";
 	print '</tr>'."\n";
+	$arrayofselected = is_array($toselect) ? $toselect : array();
 
 
 // Detect if we need a fetch on each output line
@@ -590,7 +594,8 @@ if ($object->id > 0) {
 					print $sender->getNomUrl();
 				}
 				else if ($key == 'status') {
-					print $lettertemp->getLibStatut(5);
+//					print $lettertemp->getLibStatut(5);
+					print $lettertemp->status;
 				} elseif ($key == 'rowid') {
 					print $lettertemp->showOutputField($val, $key, $lettertemp->id, '');
 				} else {
@@ -621,13 +626,16 @@ if ($object->id > 0) {
 		$reshook = $hookmanager->executeHooks('printFieldListValue', $parameters, $object); // Note that $action and $object may have been modified by hook
 		print $hookmanager->resPrint;
 		// Action column
-
-		if (!$i) {
-			$totalarray['nbfield']++;
+		print '<td class="nowrap center">';
+		if ($massactionbutton || $massaction) {   // If we are in select mode (massactionbutton defined) or if we have already selected and sent an action ($massaction) defined
+			$selected                                                  = 0;
+			if (in_array($firepermit->id, $arrayofselected)) $selected = 1;
+			print '<input id="cb' . $firepermit->id . '" class="flat checkforselect" type="checkbox" name="toselect[]" value="' . $firepermit->id . '"' . ($selected ? ' checked="checked"' : '') . '>';
 		}
 
-		print '</tr>'."\n";
-
+		print '</td>';
+		if ( ! $i) $totalarray['nbfield']++;
+		print '</tr>' . "\n";
 		$i++;
 	}
 

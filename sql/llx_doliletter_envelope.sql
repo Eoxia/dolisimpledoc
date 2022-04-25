@@ -17,8 +17,8 @@
 CREATE TABLE llx_doliletter_envelope(
 	rowid         integer AUTO_INCREMENT PRIMARY KEY NOT NULL,
 	ref           varchar(128) DEFAULT '(PROV)' NOT NULL,
-	label         varchar(32),
 	ref_ext       varchar(128),
+    label         varchar(255),
     entity        integer DEFAULT 1 NOT NULL,
 	date_creation datetime NOT NULL,
 	tms           timestamp,
@@ -30,7 +30,8 @@ CREATE TABLE llx_doliletter_envelope(
 	last_main_doc varchar(255),
 	content       text,
 	document_url  varchar(255),
-	fk_soc        integer,
+    fk_soc        integer,
+    fk_contact    integer,
 	fk_user_creat integer NOT NULL,
 	fk_user_modif integer
 ) ENGINE=innodb;

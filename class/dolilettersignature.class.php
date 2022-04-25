@@ -98,6 +98,7 @@ class DoliletterSignature extends CommonObject
 		'transaction_url'      => array('type'=>'varchar(50)', 'label'=>'TransactionUrl', 'enabled'=>'1', 'position'=>180, 'notnull'=>0, 'visible'=>1,'default'=>NULL,),
 		'last_email_sent_date' => array('type'=>'datetime', 'label'=>'LastEmailSentDate', 'enabled'=>'1', 'position'=>190, 'notnull'=>0, 'visible'=>3,),
 		'fk_object'            => array('type'=>'integer', 'label'=>'FKObject', 'enabled'=>'1', 'position'=>200, 'notnull'=>1, 'visible'=>0,),
+		'ip'                   => array('type'=>'varchar(255)', 'label'=>'IP', 'enabled'=>'1', 'position'=>210, 'notnull'=>0, 'visible'=>0,),
 	);
 
 	public $rowid;
@@ -122,6 +123,7 @@ class DoliletterSignature extends CommonObject
 	public $transaction_url;
 	public $last_email_sent_date;
 	public $fk_object;
+	public $ip;
 
 	/**
 	 * Constructor
@@ -477,6 +479,7 @@ class DoliletterSignature extends CommonObject
 	function fetchSignatory($role = "", $fk_object)
 	{
 		$filter = array('customsql' => 'fk_object=' . $fk_object . ' AND status!=0');
+
 		if (strlen($role)) {
 			$filter['customsql'] .= ' AND role = "' . $role . '"';
 			return $this->fetchAll('', '', 0, 0, $filter, 'AND');
@@ -533,17 +536,15 @@ class DoliletterSignature extends CommonObject
 	 * @param $fk_object
 	 * @return int
 	 */
-	public function deleteSignatoriesSignatures($fk_object) {
-		global $user;
+	public function deleteSignatoriesSignatures($fk_object, $document_generated = 1) {
+		global $langs, $user;
 
 		$signatories = $this->fetchSignatories($fk_object);
 
 		if (!empty($signatories) && $signatories > 0) {
 			foreach ($signatories as $signatory) {
 				if (dol_strlen($signatory->signature)) {
-					$signatory->signature = '';
-					$signatory->signature_date = '';
-					$signatory->status = 1;
+					$document_generated ? $signatory->signature = $langs->trans('DocumentGenerated') : $signatory->signature = '';
 					$signatory->update($user);
 				}
 			}
@@ -560,7 +561,7 @@ class DoliletterSignature extends CommonObject
 	function deletePreviousSignatories($role = "", $fk_object)
 	{
 		global $user;
-		$filter = array('customsql' => ' role="' . $role . '" AND fk_object=' . $fk_object . ' AND status=1');
+		$filter = array('customsql' => ' role="' . $role . '" AND fk_object=' . $fk_object);
 		$signatoriesToDelete = $this->fetchAll('', '', 0, 0, $filter, 'AND');
 
 		if ( ! empty($signatoriesToDelete) && $signatoriesToDelete > 0) {

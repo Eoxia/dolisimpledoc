@@ -227,7 +227,7 @@ window.eoxiaJS.modal.openModal = function ( event ) {
 	// Open modal signature.
 	if ($(this).hasClass('modal-signature-open')) {
 		$('#modal-signature' + idSelected).addClass('modal-active');
-		window.eoxiaJS.signature.modalSignatureOpened( $(this) );
+		window.eoxiaJS.signature.openSignatureModal( $(this) );
 	}
 
 	$('.notice').addClass('hidden');
@@ -301,10 +301,11 @@ window.eoxiaJS.signature.init = function() {
 window.eoxiaJS.signature.event = function() {
 	jQuery( document ).on( 'click', '.signature-erase', window.eoxiaJS.signature.clearCanvas );
     jQuery( document ).on( 'click', '.signature-validate', window.eoxiaJS.signature.createSignature );
-    jQuery( document ).on( 'click', '.auto-download', window.eoxiaJS.signature.autoDownloadSpecimen );
+	jQuery( document ).on( 'click', '.auto-download', window.eoxiaJS.signature.autoDownloadSpecimen );
+	jQuery( document ).on( 'click', '.download-file', window.eoxiaJS.signature.download );
 };
 
-window.eoxiaJS.signature.modalSignatureOpened = function( triggeredElement ) {
+window.eoxiaJS.signature.openSignatureModal = function( triggeredElement ) {
 	window.eoxiaJS.signature.buttonSignature = triggeredElement;
 
 	var ratio =  Math.max( window.devicePixelRatio || 1, 1 );
@@ -331,8 +332,7 @@ window.eoxiaJS.signature.clearCanvas = function( event ) {
 
 window.eoxiaJS.signature.createSignature = function() {
 	let elementSignatory = $(this).attr('value');
-
-	let elementRedirect  = $(this).find('#redirect' + elementSignatory).attr('value');
+	let elementRedirect  = $(this).closest('.digirisk-signature-container').find('#redirectURL').attr('value');
 	let elementZone  = $(this).find('#zone' + elementSignatory).attr('value');
     let actionContainerSuccess = $('.noticeSignatureSuccess');
 	var signatoryIDPost = '';
@@ -340,30 +340,28 @@ window.eoxiaJS.signature.createSignature = function() {
 		signatoryIDPost = '&signatoryID=' + elementSignatory;
 	}
 
+	let role = $(this).closest('.signatures-container').find('.role').attr('value')
+	console.log( $(this).closest('.signatures-container'))
+	console.log(role)
+
 	if ( ! $(this).closest( '.wpeo-modal' ).find( 'canvas' )[0].signaturePad.isEmpty() ) {
 		var signature = $(this).closest( '.wpeo-modal' ).find( 'canvas' )[0].toDataURL();
 	}
 
-	var url = '';
-	var type = '';
-	if (elementZone == "private") {
-		url = document.URL + '&action=addSignature' + signatoryIDPost;
-		type = "POST"
-	} else {
-		url = document.URL + '&action=addSignature' + signatoryIDPost;
-		type = "POST";
-	}
+	var url = document.URL + '&action=addSignature' + signatoryIDPost + '&role=' + role;
+	var type = "POST"
+
 	$.ajax({
 		url: url,
 		type: type,
 		processData: false,
 		contentType: 'application/octet-stream',
 		data: signature,
-		success: function() {
+		success: function( resp ) {
             if (elementZone == "private") {
 				actionContainerSuccess.load(document.URL + ' .noticeSignatureSuccess .all-notice-content')
 				actionContainerSuccess.removeClass('hidden');
-				$('.signatures-container').load( document.URL + ' .signatures-container');
+				$('.fiche').html($(resp).find('.fiche').children());
             } else {
                 window.location.replace(elementRedirect);
             }
@@ -374,9 +372,13 @@ window.eoxiaJS.signature.createSignature = function() {
 	});
 };
 
-window.eoxiaJS.signature.download = function(fileUrl, filename) {
+window.eoxiaJS.signature.download = function( event ) {
+	let filename = $(this).closest('.file-generation').find('.filename').attr('value')
+	let fileurl = $(this).closest('.file-generation').find('.fileurl').attr('value')
+	console.log(filename)
+	console.log(fileurl)
     var a = document.createElement("a");
-    a.href = fileUrl;
+    a.href = fileurl;
     a.setAttribute("download", filename);
     a.click();
 }
@@ -404,4 +406,54 @@ window.eoxiaJS.signature.autoDownloadSpecimen = function( event ) {
         error: function ( ) {
         }
     });
+};
+
+
+/**
+ * Initialise l'objet "signature" ainsi que la méthode "init" obligatoire pour la bibliothèque EoxiaJS.
+ *
+ * @since   1.1.0
+ * @version 1.1.0
+ */
+window.eoxiaJS.envelope = {};
+
+/**
+ * La méthode appelée automatiquement par la bibliothèque EoxiaJS.
+ *
+ * @since   1.1.0
+ * @version 1.1.0
+ *
+ * @return {void}
+ */
+window.eoxiaJS.envelope.init = function() {
+	window.eoxiaJS.envelope.event();
+};
+
+window.eoxiaJS.envelope.event = function() {
+	jQuery( document ).on( 'click', '.clipboard-copy', window.eoxiaJS.envelope.copyToClipboard );
+	jQuery( document ).on( 'change', '#sendingProof', window.eoxiaJS.envelope.enableSendButton );
+	jQuery( document ).on( 'change', '#acknowledgementReceipt', window.eoxiaJS.envelope.enableSendButton );
+};
+
+window.eoxiaJS.envelope.copyToClipboard = function(  event ) {
+	console.log('oui')
+	let copyText = $(".signature-link").attr('value')
+
+	navigator.clipboard.writeText(copyText).then(() => {
+			$('.copy-to-clipboard-button').animate({
+				backgroundColor: "#59ed9c"
+			}, 200, () => {
+				$('.copy-to-clipboard-button').find('i').attr('class', 'fas fa-check  clipboard-copy')
+				$('.copied-to-clipboard').attr('style', '')
+				setTimeout($('.copied-to-clipboard').fadeOut(2000), 2000);
+			})
+
+
+		}
+	)
+};
+
+window.eoxiaJS.envelope.enableSendButton = function( event ) {
+	$('.send-file').attr('class', 'butAction')
+	$('.send-file').attr('title', '')
 };

@@ -34,7 +34,7 @@ DoliLetterSetup = Configuration du module DoliLetter
 
 About = À propos
 DoliLetterAbout = À propos de DoliLetter
-DoliLetterArea = Bienvenue dans le module DoliLetter :)
+DoliLetterArea = Bienvenue dans le module DoliLetter
 
 #
 # DoliLetter
@@ -42,12 +42,18 @@ DoliLetterArea = Bienvenue dans le module DoliLetter :)
 
 # Data - Donnée
 DoliLetterIndex = DoliLetter
-DoliLetterCreate = Nouvelle enveloppe
+DoliLetterCreate = Nouveau courrier
 DoliLetterList = Liste
-
+DoliletterConfig = Configuration du module
 SelectUser = Sélectionner un utilisateur
 AddUser = Créer un utilisateur
 Create = Créer
+GoBackToCard = Retour à la fiche
+PublicInterfaceConfig = Configuration de l'interface publique
+PublicInterface = Interface publique
+EnablePublicInterface = Activer l'interface publique
+WithKindRegards = Cordialement,
+LinkedDocument = Document lié
 
 #
 # Envelope - Enveloppe
@@ -55,12 +61,18 @@ Create = Créer
 
 
 # Data - Donnée
-Envelope = Enveloppe
-Envelopes = Enveloppes
-NewEnvelope = Nouvelle enveloppe
-ModifyEnvelope = Modifier l'enveloppe
-ListEnvelopes = Liste d'enveloppes
+Envelope = Courrier
+Envelopes = Courriers
+NewEnvelope = Nouveau courrier
+ModifyEnvelope = Modifier le courrier
+ListEnvelopes = Liste de courriers
+Receivers = Destinataires
+LetterCode = Numéro de suivi
+AdministrativeService = Service administratif
+EnvelopeContent = Veuillez trouver ci-joint les documents relatifs à votre projet. Pour attester de la réception de ces documents, signez numériquement en cliquant sur ce lien : __SIGNATURE_LINK__ <b> %s </b>
 
+Lock = Verrouiller
+ProjectLinked = Projet lié
 Society = Tiers
 Sender = Émetteur
 SenderService = Méthode d'envoi
@@ -68,14 +80,99 @@ PublicNote = Note (publique)
 PrivateNote = Note (privée)
 Content = Contenu
 SendLetter = Envoyer courrier
-alreadySigned = Déjà Signé
+AlreadySigned = Le courrier a déjà été signé
+MustBeSignedBeforeSending = Ce courrier doit être signé et verrouillé avant d'être envoyé
 receivers = Destinataires
 EnvelopeSendbyLetterTrigger = Envoi Postal
-EnvelopeCreateTrigger = Création d'une enveloppe
-EnvelopeModifyTrigger = Modification d'une enveloppe
+EnvelopeCreateTrigger = Création d'un courrier
+EnvelopeModifyTrigger = Modification d'un courrier
 EnvelopeSendbyMailTrigger = Envoi par Email
-EnvelopeSignTrigger = Signature de l'enveloppe
+EnvelopeSignTrigger = Signature du courrier
+EnvelopeLockTrigger = Verrouillage du courrier
+EnvelopeSendingProofTrigger = Preuve de dépôt ajoutée
+EnvelopeAcknowledgementReceiptTrigger = Accusé de réception ajouté
 Sending = Envoi
 Sign = Signer
 Signatursender = Signataire
 Objects = Objets liés
+EnvelopeList = Liste des courriers
+EnvelopeCreate = Créer un courrier
+EnvelopeMustBeSigned = Le courrier doit être signé
+LockEnvelope = Verrouiller le courrier
+ConfirmLockEnvelope = Verrouiller le courrier ?
+SentByLetter = Envoyé par courrier
+SentByMail = Envoyé par mail
+EnvelopeMustBeLockedToGenerateDocument = <b>Le courrier doit être verrouillé pour pouvoir générer le document.</b>
+UploadAcknowledgementReceipt = Accusé de réception
+AcknowledgementReceipt = Accusé de réception
+ReceivedAndSigned = Reçu et signé
+ReceivedAndSignedByMail = Reçu par mail et signé
+ReceivedAndSignedByLetter = Reçu par courrier et signé
+AddAttendantMessage = Le destinataire a bien été enregistré :
+MustBeSentBeforeAcknowledgementReceipt = <b> Le courrier doit avoir été envoyé </b> avant de pouvoir utiliser cette fonctionnalité
+CantEditAlreadySigned = Le courrier a déjà été signé
+EditEnvelope = Modifier le courrier
+SendingProof = Preuve de dépôt
+Send = Envoyer
+Locked = Verrouillé
+EnvelopeLabel = Envoi de courrier
+EnvelopeSubject = Envoi de courrier
+RegisteredMail = Courrier recommandé
+RegisteredMailCode = Numéro de suivi
+ReOpenEnvelope = Rouvrir le courrier
+ConfirmReOpenEnvelope = Êtes-vous sûr de vouloir rouvrir le courrier ? <br> La réouverture permet la modification du courrier mais <b>la signature du document sera perdue</b>.
+EnvelopeSendbyMailTriggerContent = Le courrier a été envoyé par mail à %s le %s par %s
+EnvelopeSendbyLetterTriggerContent = Le courrier a été envoyé par voie postale à %s le %s par %s
+LetterCode: = Numéro de suivi : %s
+SendingProofTextLetter = Veuillez trouver ci-après l'accusé de réception du courrier %s envoyé par voie postale.
+UploadSendingProof = Preuve de dépôt
+ConfirmCloneEnvelope = Êtes-vous sûr(e) de vouloir cloner le courrier <b> %s </b> ?
+CloneEnvelope = Cloner le courrier
+ConfirmUploadAcknowledgementReceipt = Êtes-vous sûr(e) de vouloir envoyer cet accusé de réception ? Le statut du courrier passera à <b> "Reçu par courrier et signé" </b>
+ConfirmUploadSendingProof = Êtes-vous sûr(e) de vouloir envoyer cette preuve de dépôt ?
+LinkedFiles = Fichiers joints
+SendingLinkedFiles = Fichiers joints à l'envoi
+NoFileLinked = Pas de fichier lié, veuillez joindre un fichier
+LockDescription = Ecrit le : %s - Signé le : %s - <b> Cliquez pour verrouiller </b> <br>  <b> Une fois verrouillé, vous ne pourrez plus modifier le courrier </b>
+ValidateSendingProof = Valider la preuve de dépôt
+YouMustHaveUploadedASendingProof = Vous devez d'abord joindre une preuve de dépôt pour l'envoyer
+SendingProofGenerated = La preuve de dépôt a été générée
+YouMustHaveUploadedAnAcknowledgementReceipt = Vous devez d'abord joindre un accusé de réception pour l'envoyer
+AcknowledgementReceiptGenerated = L'accusé de réception a été généré
+ValidateAcknowledgementReceipt = Valider l'accusé de réception
+GoToSignaturePage = Accéder à la page de signature
+UploadAFileFirst = Ajoutez un fichier pour pouvoir l'envoyer
+
+#
+# Signature - Signature
+#
+
+Signed = Signé
+SignatureSender = Signature de l'envoyeur
+Role = Rôle
+SignatureLink = Lien de signature
+SendMailDate = Date d'envoi du mail de signature
+SignatureDate = Date de signature
+ActionsSignature = Actions
+The = le
+AcknowledgementReceiptSigned = L'accusé de réception du document %s a été signé avec succès
+DocumentName = Nom du document
+YourEnvelope = Votre courrier :
+YourAcknowledgementReceipt = Votre accusé de réception :
+AcknowledgementReceiptTextLetter = Veuillez trouver ci-après l'accusé de réception du courrier %s reçu par voie postale.
+AcknowledgementReceiptTextMail = Je soussigné %s avoir reçu le document %s par mail le %s.
+DocumentGenerated = Document généré
+DocumentHasAlreadyBeenGenerated = Le document a déjà été généré
+CompleteName = Nom et prénom
+ValidatePendingSignature = Validé (en attente de signature)
+ShowDocument = Voir le document
+Receiver = Destinataire
+SignatureReceiver = Signature du destinataire
+Erase = Effacer
+PublicInterfaceDocuments = Documents sur l'interface publique
+ShowDocumentsOnPublicInterface = Autoriser le téléchargement des documents depuis l'interface publique
+DeleteSignatureAfterReception = Supprimer le téléchargement public après réception
+DeleteSignatureAfterReceptionText = Désactive le téléchargement des documents depuis l'interface publique après génération de l'accusé de réception
+EnvelopeRecipientSignTrigger = Accusé de réception du courrier
+DocumentHasBeenSignedBy = Le document a été signé par %s
+DocumentSignedSha = SHA du courrier reçu : %s

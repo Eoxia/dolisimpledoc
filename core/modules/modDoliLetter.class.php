@@ -49,7 +49,7 @@ class modDoliLetter extends DolibarrModules {
 		$this->descriptionlong = $langs->trans('DoliLetterDescriptionLong');
 		$this->editor_name     = 'Eoxia';
 		$this->editor_url      = 'https://eoxia.com/';
-		$this->version         = '0.0.2';
+		$this->version         = '0.0.3';
 		$this->const_name      = 'MAIN_MODULE_'.strtoupper($this->name);
 		$this->picto           = 'doliletter256px@doliletter';
 
@@ -91,7 +91,7 @@ class modDoliLetter extends DolibarrModules {
 
 		// Dependencies
 		$this->hidden       = false;
-		$this->depends      = array('modFckEditor'); // List of module class names as string that must be enabled if this module is enabled. Example: array('always1'=>'modModuleToEnable1','always2'=>'modModuleToEnable2', 'FR1'=>'modModuleToEnableFR'...)
+		$this->depends      = array('modFckeditor', 'modProjet'); // List of module class names as string that must be enabled if this module is enabled. Example: array('always1'=>'modModuleToEnable1','always2'=>'modModuleToEnable2', 'FR1'=>'modModuleToEnableFR'...)
 		$this->requiredby   = array(); // List of module class names as string to disable if this one is disabled. Example: array('modModuleToDisable1', ...)
 		$this->conflictwith = array(); // List of module class names as string this module is in conflict with. Example: array('modModuleToDisable1', ...)
 
@@ -117,6 +117,8 @@ class modDoliLetter extends DolibarrModules {
 			// CONST ENVELOPE
 			1 => array('DOLILETTER_ENVELOPE_ADDON','chaine', 'mod_envelope_standard','', $conf->entity),
 			2 => array('DOLILETTER_ENVELOPE_ADDON_PDF','chaine', 'phobos' ,'', $conf->entity),
+			3 => array('DOLILETTER_ACKNOWLEDGEMENTRECEIPT_ADDON_PDF','chaine', 'deimos' ,'', $conf->entity),
+			4 => array('DOLILETTER_SENDINGPROOF_ADDON_PDF','chaine', 'ares' ,'', $conf->entity),
 		);
 
 		if (!isset($conf->doliletter) || !isset($conf->doliletter->enabled)) {
@@ -131,7 +133,8 @@ class modDoliLetter extends DolibarrModules {
 			$this->tabs[] = array('data'=>'project:+envelopeList:Envelope:@doliletter:1:/custom/doliletter/envelope_list.php?fromid=__ID__&fromtype=project');
 			$this->tabs[] = array('data'=>'propal:+envelopeList:Envelope:@doliletter:1:/custom/doliletter/envelope_list.php?fromid=__ID__&fromtype=propal');
 			$this->tabs[] = array('data'=>'order:+envelopeList:Envelope:@doliletter:1:/custom/doliletter/envelope_list.php?fromid=__ID__&fromtype=order');
-			$this->tabs[] = array('data'=>'invoice:+envelopeList:Envelope:@doliletter:1:/custom/doliletter/envelope_list.php?fromid=__ID__&fromtype=invoice');  	  	// To add a new tab identified by code tabname1
+			$this->tabs[] = array('data'=>'invoice:+envelopeList:Envelope:@doliletter:1:/custom/doliletter/envelope_list.php?fromid=__ID__&fromtype=facture');  	  	// To add a new tab identified by code tabname1
+			$this->tabs[] = array('data'=>'contact:+envelopeList:Envelope:@doliletter:1:/custom/doliletter/envelope_list.php?fromid=__ID__&fromtype=contact');  	  	// To add a new tab identified by code tabname1
 		// To add a new tab identified by code tabname1
 		// Example:
 		// $this->tabs[] = array('data'=>'objecttype:+tabname1:Title1:mylangfile@doliletter:$user->rights->doliletter->read:/doliletter/mynewtab1.php?id=__ID__');  					// To add a new tab identified by code tabname1
@@ -209,6 +212,11 @@ class modDoliLetter extends DolibarrModules {
 		$this->rights[$r][1] = $langs->trans('DeleteEnvelope');
 		$this->rights[$r][4] = 'envelope';
 		$this->rights[$r][5] = 'delete';
+		$r++;
+		$this->rights[$r][0] = $this->numero . sprintf("%02d", $r + 1);
+		$this->rights[$r][1] = $langs->trans('ReadAdminPage');
+		$this->rights[$r][4] = 'adminpage';
+		$this->rights[$r][5] = 'read';
 
 		// Main menu entries to add
 		$this->menu = array();
@@ -250,7 +258,21 @@ class modDoliLetter extends DolibarrModules {
 		$this->menu[$r++]=array(
 			'fk_menu'=>'fk_mainmenu=doliletter',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type'=>'left', // This is a Left menu entry
-			'titre'=> '<i class="fas fa-paper-plane"></i> ' . $langs->trans('DoliLetterCreate'),
+			'titre'=>'<i class="fas fa-list"></i> '. $langs->trans('EnvelopeList'),
+			'mainmenu'=>'doliletter',
+			'leftmenu'=>'envelope_list',
+			'url'=>'/doliletter/envelope_list.php',
+			'langs'=>'doliletter@doliletter', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'position'=>1100+$r,
+			'enabled'=>'$conf->doliletter->enabled',  // Define condition to show or hide menu entry. Use '$conf->doliletter->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'perms'=>'1', // Use 'perms'=>'$user->rights->doliletter->level1->level2' if you want your menu with a permission rules
+			'target'=>'',
+			'user'=>0, // 0=Menu for internal users, 1=external users, 2=both
+		);
+		$this->menu[$r++]=array(
+			'fk_menu'=>'fk_mainmenu=doliletter,fk_leftmenu=envelope_list',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'type'=>'left', // This is a Left menu entry
+			'titre'=> '<i class="fas fa-paper-plane"></i> ' . $langs->trans('EnvelopeCreate'),
 			'mainmenu'=>'doliletter',
 			'leftmenu'=>'envelope_card',
 			'url'=>'/doliletter/envelope_card.php?action=create',
@@ -261,19 +283,19 @@ class modDoliLetter extends DolibarrModules {
 			'target'=>'',
 			'user'=>0, // 0=Menu for internal users, 1=external users, 2=both
 		);
-		$this->menu[$r++]=array(
-			'fk_menu'=>'fk_mainmenu=doliletter',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'type'=>'left', // This is a Left menu entry
-			'titre'=>'<i class="fas fa-list"></i> '. $langs->trans('DoliLetterList'),
-			'mainmenu'=>'doliletter',
-			'leftmenu'=>'envelope_list',
-			'url'=>'/doliletter/envelope_list.php',
-			'langs'=>'doliletter@doliletter', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'position'=>1100+$r,
-			'enabled'=>'$conf->doliletter->enabled',  // Define condition to show or hide menu entry. Use '$conf->doliletter->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-			'perms'=>'1', // Use 'perms'=>'$user->rights->doliletter->level1->level2' if you want your menu with a permission rules
-			'target'=>'',
-			'user'=>0, // 0=Menu for internal users, 1=external users, 2=both
+		$this->menu[$r++] = array(
+			'fk_menu' => 'fk_mainmenu=doliletter',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'type' => 'left',			                // This is a Left menu entry
+			'titre' => '<i class="fas fa-cog"></i>  ' . $langs->trans('DoliletterConfig'),
+			'mainmenu' => 'doliletter',
+			'leftmenu' => '',
+			'url' => '/doliletter/admin/setup.php',
+			'langs' => 'doliletter@doliletter',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'position' => 48520 + $r,
+			'enabled' => '$conf->doliletter->enabled',  // Define condition to show or hide menu entry. Use '$conf->doliletter->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'perms' => '$user->rights->doliletter->adminpage->read',			                // Use 'perms'=>'$user->rights->doliletter->level1->level2' if you want your menu with a permission rules
+			'target' => '',
+			'user' => 0,				                // 0=Menu for internal users, 1=external users, 2=both
 		);
 	}
 
@@ -290,6 +312,12 @@ class modDoliLetter extends DolibarrModules {
 
 		delDocumentModel('phobos', 'envelope');
 		addDocumentModel('phobos','envelope','','');
+
+		delDocumentModel('deimos', 'acknowledgementreceipt');
+		addDocumentModel('deimos','acknowledgementreceipt','','');
+
+		delDocumentModel('ares', 'sendingproof');
+		addDocumentModel('ares','sendingproof','','');
 
 		$sql = array();
 
