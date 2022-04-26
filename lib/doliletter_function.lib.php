@@ -191,16 +191,16 @@ function dolilettershowdocuments($modulepart, $modulesubdir, $filedir, $urlsourc
 	$titletoshow                       = $langs->trans("Documents");
 	if ( ! empty($title)) $titletoshow = ($title == 'none' ? '' : $title);
 
+	$submodulepart = $modulepart;
+	// modulepart = 'nameofmodule' or 'nameofmodule:NameOfObject'
+	$tmp = explode(':', $modulepart);
+	if ( ! empty($tmp[1])) {
+		$modulepart    = $tmp[0];
+		$submodulepart = $tmp[1];
+	}
+
 	// Show table
 	if ($genallowed) {
-		$submodulepart = $modulepart;
-		// modulepart = 'nameofmodule' or 'nameofmodule:NameOfObject'
-		$tmp = explode(':', $modulepart);
-		if ( ! empty($tmp[1])) {
-			$modulepart    = $tmp[0];
-			$submodulepart = $tmp[1];
-		}
-
 		// For normalized external modules.
 		$file = dol_buildpath('/' . $modulepart . '/core/modules/' . $modulepart . '/modules_' . strtolower($submodulepart) . '.php', 0);
 
