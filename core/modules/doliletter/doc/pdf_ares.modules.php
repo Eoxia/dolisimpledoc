@@ -313,8 +313,17 @@ class pdf_ares extends ModelePDFSendingProof
 
 				$pdf->SetFont('', '', $default_font_size - 1);
 
+				require_once DOL_DOCUMENT_ROOT.'/ecm/class/ecmdirectory.class.php';
+				require_once DOL_DOCUMENT_ROOT.'/ecm/class/ecmfiles.class.php';
+				$ecmfile = new EcmFiles($this->db);
+				$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$object->ref . '/';
+				$filelist = dol_dir_list($filedir, 'files');
+				$filepath = preg_split('/documents\//',$filelist[0]['fullname'])[1];
+
+				$ecmfile->fetch(0, '', $filepath, '', '', 'doliletter_envelope', $object->id);
+
 				if ($object->status == 3) {
-					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, $langs->trans('SendingProofTextLetter', $object->ref), 0, 1);
+					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, $langs->trans('SendingProofTextLetter', $object->ref) . '<br>' . $langs->trans('DocumentSignedSha', $ecmfile->label), 0, 1);
 				}
 
 				$nexY = $pdf->GetY();

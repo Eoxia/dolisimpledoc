@@ -318,9 +318,9 @@ class pdf_deimos extends ModelePDFAcknowledgementReceipt
 				$ecmfile = new EcmFiles($this->db);
 				$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$object->ref . '/';
 				$filelist = dol_dir_list($filedir, 'files');
-				$filename = $filelist[0]['name'];
+				$filepath = preg_split('/documents\//',$filelist[0]['fullname'])[1];
 
-				$ecmfile->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/'.$filename, '', '', 'doliletter_envelope', $id);
+				$ecmfile->fetch(0, '', $filepath, '', '', 'doliletter_envelope', $object->id);
 
 				if ($object->status == 6) {
 					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, $langs->trans('AcknowledgementReceiptTextLetter', $object->ref) . '<br>' . $langs->trans('DocumentSignedSha', $ecmfile->label), 0, 1);
