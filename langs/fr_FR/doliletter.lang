@@ -142,7 +142,7 @@ AcknowledgementReceiptGenerated = L'accusé de réception a été généré
 ValidateAcknowledgementReceipt = Valider l'accusé de réception
 GoToSignaturePage = Accéder à la page de signature
 UploadAFileFirst = Ajoutez un fichier pour pouvoir l'envoyer
-
+TrackingNumberPhoto = Photo du numéro de suivi
 #
 # Signature - Signature
 #

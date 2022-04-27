@@ -1249,7 +1249,7 @@ if (($id || $ref) && $action == 'edit' ||$action == 'confirm_setInProgress') {
 }
 
 // Part to show record
-if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'confirm_setInProgress' && $action != 'create' && $action != 'letterpresend'))) {
+if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'confirm_setInProgress' && $action != 'create'))) {
 	$res = $object->fetch_optionals();
 	$head = envelopePrepareHead($object);
 	print dol_get_fiche_head($head, 'card', $langs->trans("Envelope"), -1, "doliletter@doliletter");
@@ -1517,7 +1517,6 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 		print '<input class="flat" type="file" name="userfile[]" id="sendingProof" />';
 		print '</td>';
 
-		//avec cbox de validation mais ça perd le $_FILES
 		$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$object->ref;
 		$sending_proof_files = dol_dir_list($filedir.'/sendingproof/uploaded_file/tmp');
 		$sending_proof_files_counter = count($sending_proof_files);
@@ -1550,63 +1549,6 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 		print '</tr>';
 
 		print '</table>';
-	}
-
-	if ($action != 'presend' && $action != 'letterpresend' && $action != 'uploadAcknowledgementReceipt' && $action != 'uploadSendingProof' && $action != 'stockTmpFile') {
-		print '<div class="fichecenter"><div class="fichehalfleft">';
-		print '<a name="builddoc"></a>'; // ancre
-
-		$includedocgeneration = 1;
-
-		// Documents
-		if ($includedocgeneration) {
-			$objref = dol_sanitizeFileName($object->ref);
-			$relativepath = $objref.'/'.$objref.'.pdf';
-			$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$objref;
-			$generated_files = dol_dir_list($filedir.'/', 'files');
-			$document_generated = 0;
-			foreach ($generated_files as $generated_file) {
-				if (!preg_match('/specimen/', $generated_file['name'])) {
-					$document_generated += 1;
-				}
-			}
-			$urlsource = $_SERVER["PHP_SELF"]."?id=".$object->id;
-			$genallowed = $user->rights->doliletter->envelope->read; // If you can read, you can build the PDF to read content
-			$delallowed = $user->rights->doliletter->envelope->write; // If you can create/edit, you can remove a file on card
-			print dolilettershowdocuments('doliletter:Envelope', $object->element.'/'.$objref, $filedir, $urlsource, $object->status >= 5 ? 0 : $genallowed, 0, $conf->global->DOLILETTER_ENVELOPE_ADDON_PDF, 1, 0, 0, $langs->trans('Envelope'), 0, '', '', '', $langs->defaultlang, $object->status < 3 ? ( $document_generated > 0 ? 0 : 1) : 0, $document_generated > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
-		}
-
-		if ($object->status == 3 || $object->status == 6) {
-			print '<br>';
-			$linked_files_files = count(dol_dir_list($filedir.'/linked_files'));
-			print dolilettershowdocuments('doliletter', $object->element.'/'.$objref.'/linked_files', $filedir.'/linked_files', $urlsource, 0, 0, $conf->global->DOLILETTER_ACKNOWLEDGEMENTRECEIPT_ADDON_PDF, 1, 0, 0, $langs->trans('SendingLinkedFiles'), 0, '', '', '', $langs->defaultlang, $linked_files_files > 0 ? 0 : 1, $generated_files > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
-		}
-
-		if ($object->status == 3 || $object->status == 5 || $object->status == 6) {
-			print '<br>';
-			$sending_proof_files = count(dol_dir_list($filedir.'/sendingproof'));
-			print dolilettershowdocuments('doliletter', $object->element.'/'.$objref.'/sendingproof', $filedir.'/sendingproof', $urlsource, 0, 0, $conf->global->DOLILETTER_ACKNOWLEDGEMENTRECEIPT_ADDON_PDF, 1, 0, 0, $langs->trans('SendingProof'), 0, '', '', '', $langs->defaultlang, $sending_proof_files > 0 ? 0 : 1, $generated_files > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
-		}
-
-		if ($object->status >= 5) {
-			$acknowledgement_receipt_files = count(dol_dir_list($filedir.'/acknowledgementreceipt'));
-			print dolilettershowdocuments('doliletter', $object->element.'/'.$objref.'/acknowledgementreceipt', $filedir.'/acknowledgementreceipt', $urlsource, 0, 0, $conf->global->DOLILETTER_ACKNOWLEDGEMENTRECEIPT_ADDON_PDF, 1, 0, 0, $langs->trans('AcknowledgementReceipt'), 0, '', '', '', $langs->defaultlang, $acknowledgement_receipt_files > 0 ? 0 : 1, $generated_files > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
-		}
-
-		print '</div><div class="fichehalfright"><div class="ficheaddleft">';
-
-		$MAXEVENT = 10;
-
-		$morehtmlright = '<a href="'.dol_buildpath('/doliletter/envelope_agenda.php', 1).'?id='.$object->id.'">';
-		$morehtmlright .= $langs->trans("SeeAll");
-		$morehtmlright .= '</a>';
-
-		// List of actions on element
-		include_once DOL_DOCUMENT_ROOT.'/core/class/html.formactions.class.php';
-		$formactions = new FormActions($db);
-		$somethingshown = $formactions->showactions($object, $object->element.'@'.$object->module, '', 1, '', $MAXEVENT, '', $morehtmlright);
-
-		print '</div></div></div>';
 	}
 
 	//Select mail models is same action as presend
@@ -1813,96 +1755,187 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 		print dol_get_fiche_end();
 	}
 
+	if ($action == 'letterpresend') {
 
-} else if ($action == 'letterpresend') {
+		// Build document if it not exists
+		$diroutput = $upload_dir . '/' . $object->element;
+		$outputlangs = $langs;
 
-	// Build document if it not exists
-	$diroutput = $upload_dir . '/' . $object->element;
-	$outputlangs = $langs;
+		$fileparams = dol_most_recent_file($diroutput . '/' . $object->ref, '');
+		$file = $fileparams['fullname'];
 
-	$fileparams = dol_most_recent_file($diroutput.'/'.$object->ref, '');
-	$file = $fileparams['fullname'];
-
-	$allspecimen = true;
-	$fileslist = dol_dir_list($fileparams['path']);
-	foreach($fileslist as $item) {
-		if (!preg_match('/specimen/', $item['name'])){
-			$allspecimen = false;
+		$allspecimen = true;
+		$fileslist = dol_dir_list($fileparams['path']);
+		foreach ($fileslist as $item) {
+			if (!preg_match('/specimen/', $item['name'])) {
+				$allspecimen = false;
+			}
 		}
-	}
 
-	$needcreate = empty($file) || $allspecimen;
+		$needcreate = empty($file) || $allspecimen;
 
-	$forcebuilddoc = true;
-	if ($forcebuilddoc)    // If there is no default value for supplier invoice, we do not generate file, even if modelpdf was set by a manual generation
-	{
-		if (($needcreate || !is_readable($file)) && method_exists($object, 'generateDocument'))
+		$forcebuilddoc = true;
+		if ($forcebuilddoc)    // If there is no default value for supplier invoice, we do not generate file, even if modelpdf was set by a manual generation
 		{
+			if (($needcreate || !is_readable($file)) && method_exists($object, 'generateDocument')) {
 
-			$result = $object->generateDocument(GETPOST('model') ? GETPOST('model') : $object->model_pdf, $outputlangs, $hidedetails, $hidedesc, $hideref);
-			if ($result < 0) {
-				dol_print_error($db, $object->error, $object->errors);
-				exit();
-			}
-			if ($conf->global->DOLILETTER_SHOW_DOCUMENTS_ON_PUBLIC_INTERFACE) {
-				$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$object->ref;
-				$filelist = dol_dir_list($filedir, 'files');
-				$filename = $filelist[0]['name'];
+				$result = $object->generateDocument(GETPOST('model') ? GETPOST('model') : $object->model_pdf, $outputlangs, $hidedetails, $hidedesc, $hideref);
+				if ($result < 0) {
+					dol_print_error($db, $object->error, $object->errors);
+					exit();
+				}
+				if ($conf->global->DOLILETTER_SHOW_DOCUMENTS_ON_PUBLIC_INTERFACE) {
+					$filedir = $conf->doliletter->dir_output . '/' . $object->element . '/' . $object->ref;
+					$filelist = dol_dir_list($filedir, 'files');
+					$filename = $filelist[0]['name'];
 
-				$ecmfile->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/'.$filename, '', '', 'doliletter_envelope', $id);
-				require_once DOL_DOCUMENT_ROOT.'/core/lib/security2.lib.php';
-				$ecmfile->share = getRandomPassword(true);
-				$ecmfile->update($user);
+					$ecmfile->fetch(0, '', 'doliletter/envelope/' . $object->ref . '/' . $filename, '', '', 'doliletter_envelope', $id);
+					require_once DOL_DOCUMENT_ROOT . '/core/lib/security2.lib.php';
+					$ecmfile->share = getRandomPassword(true);
+					$ecmfile->update($user);
+				}
 			}
 		}
+
+		$res = $object->fetch_optionals();
+
+		print load_fiche_titre($langs->trans('SendLetter'), '', "doliletter32px@doliletter");
+
+		print dol_get_fiche_head(array(), '');
+
+		$contact_list = array();
+
+		print '<form method="POST" enctype="multipart/form-data" action="' . $_SERVER["PHP_SELF"] . '">';
+		print '<input type="hidden" name="token" value="' . newToken() . '">';
+		print '<input type="hidden" name="action" value="lettersend">';
+		print '<input type="hidden" name="id" value="' . $object->id . '">';
+		//Combobox multiple selection for contacts saved as receivers
+
+
+		print '<table>';
+		print '<tr class="minwidth400"><td>' . $langs->trans("Receivers") . '</td><td class="minwidth400">';
+		print '<input hidden name="receiver[]" id="receiver[]" value="' . $linked_contact->id . '">';
+		print $linked_contact->getNomUrl(1);
+		//	print $form->selectcontacts($object->fk_soc, $object->fk_contact, 'receiver[]', 0, '', '', 0, 'quatrevingtpercent', false, 0, array(), false, 'multiple', 'receiver');
+		print '</td></tr>';
+		print '<tr class="minwidth400"><td>' . $langs->trans("LetterCode") . '</td><td class="minwidth400">';
+		print '<input name="lettercode">';
+		print '</td></tr>';
+		// Photo du numéro de suivi
+		print '<tr>';
+		print '<td class="titlefield">' . $form->editfieldkey($langs->trans("TrackingNumberPhoto"), 'linkedFiles', '', $object, 0) . '</td>';
+		print '<td>';
+		print '<input class="flat" type="file" name="userfile[]" id="LinkedFiles" />';
+		print '</td></tr>';
+
+//		print '<table><tr>';
+//		print '<td class="titlefield">' . $form->editfieldkey($langs->trans("TrackingNumberPhoto"), 'linkedFiles', '', $object, 0) . '</td>';
+//		print '<td>';
+//		print '<input hidden class="from-type" value="LinkedFiles" />';
+//		print '<input class="flat" type="file" name="userfile[]" id="LinkedFiles" />';
+//		print '</td>';
+//
+//		$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$object->ref;
+//		$tracking_number_photo_files = dol_dir_list($filedir.'/linked_files/uploaded_file/tmp');
+//		$tracking_number_photo_files_counter = count($tracking_number_photo_files);
+//
+//		print '<td>';
+//		print '<input class="send-file butActionRefused" title="'. $langs->trans('UploadAFileFirst') .'" type="submit" name="uploadSendingProof" id="uploadSendingProof" value="'. $langs->trans('Send').'"/>';
+//		print '</td>';
+//
+//		if ($tracking_number_photo_files_counter == 0) {
+//			print '<td class="titlefield">';
+//			print '<img width="150" alt="" src="./../../custom/doliletter/img/tracking_number_photo_confirmation.png" />';
+//			print '</td>';
+//		} else {
+//			$tracking_number_photo_path = array_shift($tracking_number_photo_files);
+//			$tracking_number_photo_path = $tracking_number_photo_path['name'];
+//			print '<td class="titlefield">';
+//			print '<img width="150" alt="" src="'.DOL_URL_ROOT.'/viewimage.php?modulepart=doliletter&entity='.$object->entity.'&file=envelope/'. $object->ref . '/sendingproof/uploaded_file/tmp/' . $tracking_number_photo_path .'">';
+//			print '</td>';
+//		}
+//		print '</form>';
+//
+//		print '<form method="POST" action="'.$_SERVER["PHP_SELF"] . '?id=' . $id .'" enctype="multipart/form-data">';
+//		print '<input type="hidden" name="token" value="'.newToken().'">';
+//		print '<input type="hidden" name="action" value="addSendingProof">';
+//
+//		print '<td>';
+//		print '<input type="submit" class="' . ($tracking_number_photo_files_counter > 0 ? 'butAction' : 'butActionRefused" title="' . dol_escape_htmltag($langs->trans("YouMustHaveUploadedAN")) . '"') . ' id="addSendingProof" value="'. $langs->trans("ValidateSendingProof") .'">';
+//		print '</td></form>';
+//
+//		print '</tr>';
+
+		print '</table>' . "<br>";
+
+		//button save -> to lettersend action
+		print '<input type="submit" class="button" name="lettersend" value="' . dol_escape_htmltag($langs->trans("Send")) . '">';
+		print '&nbsp; ';
+		print '<input type="' . ($backtopage ? "submit" : "button") . '" class="button button-cancel" name="cancel" value="' . dol_escape_htmltag($langs->trans("Cancel")) . '"' . ($backtopage ? '' : ' onclick="javascript:history.go(-1)"') . '>'; // Cancel for create does not post form if we don't know the backtopage
+
+		print '</div>';
+
+		print '</form>';
 	}
 
-	$res = $object->fetch_optionals();
+	if ($action != 'presend' && $action != 'letterpresend' && $action != 'uploadAcknowledgementReceipt' && $action != 'uploadSendingProof' && $action != 'stockTmpFile') {
+		print '<div class="fichecenter"><div class="fichehalfleft">';
+		print '<a name="builddoc"></a>'; // ancre
 
-	$head = envelopePrepareHead($object);
-	print dol_get_fiche_head($head, 'card', $langs->trans("EnvelopeSending"), -1, "doliletter@doliletter");
-	print load_fiche_titre($langs->trans('SendLetter'), '', "doliletter32px@doliletter");
+		$includedocgeneration = 1;
 
-	print dol_get_fiche_head(array(), '');
+		// Documents
+		if ($includedocgeneration) {
+			$objref = dol_sanitizeFileName($object->ref);
+			$relativepath = $objref.'/'.$objref.'.pdf';
+			$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$objref;
+			$generated_files = dol_dir_list($filedir.'/', 'files');
+			$document_generated = 0;
+			foreach ($generated_files as $generated_file) {
+				if (!preg_match('/specimen/', $generated_file['name'])) {
+					$document_generated += 1;
+				}
+			}
+			$urlsource = $_SERVER["PHP_SELF"]."?id=".$object->id;
+			$genallowed = $user->rights->doliletter->envelope->read; // If you can read, you can build the PDF to read content
+			$delallowed = $user->rights->doliletter->envelope->write; // If you can create/edit, you can remove a file on card
+			print dolilettershowdocuments('doliletter:Envelope', $object->element.'/'.$objref, $filedir, $urlsource, $object->status >= 5 ? 0 : $genallowed, 0, $conf->global->DOLILETTER_ENVELOPE_ADDON_PDF, 1, 0, 0, $langs->trans('Envelope'), 0, '', '', '', $langs->defaultlang, $object->status < 3 ? ( $document_generated > 0 ? 0 : 1) : 0, $document_generated > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
+		}
 
-	$contact_list= array();
+		if ($object->status == 3 || $object->status == 6) {
+			print '<br>';
+			$linked_files_files = count(dol_dir_list($filedir.'/linked_files'));
+			print dolilettershowdocuments('doliletter', $object->element.'/'.$objref.'/linked_files', $filedir.'/linked_files', $urlsource, 0, 0, $conf->global->DOLILETTER_ACKNOWLEDGEMENTRECEIPT_ADDON_PDF, 1, 0, 0, $langs->trans('TrackingNumberPhoto'), 0, '', '', '', $langs->defaultlang, $linked_files_files > 0 ? 0 : 1, $generated_files > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
+		}
 
-	print '<form method="POST" enctype="multipart/form-data" action="'.$_SERVER["PHP_SELF"].'">';
-	print '<input type="hidden" name="token" value="'.newToken().'">';
-	print '<input type="hidden" name="action" value="lettersend">';
-	print '<input type="hidden" name="id" value="'.$object->id.'">';
-	//Combobox multiple selection for contacts saved as receivers
+		if ($object->status == 3 || $object->status == 5 || $object->status == 6) {
+			print '<br>';
+			$sending_proof_files = count(dol_dir_list($filedir.'/sendingproof'));
+			print dolilettershowdocuments('doliletter', $object->element.'/'.$objref.'/sendingproof', $filedir.'/sendingproof', $urlsource, 0, 0, $conf->global->DOLILETTER_ACKNOWLEDGEMENTRECEIPT_ADDON_PDF, 1, 0, 0, $langs->trans('SendingProof'), 0, '', '', '', $langs->defaultlang, $sending_proof_files > 0 ? 0 : 1, $generated_files > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
+		}
 
+		if ($object->status >= 5) {
+			$acknowledgement_receipt_files = count(dol_dir_list($filedir.'/acknowledgementreceipt'));
+			print dolilettershowdocuments('doliletter', $object->element.'/'.$objref.'/acknowledgementreceipt', $filedir.'/acknowledgementreceipt', $urlsource, 0, 0, $conf->global->DOLILETTER_ACKNOWLEDGEMENTRECEIPT_ADDON_PDF, 1, 0, 0, $langs->trans('AcknowledgementReceipt'), 0, '', '', '', $langs->defaultlang, $acknowledgement_receipt_files > 0 ? 0 : 1, $generated_files > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
+		}
 
-	print '<table>';
-	print '<tr class="minwidth400"><td>'.$langs->trans("Receivers").'</td><td class="minwidth400">';
-	print '<input hidden name="receiver[]" id="receiver[]" value="' . $linked_contact->id .'">';
-	print $linked_contact->getNomUrl(1);
-//	print $form->selectcontacts($object->fk_soc, $object->fk_contact, 'receiver[]', 0, '', '', 0, 'quatrevingtpercent', false, 0, array(), false, 'multiple', 'receiver');
-	print '</td></tr>';
-	print '<tr class="minwidth400"><td>'.$langs->trans("LetterCode").'</td><td class="minwidth400">';
-	print '<input name="lettercode">';
-	print '</td></tr>';
-	// Preuve de dépôt
-	print '<tr>';
-	print '<td class="titlefield">' . $form->editfieldkey($langs->trans("LinkedFiles"), 'linkedFiles', '', $object, 0) . '</td>';
-	print '<td>';
-	print '<input class="flat" type="file" name="userfile[]" id="LinkedFiles" />';
-	print '</td></tr>';
+		print '</div><div class="fichehalfright"><div class="ficheaddleft">';
 
-	print '</table>'."<br>";
+		$MAXEVENT = 10;
 
+		$morehtmlright = '<a href="'.dol_buildpath('/doliletter/envelope_agenda.php', 1).'?id='.$object->id.'">';
+		$morehtmlright .= $langs->trans("SeeAll");
+		$morehtmlright .= '</a>';
 
-	//button save -> to lettersend action
-	print '<input type="submit" class="button" name="lettersend" value="'.dol_escape_htmltag($langs->trans("Send")).'">';
-	print '&nbsp; ';
-	print '<input type="'.($backtopage ? "submit" : "button").'" class="button button-cancel" name="cancel" value="'.dol_escape_htmltag($langs->trans("Cancel")).'"'.($backtopage ? '' : ' onclick="javascript:history.go(-1)"').'>'; // Cancel for create does not post form if we don't know the backtopage
+		// List of actions on element
+		include_once DOL_DOCUMENT_ROOT.'/core/class/html.formactions.class.php';
+		$formactions = new FormActions($db);
+		$somethingshown = $formactions->showactions($object, $object->element.'@'.$object->module, '', 1, '', $MAXEVENT, '', $morehtmlright);
 
-	print '</div>';
+		print '</div></div></div>';
+	}
 
-	print '</form>';
 }
-
 
 // End of page
 llxFooter();

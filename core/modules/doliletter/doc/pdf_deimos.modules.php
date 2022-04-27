@@ -889,7 +889,7 @@ class pdf_deimos extends ModelePDFAcknowledgementReceipt
 
 		$upload_dir 	= $conf->doliletter->multidir_output[$conf->entity ?: $conf->entity] . '/envelope/' . $object->ref . '/acknowledgementreceipt/uploaded_file';
 		$arrayoffiles 	= dol_dir_list($upload_dir);
-		
+
 		if ( !empty( $arrayoffiles ) ) {
 			foreach ($arrayoffiles as $file) {
 
