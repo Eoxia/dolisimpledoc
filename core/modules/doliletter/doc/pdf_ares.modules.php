@@ -853,7 +853,7 @@ class pdf_ares extends ModelePDFSendingProof
 		$MAX_WIDTH 	= 800;
 		$MAX_HEIGHT = 500;
 
-		$upload_dir 	= DOL_DATA_ROOT . '/doliletter/envelope/' . $object->ref . '/sendingproof/uploaded_file';
+		$upload_dir 	= $conf->doliletter->multidir_output[$conf->entity ?: $conf->entity] . '/envelope/' . $object->ref . '/sendingproof/uploaded_file';
 		$arrayoffiles 	= dol_dir_list($upload_dir);
 
 		if ( !empty( $arrayoffiles ) ) {

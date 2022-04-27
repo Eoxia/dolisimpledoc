@@ -887,8 +887,9 @@ class pdf_deimos extends ModelePDFAcknowledgementReceipt
 		$MAX_WIDTH 	= 800;
 		$MAX_HEIGHT = 500;
 
-		$upload_dir 	= DOL_DATA_ROOT . '/doliletter/envelope/' . $object->ref . '/acknowledgementreceipt/uploaded_file';
+		$upload_dir 	= $conf->doliletter->multidir_output[$conf->entity ?: $conf->entity] . '/envelope/' . $object->ref . '/acknowledgementreceipt/uploaded_file';
 		$arrayoffiles 	= dol_dir_list($upload_dir);
+		
 		if ( !empty( $arrayoffiles ) ) {
 			foreach ($arrayoffiles as $file) {
 

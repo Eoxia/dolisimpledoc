@@ -106,7 +106,7 @@ foreach ($object->fields as $key => $val) {
 if (empty($action) && empty($id) && empty($ref)) {
 	$action = 'view';
 }
-$upload_dir = $conf->doliletter->multidir_output[$conf->entity ? $conf->entity : $conf->entity]."/envelope/".get_exdir(0, 0, 0, 1, $object);
+$upload_dir = $conf->doliletter->multidir_output[$conf->entity ?: $conf->entity]."/envelope/".get_exdir(0, 0, 0, 1, $object);
 // Load object
 include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be include, not include_once.
 
