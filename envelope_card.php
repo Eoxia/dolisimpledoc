@@ -1856,7 +1856,11 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 		print '<td class="titlefield">' . $form->editfieldkey($langs->trans("TrackingNumberPhoto"), 'linkedFiles', '', $object, 0) . '</td>';
 		print '<td>';
 		print '<input class="flat" type="file" name="userfile[]" id="LinkedFiles" />';
-		print '</td></tr>';
+		print '</td>';
+		print '<td>';
+		print '<img src="./img/envelope.png"/>';
+		print '</td>';
+		print '</tr>';
 
 //		print '<table><tr>';
 //		print '<td class="titlefield">' . $form->editfieldkey($langs->trans("TrackingNumberPhoto"), 'linkedFiles', '', $object, 0) . '</td>';
