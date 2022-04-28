@@ -163,6 +163,7 @@ YourEnvelope = Votre courrier :
 YourAcknowledgementReceipt = Votre accusé de réception :
 AcknowledgementReceiptTextLetter = Veuillez trouver ci-après l'accusé de réception du courrier %s reçu par voie postale.
 AcknowledgementReceiptTextMail = Je soussigné %s avoir reçu le document %s par mail le %s.
+TrackingNumberTextLetter = Veuillez trouver ci-après le numéro de suivi du courrier %s : %s
 DocumentGenerated = Document généré
 DocumentHasAlreadyBeenGenerated = Le document a déjà été généré
 CompleteName = Nom et prénom

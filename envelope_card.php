@@ -425,7 +425,6 @@ if (empty($reshook)) {
 		}
 	}
 
-
 	// Actions to send emails
 	$triggersendname = 'DOLILETTER_ENVELOPE_SENTBYMAIL';
 	$autocopy = 'MAIN_MAIL_AUTOCOPY_ENVELOPE_TO';
@@ -839,15 +838,45 @@ if (empty($reshook)) {
 						if (!is_dir($filedir)) {
 							dol_mkdir($filedir);
 						}
-						$LFdir = $filedir . '/linked_files';
+						$TNdir = $filedir . '/trackingnumber';
+						if (!is_dir($TNdir)) {
+							dol_mkdir($TNdir);
+						}
+
+						$LFdir = $TNdir . '/uploaded_file';
 						if (!is_dir($LFdir)) {
 							dol_mkdir($LFdir);
 						}
-
 						$result = dol_add_file_process($LFdir, 0, 1, 'userfile', '', null, '', 0, $object);
 					}
 				}
 			}
+			$forcebuilddoc = true;
+
+			if ($forcebuilddoc)    // If there is no default value for supplier invoice, we do not generate file, even if modelpdf was set by a manual generation
+			{
+
+				if (method_exists($object, 'generateDocument'))
+				{
+					$result = $object->generateDocument('nerio', $langs, $hidedetails, $hidedesc, $hideref);
+
+					if ($result < 0) {
+						dol_print_error($db, $object->error, $object->errors);
+						exit();
+					}
+					if ($conf->global->DOLILETTER_SHOW_DOCUMENTS_ON_PUBLIC_INTERFACE) {
+						$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$object->ref . '/trackingnumber';
+						$filelist = dol_dir_list($filedir, 'files');
+						$filename = $filelist[0]['name'];
+
+						$ecmfile->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/trackingnumber/'.$filename, '', '', 'doliletter_envelope', $id);
+						require_once DOL_DOCUMENT_ROOT.'/core/lib/security2.lib.php';
+						$ecmfile->share = getRandomPassword(true);
+						$ecmfile->update($user);
+					}
+				}
+			}
+
 		}
 		unset($action);
 	}
@@ -1905,14 +1934,14 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 
 		if ($object->status == 3 || $object->status == 6) {
 			print '<br>';
-			$linked_files_files = count(dol_dir_list($filedir.'/linked_files'));
-			print dolilettershowdocuments('doliletter', $object->element.'/'.$objref.'/linked_files', $filedir.'/linked_files', $urlsource, 0, 0, $conf->global->DOLILETTER_ACKNOWLEDGEMENTRECEIPT_ADDON_PDF, 1, 0, 0, $langs->trans('TrackingNumberPhoto'), 0, '', '', '', $langs->defaultlang, $linked_files_files > 0 ? 0 : 1, $generated_files > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
+			$linked_files_files = count(dol_dir_list($filedir.'/trackingnumber'));
+			print dolilettershowdocuments('doliletter', $object->element.'/'.$objref.'/trackingnumber', $filedir.'/trackingnumber', $urlsource, 0, 0, $conf->global->DOLILETTER_TRACKINGNUMBER_ADDON_PDF, 1, 0, 0, $langs->trans('TrackingNumber'), 0, '', '', '', $langs->defaultlang, $linked_files_files > 0 ? 0 : 1, $generated_files > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
 		}
 
 		if ($object->status == 3 || $object->status == 5 || $object->status == 6) {
 			print '<br>';
 			$sending_proof_files = count(dol_dir_list($filedir.'/sendingproof'));
-			print dolilettershowdocuments('doliletter', $object->element.'/'.$objref.'/sendingproof', $filedir.'/sendingproof', $urlsource, 0, 0, $conf->global->DOLILETTER_ACKNOWLEDGEMENTRECEIPT_ADDON_PDF, 1, 0, 0, $langs->trans('SendingProof'), 0, '', '', '', $langs->defaultlang, $sending_proof_files > 0 ? 0 : 1, $generated_files > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
+			print dolilettershowdocuments('doliletter', $object->element.'/'.$objref.'/sendingproof', $filedir.'/sendingproof', $urlsource, 0, 0, $conf->global->DOLILETTER_SENDINGPROOF_ADDON_PDF, 1, 0, 0, $langs->trans('SendingProof'), 0, '', '', '', $langs->defaultlang, $sending_proof_files > 0 ? 0 : 1, $generated_files > 0 ? $langs->trans('DocumentHasAlreadyBeenGenerated') : $langs->trans('EnvelopeMustBeLockedToGenerateDocument'));
 		}
 
 		if ($object->status >= 5) {
