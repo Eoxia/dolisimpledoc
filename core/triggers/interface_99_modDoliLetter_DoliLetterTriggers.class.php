@@ -127,21 +127,6 @@ class InterfaceDoliLetterTriggers extends DolibarrTriggers
 					$signatory = array_shift($signatory);
 				}
 
-				$actioncomm->elementtype = 'envelope@doliletter';
-				$actioncomm->code        = 'AC_DOLILETTER_ENVELOPE_SENTBYMAIL';
-				$actioncomm->type_code   = 'AC_OTH_AUTO';
-				$actioncomm->label       = $langs->trans('EnvelopeSendbyMailTrigger');
-				$actioncomm->note        = $langs->trans('EnvelopeSendbyMailTriggerContent', $contact->firstname . ' ' . $contact->lastname, dol_print_date(dol_now()), $signatory->firstname . ' ' . $signatory->lastname);
-				$actioncomm->datep       = $now;
-				$actioncomm->socid       = $object->fk_soc;
-				$actioncomm->contactid   = $object->fk_contact;
-				$actioncomm->contact_id  = $object->fk_contact;
-				$actioncomm->socpeopleassigned = array($object->fk_contact => $object->fk_contact);
-				$actioncomm->fk_element  = $object->id;
-				$actioncomm->userownerid = $user->id;
-				$actioncomm->percentage  = -1;
-				$actioncomm->extraparams = 'email_sending';
-
 				// Fields defined when action is an email (content should be into object->actionmsg to be added into note, subject into object->actionms2 to be added into label)
 				$actioncomm->email_msgid   = empty($object->email_msgid) ? null : $object->email_msgid;
 				$actioncomm->email_from    = empty($object->email_from) ? null : $object->email_from;
@@ -151,6 +136,30 @@ class InterfaceDoliLetterTriggers extends DolibarrTriggers
 				$actioncomm->email_tobcc   = empty($object->email_tobcc) ? null : $object->email_tobcc;
 				$actioncomm->email_subject = empty($object->email_subject) ? null : $object->email_subject;
 				$actioncomm->errors_to     = empty($object->errors_to) ? null : $object->errors_to;
+
+				$actionmsg = $langs->transnoentities('MailFrom').': '.dol_escape_htmltag($actioncomm->email_from);
+				$actionmsg = dol_concatdesc($actionmsg, $langs->transnoentities('MailTo').': '.dol_escape_htmltag($actioncomm->email_to));
+				if ($actioncomm->email_tocc ) {
+					$actionmsg = dol_concatdesc($actionmsg, $langs->transnoentities('Bcc').": ".dol_escape_htmltag($actioncomm->email_tocc ));
+				}
+				$actionmsg = dol_concatdesc($actionmsg, $langs->transnoentities('MailTopic').": ".$actioncomm->email_subject);
+				$actionmsg = dol_concatdesc($actionmsg, $langs->transnoentities('TextUsedInTheMessageBody').":");
+				$actionmsg = dol_concatdesc($actionmsg, $object->message);
+
+				$actioncomm->elementtype = 'envelope@doliletter';
+				$actioncomm->code        = 'AC_DOLILETTER_ENVELOPE_SENTBYMAIL';
+				$actioncomm->type_code   = 'AC_OTH_AUTO';
+				$actioncomm->label       = $langs->trans('EnvelopeSendbyMailTrigger');
+				$actioncomm->note        = $langs->trans('EnvelopeSendbyMailTriggerContent', $contact->firstname . ' ' . $contact->lastname, dol_print_date(dol_now()), $signatory->firstname . ' ' . $signatory->lastname) . '<br>' . $actionmsg;
+				$actioncomm->datep       = $now;
+				$actioncomm->socid       = $object->fk_soc;
+				$actioncomm->contactid   = $object->fk_contact;
+				$actioncomm->contact_id  = $object->fk_contact;
+				$actioncomm->socpeopleassigned = array($object->fk_contact => $object->fk_contact);
+				$actioncomm->fk_element  = $object->id;
+				$actioncomm->userownerid = $user->id;
+				$actioncomm->percentage  = -1;
+				$actioncomm->extraparams = 'email_sending';
 
 				$actioncomm->create($user);
 				break;
