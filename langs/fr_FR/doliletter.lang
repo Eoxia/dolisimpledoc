@@ -143,6 +143,7 @@ ValidateAcknowledgementReceipt = Valider l'accusé de réception
 GoToSignaturePage = Accéder à la page de signature
 UploadAFileFirst = Ajoutez un fichier pour pouvoir l'envoyer
 TrackingNumberPhoto = Photo du numéro de suivi
+TrackingNumber = Numéro de suivi
 
 #
 # Signature - Signature

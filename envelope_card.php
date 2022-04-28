@@ -1345,7 +1345,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 
 	if ($object->status == 3 || $object->status == 6) {
 		$morehtmlref .=  '<tr><td>';
-		$morehtmlref .= $langs->trans('RegisteredMailCode') . ' : ' . $lettersending->letter_code;
+		$morehtmlref .=  '<b>' . $langs->trans('TrackingNumber') . '</b>' . ' : ' . $lettersending->letter_code;
 		$morehtmlref .= '</td></tr>';
 	}
 
