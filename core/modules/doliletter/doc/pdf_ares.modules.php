@@ -323,7 +323,7 @@ class pdf_ares extends ModelePDFSendingProof
 				$ecmfile->fetch(0, '', $filepath, '', '', 'doliletter_envelope', $object->id);
 
 				if ($object->status == 3) {
-					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, $langs->trans('SendingProofTextLetter', $object->ref) . '<br>' . $langs->trans('DocumentSignedSha', $ecmfile->label), 0, 1);
+					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, $langs->trans('SendingProofTextLetter', $object->ref) . '<br>' . $langs->trans('SentDocumentSignedSha', $ecmfile->label), 0, 1);
 				}
 
 				$nexY = $pdf->GetY();
