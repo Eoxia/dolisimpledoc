@@ -741,8 +741,9 @@ if (empty($reshook)) {
 									setEventMessages($object->error, $object->errors, 'errors');
 								} else {
 									$object->setStatusCommon($user, 4);
-									$object->last_email_sent_date = dol_now();
-									$object->update($user);
+									$signatory->fetchSignatory('E_RECEIVER', $id);
+									$signatory->last_email_sent_date = dol_now();
+									$signatory->update($user);
 								}
 							}
 							// End call of triggers
