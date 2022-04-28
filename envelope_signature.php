@@ -364,7 +364,7 @@ if ((empty($action) || ($action != 'create' && $action != 'edit'))) {
 	print $langs->trans("Sender");
 	print '</td><td class="center">';
 
-	$current_url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+	$current_url = $_SERVER['HTTP_HOST'] . (preg_match('/&/',$_SERVER['REQUEST_URI']) ? preg_split('/&/',$_SERVER['REQUEST_URI'])[0] : $_SERVER['REQUEST_URI']);
 	print$current_url;
 	print  '<input hidden class="signature-link" value="'. $current_url .'">';
 	print '   ' . '<button class="copy-to-clipboard-button"><i class="fas fa-clipboard clipboard-copy"></i></button>';
