@@ -308,7 +308,7 @@ if (isset($extrafields->attributes[$object->table_element]['label']) && is_array
 	$sql .= " LEFT JOIN ".MAIN_DB_PREFIX.$object->table_element."_extrafields as ef on (t.rowid = ef.fk_object)";
 }
 if (dol_strlen($fromtype) > 0 && !in_array($fromtype, $linkedObjectsArray)) {
-	$sql .= ' LEFT JOIN ' . MAIN_DB_PREFIX . 'element_element as e on (e.fk_source = ' .$fromid. ' AND e.sourcetype="' . $fromtype . '" AND e.targettype = "envelope")';
+	$sql .= ' LEFT JOIN ' . MAIN_DB_PREFIX . 'element_element as e on (e.fk_source = ' .$fromid. ' AND e.sourcetype="' . $fromtype . '" AND e.targettype = "doliletter_envelope")';
 }
 // Add table from hooks
 $parameters = array();
