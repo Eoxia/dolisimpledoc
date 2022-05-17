@@ -169,7 +169,7 @@ if (dol_strlen($element->signature)) {
 			<?php if ($conf->global->DOLILETTER_SHOW_DOCUMENTS_ON_PUBLIC_INTERFACE) : ?>
 				<div class="wpeo-gridlayout grid-2 file-generation">
 					<?php if ($type == 'envelope') : ?>
-						<?php $filelist = dol_dir_list($upload_dir . '/' . $object->element . '/' . $object->ref);
+						<?php $filelist = dol_dir_list($upload_dir . '/' . $object->element . '/' . $object->ref, 'files');
 						if (!empty($filelist)) {
 							foreach ($filelist as $file) {
 								if (!preg_match('/specimen/', $file['name'])) {
