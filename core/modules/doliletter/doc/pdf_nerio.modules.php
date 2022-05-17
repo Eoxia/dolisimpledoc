@@ -34,12 +34,12 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/pdf.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
 
-require_once __DIR__ . '/../modules_sendingproof.php';
+require_once __DIR__ . '/../modules_trackingnumber.php';
 
 /**
  *	Class to build contracts documents with model Strato
  */
-class pdf_ares extends ModelePDFSendingProof
+class pdf_nerio extends ModelePDFTrackingNumber
 {
 	/**
 	 * @var DoliDb Database handler
@@ -130,7 +130,7 @@ class pdf_ares extends ModelePDFSendingProof
 		global $conf, $langs, $mysoc;
 
 		$this->db = $db;
-		$this->name = 'ares';
+		$this->name = 'nerio';
 		$this->description = $langs->trans("StandardContractsTemplate");
 
 		// Page size for A4 format
@@ -196,7 +196,7 @@ class pdf_ares extends ModelePDFSendingProof
 				$file = $dir."/SPECIMEN.pdf";
 			} else {
 				$objectref = dol_sanitizeFileName($object->ref);
-				$dir = $conf->doliletter->multidir_output[$conf->entity]."/envelope/".$objectref .'/sendingproof';
+				$dir = $conf->doliletter->multidir_output[$conf->entity]."/envelope/".$objectref .'/trackingnumber';
 			}
 			if (!file_exists($dir))
 			{
@@ -211,7 +211,7 @@ class pdf_ares extends ModelePDFSendingProof
 				$docnum = 0;
 					do {
 						$date = dol_print_date(dol_now(),'dayxcard');
-						$filename = $date . '_' . $objectref . '_SP' . '_' . $docnum . '.pdf';
+						$filename = $date . '_' . $objectref . '_TN' . '_' . $docnum . '.pdf';
 						$filename = str_replace(' ', '_', $filename);
 						$filename = dol_sanitizeFileName($filename);
 						if ($object->status < 2) {
@@ -321,9 +321,16 @@ class pdf_ares extends ModelePDFSendingProof
 				$filepath = preg_split('/documents\//',$filelist[0]['fullname'])[1];
 
 				$ecmfile->fetch(0, '', $filepath, '', '', 'doliletter_envelope', $object->id);
+				$letter = new LetterSending($this->db);
+				$lettersending = $letter->fetchAll('', '', 0, 0, array('customsql' => ' fk_envelope =' . $object->id));
+				if (is_array($lettersending)) {
+					$lettersending = end($lettersending);
+				} else {
+					$lettersending = $letter;
+				}
 
 				if ($object->status == 3) {
-					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, $langs->trans('SendingProofTextLetter', $object->ref) . '<br>' . $langs->trans('SentDocumentSignedSha', $ecmfile->label), 0, 1);
+					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, $langs->trans('TrackingNumberTextLetter', $object->ref, $lettersending->letter_code) . '<br>' . $langs->trans('SentDocumentSignedSha', $ecmfile->label), 0, 1);
 				}
 
 				$nexY = $pdf->GetY();
@@ -637,7 +644,7 @@ class pdf_ares extends ModelePDFSendingProof
 		$contact->fetch($object->fk_contact);
 
 		$pdf->SetXY($this->marge_gauche, $posy);
-//		$pdf->MultiCell($posmiddle - $this->marge_gauche - 5, 5,  $outputlangs->transnoentities('SendingProofTextMail', $receiver->firstname . ' ' . $receiver->lastname, preg_replace('/AR_/', '', $filename), 'mail', dol_print_date($receiver->signature_date), $receiver->ip ), 0, 'L', 0);
+//		$pdf->MultiCell($posmiddle - $this->marge_gauche - 5, 5,  $outputlangs->transnoentities('TrackingNumberTextMail', $receiver->firstname . ' ' . $receiver->lastname, preg_replace('/AR_/', '', $filename), 'mail', dol_print_date($receiver->signature_date), $receiver->ip ), 0, 'L', 0);
 
 		$pdf->SetXY($this->marge_gauche, $posy + 10);
 		$pdf->Image($test, $this->marge_gauche, $posy - 5, 50, 50); // width=0 (auto)
@@ -709,7 +716,7 @@ class pdf_ares extends ModelePDFSendingProof
 		$pdf->SetFont('', 'B', $default_font_size + 3);
 		$pdf->SetXY($posx, $posy);
 		$pdf->SetTextColor(0, 0, 60);
-		$title = $outputlangs->transnoentities("SendingProof");
+		$title = $outputlangs->transnoentities("TrackingNumber");
 		$pdf->MultiCell(100, 4, $title, '', 'R');
 
 		$pdf->SetFont('', 'B', $default_font_size + 2);
@@ -853,7 +860,7 @@ class pdf_ares extends ModelePDFSendingProof
 		$MAX_WIDTH 	= 800;
 		$MAX_HEIGHT = 500;
 
-		$upload_dir 	= $conf->doliletter->multidir_output[$conf->entity ?: $conf->entity] . '/envelope/' . $object->ref . '/sendingproof/uploaded_file';
+		$upload_dir 	= $conf->doliletter->multidir_output[$conf->entity ?: $conf->entity] . '/envelope/' . $object->ref . '/trackingnumber/uploaded_file';
 		$arrayoffiles 	= dol_dir_list($upload_dir);
 
 		if ( !empty( $arrayoffiles ) ) {

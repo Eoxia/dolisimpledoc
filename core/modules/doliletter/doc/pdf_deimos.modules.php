@@ -318,14 +318,14 @@ class pdf_deimos extends ModelePDFAcknowledgementReceipt
 				$ecmfile = new EcmFiles($this->db);
 				$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$object->ref . '/';
 				$filelist = dol_dir_list($filedir, 'files');
-				$filename = $filelist[0]['name'];
+				$filepath = preg_split('/documents\//',$filelist[0]['fullname'])[1];
 
-				$ecmfile->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/'.$filename, '', '', 'doliletter_envelope', $id);
+				$ecmfile->fetch(0, '', $filepath, '', '', 'doliletter_envelope', $object->id);
 
 				if ($object->status == 6) {
-					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, $langs->trans('AcknowledgementReceiptTextLetter', $object->ref) . '<br>' . $langs->trans('DocumentSignedSha', $ecmfile->label), 0, 1);
+					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, $langs->trans('AcknowledgementReceiptTextLetter', $object->ref) . '<br>' . $langs->trans('ReceivedDocumentSignedSha', $ecmfile->label), 0, 1);
 				} elseif ($object->status == 5) {
-					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, $langs->trans('AcknowledgementReceiptTextMail', $receiver->firstname . ' ' . $receiver->lastname, preg_replace('/AR_/', '', $filename), dol_print_date($receiver->signature_date)) . ' ' . 'IP : ' . $receiver->ip . '<br>' . $langs->trans('DocumentSignedSha', $ecmfile->label), 0, 1);
+					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, $langs->trans('AcknowledgementReceiptTextMail', $receiver->firstname . ' ' . $receiver->lastname, preg_replace('/AR_/', '', $filename), dol_print_date($receiver->signature_date)) . ' ' . 'IP : ' . $receiver->ip . '<br>' . $langs->trans('ReceivedDocumentSignedSha', $ecmfile->label), 0, 1);
 				}
 
 				$nexY = $pdf->GetY();
@@ -887,8 +887,9 @@ class pdf_deimos extends ModelePDFAcknowledgementReceipt
 		$MAX_WIDTH 	= 800;
 		$MAX_HEIGHT = 500;
 
-		$upload_dir 	= DOL_DATA_ROOT . '/doliletter/envelope/' . $object->ref . '/acknowledgementreceipt/uploaded_file';
+		$upload_dir 	= $conf->doliletter->multidir_output[$conf->entity ?: $conf->entity] . '/envelope/' . $object->ref . '/acknowledgementreceipt/uploaded_file';
 		$arrayoffiles 	= dol_dir_list($upload_dir);
+
 		if ( !empty( $arrayoffiles ) ) {
 			foreach ($arrayoffiles as $file) {
 

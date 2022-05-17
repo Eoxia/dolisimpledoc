@@ -290,7 +290,7 @@ if ($action == 'deleteAttendant') {
  *  View
  */
 
-$title    = $langs->trans("EnvelopeSign");
+$title    = $langs->trans("EnvelopeSignature");
 $help_url = '';
 $morejs   = array("/doliletter/js/signature-pad.min.js", "/doliletter/js/doliletter.js.php");
 $morecss  = array("/doliletter/css/doliletter.css");
@@ -363,7 +363,8 @@ if ((empty($action) || ($action != 'create' && $action != 'edit'))) {
 	print '</td><td class="role" value="E_SENDER">';
 	print $langs->trans("Sender");
 	print '</td><td class="center">';
-	$current_url =  (preg_match('/&/', $_SERVER['HTTP_REFERER']) ? preg_split('/&/', $_SERVER['HTTP_REFERER'])[0] :  $_SERVER['HTTP_REFERER']);
+
+	$current_url = $_SERVER['HTTP_HOST'] . (preg_match('/&/',$_SERVER['REQUEST_URI']) ? preg_split('/&/',$_SERVER['REQUEST_URI'])[0] : $_SERVER['REQUEST_URI']);
 	print$current_url;
 	print  '<input hidden class="signature-link" value="'. $current_url .'">';
 	print '   ' . '<button class="copy-to-clipboard-button"><i class="fas fa-clipboard clipboard-copy"></i></button>';
