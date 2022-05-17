@@ -1684,8 +1684,14 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 				if ($conf->global->DOLILETTER_SHOW_DOCUMENTS_ON_PUBLIC_INTERFACE) {
 					$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$object->ref . '/';
 					$filelist = dol_dir_list($filedir, 'files');
-					$filename = $filelist[0]['name'];
-
+					if (!empty($filelist)) {
+						foreach ($filelist as $file) {
+							if (!preg_match('/specimen/', $file['name'])) {
+								$fileurl = $file['fullname'];
+								$filename = $file['name'];
+							}
+						}
+					}
 					$ecmfile->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/'.$filename, '', '', 'doliletter_envelope', $id);
 					require_once DOL_DOCUMENT_ROOT.'/core/lib/security2.lib.php';
 					$ecmfile->share = getRandomPassword(true);
@@ -1842,8 +1848,14 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 				if ($conf->global->DOLILETTER_SHOW_DOCUMENTS_ON_PUBLIC_INTERFACE) {
 					$filedir = $conf->doliletter->dir_output . '/' . $object->element . '/' . $object->ref;
 					$filelist = dol_dir_list($filedir, 'files');
-					$filename = $filelist[0]['name'];
-
+					if (!empty($filelist)) {
+						foreach ($filelist as $file) {
+							if (!preg_match('/specimen/', $file['name'])) {
+								$fileurl = $file['fullname'];
+								$filename = $file['name'];
+							}
+						}
+					}
 					$ecmfile->fetch(0, '', 'doliletter/envelope/' . $object->ref . '/' . $filename, '', '', 'doliletter_envelope', $id);
 					require_once DOL_DOCUMENT_ROOT . '/core/lib/security2.lib.php';
 					$ecmfile->share = getRandomPassword(true);
