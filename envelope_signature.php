@@ -290,7 +290,7 @@ if ($action == 'deleteAttendant') {
  *  View
  */
 
-$title    = $langs->trans("EnvelopeSign");
+$title    = $langs->trans("EnvelopeSignature");
 $help_url = '';
 $morejs   = array("/doliletter/js/signature-pad.min.js", "/doliletter/js/doliletter.js.php");
 $morecss  = array("/doliletter/css/doliletter.css");

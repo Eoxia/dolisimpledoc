@@ -171,9 +171,12 @@ if (dol_strlen($element->signature)) {
 					<?php if ($type == 'envelope') : ?>
 						<?php $filelist = dol_dir_list($upload_dir . '/' . $object->element . '/' . $object->ref);
 						if (!empty($filelist)) {
-							$file = array_shift($filelist);
-							$fileurl = $file['fullname'];
-							$filename = $file['name'];
+							foreach ($filelist as $file) {
+								if (!preg_match('/specimen/', $file['name'])) {
+									$fileurl = $file['fullname'];
+									$filename = $file['name'];
+								}
+							}
 							$envelope_file = $ecmfile;
 							$envelope_file->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/'.$filename, '', '', 'doliletter_envelope', $object->id);
 						}
