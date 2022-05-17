@@ -1880,6 +1880,13 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 
 
 		print '<table>';
+
+		print '<td>';
+		print '<img src="./img/envelope.png"/>';
+		print '</td>';
+
+		print '<td>';
+		print '<table>';
 		print '<tr class="minwidth400"><td>' . $langs->trans("Receivers") . '</td><td class="minwidth400">';
 		print '<input hidden name="receiver[]" id="receiver[]" value="' . $linked_contact->id . '">';
 		print $linked_contact->getNomUrl(1);
@@ -1894,58 +1901,21 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 		print '<td>';
 		print '<input class="flat" type="file" name="userfile[]" id="LinkedFiles" />';
 		print '</td>';
-		print '<td>';
-		print '<img src="./img/envelope.png"/>';
-		print '</td>';
 		print '</tr>';
 
-//		print '<table><tr>';
-//		print '<td class="titlefield">' . $form->editfieldkey($langs->trans("TrackingNumberPhoto"), 'linkedFiles', '', $object, 0) . '</td>';
-//		print '<td>';
-//		print '<input hidden class="from-type" value="LinkedFiles" />';
-//		print '<input class="flat" type="file" name="userfile[]" id="LinkedFiles" />';
-//		print '</td>';
-//
-//		$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$object->ref;
-//		$tracking_number_photo_files = dol_dir_list($filedir.'/linked_files/uploaded_file/tmp');
-//		$tracking_number_photo_files_counter = count($tracking_number_photo_files);
-//
-//		print '<td>';
-//		print '<input class="send-file butActionRefused" title="'. $langs->trans('UploadAFileFirst') .'" type="submit" name="uploadSendingProof" id="uploadSendingProof" value="'. $langs->trans('Send').'"/>';
-//		print '</td>';
-//
-//		if ($tracking_number_photo_files_counter == 0) {
-//			print '<td class="titlefield">';
-//			print '<img width="150" alt="" src="./../../custom/doliletter/img/tracking_number_photo_confirmation.png" />';
-//			print '</td>';
-//		} else {
-//			$tracking_number_photo_path = array_shift($tracking_number_photo_files);
-//			$tracking_number_photo_path = $tracking_number_photo_path['name'];
-//			print '<td class="titlefield">';
-//			print '<img width="150" alt="" src="'.DOL_URL_ROOT.'/viewimage.php?modulepart=doliletter&entity='.$object->entity.'&file=envelope/'. $object->ref . '/sendingproof/uploaded_file/tmp/' . $tracking_number_photo_path .'">';
-//			print '</td>';
-//		}
-//		print '</form>';
-//
-//		print '<form method="POST" action="'.$_SERVER["PHP_SELF"] . '?id=' . $id .'" enctype="multipart/form-data">';
-//		print '<input type="hidden" name="token" value="'.newToken().'">';
-//		print '<input type="hidden" name="action" value="addSendingProof">';
-//
-//		print '<td>';
-//		print '<input type="submit" class="' . ($tracking_number_photo_files_counter > 0 ? 'butAction' : 'butActionRefused" title="' . dol_escape_htmltag($langs->trans("YouMustHaveUploadedAN")) . '"') . ' id="addSendingProof" value="'. $langs->trans("ValidateSendingProof") .'">';
-//		print '</td></form>';
-//
-//		print '</tr>';
-
-		print '</table>' . "<br>";
+		print '</table>';
+		print '</td>';
+		print '<td>';
 
 		//button save -> to lettersend action
 		print '<input type="submit" class="button" name="lettersend" value="' . dol_escape_htmltag($langs->trans("Send")) . '">';
 		print '&nbsp; ';
 		print '<input type="' . ($backtopage ? "submit" : "button") . '" class="button button-cancel" name="cancel" value="' . dol_escape_htmltag($langs->trans("Cancel")) . '"' . ($backtopage ? '' : ' onclick="javascript:history.go(-1)"') . '>'; // Cancel for create does not post form if we don't know the backtopage
 
-		print '</div>';
+		print '</td>';
+		print '</table>' . "<br>";
 
+		print '</div>';
 		print '</form>';
 	}
 
