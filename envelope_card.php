@@ -874,8 +874,14 @@ if (empty($reshook)) {
 					if ($conf->global->DOLILETTER_SHOW_DOCUMENTS_ON_PUBLIC_INTERFACE) {
 						$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$object->ref . '/trackingnumber';
 						$filelist = dol_dir_list($filedir, 'files');
-						$filename = $filelist[0]['name'];
-
+						if (!empty($filelist)) {
+							foreach ($filelist as $file) {
+								if (!preg_match('/specimen/', $file['name'])) {
+									$fileurl = $file['fullname'];
+									$filename = $file['name'];
+								}
+							}
+						}
 						$ecmfile->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/trackingnumber/'.$filename, '', '', 'doliletter_envelope', $id);
 						require_once DOL_DOCUMENT_ROOT.'/core/lib/security2.lib.php';
 						$ecmfile->share = getRandomPassword(true);
@@ -989,8 +995,14 @@ if (empty($reshook)) {
 							if ($conf->global->DOLILETTER_SHOW_DOCUMENTS_ON_PUBLIC_INTERFACE) {
 								$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$object->ref . '/acknowledgementreceipt';
 								$filelist = dol_dir_list($filedir, 'files');
-								$filename = $filelist[0]['name'];
-
+								if (!empty($filelist)) {
+									foreach ($filelist as $file) {
+										if (!preg_match('/specimen/', $file['name'])) {
+											$fileurl = $file['fullname'];
+											$filename = $file['name'];
+										}
+									}
+								}
 								$ecmfile->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/acknowledgementreceipt/'.$filename, '', '', 'doliletter_envelope', $id);
 								require_once DOL_DOCUMENT_ROOT.'/core/lib/security2.lib.php';
 								$ecmfile->share = getRandomPassword(true);
@@ -1059,8 +1071,14 @@ if (empty($reshook)) {
 								$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$object->ref . '/sendingproof';
 
 								$filelist = dol_dir_list($filedir, 'files');
-								$filename = $filelist[0]['name'];
-
+								if (!empty($filelist)) {
+									foreach ($filelist as $file) {
+										if (!preg_match('/specimen/', $file['name'])) {
+											$fileurl = $file['fullname'];
+											$filename = $file['name'];
+										}
+									}
+								}
 								$ecmfile->fetch(0, '', 'doliletter/envelope/'.$object->ref.'/sendingproof/'.$filename, '', '', 'doliletter_envelope', $id);
 								require_once DOL_DOCUMENT_ROOT.'/core/lib/security2.lib.php';
 								$ecmfile->share = getRandomPassword(true);
