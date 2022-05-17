@@ -88,6 +88,7 @@ EnvelopeCreateTrigger = Création d'un courrier
 EnvelopeModifyTrigger = Modification d'un courrier
 EnvelopeSendbyMailTrigger = Envoi par Email
 EnvelopeSignTrigger = Signature du courrier
+EnvelopeSignature = Signature
 EnvelopeLockTrigger = Verrouillage du courrier
 EnvelopeSendingProofTrigger = Preuve de dépôt ajoutée
 EnvelopeAcknowledgementReceiptTrigger = Accusé de réception ajouté

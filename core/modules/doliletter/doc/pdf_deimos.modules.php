@@ -325,7 +325,7 @@ class pdf_deimos extends ModelePDFAcknowledgementReceipt
 				if ($object->status == 6) {
 					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, $langs->trans('AcknowledgementReceiptTextLetter', $object->ref) . '<br>' . $langs->trans('ReceivedDocumentSignedSha', $ecmfile->label), 0, 1);
 				} elseif ($object->status == 5) {
-					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, $langs->trans('AcknowledgementReceiptTextMail', $receiver->firstname . ' ' . $receiver->lastname, preg_replace('/AR_/', '', $filename), dol_print_date($receiver->signature_date)) . ' ' . 'IP : ' . $receiver->ip . '<br>' . $langs->trans('DocumentSignedSha', $ecmfile->label), 0, 1);
+					$pdf->writeHTMLCell(190, 3, $this->posxdesc - 1, $tab_top - 1, $langs->trans('AcknowledgementReceiptTextMail', $receiver->firstname . ' ' . $receiver->lastname, preg_replace('/AR_/', '', $filename), dol_print_date($receiver->signature_date)) . ' ' . 'IP : ' . $receiver->ip . '<br>' . $langs->trans('ReceivedDocumentSignedSha', $ecmfile->label), 0, 1);
 				}
 
 				$nexY = $pdf->GetY();
