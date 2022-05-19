@@ -1515,6 +1515,11 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 		print load_fiche_titre($langs->trans('UploadAcknowledgementReceipt'), null, null);
 
 		print '<table><tr>';
+
+		print '<td class="titlefield">';
+		print '<img width="150" alt="" src="./../../custom/doliletter/img/acknowledgement_receipt_confirmation.png" />';
+		print '</td>';
+
 		print '<td class="titlefield">' . $form->editfieldkey($langs->trans("AcknowledgementReceipt"), 'AcknowledgementReceipt', '', $object, 0) . '</td>';
 		print '<td>';
 		print '<input hidden class="from-type" value="acknowledgementReceipt" />';
@@ -1530,11 +1535,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 		print '<input class="send-file butActionRefused" title="'. $langs->trans('UploadAFileFirst') .'" type="submit" name="uploadAcknowledgementReceipt" id="uploadAcknowledgementReceipt" value="'. $langs->trans('Send').'"/>';
 		print '</td>';
 
-		if ($acknowledgement_receipt_files_counter == 0) {
-			print '<td class="titlefield">';
-			print '<img width="150" alt="" src="./../../custom/doliletter/img/acknowledgement_receipt_confirmation.png" />';
-			print '</td>';
-		} else {
+		if ($acknowledgement_receipt_files_counter != 0) {
 			$acknowledgement_receipt_path = array_shift($acknowledgement_receipt_files);
 			$acknowledgement_receipt_path = $acknowledgement_receipt_path['name'];
 			print '<td class="titlefield">';
@@ -1566,31 +1567,33 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'conf
 		print load_fiche_titre($langs->trans('UploadSendingProof'), null, null);
 
 		print '<table><tr>';
+
+		print '<td class="titlefield">';
+		print '<img width="150" alt="" src="./../../custom/doliletter/img/sending_proof_confirmation.png" />';
+		print '</td>';
+
 		print '<td class="titlefield">' . $form->editfieldkey($langs->trans("SendingProof"), 'SendingProof', '', $object, 0) . '</td>';
 		print '<td>';
 		print '<input hidden class="from-type" value="sendingProof" />';
 		print '<input class="flat" type="file" name="userfile[]" id="sendingProof" />';
 		print '</td>';
 
-		$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$object->ref;
-		$sending_proof_files = dol_dir_list($filedir.'/sendingproof/uploaded_file/tmp');
-		$sending_proof_files_counter = count($sending_proof_files);
-
 		print '<td>';
 		print '<input class="send-file butActionRefused" title="'. $langs->trans('UploadAFileFirst') .'" type="submit" name="uploadSendingProof" id="uploadSendingProof" value="'. $langs->trans('Send').'"/>';
 		print '</td>';
 
-		if ($sending_proof_files_counter == 0) {
-			print '<td class="titlefield">';
-			print '<img width="150" alt="" src="./../../custom/doliletter/img/sending_proof_confirmation.png" />';
-			print '</td>';
-		} else {
+		$filedir = $conf->doliletter->dir_output.'/'.$object->element.'/'.$object->ref;
+		$sending_proof_files = dol_dir_list($filedir.'/sendingproof/uploaded_file/tmp');
+		$sending_proof_files_counter = count($sending_proof_files);
+
+		if ($sending_proof_files_counter != 0) {
 			$sending_proof_path = array_shift($sending_proof_files);
 			$sending_proof_path = $sending_proof_path['name'];
 			print '<td class="titlefield">';
 			print '<img width="150" alt="" src="'.DOL_URL_ROOT.'/viewimage.php?modulepart=doliletter&entity='.$object->entity.'&file=envelope/'. $object->ref . '/sendingproof/uploaded_file/tmp/' . $sending_proof_path .'">';
 			print '</td>';
 		}
+
 		print '</form>';
 
 		print '<form method="POST" action="'.$_SERVER["PHP_SELF"] . '?id=' . $id .'" enctype="multipart/form-data">';
