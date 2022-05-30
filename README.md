@@ -2,9 +2,9 @@
 
 ## Informations
 
-Version du module: 1.0.1
+Version du module: 1.0.2
 
-Dernière mise à jour: 19/05/2022
+Dernière mise à jour: 30/05/2022
 
 Prérequis:
 * Dolibarr min version 13.0.0
@@ -14,6 +14,7 @@ Thème: Eldy Menu
 
 Editeur/Licence: [Eoxia](https://www.eoxia.com) / GPL-v3
 
+Assitance: [Forum www.dolibarr.fr](https://www.dolibarr.fr) / Par mail à contact@evarisk.com
 Assitance: [Forum www.dolibarr.fr](https://www.dolibarr.fr) / Par mail à contact@evarisk.com
 
 ## Fonctionnalités
